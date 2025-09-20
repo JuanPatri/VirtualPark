@@ -66,4 +66,12 @@ public class UserTest
         user.Email = "pepitoperez@gmail.com";
         user.Email.Should().Be("pepitoperez@gmail.com");
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Password_shouldBeGettable()
+    {
+        var user = new User { Password = "Password123." };
+        user.Password.Should().Be("Password123.");
+    }
 }

@@ -74,4 +74,13 @@ public class UserTest
         var user = new User { Password = "Password123." };
         user.Password.Should().Be("Password123.");
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Password_shouldBeSettable()
+    {
+        var user = new User();
+        user.Password = "Password123.";
+        user.Password.Should().Be("Password123.");
+    }
 }

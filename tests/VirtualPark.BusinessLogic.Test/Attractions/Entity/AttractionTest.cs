@@ -87,9 +87,17 @@ public sealed class AttractionTest
     }
     #endregion
     #region Available
+    [TestMethod]
     public void Available_GetSet_Works()
     {
-        Attraction attraction = new Attraction{ Available = true};
+        Attraction attraction = new Attraction{ Available = false};
+        attraction.Available.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void WhenAttractionIsCreated_AvailableIsTrue()
+    {
+        Attraction attraction = new Attraction();
         attraction.Available.Should().BeTrue();
     }
     #endregion

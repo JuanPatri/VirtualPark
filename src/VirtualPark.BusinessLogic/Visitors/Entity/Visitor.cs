@@ -8,7 +8,7 @@ public sealed class Visitor
 
     private string _email = string.Empty;
 
-    private readonly string _lastName = string.Empty;
+    private string _lastName = string.Empty;
 
     private string _name = string.Empty;
 
@@ -47,15 +47,7 @@ public sealed class Visitor
     public string LastName
     {
         get => _lastName;
-        set
-        {
-            if(string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentException("Last name cannot be null or empty");
-            }
-
-            _passwordHash = value;
-        }
+        set => _lastName = ValidateLastName(value);
     }
 
     public string Email
@@ -82,6 +74,16 @@ public sealed class Visitor
         if(string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException("Name cannot be null or empty");
+        }
+
+        return name;
+    }
+
+    private static string ValidateLastName(string name)
+    {
+        if(string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Last name cannot be null or empty");
         }
 
         return name;

@@ -63,7 +63,7 @@ public sealed class AttractionTest
     }
     #endregion
     #region Events
-
+    [TestMethod]
     public void WhenAttractionIsCreated_ListEventIsAssigned()
     {
         Attraction attraction = new Attraction();

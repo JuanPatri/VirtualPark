@@ -1,4 +1,4 @@
-namespace VirtualPark.BusinessLogic.Visitor.Entity;
+namespace VirtualPark.BusinessLogic.Visitors.Entity;
 
 public sealed class Visitor
 {

@@ -49,4 +49,12 @@ public class UserTest
         user.LastName = "Perez";
         user.LastName.Should().Be("Perez");
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Email_shouldBeGetteable()
+    {
+        var user = new User { Email = "pepitoperez@gmail.com" };
+        user.Email.Should().Be("pepitoperez@gmail.com");
+    }
 }

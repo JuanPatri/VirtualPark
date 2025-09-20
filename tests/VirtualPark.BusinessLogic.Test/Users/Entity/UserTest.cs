@@ -18,9 +18,9 @@ public class UserTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void User_ShouldBeGettable()
+    public void Name_Getter_ReturnsAssignedValue()
     {
-        var user = new User(){Name = "Pepe"};
+        var user = new User { Name = "Pepe"};
         user.Name.Should().Be("Pepe");
     }
 }

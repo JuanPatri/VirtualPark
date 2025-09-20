@@ -15,4 +15,12 @@ public class UserTest
         var user = new User();
         user.Id.Should().NotBe(Guid.Empty);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void User_ShouldBeGettable()
+    {
+        var user = new User(){Name = "Pepe"};
+        user.Name.Should().Be("Pepe");
+    }
 }

@@ -77,4 +77,13 @@ public sealed class AttractionTest
         attraction.Events.Should().BeEmpty();
     }
     #endregion
+    #region CurrentVisitors
+
+    [TestMethod]
+    public void CurrentVisitors_GetSet_Works()
+    {
+        Attraction attraction = new Attraction { CurrentVisitors = 40 };
+        attraction.CurrentVisitors.Should().Be(40);
+    }
+    #endregion
 }

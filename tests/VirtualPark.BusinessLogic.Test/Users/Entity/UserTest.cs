@@ -20,7 +20,16 @@ public class UserTest
     [TestCategory("Validation")]
     public void Name_Getter_ReturnsAssignedValue()
     {
-        var user = new User { Name = "Pepe"};
+        var user = new User { Name = "Pepe" };
+        user.Name.Should().Be("Pepe");
+    }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Name_shouldBeSettable()
+    {
+        var user = new User();
+        user.Name = "Pepe";
         user.Name.Should().Be("Pepe");
     }
 }

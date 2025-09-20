@@ -1,3 +1,5 @@
+using VirtualPark.BusinessLogic.Events.Entity;
+
 namespace VirtualPark.BusinessLogic.Attractions.Entity;
 
 public sealed class Attraction
@@ -8,4 +10,5 @@ public sealed class Attraction
     public int MiniumAge { get; set; }
     public int Capacity { get; set; }
     public string Description { get; set; } = null!;
+    public List<Event> Events { get; set; } = new List<Event>();
 }

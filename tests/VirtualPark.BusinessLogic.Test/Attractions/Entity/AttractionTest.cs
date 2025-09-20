@@ -67,7 +67,7 @@ public sealed class AttractionTest
     public void WhenAttractionIsCreated_ListEventIsAssigned()
     {
         Attraction attraction = new Attraction();
-        attraction.Events.Should().NotBeNull;
+        attraction.Events.Should().NotBeNull();
     }
     #endregion
 }

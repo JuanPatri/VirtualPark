@@ -1,4 +1,4 @@
-namespace VirtualPark.BusinessLogic.Attractions.ValueObjects;
+namespace VirtualPark.BusinessLogic.Attractions;
 
 /// <summary>Types of park attractions.</summary>
 public enum AttractionType

@@ -1,4 +1,3 @@
-using VirtualPark.BusinessLogic.Attractions.ValueObjects;
 using VirtualPark.BusinessLogic.Events.Entity;
 
 namespace VirtualPark.BusinessLogic.Attractions.Entity;

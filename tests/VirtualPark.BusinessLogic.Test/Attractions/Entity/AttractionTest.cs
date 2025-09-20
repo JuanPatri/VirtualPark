@@ -1,7 +1,6 @@
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
-using VirtualPark.BusinessLogic.Attractions.ValueObjects;
 
 namespace VirtualPark.BusinessLogic.Test.Attractions.Entity;
 
@@ -18,7 +17,6 @@ public sealed class AttractionTest
         attraction.Id.Should().NotBe(Guid.Empty);
     }
     #endregion
-
     #region Type
     [TestMethod]
     public void Type_GetSet_Works()
@@ -27,7 +25,6 @@ public sealed class AttractionTest
         attraction.Type.Should().Be(AttractionType.RollerCoaster);
     }
     #endregion
-
     #region Name
     [TestMethod]
     public void Name_GetSet_Works()

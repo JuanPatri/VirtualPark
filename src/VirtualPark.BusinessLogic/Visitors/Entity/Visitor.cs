@@ -17,6 +17,7 @@ public sealed class Visitor
         Name = name;
         Email = email;
         PasswordHash = passwordHash;
+        Score = 0;
     }
 
     public Guid Id { get; } = Guid.NewGuid();
@@ -44,6 +45,8 @@ public sealed class Visitor
         get => _email;
         set => _email = ValidateEmail(value);
     }
+
+    public int Score { get; set; }
 
     private static DateTime ValidateDateOfBirth(DateTime date)
     {
@@ -80,7 +83,7 @@ public sealed class Visitor
     {
         if(string.IsNullOrWhiteSpace(passwordHash))
         {
-            throw new ArgumentException("Password hash cannot be null or empty", nameof(passwordHash));
+            throw new ArgumentException("The password hash cannot be null or empty");
         }
 
         return passwordHash;

@@ -12,7 +12,7 @@ public sealed class AttractionTest
     [TestMethod]
     public void WhemAttractionIsCreated_IdIsAssigned()
     {
-        var attraction = new Attraction()
+        var attraction = new Attraction();
         attraction.Id.Should().NotBe(Guid.Empty);
     }
     #endregion

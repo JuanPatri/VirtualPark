@@ -35,4 +35,13 @@ public sealed class AttractionTest
         attraction.Name.Should().Be("The Big Bang");
     }
     #endregion
+    #region MiniumAge
+
+    [TestMethod]
+    public void MiniumAge_GetSet_Works()
+    {
+        Attraction attraction = new Attraction { MiniumAge = 13 };
+        attraction.MiniumAge.Should().Be(13);
+    }
+    #endregion
 }

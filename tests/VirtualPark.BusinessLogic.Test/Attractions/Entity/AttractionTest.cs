@@ -1,6 +1,7 @@
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
+using VirtualPark.BusinessLogic.Attractions.ValueObjects;
 
 namespace VirtualPark.BusinessLogic.Test.Attractions.Entity;
 
@@ -13,7 +14,7 @@ public sealed class AttractionTest
     [TestMethod]
     public void WhenAttractionIsCreated_IdIsAssigned()
     {
-        Attraction attraction = new Attraction();
+        var attraction = new Attraction();
         attraction.Id.Should().NotBe(Guid.Empty);
     }
     #endregion
@@ -22,7 +23,7 @@ public sealed class AttractionTest
     [TestMethod]
     public void Type_GetSet_Works()
     {
-        Attraction attraction = new Attraction { Type = AttractionType.RollerCoaster };
+        var attraction = new Attraction { Type = AttractionType.RollerCoaster };
         attraction.Type.Should().Be(AttractionType.RollerCoaster);
     }
     #endregion
@@ -31,7 +32,7 @@ public sealed class AttractionTest
     [TestMethod]
     public void Name_GetSet_Works()
     {
-        Attraction attraction = new Attraction { Name = "The Big Bang" };
+        var attraction = new Attraction { Name = "The Big Bang" };
         attraction.Name.Should().Be("The Big Bang");
     }
     #endregion
@@ -40,7 +41,7 @@ public sealed class AttractionTest
     [TestMethod]
     public void MiniumAge_GetSet_Works()
     {
-        Attraction attraction = new Attraction { MiniumAge = 13 };
+        var attraction = new Attraction { MiniumAge = 13 };
         attraction.MiniumAge.Should().Be(13);
     }
     #endregion
@@ -49,7 +50,7 @@ public sealed class AttractionTest
     [TestMethod]
     public void Capacity_GetSet_Works()
     {
-        Attraction attraction = new Attraction { Capacity = 60 };
+        var attraction = new Attraction { Capacity = 60 };
         attraction.Capacity.Should().Be(60);
     }
     #endregion
@@ -58,7 +59,7 @@ public sealed class AttractionTest
     [TestMethod]
     public void Description_GetSet_Works()
     {
-        Attraction attraction = new Attraction { Description = "The largest roller coaster in the world." };
+        var attraction = new Attraction { Description = "The largest roller coaster in the world." };
         attraction.Description.Should().Be("The largest roller coaster in the world.");
     }
     #endregion
@@ -66,14 +67,14 @@ public sealed class AttractionTest
     [TestMethod]
     public void WhenAttractionIsCreated_ListEventIsAssigned()
     {
-        Attraction attraction = new Attraction();
+        var attraction = new Attraction();
         attraction.Events.Should().NotBeNull();
     }
 
     [TestMethod]
     public void WhenAttractiomIsCreated_ListEventIsEmpty()
     {
-        Attraction attraction = new Attraction();
+        var attraction = new Attraction();
         attraction.Events.Should().BeEmpty();
     }
     #endregion
@@ -82,7 +83,7 @@ public sealed class AttractionTest
     [TestMethod]
     public void CurrentVisitors_GetSet_Works()
     {
-        Attraction attraction = new Attraction { CurrentVisitors = 40 };
+        var attraction = new Attraction { CurrentVisitors = 40 };
         attraction.CurrentVisitors.Should().Be(40);
     }
     #endregion
@@ -90,14 +91,14 @@ public sealed class AttractionTest
     [TestMethod]
     public void Available_GetSet_Works()
     {
-        Attraction attraction = new Attraction{ Available = false};
+        var attraction = new Attraction { Available = false };
         attraction.Available.Should().BeFalse();
     }
 
     [TestMethod]
     public void WhenAttractionIsCreated_AvailableIsTrue()
     {
-        Attraction attraction = new Attraction();
+        var attraction = new Attraction();
         attraction.Available.Should().BeTrue();
     }
     #endregion

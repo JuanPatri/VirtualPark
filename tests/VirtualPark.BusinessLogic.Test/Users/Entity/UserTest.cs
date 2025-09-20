@@ -60,7 +60,7 @@ public class UserTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Email_shouldBeSettable()
+    public void Email_Setter_ReturnsAssignedValue()
     {
         var user = new User();
         user.Email = "pepitoperez@gmail.com";

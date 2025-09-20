@@ -7,7 +7,7 @@ public sealed class Visitor
     public DateTime DateOfBirth
     {
         get => _dateOfBirth;
-        init
+        set
         {
             if (value > DateTime.UtcNow)
             {

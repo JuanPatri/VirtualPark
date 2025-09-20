@@ -77,7 +77,7 @@ public class UserTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Password_shouldBeSettable()
+    public void Password_Setter_ReturnsAssignedValue()
     {
         var user = new User();
         user.Password = "Password123.";

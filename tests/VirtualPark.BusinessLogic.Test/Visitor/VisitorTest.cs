@@ -11,7 +11,7 @@ public class VisitorTest
     public void WhenVisitorIsCreated_IdShouldBeAssigned()
     {
         // Act
-        var visitor = new Visitor("Name");
+        var visitor = new Visitor("Name", "visitor@mail.com");
 
         // Assert
         visitor.Id.Should().NotBe(Guid.Empty);
@@ -27,7 +27,7 @@ public class VisitorTest
         // Act
         var ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor("Name");
+            var visitor = new Visitor("Name", "visitor@mail.com");
             visitor.DateOfBirth = futureDate;
         });
 
@@ -45,7 +45,7 @@ public class VisitorTest
         // Act
         var ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor(invalidName);
+            var visitor = new Visitor(invalidName,  "visitor@mail.com");
         });
 
         // Assert
@@ -60,11 +60,12 @@ public class VisitorTest
     public void Email_WhenInvalidFormat_ShouldThrowArgumentException(string invalidEmail)
     {
         // Act
-        Action act = () => new Visitor { Email = invalidEmail };
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
+        {
+            var visitor = new Visitor("Name",  "invalidEmail");
+        });
 
         // Assert
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Email format is invalid");
+        Assert.AreEqual("Email format is invalid", ex.Message);
     }
 }

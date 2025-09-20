@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace VirtualPark.BusinessLogic.Visitors.Entity;
 
 public sealed class Visitor
@@ -18,16 +20,33 @@ public sealed class Visitor
         set => _name = ValidateName(value);
     }
 
-    public Visitor(string name)
+    private  string _email = string.Empty;
+    public string Email
+    {
+        get => _email;
+        set
+        {
+            var validator = new EmailAddressAttribute();
+            if (!validator.IsValid(value))
+            {
+                throw new ArgumentException("Email format is invalid");
+            }
+
+            _email = value;
+        }
+    }
+
+    public Visitor(string name, string email)
     {
         Name = name;
+        Email = email;
     }
 
     private static DateTime ValidateDateOfBirth(DateTime date)
     {
         if (date > DateTime.UtcNow)
         {
-            throw new ArgumentException("Date of birth cannot be in the future", nameof(date));
+            throw new ArgumentException("Date of birth cannot be in the future");
         }
 
         return date;
@@ -37,7 +56,7 @@ public sealed class Visitor
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentException("Name cannot be null or empty", nameof(name));
+            throw new ArgumentException("Name cannot be null or empty");
         }
 
         return name;

@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Visitor\Entity\" />
+    <Folder Include="Visitor\Models\" />
+    <Folder Include="Visitor\Services\" />
+  </ItemGroup>
+
 </Project>

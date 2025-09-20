@@ -33,4 +33,21 @@ public class VisitorTest
         // Assert
         Assert.AreEqual("Date of birth cannot be in the future", ex.Message);
     }
+
+    [DataTestMethod]
+    [TestCategory("Validation")]
+    [DataRow(null)]
+    [DataRow("")]
+    [DataRow("   ")]
+    public void SetName_WhenValueIsNullOrEmpty_ShouldThrowArgumentException(string invalidName)
+    {
+        // Act
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
+        {
+            var visitor = new Visitor { Name = invalidName };
+        });
+
+        // Assert
+        Assert.AreEqual("Name cannot be null or empty", ex.Message);
+    }
 }

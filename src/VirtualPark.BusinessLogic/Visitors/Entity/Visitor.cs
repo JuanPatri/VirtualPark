@@ -10,10 +10,27 @@ public sealed class Visitor
 
     private string _name = string.Empty;
 
-    public Visitor(string name, string email)
+    public Visitor(string name, string email, string passwordHash)
     {
         Name = name;
         Email = email;
+        PasswordHash = passwordHash;
+    }
+
+    private string _passwordHash = string.Empty;
+
+    public string PasswordHash
+    {
+        get => _passwordHash;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException("The password hash cannot be null or empty");
+            }
+
+            _passwordHash = value;
+        }
     }
 
     public Guid Id { get; } = Guid.NewGuid();

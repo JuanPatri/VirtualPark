@@ -11,7 +11,7 @@ public class VisitorTest
     public void WhenVisitorIsCreated_IdShouldBeAssigned()
     {
         // Act
-        var visitor = new Visitor("Name", "visitor@mail.com");
+        var visitor = new Visitor("Name", "visitor@mail.com", "8743b52063cd8");
 
         // Assert
         visitor.Id.Should().NotBe(Guid.Empty);
@@ -27,7 +27,7 @@ public class VisitorTest
         // Act
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor("Name", "visitor@mail.com");
+            var visitor = new Visitor("Name", "visitor@mail.com", "8743b52063cd8");
             visitor.DateOfBirth = futureDate;
         });
 
@@ -45,7 +45,7 @@ public class VisitorTest
         // Act
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor(invalidName, "visitor@mail.com");
+            var visitor = new Visitor(invalidName, "visitor@mail.com", "8743b52063cd8");
         });
 
         // Assert
@@ -62,7 +62,7 @@ public class VisitorTest
         // Act
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor("Name", "invalidEmail");
+            var visitor = new Visitor("Name", "invalidEmail", "8743b52063cd8");
         });
 
         // Assert
@@ -79,10 +79,10 @@ public class VisitorTest
         // Act
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor("Name", "invalidEmail", invalidPassword);
+            var visitor = new Visitor("Name", "visitor@mail.com", invalidPassword);
         });
 
         // Assert
-        Assert.AreEqual("The password can not be null or empty", ex.Message);
+        Assert.AreEqual("The password hash cannot be null or empty", ex.Message);
     }
 }

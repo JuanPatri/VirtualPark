@@ -62,4 +62,12 @@ public sealed class AttractionTest
         attraction.Description.Should().Be("The largest roller coaster in the world.");
     }
     #endregion
+    #region Events
+
+    public void WhenAttractionIsCreated_ListEventIsAssigned()
+    {
+        Attraction attraction = new Attraction();
+        attraction.Events.Should().NotBeNull;
+    }
+    #endregion
 }

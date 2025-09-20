@@ -26,4 +26,13 @@ public sealed class AttractionTest
         attraction.Type.Should().Be(AttractionType.RollerCoaster);
     }
     #endregion
+
+    #region Name
+    [TestMethod]
+    public void Name_GetSet_Works()
+    {
+        Attraction attraction = new Attraction { Name = "The Big Bang" };
+        attraction.Name.Should().Be("The Big Bang");
+    }
+    #endregion
 }

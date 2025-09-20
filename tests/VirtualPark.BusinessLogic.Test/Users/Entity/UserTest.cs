@@ -57,7 +57,7 @@ public class UserTest
         var user = new User { Email = "pepitoperez@gmail.com" };
         user.Email.Should().Be("pepitoperez@gmail.com");
     }
-    
+
     [TestMethod]
     [TestCategory("Validation")]
     public void Email_shouldBeSettable()

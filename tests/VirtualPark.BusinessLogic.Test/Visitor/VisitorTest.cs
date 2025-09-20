@@ -54,6 +54,23 @@ public class VisitorTest
 
     [DataTestMethod]
     [TestCategory("Validation")]
+    [DataRow(null)]
+    [DataRow("")]
+    [DataRow("   ")]
+    public void SetLastName_WhenValueIsNullOrEmpty_ShouldThrowArgumentException(string invalidLastName)
+    {
+        // Act
+        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
+        {
+            var visitor = new Visitor("Name",invalidLastName, "visitor@mail.com", "8743b52063cd8");
+        });
+
+        // Assert
+        Assert.AreEqual("Last name cannot be null or empty", ex.Message);
+    }
+
+    [DataTestMethod]
+    [TestCategory("Validation")]
     [DataRow("not-an-email")]
     [DataRow("missingatsign.com")]
     [DataRow("user@.com")]

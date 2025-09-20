@@ -7,4 +7,5 @@ public sealed class Attraction
     public string Name { get; set; } = null!;
     public int MiniumAge { get; set; }
     public int Capacity { get; set; }
+    public string Description { get; set; } = null!;
 }

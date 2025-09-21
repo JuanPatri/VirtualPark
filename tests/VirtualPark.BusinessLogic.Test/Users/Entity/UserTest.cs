@@ -97,7 +97,7 @@ public class UserTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void VisitorProfile_ShouldBeGettable()
+    public void VisitorProfile_getter_ReturnsAssignedValue()
     {
         var visitorProfile = new VisitorProfile();
         var user = new User { VisitorProfile = visitorProfile };

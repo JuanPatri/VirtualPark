@@ -1,6 +1,8 @@
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Visitors.Entity;
 
+namespace VirtualPark.BusinessLogic.Test.Visitor;
+
 [TestClass]
 [TestCategory("Entity")]
 [TestCategory("Visitor")]
@@ -11,7 +13,7 @@ public class VisitorTest
     public void WhenVisitorIsCreated_IdShouldBeAssigned()
     {
         // Act
-        var visitor = new Visitor("Name", "Last name", new DateTime(1998, 9, 20), "visitor@mail.com", "8743b52063cd8");
+        var visitor = new Visitors.Entity.Visitor("Name", "Last name", new DateTime(1998, 9, 20), "visitor@mail.com", "8743b52063cd8");
 
         // Assert
         visitor.Id.Should().NotBe(Guid.Empty);
@@ -27,7 +29,7 @@ public class VisitorTest
         // Act
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor("Name", "Last name", new DateTime(1998, 9, 20), "visitor@mail.com",
+            var visitor = new Visitors.Entity.Visitor("Name", "Last name", new DateTime(1998, 9, 20), "visitor@mail.com",
                 "8743b52063cd8");
             visitor.DateOfBirth = futureDate;
         });
@@ -46,7 +48,7 @@ public class VisitorTest
         // Act
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor(invalidName, "Last name", new DateTime(1998, 9, 20), "visitor@mail.com",
+            var visitor = new Visitors.Entity.Visitor(invalidName, "Last name", new DateTime(1998, 9, 20), "visitor@mail.com",
                 "8743b52063cd8");
         });
 
@@ -64,7 +66,7 @@ public class VisitorTest
         // Act
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor("Name", invalidLastName, new DateTime(1998, 9, 20), "visitor@mail.com",
+            var visitor = new Visitors.Entity.Visitor("Name", invalidLastName, new DateTime(1998, 9, 20), "visitor@mail.com",
                 "8743b52063cd8");
         });
 
@@ -82,7 +84,7 @@ public class VisitorTest
         // Act
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor("Name", "Last name", new DateTime(1998, 9, 20), invalidEmail, "8743b52063cd8");
+            var visitor = new Visitors.Entity.Visitor("Name", "Last name", new DateTime(1998, 9, 20), invalidEmail, "8743b52063cd8");
         });
 
         // Assert
@@ -99,7 +101,7 @@ public class VisitorTest
         // Act
         ArgumentException ex = Assert.ThrowsException<ArgumentException>(() =>
         {
-            var visitor = new Visitor("Name", "Last name", new DateTime(1998, 9, 20), "visitor@mail.com",
+            var visitor = new Visitors.Entity.Visitor("Name", "Last name", new DateTime(1998, 9, 20), "visitor@mail.com",
                 invalidPassword);
         });
 
@@ -111,7 +113,7 @@ public class VisitorTest
     [TestCategory("Constructor")]
     public void Constructor_WhenVisitorIsCreated_ShouldInitializeScoreAsZero()
     {
-        var visitor = new Visitor("Name", "Last name", new DateTime(1998, 9, 20), "visitor@mail.com", "8743b52063cd8");
+        var visitor = new Visitors.Entity.Visitor("Name", "Last name", new DateTime(1998, 9, 20), "visitor@mail.com", "8743b52063cd8");
 
         visitor.Score.Should().Be(0);
     }
@@ -121,7 +123,7 @@ public class VisitorTest
     public void Constructor_WhenVisitorIsCreated_ShouldSetMembershipToStandardByDefault()
     {
         // Act
-        var visitor = new Visitor("Name", "Last name", new DateTime(1998, 9, 20), "visitor@mail.com", "8743b52063cd8");
+        var visitor = new Visitors.Entity.Visitor("Name", "Last name", new DateTime(1998, 9, 20), "visitor@mail.com", "8743b52063cd8");
 
         // Assert
         visitor.Membership.Should().Be(Membership.Standard);
@@ -132,7 +134,7 @@ public class VisitorTest
     public void Constructor_WhenValidDataProvided_ShouldExposePropertiesCorrectly()
     {
         // Act
-        var visitor = new Visitor("Name", "LastName", new DateTime(1998, 9, 20), "visitor@mail.com", "8743b52063cd8");
+        var visitor = new Visitors.Entity.Visitor("Name", "LastName", new DateTime(1998, 9, 20), "visitor@mail.com", "8743b52063cd8");
 
         // Assert
         visitor.Name.Should().Be("Name");

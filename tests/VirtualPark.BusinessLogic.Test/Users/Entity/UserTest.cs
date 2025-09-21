@@ -117,11 +117,11 @@ public class UserTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void VisitorProfileId_ShouldBeSettable()
+    public void VisitorProfileId_Getter_ReturnsAssignedValue()
     {
-        var Id = Guid.NewGuid();
-        var user = new User { VisitorProfileId = Id };
-        user.VisitorProfileId.Should().Be(Id);
+        var id = Guid.NewGuid();
+        var user = new User { VisitorProfileId = id };
+        user.VisitorProfileId.Should().Be(id);
     }
     #endregion
 }

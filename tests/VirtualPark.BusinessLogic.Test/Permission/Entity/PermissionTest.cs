@@ -16,4 +16,12 @@ public sealed class PermissionTest
         // Assert
         permission.Id.Should().NotBe(Guid.Empty);
     }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Description_SetterGetter_ShouldReturnAssignedValue()
+    {
+        var permission = new Permission { Description = "Can create tickets" };
+        permission.Description.Should().Be("Can create tickets");
+    }
 }

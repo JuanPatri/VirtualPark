@@ -34,4 +34,15 @@ public sealed class RoleTest
         var role = new Role { Description = "Administrator role with full access" };
         role.Description.Should().Be("Administrator role with full access");
     }
+
+    [TestMethod]
+    [TestCategory("Constructor")]
+    public void Constructor_WhenRoleIsCreated_ShouldInitializePermissionsList()
+    {
+        var role = new Role();
+
+        role.Permissions.Should().NotBeNull();
+        role.Permissions.Should().BeEmpty();
+    }
+
 }

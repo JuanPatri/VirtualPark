@@ -1,4 +1,7 @@
-namespace VirtualPark.BusinessLogic.Test.VisitorProfile.Entity;
+using FluentAssertions;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
+
+namespace VirtualPark.BusinessLogic.Test.VisitorsProfile.Entity;
 
 [TestClass]
 [TestCategory("Entity")]
@@ -10,6 +13,6 @@ public class VisitorProfileTest
     public void User_createdShouldBeHaveId()
     {
         var visitorProfile = new VisitorProfile();
-        visitorProfile.Id.Should().NotBe(Guid.Empty);
+        visitorProfile.Id.Should().NotBe(System.Guid.Empty);
     }
 }

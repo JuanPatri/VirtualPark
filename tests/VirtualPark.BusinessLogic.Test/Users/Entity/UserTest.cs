@@ -123,5 +123,15 @@ public class UserTest
         var user = new User { VisitorProfileId = id };
         user.VisitorProfileId.Should().Be(id);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void VisitorProfileId_ShouldBeSettable()
+    {
+        var id = Guid.NewGuid();
+        var user = new User();
+        user.VisitorProfileId = id;
+        user.VisitorProfileId.Should().Be(id);
+    }
     #endregion
 }

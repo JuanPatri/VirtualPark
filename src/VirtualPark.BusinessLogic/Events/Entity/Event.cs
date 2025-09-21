@@ -9,5 +9,5 @@ public sealed class Event
     public DateTime Date { get; set; }
     public int Capacity { get; set; }
     public int Cost { get; set; }
-    public List<Attraction> Attractions { get; set; } = new List<Attraction>();
+    public List<Attraction> Attractions { get; set; } = [];
 }

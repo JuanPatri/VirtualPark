@@ -1,10 +1,12 @@
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Permissions;
 
+namespace VirtualPark.BusinessLogic.Test.Permissions.Entity;
+
 [TestClass]
 [TestCategory("Entity")]
 [TestCategory("Permission")]
-public sealed class PermissionTest
+public class PermissionTest
 {
     [TestMethod]
     [TestCategory("Constructor")]

@@ -1,5 +1,7 @@
 using FluentAssertions;
-namespace VirtualPark.BusinessLogic.Roles.Entity;
+using VirtualPark.BusinessLogic.Roles.Entity;
+
+namespace VirtualPark.BusinessLogic.Test.Roles.Entity;
 
 [TestClass]
 [TestCategory("Entity")]

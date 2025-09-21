@@ -26,7 +26,7 @@ public class VisitorProfileTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void DateOfBirth_shouldBeSettable()
+    public void DateOfBirth_Setter_ReturnsAssignedValue()
     {
         var visitorProfile = new VisitorProfile();
         visitorProfile.DateOfBirth = new DateOnly(2002, 07, 30);

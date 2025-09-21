@@ -38,7 +38,16 @@ public class VisitorProfileTest
     [TestCategory("Validation")]
     public void Membership_Getter_ReturnsAssignedValue()
     {
-        var visitorProfile = new VisitorProfile() { Membership = Membership.Standard};
+        var visitorProfile = new VisitorProfile { Membership = Membership.Standard };
+        visitorProfile.Membership.Should().Be(Membership.Standard);
+    }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Membership_ShouldBeSettable()
+    {
+        var visitorProfile = new VisitorProfile();
+        visitorProfile.Membership = Membership.Standard;
         visitorProfile.Membership.Should().Be(Membership.Standard);
     }
 }

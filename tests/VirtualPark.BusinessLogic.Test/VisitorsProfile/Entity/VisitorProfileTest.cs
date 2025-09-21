@@ -32,4 +32,12 @@ public class VisitorProfileTest
         visitorProfile.DateOfBirth = new DateOnly(2002, 07, 30);
         visitorProfile.DateOfBirth.Should().Be(new DateOnly(2002, 07, 30));
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Memership_shouldBeGettable()
+    {
+        var visitorProfile = new VisitorProfile() { Membership = VisitorProfile.Membership.Estandar };
+        visitorProfile.Membership.Should().Be(VisitorProfile.Membership.Estandar);
+    }
 }

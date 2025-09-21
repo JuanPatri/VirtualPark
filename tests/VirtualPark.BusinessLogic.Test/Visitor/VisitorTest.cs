@@ -1,8 +1,7 @@
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtualPark.BusinessLogic.Visitors.Entity;
 
-namespace VirtualPark.BusinessLogic.Test.Visitor;
+namespace VirtualPark.BusinessLogic.Test.Visitor.Entity;
 
 [TestClass]
 [TestCategory("Entity")]

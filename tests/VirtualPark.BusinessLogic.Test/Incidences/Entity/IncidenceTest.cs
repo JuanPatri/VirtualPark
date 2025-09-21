@@ -1,3 +1,6 @@
+using FluentAssertions;
+using VirtualPark.BusinessLogic.Incidences.Entity;
+
 namespace VirtualPark.BusinessLogic.Test.Incidences.Entity;
 
 [TestClass]

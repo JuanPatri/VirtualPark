@@ -50,4 +50,13 @@ public sealed class EventTest
         newEvent.Cost.Should().Be(250);
     }
     #endregion
+    #region Attraction
+
+    [TestMethod]
+    public void WhenAttractionIsCreated_ListAttractionIsAssigned()
+    {
+        var newEvent = new Event();
+        newEvent.Attraction.Should().NotBeNull();
+    }
+    #endregion
 }

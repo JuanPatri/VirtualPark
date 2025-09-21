@@ -1,4 +1,5 @@
-namespace VirtualPark.BusinessLogic.Test.Permission.Entity;
+using FluentAssertions;
+using VirtualPark.BusinessLogic.Permissions;
 
 [TestClass]
 [TestCategory("Entity")]

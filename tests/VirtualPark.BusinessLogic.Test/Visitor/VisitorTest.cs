@@ -1,7 +1,7 @@
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Visitors.Entity;
 
-namespace VirtualPark.BusinessLogic.Test.Visitor.Entity;
+namespace VirtualPark.BusinessLogic.Test.Visitor;
 
 [TestClass]
 [TestCategory("Entity")]

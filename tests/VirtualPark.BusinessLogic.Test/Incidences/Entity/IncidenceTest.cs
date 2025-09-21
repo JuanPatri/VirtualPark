@@ -8,11 +8,13 @@ namespace VirtualPark.BusinessLogic.Test.Incidences.Entity;
 [TestCategory("Incidence")]
 public class IncidenceTest
 {
+    #region Id
     [TestMethod]
     [TestCategory("Validation")]
-    public void Incidence_ShouldHaveNonEmptyId()
+    public void Incidence_WhenCreated_ShouldHaveNonEmptyId()
     {
         var incidence = new Incidence();
         incidence.Id.Should().NotBe(Guid.Empty);
     }
+    #endregion
 }

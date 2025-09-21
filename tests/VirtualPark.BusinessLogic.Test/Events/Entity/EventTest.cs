@@ -1,6 +1,5 @@
 using FluentAssertions;
-using VirtualPark.BusinessLogic.Attractions.Entity;
-using VirtualPark.BusinessLogic.Events;
+using VirtualPark.BusinessLogic.Events.Entity;
 
 namespace VirtualPark.BusinessLogic.Test.Events.Entity;
 
@@ -13,7 +12,7 @@ public sealed class EventTest
     [TestMethod]
     public void WhenEventIsCreated_IdIsAssigned()
     {
-        var newEvent = new EventTest();
+        var newEvent = new Event();
         newEvent.Id.Should().NotBe(Guid.Empty);
     }
     #endregion

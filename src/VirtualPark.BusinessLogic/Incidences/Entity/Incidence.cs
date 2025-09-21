@@ -6,6 +6,7 @@ public class Incidence
 {
     public Guid Id { get; }
     public TypeIncidence Type { get; set; } = null!;
+    public string Description { get; init; } = null!;
 
     public Incidence()
     {

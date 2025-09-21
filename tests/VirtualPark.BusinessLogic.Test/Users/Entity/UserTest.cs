@@ -95,6 +95,7 @@ public class UserTest
     }
     #endregion
 
+    #region  VisitorProfile
     [TestMethod]
     [TestCategory("Validation")]
     public void VisitorProfile_Getter_ReturnsAssignedValue()
@@ -113,4 +114,14 @@ public class UserTest
         user.VisitorProfile = visitorProfile;
         user.VisitorProfile.Should().Be(visitorProfile);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void VisitorProfileId_ShouldBeSettable()
+    {
+        var Id = Guid.NewGuid();
+        var user = new User { VisitorProfileId = Id };
+        user.VisitorProfileId.Should().Be(Id);
+    }
+    #endregion
 }

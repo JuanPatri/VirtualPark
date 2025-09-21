@@ -42,7 +42,7 @@ public class IncidenceTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Description_ShouldBeGettable()
+    public void Description_Getter_ReturnsAssignedValue()
     {
         var incidence = new Incidence { Description = "Description" };
         incidence.Description.Should().Be("Description");

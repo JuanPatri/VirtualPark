@@ -39,4 +39,12 @@ public class IncidenceTest
         incidence.Type.Should().Be(type);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Description_ShouldBeGettable()
+    {
+        var incidence = new Incidence { Description = "Description" };
+        incidence.Description.Should().Be("Description");
+    }
 }

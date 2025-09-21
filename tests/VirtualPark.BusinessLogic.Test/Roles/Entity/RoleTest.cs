@@ -44,5 +44,4 @@ public sealed class RoleTest
         role.Permissions.Should().NotBeNull();
         role.Permissions.Should().BeEmpty();
     }
-
 }

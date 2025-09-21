@@ -16,5 +16,6 @@ public sealed class EventTest
         newEvent.Id.Should().NotBe(Guid.Empty);
     }
     #endregion
+    #
 
 }

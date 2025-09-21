@@ -60,7 +60,7 @@ public sealed class EventTest
     }
 
     [TestMethod]
-    public void WhenAttractiomIsCreated_ListAttractioonIsEmpty()
+    public void WhenEventIsCreated_ListAttractioonIsEmpty()
     {
         var newEvent = new Event();
         newEvent.Attractions.Should().BeEmpty();

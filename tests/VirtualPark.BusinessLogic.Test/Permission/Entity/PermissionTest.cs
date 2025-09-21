@@ -24,4 +24,12 @@ public sealed class PermissionTest
         var permission = new Permission { Description = "Can create tickets" };
         permission.Description.Should().Be("Can create tickets");
     }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Key_SetterGetter_ShouldReturnAssignedValue()
+    {
+        var permission = new Permission { Key = "CREATE_TICKET" };
+        permission.Key.Should().Be("CREATE_TICKET");
+    }
 }

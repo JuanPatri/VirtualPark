@@ -28,5 +28,15 @@ public class IncidenceTest
         var incidence = new Incidence { Type = type };
         incidence.Type.Should().Be(type);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Type_shouldBeSettable()
+    {
+        var type = new TypeIncidence();
+        var incidence = new Incidence();
+        incidence.Type = type;
+        incidence.Type.Should().Be(type);
+    }
     #endregion
 }

@@ -31,7 +31,7 @@ public class IncidenceTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Type_shouldBeSettable()
+    public void Type_Setter_ReturnsAssignedValue()
     {
         var type = new TypeIncidence();
         var incidence = new Incidence();

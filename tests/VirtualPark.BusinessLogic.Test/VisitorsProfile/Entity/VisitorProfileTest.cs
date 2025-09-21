@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Visitors.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
 namespace VirtualPark.BusinessLogic.Test.VisitorsProfile.Entity;
@@ -37,7 +38,7 @@ public class VisitorProfileTest
     [TestCategory("Validation")]
     public void Memership_shouldBeGettable()
     {
-        var visitorProfile = new VisitorProfile() { Membership = VisitorProfile.Membership.Estandar };
-        visitorProfile.Membership.Should().Be(VisitorProfile.Membership.Estandar);
+        var visitorProfile = new VisitorProfile() { Membership = Membership.Standard};
+        visitorProfile.Membership.Should().Be(Membership.Standard);
     }
 }

@@ -18,4 +18,14 @@ public class TypeIncidenceTest
     }
     #endregion
 
+    #region Type
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Type_shouldBeGettable()
+    {
+        var typeIncidence = new TypeIncidence() { Type = "Repair" };
+        typeIncidence.Type.Should().Be("Repair");
+    }
+    #endregion
+
 }

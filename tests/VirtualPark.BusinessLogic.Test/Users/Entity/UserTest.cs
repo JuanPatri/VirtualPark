@@ -126,7 +126,7 @@ public class UserTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void VisitorProfileId_ShouldBeSettable()
+    public void VisitorProfileId_Setter_ReturnsAssignedValue()
     {
         var id = Guid.NewGuid();
         var user = new User();

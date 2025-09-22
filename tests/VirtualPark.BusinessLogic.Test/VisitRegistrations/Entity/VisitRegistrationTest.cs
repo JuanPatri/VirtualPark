@@ -1,3 +1,5 @@
+using FluentAssertions;
+using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 namespace VirtualPark.BusinessLogic.Test.VisitRegistrations.Entity;
 
 [TestClass]
@@ -5,6 +7,7 @@ namespace VirtualPark.BusinessLogic.Test.VisitRegistrations.Entity;
 [TestCategory("VisitRegistration")]
 public sealed class VisitRegistrationTest
 {
+    #region Id
     [TestMethod]
     [TestCategory("Constructor")]
     public void Constructor_WhenVisitRegistrationIsCreated_ShouldAssignId()
@@ -12,4 +15,15 @@ public sealed class VisitRegistrationTest
         var visit = new VisitRegistration();
         visit.Id.Should().NotBe(Guid.Empty);
     }
+    #endregion
+
+    #region Date
+    [TestMethod]
+    [TestCategory("Constructor")]
+    public void Constructor_WhenVisitRegistrationIsCreated_ShouldInitializeDate()
+    {
+        var visit = new VisitRegistration();
+        visit.Date.Should().NotBe(default);
+    }
+    #endregion
 }

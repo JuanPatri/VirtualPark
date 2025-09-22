@@ -1,19 +1,18 @@
-using System;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace VirtualPark.DataAccess.Test;
 
 [TestClass]
-[TestCategory("Repository")]
-public class RepositoryTest
+[TestCategory("GenericRepository")]
+public class GenericRepositoryTest
 {
     private readonly DbContext _context = SqliteInMemoryDbContext.BuildTestDbContext();
-    private readonly Repository _repository;
+    private readonly GenericRepository<EntityTest> _genericRepository;
 
-    public RepositoryTest()
+    public GenericRepositoryTest()
     {
-        _repository = new Repository<EntityTest>(_context);
+        _genericRepository = new GenericRepository<EntityTest>(_context);
     }
 
     [TestInitialize]
@@ -37,7 +36,7 @@ public class RepositoryTest
         _context.Set<EntityTest>().AddRange(e1, e2);
         _context.SaveChanges();
 
-        var result = _repository.GetAll();
+        var result = _genericRepository.GetAll();
 
         result.Should().NotBeNull();
         result.Should().HaveCount(2);

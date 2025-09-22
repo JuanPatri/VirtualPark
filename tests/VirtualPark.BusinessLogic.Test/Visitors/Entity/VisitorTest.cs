@@ -84,4 +84,14 @@ public class VisitorTest
         visitor.Score.Should().Be(0);
     }
     #endregion
+
+    #region Membership
+    [TestMethod]
+    [TestCategory("Constructor")]
+    public void Membership_WhenVisitorIsCreated_ShouldBeStandardByDefault()
+    {
+        var visitor = new Visitor();
+
+        visitor.Membership.Should().Be(Membership.Standard);
+    }
 }

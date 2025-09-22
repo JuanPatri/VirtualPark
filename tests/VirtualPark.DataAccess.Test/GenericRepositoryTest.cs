@@ -28,7 +28,7 @@ public class GenericRepositoryTest
     }
 
     [TestMethod]
-    public void GetAll_Ok()
+    public void GetAll__WhenEntitiesExist__ReturnsAll()
     {
         var e1 = new EntityTest { Id = Guid.NewGuid().ToString() };
         var e2 = new EntityTest { Id = Guid.NewGuid().ToString() };

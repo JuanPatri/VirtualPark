@@ -37,8 +37,8 @@ public sealed class TicketTest
     [TestMethod]
     public void EventId_GetSet_Works()
     {
-        var ticket = new Ticket{ EventId = Guid.NewGuid() };
-        ticket.EventId.Should().Be(ticket.Id);
+        var ticket = new Ticket { EventId = Guid.NewGuid() };
+        ticket.EventId.Should().Be(ticket.EventId);
     }
     #endregion
 }

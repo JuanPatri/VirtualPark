@@ -27,6 +27,7 @@ public class GenericRepositoryTest
         _context.Database.EnsureDeleted();
     }
 
+    #region Success
     [TestMethod]
     public void GetAll_WhenEntitiesExist_ReturnsAll()
     {
@@ -45,7 +46,7 @@ public class GenericRepositoryTest
     }
 
     [TestMethod]
-    public void GetAll_Ok()
+    public void GetAll_WithPredicate_ReturnsFilteredById()
     {
         var e1 = new EntityTest { Id = Guid.NewGuid().ToString() };
         var e2 = new EntityTest { Id = Guid.NewGuid().ToString() };
@@ -60,6 +61,7 @@ public class GenericRepositoryTest
         result.Should().ContainEquivalentOf(e1);
         result.Should().NotContainEquivalentOf(e2);
     }
+    #endregion
 }
 
 internal sealed class TestDbContext : DbContext

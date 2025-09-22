@@ -6,4 +6,5 @@ public class Visitor
     public string Name { get; set; } = null!;
     public object LastName { get; set; } = null!;
     public object Email { get; set; } = null!;
+    public object PasswordHash { get; set; } = null!;
 }

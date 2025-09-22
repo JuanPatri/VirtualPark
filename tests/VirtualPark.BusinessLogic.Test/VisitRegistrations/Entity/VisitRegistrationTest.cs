@@ -26,7 +26,7 @@ public sealed class VisitRegistrationTest
         visit.Date.Should().NotBe(default);
     }
     #endregion
-    
+
     #region Attractions
     [TestMethod]
     [TestCategory("Constructor")]

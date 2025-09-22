@@ -94,4 +94,5 @@ public class VisitorTest
 
         visitor.Membership.Should().Be(Membership.Standard);
     }
+    #endregion
 }

@@ -9,4 +9,5 @@ public class Visitor
     public object PasswordHash { get; set; } = null!;
     public DateTime DateOfBirth { get; set; }
     public object Score { get; set; } = 0;
+    public Membership Membership { get; set; } = Membership.Standard;
 }

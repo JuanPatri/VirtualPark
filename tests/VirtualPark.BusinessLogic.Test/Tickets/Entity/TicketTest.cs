@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Tickets;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 
 namespace VirtualPark.BusinessLogic.Test.Tickets.Entity;
@@ -25,10 +26,11 @@ public sealed class TicketTest
     }
     #endregion
     #region Type
+    [TestMethod]
     public void Type_GetSet_Works()
     {
         var ticket = new Ticket { Type = EntranceType.General };
-        ticket.Type().Should().Be(EntranceType.General);
+        ticket.Type.Should().Be(EntranceType.General);
     }
     #endregion
 }

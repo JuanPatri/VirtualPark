@@ -33,4 +33,12 @@ public sealed class TicketTest
         ticket.Type.Should().Be(EntranceType.General);
     }
     #endregion
+    #region Event
+    [TestMethod]
+    public void EventId_GetSet_Works()
+    {
+        var ticket = new Ticket{ EventId = Guid.NewGuid() };
+        ticket.EventId.Should().Be(ticket.Id);
+    }
+    #endregion
 }

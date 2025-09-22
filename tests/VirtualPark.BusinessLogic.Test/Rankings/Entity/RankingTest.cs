@@ -17,7 +17,6 @@ public class RankingTest
     }
     #endregion
     #region Date
-
     [TestMethod]
     public void Date_GetSet_Works()
     {
@@ -25,5 +24,13 @@ public class RankingTest
         ranking.Date.Should().Be(new DateTime(2000, 1, 1));
     }
 
+    #endregion
+    #region Ranking
+    [TestMethod]
+    public void WhenRankingIsCreated_ListEntriesIsAssigned()
+    {
+        var ranking = new Ranking();
+        ranking.Entries.Should().NotBeNull();
+    }
     #endregion
 }

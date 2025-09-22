@@ -50,4 +50,15 @@ public class VisitorTest
         visitor.Email.Should().Be("john.doe@mail.com");
     }
     #endregion
+
+    #region Password
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void PasswordHash_WhenAssigned_ShouldBeStored()
+    {
+        var visitor = new Visitor { PasswordHash = "8743b52063cd84097a65d" };
+
+        visitor.PasswordHash.Should().Be("8743b52063cd84097a65d");
+    }
+    #endregion
 }

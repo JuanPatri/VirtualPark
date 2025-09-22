@@ -27,6 +27,7 @@ public class GenericRepositoryTest
         _context.Database.EnsureDeleted();
     }
 
+    #region GetAll
     #region Success
     [TestMethod]
     public void GetAll_WhenEntitiesExist_ReturnsAll()
@@ -63,8 +64,9 @@ public class GenericRepositoryTest
     }
     #endregion
 
+    #region Failure
     [TestMethod]
-    public void GetAll_failed()
+    public void GetAll_WithPredicateNoMatch_ReturnsEmptyList()
     {
         var e1 = new EntityTest { Id = Guid.NewGuid().ToString() };
         var e2 = new EntityTest { Id = Guid.NewGuid().ToString() };
@@ -78,6 +80,8 @@ public class GenericRepositoryTest
         result.Should().NotBeNull();
         result.Should().BeEmpty("no entity matches the predicate");
     }
+    #endregion
+    #endregion
 }
 
 internal sealed class TestDbContext : DbContext

@@ -16,4 +16,14 @@ public class RankingTest
         ranking.Id.Should().NotBe(Guid.Empty);
     }
     #endregion
+    #region Date
+
+    [TestMethod]
+    public void Date_GetSet_Works()
+    {
+        var ranking = new Ranking { Date = new DateTime(2000, 1, 1)};
+        ranking.Date.Should().Be(new DateTime(2000, 1, 1));
+    }
+
+    #endregion
 }

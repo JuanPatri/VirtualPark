@@ -12,7 +12,7 @@ public class UserRoleTest
     #region  UserId
     [TestMethod]
     [TestCategory("Validation")]
-    public void UserRole_UserIdshoulBeGettable()
+    public void UserRole_GetterUserId_ReturnsAssignedValue()
     {
         User user = new User();
         var userRole = new UserRole { UserId = user.Id };

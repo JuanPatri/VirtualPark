@@ -9,4 +9,5 @@ public class Incidence
     public string Description { get; set; } = null!;
     public DateTime Start { get; set; }
     public DateTime End { get; set; }
+    public Guid AttractionId { get; set; }
 }

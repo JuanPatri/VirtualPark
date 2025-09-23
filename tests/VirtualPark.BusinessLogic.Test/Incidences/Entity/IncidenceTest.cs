@@ -76,8 +76,8 @@ public class IncidenceTest
     [TestCategory("Validation")]
     public void Attraction_GetterSetter_ReturnsAssignedValue()
     {
-        var incidence = new Incidence { Attraction = Guid.NewGuid() };
-        incidence.Attraction.Should().Be(incidence.Attraction);
+        var incidence = new Incidence { AttractionId = Guid.NewGuid() };
+        incidence.AttractionId.Should().Be(incidence.AttractionId);
     }
     #endregion
 }

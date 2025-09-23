@@ -55,8 +55,8 @@ public class IncidenceTest
     [TestCategory("Validation")]
     public void Start_GetterSetter_ReturnsAssignedValue()
     {
-        var incidence = new Incidence { Sart = DateTime.Now };
-        incidence.Start.Should().Be(incidence.Sart);
+        var incidence = new Incidence { Start = DateTime.Now };
+        incidence.Start.Should().Be(incidence.Start);
     }
     #endregion
 }

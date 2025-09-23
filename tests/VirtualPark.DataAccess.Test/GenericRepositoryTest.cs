@@ -193,8 +193,10 @@ public class GenericRepositoryTest
     #endregion
     #endregion
 
+    #region Delete
+    #region Success
     [TestMethod]
-    public void Remove_oka()
+    public void Remove_ExistingEntity_DeletesSuccessfully()
     {
         var entity = new EntityTest { Id = Guid.NewGuid().ToString() };
         _context.Set<EntityTest>().Add(entity);
@@ -206,13 +208,12 @@ public class GenericRepositoryTest
 
         result.Should().BeNull();
     }
+    #endregion
+    #endregion
 }
 
-internal sealed class TestDbContext : DbContext
+internal sealed class TestDbContext(DbContextOptions<TestDbContext> options) : DbContext(options)
 {
-    public TestDbContext(DbContextOptions<TestDbContext> options)
-        : base(options) { }
-
     public DbSet<EntityTest> EntitiesTest => Set<EntityTest>();
 }
 

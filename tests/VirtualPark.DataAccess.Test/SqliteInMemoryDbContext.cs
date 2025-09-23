@@ -9,7 +9,7 @@ public class SqliteInMemoryDbContext
 
     internal static TestDbContext BuildTestDbContext()
     {
-        if (_connection.State != System.Data.ConnectionState.Open)
+        if(_connection.State != System.Data.ConnectionState.Open)
         {
             _connection.Open();
         }

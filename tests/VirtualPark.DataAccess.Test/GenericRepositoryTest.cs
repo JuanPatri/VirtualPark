@@ -118,6 +118,8 @@ public class GenericRepositoryTest
     #endregion
     #endregion
 
+    #region Add
+    #region Success
     [TestMethod]
     public void Add_NewEntity_PersistsInDatabase()
     {
@@ -131,6 +133,8 @@ public class GenericRepositoryTest
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(entity);
     }
+    #endregion
+    #endregion
 }
 
 internal sealed class TestDbContext : DbContext

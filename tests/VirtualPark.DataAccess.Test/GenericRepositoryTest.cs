@@ -136,6 +136,7 @@ public class GenericRepositoryTest
     #endregion
     #endregion
 
+    #region Exist
     #region Success
     [TestMethod]
     public void Exist_WithMatchingPredicate__ReturnsTrue()
@@ -152,8 +153,9 @@ public class GenericRepositoryTest
     }
     #endregion
 
+    #region Failure
     [TestMethod]
-    public void Exist_Failed()
+    public void Exist_WithNonMatchingPredicate_ReturnsFalse()
     {
         var e1 = new EntityTest { Id = Guid.NewGuid().ToString() };
         var e2 = new EntityTest { Id = Guid.NewGuid().ToString() };
@@ -167,6 +169,8 @@ public class GenericRepositoryTest
 
         result.Should().BeFalse();
     }
+    #endregion
+    #endregion
 }
 
 internal sealed class TestDbContext : DbContext

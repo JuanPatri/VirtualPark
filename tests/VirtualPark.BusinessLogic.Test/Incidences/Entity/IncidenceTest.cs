@@ -40,11 +40,23 @@ public class IncidenceTest
     }
     #endregion
 
+    #region Description
     [TestMethod]
     [TestCategory("Validation")]
-    public void Description_Getter_ReturnsAssignedValue()
+    public void Description_GetterSetter_ReturnsAssignedValue()
     {
         var incidence = new Incidence { Description = "Description" };
         incidence.Description.Should().Be("Description");
     }
+    #endregion
+    #region Start
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Start_GetterSetter_ReturnsAssignedValue()
+    {
+        var incidence = new Incidence { Sart = DateTime.Now };
+        incidence.Start.Should().Be(incidence.Sart);
+    }
+    #endregion
 }

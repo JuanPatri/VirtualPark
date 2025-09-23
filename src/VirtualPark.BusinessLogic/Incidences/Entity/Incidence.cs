@@ -6,6 +6,6 @@ public class Incidence
 {
     public Guid Id { get; init; } = Guid.NewGuid();
     public TypeIncidence Type { get; set; } = null!;
-    public string Description { get; init; } = null!;
+    public string Description { get; set; } = null!;
     public DateTime Start { get; set; }
 }

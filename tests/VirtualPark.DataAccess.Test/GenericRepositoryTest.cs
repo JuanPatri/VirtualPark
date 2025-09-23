@@ -175,19 +175,18 @@ public class GenericRepositoryTest
     [TestMethod]
     public void Update_Success()
     {
-        var entity = new EntityTest { Id = Guid.NewGuid().ToString() };
+        var entity = new EntityTest { Id = Guid.NewGuid().ToString(), Name = "Old" };
         _context.Set<EntityTest>().Add(entity);
         _context.SaveChanges();
 
-        var updatedEntity = new EntityTest { Id = entity.Id };
-        _genericRepository.Update(updatedEntity);
-        _context.SaveChanges();
+        entity.Name = "New";
+        _genericRepository.Update(entity);
 
         var result = _context.Set<EntityTest>().Find(entity.Id);
 
         result.Should().NotBeNull();
         result!.Id.Should().Be(entity.Id);
-        result.Should().BeEquivalentTo(updatedEntity);
+        result.Name.Should().Be("New");
     }
 }
 
@@ -202,4 +201,5 @@ internal sealed class TestDbContext : DbContext
 internal sealed record class EntityTest
 {
     public string Id { get; init; } = Guid.NewGuid().ToString();
+
 }

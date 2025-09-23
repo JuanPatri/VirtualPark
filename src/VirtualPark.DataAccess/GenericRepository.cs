@@ -40,7 +40,9 @@ public sealed class GenericRepository<T>(DbContext context) : IRepository<T>
 
     public void Update(T entity)
     {
-        throw new NotImplementedException();
+        _entities.Update(entity);
+
+        _context.SaveChanges();
     }
 
     public void Delete(T entity)

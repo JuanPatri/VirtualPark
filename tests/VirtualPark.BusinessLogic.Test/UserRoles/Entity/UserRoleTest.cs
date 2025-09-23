@@ -31,6 +31,7 @@ public class UserRoleTest
     }
     #endregion
 
+    #region  RoleId
     [TestMethod]
     [TestCategory("Validation")]
     public void UserRole_GetterRoleId_ReturnsAssignedValue()
@@ -42,11 +43,12 @@ public class UserRoleTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void UserRole_RoleIdShouldBeSettable()
+    public void UserRole_SetterRoleId_ReturnsAssignedValue()
     {
         Role role = new Role();
         var userRole = new UserRole();
         userRole.RoleId = role.Id;
         userRole.RoleId.Should().Be(role.Id);
     }
+    #endregion
 }

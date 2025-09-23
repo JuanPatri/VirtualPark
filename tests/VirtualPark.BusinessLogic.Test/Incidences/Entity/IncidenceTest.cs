@@ -1,4 +1,3 @@
-using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Incidences.Entity;
 using VirtualPark.BusinessLogic.TypeIncidences.Entity;

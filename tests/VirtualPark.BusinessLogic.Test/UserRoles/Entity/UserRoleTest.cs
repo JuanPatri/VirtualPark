@@ -21,7 +21,7 @@ public class UserRoleTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void UserRole_UserIdShouldBeSettable()
+    public void UserRole_setterUserId_ReturnsAssignedValue()
     {
         User user = new User();
         var userRole = new UserRole();

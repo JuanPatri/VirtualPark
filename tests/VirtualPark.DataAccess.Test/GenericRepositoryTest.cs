@@ -135,6 +135,20 @@ public class GenericRepositoryTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    public void Exist_oka()
+    {
+        var e1 = new EntityTest { Id = Guid.NewGuid().ToString() };
+        var e2 = new EntityTest { Id = Guid.NewGuid().ToString() };
+
+        _context.Set<EntityTest>().AddRange(e1, e2);
+        _context.SaveChanges();
+
+        var result = _genericRepository.Exist(x => x.Id == e1.Id);
+
+        result.Should().BeTrue();
+    }
 }
 
 internal sealed class TestDbContext : DbContext

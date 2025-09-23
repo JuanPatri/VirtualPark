@@ -1,3 +1,4 @@
+using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Incidences.Entity;
 using VirtualPark.BusinessLogic.TypeIncidences.Entity;
@@ -67,6 +68,16 @@ public class IncidenceTest
     {
         var incidence = new Incidence { End = DateTime.Now };
         incidence.End.Should().Be(incidence.End);
+    }
+    #endregion
+    #region Attraction
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Attraction_GetterSetter_ReturnsAssignedValue()
+    {
+        var incidence = new Incidence { Attraction = Guid.NewGuid() };
+        incidence.Attraction.Should().Be(incidence.Attraction);
     }
     #endregion
 }

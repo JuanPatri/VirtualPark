@@ -8,4 +8,5 @@ public class Incidence
     public TypeIncidence Type { get; set; } = null!;
     public string Description { get; set; } = null!;
     public DateTime Start { get; set; }
+    public DateTime End { get; set; }
 }

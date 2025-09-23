@@ -48,7 +48,7 @@ public class RankingTest
     public void Period_GetSet_Works()
     {
         var ranking = new Ranking { Period = Period.Daily };
-        ranking.Date.Should().Be(Period.Daily);
+        ranking.Period.Should().Be(Period.Daily);
     }
     #endregion
 }

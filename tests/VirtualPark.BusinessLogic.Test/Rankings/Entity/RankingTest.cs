@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Rankings;
 using VirtualPark.BusinessLogic.Rankings.Entity;
 
 namespace VirtualPark.BusinessLogic.Test.Rankings.Entity;
@@ -39,6 +40,15 @@ public class RankingTest
     {
         var ranking = new Ranking();
         ranking.Entries.Should().BeEmpty();
+    }
+    #endregion
+    #region Period
+
+    [TestMethod]
+    public void Period_GetSet_Works()
+    {
+        var ranking = new Ranking { Period = Period.Daily };
+        ranking.Date.Should().Be(Period.Daily);
     }
     #endregion
 }

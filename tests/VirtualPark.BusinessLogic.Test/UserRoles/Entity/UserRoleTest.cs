@@ -39,4 +39,14 @@ public class UserRoleTest
         var userRole = new UserRole { RoleId = role.Id };
         userRole.RoleId.Should().Be(role.Id);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void UserRole_RoleIdShouldBeSettable()
+    {
+        Role role = new Role();
+        var userRole = new UserRole();
+        userRole.RoleId = role.Id;
+        userRole.RoleId.Should().Be(role.Id);
+    }
 }

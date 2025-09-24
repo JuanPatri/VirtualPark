@@ -1,3 +1,6 @@
+using FluentAssertions;
+using VirtualPark.BusinessLogic.Events.Models;
+
 namespace VirtualPark.BusinessLogic.Test.Events.Modules;
 
 [TestClass]
@@ -5,9 +8,10 @@ namespace VirtualPark.BusinessLogic.Test.Events.Modules;
 [TestCategory("EventsArgsTest")]
 public class EventsArgsTest
 {
+    [TestMethod]
     public void Name_Getter_ReturnsAssignedValue()
     {
         var eventsArgs = new EventsArgs("Halloween");
-        EventArgs.Should().Be("Halloween");
+        eventsArgs.Name.Should().Be("Halloween");
     }
 }

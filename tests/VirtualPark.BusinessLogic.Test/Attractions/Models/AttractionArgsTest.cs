@@ -14,7 +14,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Type_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
         attractionArgs.Type.Should().Be("RollerCoaster");
     }
     #endregion
@@ -24,7 +24,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Name_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
         attractionArgs.Name.Should().Be("The Big Bang");
     }
     #endregion
@@ -34,7 +34,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void MiniumAge_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
         attractionArgs.MiniumAge.Should().Be(13);
     }
     #endregion
@@ -43,7 +43,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Capacity_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
         attractionArgs.Capacity.Should().Be(500);
     }
     #endregion
@@ -53,7 +53,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Description_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
         attractionArgs.Description.Should().Be("Description");
     }
     #endregion
@@ -63,8 +63,18 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void CurrentVisitor_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
         attractionArgs.CurrentVisitor.Should().Be(50);
+    }
+    #endregion
+    #region Available
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Available_Getter_ReturnsAssignedValue()
+    {
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
+        attractionArgs.Available.Should().BeTrue();
     }
     #endregion
 }

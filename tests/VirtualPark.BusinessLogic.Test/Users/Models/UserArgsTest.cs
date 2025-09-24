@@ -50,12 +50,14 @@ public class UserArgsTest
     }
     #endregion
 
+    #region VisitorProfile
     [TestMethod]
     [TestCategory("Validation")]
-    public void VisitorProfile_shouldbegettable()
+    public void VisitorProfile_Getter_ReturnsAssignedValue()
     {
         var visitorProfileArgs = new VisitorProfileArgs("2002-07-30", "Standard");
         var userArgs = new UserArgs { VisitorProfile = visitorProfileArgs };
         userArgs.VisitorProfile.Should().Be(visitorProfileArgs);
     }
+    #endregion
 }

@@ -110,4 +110,18 @@ public class UserArgsTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_error()
+    {
+        var invalidPassword = "Password123";
+
+        var act = () => new UserArgs("Pepe", "Perez", "pepe.perez@mail.com", invalidPassword);
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage("*Password must be at least 8 characters long*")
+            .And.ParamName.Should().Be("password");
+    }
 }

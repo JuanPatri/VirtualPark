@@ -23,4 +23,16 @@ public sealed class QrTest
         qr.IdentifyVisitor().Should().Be(visitor);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void NfcId_WhenCreatedWithVisitor_ShouldMatchVisitorsNfcId()
+    {
+        var visitor = new Visitor();
+        var ticket = new Ticket { Visitor = visitor };
+
+        var qr = new Qr(ticket);
+
+        qr.QrId.Should().Be(ticket.QrId);
+    }
 }

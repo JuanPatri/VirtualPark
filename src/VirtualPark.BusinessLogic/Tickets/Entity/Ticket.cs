@@ -9,4 +9,5 @@ public sealed class Ticket
     public EntranceType Type { get; set; }
     public Guid EventId { get; set; }
     public Visitor Visitor { get; set; } = null!;
+    public Guid QrId { get; set; } = Guid.NewGuid();
 }

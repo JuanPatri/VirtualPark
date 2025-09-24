@@ -6,7 +6,6 @@ namespace VirtualPark.BusinessLogic.ViaAccess.Entity;
 public class Qr : IViaAccess
 {
     private readonly Ticket _ticket;
-
     public Qr(Ticket ticket)
     {
         _ticket = ticket;

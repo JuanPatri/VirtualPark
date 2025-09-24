@@ -26,7 +26,7 @@ public class UserArgs
             throw new ArgumentException($"Invalid email format: {email}", nameof(email));
         }
 
-        var regex = new Regex(@".{8,}$");
+        var regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$");
         var isNotValid = !regex.IsMatch(password);
         if (isNotValid)
         {

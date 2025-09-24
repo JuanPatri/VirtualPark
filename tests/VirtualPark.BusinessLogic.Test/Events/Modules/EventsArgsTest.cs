@@ -11,6 +11,7 @@ public class EventsArgsTest
     #region Name
     #region Success
     [TestMethod]
+    [TestCategory("Validation")]
     public void Name_Getter_ReturnsAssignedValue()
     {
         var eventsArgs = new EventsArgs("Halloween", "2002-07-30");
@@ -20,6 +21,7 @@ public class EventsArgsTest
 
     #region Failure
     [TestMethod]
+    [TestCategory("Validation")]
     [DataRow(null)]
     [DataRow("")]
     [DataRow(" ")]
@@ -36,6 +38,7 @@ public class EventsArgsTest
 
     #region Success
     [TestMethod]
+    [TestCategory("Validation")]
     public void DateOfBirth_Getter_ReturnsAssignedValue()
     {
         var eventArgs = new EventsArgs("Halloween",  "2002-07-30");

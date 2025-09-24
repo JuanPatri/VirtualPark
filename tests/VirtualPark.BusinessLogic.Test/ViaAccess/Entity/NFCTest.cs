@@ -21,6 +21,7 @@ public sealed class NfcTest
     }
     #endregion
 
+    #region NfcId
     [TestMethod]
     [TestCategory("Behaviour")]
     public void NfcId_WhenCreatedWithVisitor_ShouldMatchVisitorsNfcId()
@@ -31,4 +32,5 @@ public sealed class NfcTest
 
         nfc.NfcId.Should().Be(visitor.NfcId);
     }
+    #endregion
 }

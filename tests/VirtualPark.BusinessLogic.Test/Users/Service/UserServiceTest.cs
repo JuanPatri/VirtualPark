@@ -44,4 +44,27 @@ public class UserServiceTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    public void CreateUser_Success()
+    {
+        var args = new UserArgs("Pepe", "Perez", "pepe@mail.com", "Password123!");
+
+        _usersRepositoryMock
+            .Setup(r => r.Exist(u => u.Email == args.Email))
+            .Returns(false);
+
+        _usersRepositoryMock
+            .Setup(r => r.Add(It.Is<User>(u =>
+                u.Name == args.Name &&
+                u.LastName == args.LastName &&
+                u.Email == args.Email &&
+                u.Password == args.Password)));
+
+        var result = _userService.Create(args);
+
+        result.Should().NotBeEmpty();
+
+        _usersRepositoryMock.VerifyAll();
+    }
 }

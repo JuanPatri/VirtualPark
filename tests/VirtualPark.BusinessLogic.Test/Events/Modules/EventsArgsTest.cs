@@ -131,4 +131,14 @@ public class EventsArgsTest
             .Throw<ArgumentOutOfRangeException>()
             .WithParameterName("cost");
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Attractions_Getter_ReturnsAssignedValues()
+    {
+        var attractions = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+        var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 100, 500, attractions);
+
+        eventsArgs.Attractions.Should().BeEquivalentTo(attractions);
+    }
 }

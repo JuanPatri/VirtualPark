@@ -5,7 +5,7 @@ namespace VirtualPark.BusinessLogic.Test.Validations;
 
 [TestClass]
 [TestCategory("Validations")]
-public class ValidationTest
+public class ValidationServicesTest
 {
     [TestMethod]
     [TestCategory("Validations")]

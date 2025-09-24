@@ -14,7 +14,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Type_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description");
         attractionArgs.Type.Should().Be("RollerCoaster");
     }
     #endregion
@@ -24,7 +24,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Name_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description");
         attractionArgs.Name.Should().Be("The Big Bang");
     }
     #endregion
@@ -34,7 +34,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void MiniumAge_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description");
         attractionArgs.MiniumAge.Should().Be(13);
     }
     #endregion
@@ -43,8 +43,18 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Capacity_Getter_ReturnsAssignedValue()
     {
-        var attractionsArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description");
         attractionsArgs.Capacity.Should().Be(500);
+    }
+    #endregion
+    #region Description
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Description_Getter_ReturnsAssignedValue()
+    {
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description");
+        attractionArgs.Description.Should().Be("Description");
     }
     #endregion
 }

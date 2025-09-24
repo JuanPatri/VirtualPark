@@ -8,5 +8,5 @@ public class UserArgs
     public string LastName { get; init; } = null!;
     public string Email { get; init; } = null!;
     public string Password { get; init; } = null!;
-    public VisitorProfileArgs? VisitorProfile { get; init; }
+    public VisitorProfileArgs? VisitorProfile { get; set; }
 }

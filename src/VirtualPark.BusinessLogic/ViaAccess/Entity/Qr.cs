@@ -3,19 +3,11 @@ using VirtualPark.BusinessLogic.Visitors.Entity;
 
 namespace VirtualPark.BusinessLogic.ViaAccess.Entity;
 
-public class Qr : IViaAccess
+public sealed class Qr(Ticket ticket) : IViaAccess
 {
-    private readonly Ticket _ticket;
-    public Qr(Ticket ticket)
-    {
-        _ticket = ticket;
-        QrId = ticket.QrId;
-    }
+    private readonly Ticket _ticket = ticket;
 
-    public Guid QrId { get; }
+    public Guid QrId { get; } = ticket.QrId;
 
-    public Visitor IdentifyVisitor()
-    {
-        return _ticket.Visitor;
-    }
+    public Visitor IdentifyVisitor() => _ticket.Visitor;
 }

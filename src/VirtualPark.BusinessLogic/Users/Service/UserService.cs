@@ -21,7 +21,7 @@ public class UserService(IRepository<User> userRepository)
     private void ValidateEmail(UserArgs args)
     {
         var isEmailTaken = _userRepository.Exist(u => u.Email == args.Email);
-        if (isEmailTaken)
+        if(isEmailTaken)
         {
             throw new InvalidOperationException("Email already exists");
         }

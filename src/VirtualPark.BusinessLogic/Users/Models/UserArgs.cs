@@ -4,22 +4,13 @@ using VirtualPark.BusinessLogic.VisitorsProfile.Models;
 
 namespace VirtualPark.BusinessLogic.Users.Models;
 
-public class UserArgs
+public class UserArgs(string name, string lastName, string email, string password)
 {
-    public string Name { get; init; } = null!;
-    public string LastName { get; init; } = null!;
-    public string Email { get; init; } = null!;
-    public string Password { get; init; } = null!;
+    public string Name { get; init; } = name;
+    public string LastName { get; init; } = lastName;
+    public string Email { get; init; } = ValidateEmail(email);
+    public string Password { get; init; } = ValidatePassword(password);
     public VisitorProfileArgs? VisitorProfile { get; set; }
-
-    public UserArgs(string name, string lastName, string email, string password)
-    {
-        Name = name;
-        LastName = lastName;
-
-        Email = ValidateEmail(email);
-        Password = ValidatePassword(password);
-    }
 
     private static string ValidateEmail(string email)
     {
@@ -39,12 +30,11 @@ public class UserArgs
         var regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$");
 
         var isNotValid = !regex.IsMatch(password);
-        if (isNotValid)
+        if(isNotValid)
         {
             throw new ArgumentException(
                 "Password must be at least 8 characters long and contain uppercase, lowercase, digit, and special character.",
-                nameof(password)
-            );
+                nameof(password));
         }
 
         return password;

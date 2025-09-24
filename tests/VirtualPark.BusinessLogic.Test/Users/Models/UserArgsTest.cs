@@ -1,5 +1,4 @@
 using FluentAssertions;
-using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.Users.Models;
 using VirtualPark.BusinessLogic.VisitorsProfile.Models;
 

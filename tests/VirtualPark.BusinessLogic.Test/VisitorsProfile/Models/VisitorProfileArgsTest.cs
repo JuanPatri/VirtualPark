@@ -15,7 +15,7 @@ public class VisitorProfileArgsTest
     [TestCategory("Validation")]
     public void DateOfBirth_Getter_ReturnsAssignedValue()
     {
-        var visitorProfileArgs = new VisitorProfileArgs("2002-07-30", "Standard" );
+        var visitorProfileArgs = new VisitorProfileArgs("2002-07-30", "Standard");
         visitorProfileArgs.DateOfBirth.Should().Be(new DateOnly(2002, 07, 30));
     }
     #endregion

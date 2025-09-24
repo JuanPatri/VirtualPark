@@ -120,4 +120,15 @@ public class EventsArgsTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_WithNegativeCost_ThrowsArgumentException()
+    {
+        var act = () => new EventsArgs("Halloween", "2025-12-30", 100, -200);
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage("Invalid cost: must be greater than zero");
+    }
 }

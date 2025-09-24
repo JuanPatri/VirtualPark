@@ -33,7 +33,7 @@ public class VisitorProfileArgsTest
     [TestCategory("Validation")]
     public void Constructor_failed()
     {
-        var act = () => new VisitorProfileArgs("2002-07-30", "Standard");
+        var act = () => new VisitorProfileArgs("2002/07/30", "Standard");
 
         act.Should()
             .Throw<ArgumentException>()

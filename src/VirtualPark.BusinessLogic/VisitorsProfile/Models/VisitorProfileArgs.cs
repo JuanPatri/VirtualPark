@@ -9,7 +9,15 @@ public class VisitorProfileArgs
 
     public VisitorProfileArgs(string dateOfBirth, string membership)
     {
-        DateOfBirth = DateOnly.Parse(dateOfBirth);
+        if (!DateOnly.TryParseExact(dateOfBirth, "yyyy-MM-dd", out var parsedDate))
+        {
+            throw new ArgumentException(
+                $"Invalid date format: {dateOfBirth}. Expected format is yyyy-MM-dd",
+                nameof(dateOfBirth)
+            );
+        }
+
+        DateOfBirth = parsedDate;
         Membership = Enum.Parse<Membership>(membership, ignoreCase: true);;
     }
 }

@@ -95,5 +95,17 @@ public class EventsArgsTest
         eventsArgs.Capacity.Should().Be(100);
     }
     #endregion
+    #region Failure
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_WithNegativeCapacity_ThrowsArgumentException()
+    {
+        var act = () => new EventsArgs("Halloween", "2025-12-30", -10);
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage("Invalid capacity: must be greater than zero");
+    }
+    #endregion
     #endregion
 }

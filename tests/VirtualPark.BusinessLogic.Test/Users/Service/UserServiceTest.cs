@@ -24,7 +24,7 @@ public class UserServiceTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Create__WhenEmailAlreadyExists__ThrowsInvalidOperationException()
+    public void Create_failure()
     {
         var args = new UserArgs("Pepe", "Perez", "pepe@mail.com", "Password123!");
 

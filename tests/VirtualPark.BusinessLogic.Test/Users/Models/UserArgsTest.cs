@@ -95,7 +95,7 @@ public class UserArgsTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Constructor__WithInvalidPassword__ThrowsArgumentException()
+    public void Constructor_error()
     {
         var invalidPassword = "pass";
 

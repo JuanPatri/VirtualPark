@@ -108,4 +108,12 @@ public class EventsArgsTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Cost_Getter_ReturnsAssignedValue()
+    {
+        var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 100, 500);
+        eventsArgs.Cost.Should().Be(500);
+    }
 }

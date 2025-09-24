@@ -8,11 +8,13 @@ namespace VirtualPark.BusinessLogic.Test.Users.Models;
 [TestCategory("UserArgs")]
 public class UserArgsTest
 {
+    #region Name
     [TestMethod]
     [TestCategory("Validation")]
-    public void Name_shouldBeGettable()
+    public void Name_Getter_ReturnsAssignedValue()
     {
         var userArgs = new UserArgs { Name = "Pepe" };
         userArgs.Name.Should().Be("Pepe");
     }
+    #endregion
 }

@@ -14,7 +14,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Type_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang");
         attractionArgs.Type.Should().Be("RollerCoaster");
     }
     #endregion

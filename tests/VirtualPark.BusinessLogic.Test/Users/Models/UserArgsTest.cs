@@ -17,4 +17,12 @@ public class UserArgsTest
         userArgs.Name.Should().Be("Pepe");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void LastName_ShouldBeGettable()
+    {
+        var userArgs = new UserArgs { LastName = "Perez" };
+        userArgs.LastName.Should().Be("Perez");
+    }
 }

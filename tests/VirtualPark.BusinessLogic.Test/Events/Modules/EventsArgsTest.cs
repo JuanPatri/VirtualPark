@@ -103,8 +103,8 @@ public class EventsArgsTest
         var act = () => new EventsArgs("Halloween", "2025-12-30", -10);
 
         act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Invalid capacity: must be greater than zero");
+            .Throw<ArgumentOutOfRangeException>()
+            .WithParameterName("capacity");
     }
     #endregion
     #endregion

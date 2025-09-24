@@ -4,7 +4,14 @@ public sealed class EventsArgs(string name, string date, int capacity)
 {
     public string Name { get; init; } = ValidateName(name);
     public DateOnly Date { get; init; } = ValidateEventDate(date);
-    public int Capacity { get; set; } = capacity;
+    public int Capacity { get; set; } = ValidateCapacity(capacity);
+
+    private static int ValidateCapacity(int capacity)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(capacity);
+
+        return capacity;
+    }
 
     private static string ValidateName(string name)
     {

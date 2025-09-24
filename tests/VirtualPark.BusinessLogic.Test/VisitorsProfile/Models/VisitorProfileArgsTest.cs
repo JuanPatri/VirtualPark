@@ -19,11 +19,13 @@ public class VisitorProfileArgsTest
     }
     #endregion
 
+    #region Membership
     [TestMethod]
     [TestCategory("Validation")]
-    public void Membership_ShouldBeGettable()
+    public void Membership_Getter_ReturnsAssignedValue()
     {
         var visitorProfileArgs = new VisitorProfileArgs { Membership = Membership.Standard };
         visitorProfileArgs.Membership.Should().Be(Membership.Standard);
     }
+    #endregion
 }

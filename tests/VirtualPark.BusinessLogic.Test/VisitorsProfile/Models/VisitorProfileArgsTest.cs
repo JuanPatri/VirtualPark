@@ -28,4 +28,16 @@ public class VisitorProfileArgsTest
         visitorProfileArgs.Membership.Should().Be(Membership.Standard);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_failed()
+    {
+        var act = () => new VisitorProfileArgs("2002-07-30", "Standard");
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage("*Invalid date format*")
+            .And.ParamName.Should().Be("dateOfBirth");
+    }
 }

@@ -60,4 +60,14 @@ public class UserArgsTest
         userArgs.VisitorProfile.Should().Be(visitorProfileArgs);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void VisitorProfile_shouldBeSettable()
+    {
+        var visitorProfileArgs = new VisitorProfileArgs("2002-07-30", "Standard");
+        var userArgs = new UserArgs();
+        userArgs.VisitorProfile = visitorProfileArgs;
+        userArgs.VisitorProfile.Should().Be(visitorProfileArgs);
+    }
 }

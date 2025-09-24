@@ -74,4 +74,18 @@ public class UserArgsTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_InvalidEmail()
+    {
+        var invalidEmail = "pepe.perez";
+
+        var act = () => new UserArgs("Pepe", "Perez", invalidEmail, "Password123!");
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage($"*{invalidEmail}*")
+            .And.ParamName.Should().Be("email");
+    }
 }

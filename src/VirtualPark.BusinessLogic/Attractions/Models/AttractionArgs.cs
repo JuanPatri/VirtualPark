@@ -1,3 +1,3 @@
 namespace VirtualPark.BusinessLogic.Attractions.Models;
 
-public sealed record AttractionArgs(string Type, string Name, int MiniumAge) { }
+public sealed record AttractionArgs(string Type, string Name, int MiniumAge, int Capacity) { }

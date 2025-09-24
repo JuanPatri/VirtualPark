@@ -15,6 +15,18 @@ public class UserService(IRepository<User> userRepository)
             throw new InvalidOperationException("Email already exists");
         }
 
-        return Guid.NewGuid();
+        var user = new User
+        {
+            Name = args.Name,
+            LastName = args.LastName,
+            Email = args.Email,
+            Password = args.Password,
+
+            // hacer craete de visitor profile
+            // y rolelist
+        };
+
+        _userRepository.Add(user);
+        return user.Id;
     }
 }

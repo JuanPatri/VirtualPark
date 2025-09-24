@@ -9,7 +9,10 @@ public class Nfc : IViaAccess
     public Nfc(Visitor visitor)
     {
         _visitor = visitor;
+        NfcId = _visitor.NfcId;
     }
+
+    public Guid NfcId { get; set; }
 
     public Visitor IdentifyVisitor()
     {

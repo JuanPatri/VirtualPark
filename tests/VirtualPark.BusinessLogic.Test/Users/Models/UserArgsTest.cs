@@ -27,4 +27,12 @@ public class UserArgsTest
         userArgs.LastName.Should().Be("Perez");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Email_shouldBeGettable()
+    {
+        var userArgs = new UserArgs { Email = "pepeperez@gmail.com" };
+        userArgs.Email.Should().Be("pepeperez@gmail.com");
+    }
 }

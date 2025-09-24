@@ -1,3 +1,4 @@
+using FluentAssertions;
 using VirtualPark.BusinessLogic.Attractions.Models;
 
 namespace VirtualPark.BusinessLogic.Test.Attractions.Models;
@@ -6,4 +7,15 @@ namespace VirtualPark.BusinessLogic.Test.Attractions.Models;
 [TestCategory("Models")]
 [TestCategory("Attractions")]
 [TestCategory("AttractionsArgs")]
-public class AttractionArgsTest {}
+public class AttractionArgsTest
+{
+    #region Type
+
+    [TestMethod]
+    public void Type_Getter_ReturnsAssignedValue()
+    {
+        var attractionArgs = new AttractionArgs { Type = "RollerCoaster" };
+        attractionArgs.GetType().Should().Be("RollerCoaster");
+    }
+    #endregion
+}

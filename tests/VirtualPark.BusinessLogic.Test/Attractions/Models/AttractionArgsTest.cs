@@ -39,7 +39,6 @@ public class AttractionArgsTest
     }
     #endregion
     #region Capacity
-
     [TestMethod]
     [TestCategory("Validation")]
     public void Capacity_Getter_ReturnsAssignedValue()
@@ -48,4 +47,5 @@ public class AttractionArgsTest
         attractionsArgs.Capacity.Should().Be(500);
     }
     #endregion
+    
 }

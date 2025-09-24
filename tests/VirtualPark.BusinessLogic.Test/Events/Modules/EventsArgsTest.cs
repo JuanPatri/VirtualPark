@@ -67,6 +67,6 @@ public class EventsArgsTest
 
         act.Should()
             .Throw<ArgumentException>()
-            .WithMessage("Date cannot be in the past or future");
+            .WithMessage("Event date cannot be in the past");
     }
 }

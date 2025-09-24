@@ -24,6 +24,11 @@ public sealed class EventsArgs(string name, string date)
             throw new ArgumentException("Invalid event date format. Expected yyyy-MM-dd");
         }
 
+        if (parsedDate < DateOnly.FromDateTime(DateTime.UtcNow))
+        {
+            throw new ArgumentException("Event date cannot be in the past");
+        }
+
         return parsedDate;
     }
 }

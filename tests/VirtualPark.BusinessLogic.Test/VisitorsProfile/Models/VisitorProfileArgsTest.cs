@@ -14,7 +14,7 @@ public class VisitorProfileArgsTest
     [TestCategory("Validation")]
     public void DateOfBirth_Getter_ReturnsAssignedValue()
     {
-        var visitorProfileArgs = new VisitorProfileArgs { DateOfBirth = new DateOnly(2002, 07, 30) };
+        var visitorProfileArgs = new VisitorProfileArgs("2002-07-30", "Standard" );
         visitorProfileArgs.DateOfBirth.Should().Be(new DateOnly(2002, 07, 30));
     }
     #endregion
@@ -24,7 +24,7 @@ public class VisitorProfileArgsTest
     [TestCategory("Validation")]
     public void Membership_Getter_ReturnsAssignedValue()
     {
-        var visitorProfileArgs = new VisitorProfileArgs { Membership = Membership.Standard };
+        var visitorProfileArgs = new VisitorProfileArgs("2002-07-30", "Standard");
         visitorProfileArgs.Membership.Should().Be(Membership.Standard);
     }
     #endregion

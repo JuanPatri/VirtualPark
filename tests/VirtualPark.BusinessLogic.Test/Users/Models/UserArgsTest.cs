@@ -37,4 +37,12 @@ public class UserArgsTest
         userArgs.Email.Should().Be("pepeperez@gmail.com");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Password_ShouldBeGettable()
+    {
+        var userArgs = new UserArgs { Password = "Password123." };
+        userArgs.Password.Should().Be("Password123.");
+    }
 }

@@ -16,17 +16,28 @@ public class UserArgs
     {
         Name = name;
         LastName = lastName;
+
+        Email = ValidateEmail(email);
+        Password = ValidatePassword(password);
+    }
+
+    private static string ValidateEmail(string email)
+    {
         try
         {
             var ok = new MailAddress(email);
-            Email = email;
+            return email;
         }
         catch
         {
             throw new ArgumentException($"Invalid email format: {email}", nameof(email));
         }
+    }
 
+    private static string ValidatePassword(string password)
+    {
         var regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$");
+
         var isNotValid = !regex.IsMatch(password);
         if (isNotValid)
         {
@@ -36,6 +47,6 @@ public class UserArgs
             );
         }
 
-        Password = password;
+        return password;
     }
 }

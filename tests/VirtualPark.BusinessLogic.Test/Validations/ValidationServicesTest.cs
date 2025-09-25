@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.Validations.Services;
 
 namespace VirtualPark.BusinessLogic.Test.Validations;
@@ -130,6 +131,21 @@ public class ValidationServicesTest
         act.Should()
             .Throw<FormatException>()
             .WithMessage("The value 'abc' is not a valid GUID.");
+    }
+
+    #endregion
+    #region ParseAttractionTypeEnum
+    [DataTestMethod]
+    [DataRow("RollerCoaster", AttractionType.RollerCoaster)]
+    [DataRow("rollercoaster", AttractionType.RollerCoaster)]
+    [DataRow(" SIMULATOR ", AttractionType.Simulator)]
+    [DataRow("show", AttractionType.Show)]
+    public void ValidateAndParseAttractionType_ShouldReturnEnum_WhenValueIsValid(
+        string input, AttractionType expected)
+    {
+        var result = ValidationServices.ValidateAndParseAttractionType(input);
+
+        Assert.AreEqual(expected, result);
     }
     #endregion
 }

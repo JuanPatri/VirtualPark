@@ -147,5 +147,18 @@ public class ValidationServicesTest
 
         Assert.AreEqual(expected, result);
     }
+
+    [TestMethod]
+    public void ValidateAndParseAttractionType_ShouldThrow_WhenValueIsUnknown()
+    {
+        var input = "FerrisWheel";
+
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
+        {
+            ValidationServices.ValidateAndParseAttractionType(input);
+        });
+
+        StringAssert.Contains(ex.Message, "not a valid AttractionType");
+    }
     #endregion
 }

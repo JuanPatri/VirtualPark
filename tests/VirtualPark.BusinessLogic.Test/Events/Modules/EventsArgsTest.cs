@@ -48,7 +48,6 @@ public class EventsArgsTest
     #endregion
 
     #region Failure
-    [TestCategory("Validation")]
     [TestMethod]
     [TestCategory("Validation")]
     public void EventsArgs_ShouldThrowArgumentException_WhenDateFormatIsInvalid()

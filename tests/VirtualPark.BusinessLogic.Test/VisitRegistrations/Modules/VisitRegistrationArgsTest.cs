@@ -8,6 +8,8 @@ namespace VirtualPark.BusinessLogic.Test.VisitRegistrations.Modules;
 [TestCategory("VisitRegistrationArgs")]
 public class VisitRegistrationArgsTest
 {
+    #region Date
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void Date_Getter_ReturnsAssignedValue()
@@ -15,4 +17,6 @@ public class VisitRegistrationArgsTest
         var visitRegistrationArgs = new VisitRegistrationArgs("2025-09-30");
         visitRegistrationArgs.Date.Should().Be("2025-09-30");
     }
+    #endregion
+    #endregion
 }

@@ -1,7 +1,9 @@
+using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Events.Models;
+using VirtualPark.BusinessLogic.Events.Services;
 using VirtualPark.Repository;
 
 [TestClass]

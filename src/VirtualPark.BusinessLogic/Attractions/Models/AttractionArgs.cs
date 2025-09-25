@@ -2,7 +2,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 
 namespace VirtualPark.BusinessLogic.Attractions.Models;
 
-public sealed class AttractionArgs(string type, string name, string miniumAge, string capacity, string description, string currentVisitor, string available, string[] events)
+public sealed class AttractionArgs(string type, string name, string miniumAge, string capacity, string description, string currentVisitor, string available)
 {
     public AttractionType Type { get; init; } = ValidationServices.ValidateAndParseAttractionType(type);
     public string Name { get; init; } = name;
@@ -11,5 +11,4 @@ public sealed class AttractionArgs(string type, string name, string miniumAge, s
     public string Description { get; init; } = description;
     public int CurrentVisitor { get; init; } = ValidationServices.ValidateAndParseInt(currentVisitor);
     public bool Available { get; init; } = ValidationServices.ValidateAndParseBool(available);
-    public List<Guid> Events { get; init; } = events.Select(ValidationServices.ValidateAndParseGuid).ToList();
 }

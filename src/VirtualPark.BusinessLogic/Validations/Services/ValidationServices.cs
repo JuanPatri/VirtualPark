@@ -66,5 +66,4 @@ public static class ValidationServices
 
         return result;
     }
-
 }

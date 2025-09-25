@@ -2,9 +2,9 @@ namespace VirtualPark.BusinessLogic.VisitRegistrations.Modules;
 
 public sealed class VisitRegistrationArgs(string date)
 {
-    public string Date { get; init; } = ValidateVisitDate(date);
+    public  DateOnly Date { get; init; } = ValidateVisitDate(date);
 
-    private static string ValidateVisitDate(string date)
+    private static DateOnly ValidateVisitDate(string date)
     {
         if(!DateOnly.TryParseExact(date, "yyyy-MM-dd", out var parsedDate))
         {
@@ -12,6 +12,12 @@ public sealed class VisitRegistrationArgs(string date)
                 $"Invalid date format: {date}. Expected format is yyyy-MM-dd");
         }
 
-        return date;
+        if(parsedDate < DateOnly.FromDateTime(DateTime.UtcNow))
+        {
+            throw new ArgumentException(
+                $"Invalid event date: {parsedDate:yyyy-MM-dd}. Event date cannot be in the past");
+        }
+
+        return parsedDate;
     }
 }

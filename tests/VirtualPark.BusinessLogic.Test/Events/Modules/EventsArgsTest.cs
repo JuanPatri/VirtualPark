@@ -46,7 +46,7 @@ public class EventsArgsTest
     public void DateOfBirth_Getter_ReturnsAssignedValue()
     {
         var attractions = new List<Attraction> { new Attraction() };
-        var eventArgs = new EventsArgs("Halloween",  "2025-12-30", 50, 200, attractions);
+        var eventArgs = new EventsArgs("Halloween", "2025-12-30", 50, 200, attractions);
         eventArgs.Date.Should().Be(new DateOnly(2025, 12, 30));
     }
     #endregion
@@ -62,7 +62,7 @@ public class EventsArgsTest
         Action act = () =>
         {
             var attractions = new List<Attraction> { new Attraction() };
-            var eventsArgs = new EventsArgs("Halloween", invalidDate, 50, 200,  attractions);
+            var eventsArgs = new EventsArgs("Halloween", invalidDate, 50, 200, attractions);
         };
 
         act.Should()
@@ -81,7 +81,7 @@ public class EventsArgsTest
         Action act = () =>
         {
             var attractions = new List<Attraction> { new Attraction() };
-            var eventsArgs = new EventsArgs("Halloween", invalidDate, 50, 200,  attractions);
+            var eventsArgs = new EventsArgs("Halloween", invalidDate, 50, 200, attractions);
         };
 
         act.Should()
@@ -108,7 +108,7 @@ public class EventsArgsTest
     public void Constructor_WithNegativeCapacity_ThrowsArgumentException()
     {
         var attractions = new List<Attraction> { new Attraction() };
-        var act = () => new EventsArgs("Halloween", "2025-12-30", -10, 200,  attractions);
+        var act = () => new EventsArgs("Halloween", "2025-12-30", -10, 200, attractions);
 
         act.Should()
             .Throw<ArgumentOutOfRangeException>()
@@ -135,7 +135,7 @@ public class EventsArgsTest
     public void Constructor_WithNegativeCost_ThrowsArgumentException()
     {
         var attractions = new List<Attraction> { new Attraction() };
-        var act = () => new EventsArgs("Halloween", "2025-12-30", 100, -200,  attractions);
+        var act = () => new EventsArgs("Halloween", "2025-12-30", 100, -200, attractions);
 
         act.Should()
             .Throw<ArgumentOutOfRangeException>()

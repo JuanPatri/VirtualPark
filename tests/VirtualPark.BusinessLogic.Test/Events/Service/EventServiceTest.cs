@@ -36,4 +36,27 @@ public sealed class EventServiceTest
         _repositoryMock.Verify(r => r.Add(It.IsAny<Event>()), Times.Once);
     }
     #endregion
+
+    #region Create
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Create_ShouldCallRepositoryAddWithMappedEntity()
+    {
+        var attractions = new List<Attraction> { new Attraction { Id = Guid.NewGuid(), Name = "Ferris Wheel" } };
+        var args = new EventsArgs("Christmas Party", "2025-12-24", 200, 1000, attractions);
+
+        Event? capturedEvent = null;
+        _repositoryMock.Setup(r => r.Add(It.IsAny<Event>()))
+            .Callback<Event>(e => capturedEvent = e);
+
+        var id = _service.Create(args);
+
+        capturedEvent.Should().NotBeNull();
+        capturedEvent!.Id.Should().Be(id);
+        capturedEvent.Name.Should().Be("Christmas Party");
+        capturedEvent.Capacity.Should().Be(200);
+        capturedEvent.Cost.Should().Be(1000);
+        capturedEvent.Attractions.Should().BeEquivalentTo(attractions);
+    }
+    #endregion
 }

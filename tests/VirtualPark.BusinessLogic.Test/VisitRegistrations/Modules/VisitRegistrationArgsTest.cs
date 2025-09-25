@@ -26,7 +26,7 @@ public class VisitRegistrationArgsTest
 
         Action act = () =>
         {
-            var eventsArgs = new VisitRegistrationArgs(invalidDate);
+            var visitRegistrationArgs = new VisitRegistrationArgs(invalidDate);
         };
 
         act.Should()

@@ -167,8 +167,20 @@ public class ValidationServicesTest
         string? input = null;
 
         var ex = Assert.ThrowsException<ArgumentException>(
-            (Action)(() => ValidationServices.ValidateAndParseAttractionType(input!))
-        );
+            (Action)(() => ValidationServices.ValidateAndParseAttractionType(input!)));
+
+        StringAssert.Contains(ex.Message, "cannot be null or empty");
+    }
+
+    [DataTestMethod]
+    [DataRow("")]
+    [DataRow("   ")]
+    public void ValidateAndParseAttractionType_ShouldThrow_WhenValueIsEmptyOrWhitespace(string input)
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
+        {
+            ValidationServices.ValidateAndParseAttractionType(input);
+        });
 
         StringAssert.Contains(ex.Message, "cannot be null or empty");
     }

@@ -14,7 +14,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Type_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true",  new List<string> { "f3f0a7c6-2f2d-4b44-9b1f-3f3a4a6a9a10", "c8a0b0ef-9a4d-46d9-a3a0-2e5d0e32d4b1" });
         attractionArgs.Type.Should().Be("RollerCoaster");
     }
     #endregion
@@ -24,7 +24,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Name_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true",  new List<string> { "f3f0a7c6-2f2d-4b44-9b1f-3f3a4a6a9a10", "c8a0b0ef-9a4d-46d9-a3a0-2e5d0e32d4b1" });
         attractionArgs.Name.Should().Be("The Big Bang");
     }
     #endregion
@@ -34,7 +34,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void MiniumAge_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true",  new List<string> { "f3f0a7c6-2f2d-4b44-9b1f-3f3a4a6a9a10", "c8a0b0ef-9a4d-46d9-a3a0-2e5d0e32d4b1" });
         attractionArgs.MiniumAge.Should().Be(13);
     }
     #endregion
@@ -43,7 +43,7 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Capacity_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true",  new List<string> { "f3f0a7c6-2f2d-4b44-9b1f-3f3a4a6a9a10", "c8a0b0ef-9a4d-46d9-a3a0-2e5d0e32d4b1" });
         attractionArgs.Capacity.Should().Be(500);
     }
     #endregion
@@ -73,8 +73,18 @@ public class AttractionArgsTest
     [TestCategory("Validation")]
     public void Available_Getter_ReturnsAssignedValue()
     {
-        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true",  new List<string> { "f3f0a7c6-2f2d-4b44-9b1f-3f3a4a6a9a10", "c8a0b0ef-9a4d-46d9-a3a0-2e5d0e32d4b1" });
         attractionArgs.Available.Should().BeTrue();
+    }
+    #endregion
+    #region Events
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Events_Getter_ReturnsAssignedValue()
+    {
+        var attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true",  new List<string> { "f3f0a7c6-2f2d-4b44-9b1f-3f3a4a6a9a10", "c8a0b0ef-9a4d-46d9-a3a0-2e5d0e32d4b1" });
+        attractionArgs.Event.Should().NotBeNull().And.HaveCount(2).And.ContainInOrder(expectedEvents);
     }
     #endregion
 }

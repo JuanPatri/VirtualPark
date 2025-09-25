@@ -7,6 +7,7 @@ namespace VirtualPark.BusinessLogic.Test.Validations;
 [TestCategory("Validations")]
 public class ValidationServicesTest
 {
+    #region ParseInt
     [TestMethod]
     [TestCategory("Validations")]
     public void ParseToInt_WhenInputIsValid_ShouldReturnInteger()
@@ -40,6 +41,8 @@ public class ValidationServicesTest
             .Throw<FormatException>()
             .WithMessage("The value 'abc' is not a valid integer.");
     }
+    #endregion
+    #region ParseBool
 
     [TestClass]
     [TestCategory("Validations")]
@@ -89,4 +92,44 @@ public class ValidationServicesTest
                 .WithMessage("The value 'maybe' is not a valid boolean.");
         }
     }
+    #endregion
+    #region ParseGuid
+    [TestMethod]
+    [TestCategory("Validations")]
+    public void ValidateAndParseGuid_WhenInputIsValid_ShouldReturnGuid()
+    {
+        var input = "f3f0a7c6-2f2d-4b44-9b1f-3f3a4a6a9a10";
+        var expected = new Guid(input);
+
+        var result = ValidationServices.ValidateAndParseGuid(input);
+
+        result.Should().Be(expected);
+    }
+
+    [TestMethod]
+    [TestCategory("Validations")]
+    public void ValidateAndParseGuid_WhenInputIsNullOrEmpty_ShouldThrowArgumentException()
+    {
+       var input = string.Empty;
+
+        Action act = () => ValidationServices.ValidateAndParseGuid(input);
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage("Value cannot be null or empty.");
+    }
+
+    [TestMethod]
+    [TestCategory("Validations")]
+    public void ValidateAndParseGuid_WhenInputIsInvalid_ShouldThrowFormatException()
+    {
+        var input = "abc";
+
+        Action act = () => ValidationServices.ValidateAndParseGuid(input);
+
+        act.Should()
+            .Throw<FormatException>()
+            .WithMessage("The value 'abc' is not a valid GUID.");
+    }
+    #endregion
 }

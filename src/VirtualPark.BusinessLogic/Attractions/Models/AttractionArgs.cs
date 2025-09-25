@@ -2,7 +2,14 @@ using VirtualPark.BusinessLogic.Validations.Services;
 
 namespace VirtualPark.BusinessLogic.Attractions.Models;
 
-public sealed class AttractionArgs(string type, string name, string miniumAge, string capacity, string description, string currentVisitor, string available)
+public sealed class AttractionArgs(
+    string type,
+    string name,
+    string miniumAge,
+    string capacity,
+    string description,
+    string currentVisitor,
+    string available)
 {
     public string Type { get; init; } = type;
     public string Name { get; init; } = name;

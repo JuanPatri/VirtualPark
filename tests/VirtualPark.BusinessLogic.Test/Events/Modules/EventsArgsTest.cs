@@ -142,6 +142,8 @@ public class EventsArgsTest
             .WithParameterName("cost");
     }
 
+    #region Attractions
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void Attractions_Getter_ReturnsAssignedValues()
@@ -151,4 +153,6 @@ public class EventsArgsTest
 
         eventsArgs.Attractions.Should().BeEquivalentTo(attractions);
     }
+    #endregion
+    #endregion
 }

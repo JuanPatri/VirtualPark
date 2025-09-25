@@ -39,13 +39,11 @@ public static class ValidationServices
             throw new ArgumentException("Value cannot be null or empty.");
         }
 
-        try
-        {
-            return new Guid(value);
-        }
-        catch(Exception)
+        if(!Guid.TryParse(value, out var result))
         {
             throw new FormatException($"The value '{value}' is not a valid GUID.");
         }
+
+        return result;
     }
 }

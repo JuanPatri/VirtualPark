@@ -5,7 +5,7 @@ namespace VirtualPark.BusinessLogic.Test.Attractions.Models;
 
 [TestClass]
 [TestCategory("Models")]
-[TestCategory("Attractions")]
+[TestCategory("Attraction")]
 [TestCategory("AttractionsArgs")]
 public class AttractionArgsTest
 {

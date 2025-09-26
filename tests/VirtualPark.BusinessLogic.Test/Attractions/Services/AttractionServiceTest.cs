@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Attractions.Entity;
@@ -25,7 +26,6 @@ public class AttractionServiceTest
     }
 
     #region create
-
     [TestMethod]
     public void Create_WhenArgsAreValid_ShouldCreateAttraction()
     {
@@ -45,10 +45,22 @@ public class AttractionServiceTest
 
         var attraction = _attractionService.Create(_attractionArgs);
 
-        attraction.Should().NotBeEmpty();
+        attraction.Should().NotBeNull();
 
         _mockAttractionRepository.VerifyAll();
     }
+    #endregion
+    #region validationName
+    [TestCategory("Validation")]
+    [TestMethod]
+    public void Create_WhenNameIsEmpty_ShouldThrowException()
+    {
+        _mockAttractionRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(true);
 
+        Assert.ThrowsException<ArgumentException>(
+            () => _attractionService.ValidateAttractionName(string.Empty));
+    }
     #endregion
 }

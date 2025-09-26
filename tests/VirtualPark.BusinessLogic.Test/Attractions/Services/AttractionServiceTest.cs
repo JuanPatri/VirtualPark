@@ -51,8 +51,7 @@ public class AttractionServiceTest
                 a.Capacity == _attractionArgs.Capacity &&
                 a.Description == _attractionArgs.Description &&
                 a.CurrentVisitors == _attractionArgs.CurrentVisitor &&
-                a.Available == _attractionArgs.Available
-            )),
+                a.Available == _attractionArgs.Available)),
             Times.Once);
     }
 

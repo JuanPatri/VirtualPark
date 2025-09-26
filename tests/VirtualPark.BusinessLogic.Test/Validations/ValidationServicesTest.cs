@@ -111,7 +111,7 @@ public class ValidationServicesTest
     [TestCategory("Validations")]
     public void ValidateAndParseGuid_WhenInputIsNullOrEmpty_ShouldThrowArgumentException()
     {
-       var input = string.Empty;
+        var input = string.Empty;
 
         Action act = () => ValidationServices.ValidateAndParseGuid(input);
 
@@ -186,45 +186,45 @@ public class ValidationServicesTest
     }
     #endregion
     #region ValidateAge
-        [DataTestMethod]
-        [DataRow(1)]
-        [DataRow(18)]
-        [DataRow(50)]
-        [DataRow(99)]
-        public void ValidateAge_WhenAgeIsValid_ShouldNotThrow(int age)
-        {
-            Action act = () => ValidationServices.ValidateAge(age);
-            act.Should().NotThrow();
-        }
-
-        [TestMethod]
-        public void ValidateAge_WhenAgeIsZero_ShouldThrow()
-        {
-            Action act = () => ValidationServices.ValidateAge(0);
-
-            act.Should().Throw<ArgumentOutOfRangeException>()
-                .WithParameterName("age")
-                .WithMessage("*between 1 and 99*");
-        }
-
-        [DataTestMethod]
-        [DataRow(-1)]
-        [DataRow(-10)]
-        [DataRow(-100)]
-        public void ValidateAge_WhenAgeIsNegative_ShouldThrow(int age)
-        {
-            Action act = () => ValidationServices.ValidateAge(age);
-            act.Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        [DataTestMethod]
-        [DataRow(100)]
-        [DataRow(150)]
-        [DataRow(999)]
-        public void ValidateAge_WhenAgeIsGreaterThanOrEqual100_ShouldThrow(int age)
-        {
-            Action act = () => ValidationServices.ValidateAge(age);
-            act.Should().Throw<ArgumentOutOfRangeException>();
-        }
-        #endregion
+    [DataTestMethod]
+    [DataRow(1)]
+    [DataRow(18)]
+    [DataRow(50)]
+    [DataRow(99)]
+    public void ValidateAge_WhenAgeIsValid_ShouldNotThrow(int age)
+    {
+        Action act = () => ValidationServices.ValidateAge(age);
+        act.Should().NotThrow();
     }
+
+    [TestMethod]
+    public void ValidateAge_WhenAgeIsZero_ShouldThrow()
+    {
+        Action act = () => ValidationServices.ValidateAge(0);
+
+        act.Should().Throw<ArgumentOutOfRangeException>()
+            .WithParameterName("age")
+            .WithMessage("*between 1 and 99*");
+    }
+
+    [DataTestMethod]
+    [DataRow(-1)]
+    [DataRow(-10)]
+    [DataRow(-100)]
+    public void ValidateAge_WhenAgeIsNegative_ShouldThrow(int age)
+    {
+        Action act = () => ValidationServices.ValidateAge(age);
+        act.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [DataTestMethod]
+    [DataRow(100)]
+    [DataRow(150)]
+    [DataRow(999)]
+    public void ValidateAge_WhenAgeIsGreaterThanOrEqual100_ShouldThrow(int age)
+    {
+        Action act = () => ValidationServices.ValidateAge(age);
+        act.Should().Throw<ArgumentOutOfRangeException>();
+    }
+    #endregion
+}

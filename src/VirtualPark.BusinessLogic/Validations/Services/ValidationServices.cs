@@ -6,12 +6,12 @@ public static class ValidationServices
 {
     public static int ValidateAndParseInt(string number)
     {
-        if (string.IsNullOrWhiteSpace(number))
+        if(string.IsNullOrWhiteSpace(number))
         {
             throw new ArgumentException("Value cannot be null or empty.");
         }
 
-        if (!int.TryParse(number, out var result))
+        if(!int.TryParse(number, out var result))
         {
             throw new FormatException($"The value '{number}' is not a valid integer.");
         }
@@ -21,12 +21,12 @@ public static class ValidationServices
 
     public static bool ValidateAndParseBool(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if(string.IsNullOrWhiteSpace(value))
         {
             throw new ArgumentException("Value cannot be null or empty.");
         }
 
-        if (!bool.TryParse(value, out var result))
+        if(!bool.TryParse(value, out var result))
         {
             throw new FormatException($"The value '{value}' is not a valid boolean.");
         }
@@ -51,17 +51,16 @@ public static class ValidationServices
 
     public static AttractionType ValidateAndParseAttractionType(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if(string.IsNullOrWhiteSpace(value))
         {
             throw new ArgumentException("Attraction type cannot be null or empty.");
         }
 
-        if (!Enum.TryParse<AttractionType>(value, true, out var result))
+        if(!Enum.TryParse<AttractionType>(value, true, out var result))
         {
             throw new ArgumentException(
                 $"The value '{value}' is not a valid AttractionType. " +
-                $"Valid values are: {string.Join(", ", Enum.GetNames(typeof(AttractionType)))}"
-            );
+                $"Valid values are: {string.Join(", ", Enum.GetNames(typeof(AttractionType)))}");
         }
 
         return result;
@@ -69,7 +68,7 @@ public static class ValidationServices
 
     public static void ValidateAge(int age)
     {
-        if (age <= 0 || age >= 100)
+        if(age <= 0 || age >= 100)
         {
             throw new ArgumentOutOfRangeException(nameof(age), "Age must be between 1 and 99.");
         }

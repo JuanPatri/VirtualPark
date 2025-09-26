@@ -30,6 +30,10 @@ public class AttractionServiceTest
     public void Create_WhenArgsAreValid_ShouldCreateAttraction()
     {
         _mockAttractionRepository
+            .Setup(r => r.Exist(e => e.Name == _attractionArgs.Name))
+            .Returns(false);
+
+        _mockAttractionRepository
             .Setup(r => r.Add(It.Is<Attraction>(
                 a => a.Type == _attractionArgs.Type
                      && a.Name == _attractionArgs.Name
@@ -40,7 +44,10 @@ public class AttractionServiceTest
                      && a.Available == _attractionArgs.Available)));
 
         var attraction = _attractionService.Create(_attractionArgs);
-        attraction.Should()
+
+        attraction.Should().NotBeEmpty();
+
+        _mockAttractionRepository.VerifyAll();
     }
 
     #endregion

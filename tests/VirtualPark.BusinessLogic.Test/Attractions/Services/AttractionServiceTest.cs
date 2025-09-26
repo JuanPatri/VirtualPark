@@ -61,6 +61,24 @@ public class AttractionServiceTest
 
         Assert.ThrowsException<ArgumentException>(
             () => _attractionService.ValidateAttractionName(string.Empty));
+
+        _mockAttractionRepository.VerifyAll();
     }
+
+    [TestMethod]
+    public void Create_WhenNameValid_DontShouldThrowException()
+    {
+        _mockAttractionRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(false);
+
+        _mockAttractionRepository
+            .Setup(r => r.Add(It.IsAny<Attraction>())); // no devuelve nada, solo simula
+
+        Action act = () => _attractionService.Create(_attractionArgs);
+
+        act.Should().NotThrow();
+    }
+
     #endregion
 }

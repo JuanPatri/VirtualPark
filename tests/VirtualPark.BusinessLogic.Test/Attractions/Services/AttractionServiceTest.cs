@@ -51,7 +51,8 @@ public class AttractionServiceTest
                 a.Capacity == _attractionArgs.Capacity &&
                 a.Description == _attractionArgs.Description &&
                 a.CurrentVisitors == _attractionArgs.CurrentVisitor &&
-                a.Available == _attractionArgs.Available)),
+                a.Available == _attractionArgs.Available
+            )),
             Times.Once);
     }
 
@@ -97,6 +98,22 @@ public class AttractionServiceTest
 
         act.Should().NotThrow();
         _mockAttractionRepository.Verify(r => r.Add(It.IsAny<Attraction>()), Times.Once);
+    }
+
+    #endregion
+    #region MapToEntity
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void MapToEntity_WhenArgsAreValid_ShouldReturnAttractionEntity()
+    {
+        var attraction = _attractionService.MapToEntity(_attractionArgs);
+
+        attraction.Should().NotBeNull();
+        attraction.Should().BeEquivalentTo(_attractionArgs, options => options
+                .ExcludingMissingMembers()
+                .Excluding(a => a.Id)
+        );
     }
 
     #endregion

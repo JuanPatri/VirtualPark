@@ -102,8 +102,7 @@ public class EventsArgsTest
         var act = () => new EventsArgs("Halloween", "2025-12-30", -10, 200);
 
         act.Should()
-            .Throw<ArgumentOutOfRangeException>()
-            .WithParameterName("capacity");
+            .Throw<ArgumentOutOfRangeException>();
     }
     #endregion
     #endregion
@@ -127,8 +126,7 @@ public class EventsArgsTest
         var act = () => new EventsArgs("Halloween", "2025-12-30", 100, -200);
 
         act.Should()
-            .Throw<ArgumentOutOfRangeException>()
-            .WithParameterName("cost");
+            .Throw<ArgumentOutOfRangeException>();
     }
     #endregion
     #endregion

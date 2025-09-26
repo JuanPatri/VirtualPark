@@ -66,4 +66,12 @@ public static class ValidationServices
 
         return result;
     }
+
+    public static void ValidateAge(int age)
+    {
+        if (age <= 0 || age >= 100)
+        {
+            throw new ArgumentOutOfRangeException(nameof(age), "Age must be between 1 and 99.");
+        }
+    }
 }

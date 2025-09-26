@@ -107,12 +107,15 @@ public class AttractionServiceTest
     [TestCategory("Validation")]
     public void MapToEntity_WhenArgsAreValid_ShouldReturnAttractionEntity()
     {
+        _mockAttractionRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(false);
+
         var attraction = _attractionService.MapToEntity(_attractionArgs);
 
         attraction.Should().NotBeNull();
-        attraction.Should().BeEquivalentTo(_attractionArgs, options => options
-                .ExcludingMissingMembers()
-        );
+        attraction.Should().BeEquivalentTo(_attractionArgs, opt => opt
+            .ExcludingMissingMembers());
     }
 
     #endregion

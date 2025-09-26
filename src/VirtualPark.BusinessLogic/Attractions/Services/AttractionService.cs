@@ -10,18 +10,7 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
 
     public Attraction Create(AttractionArgs args)
     {
-        ValidateAttractionName(args.Name);
-
-        var attraction = new Attraction
-        {
-            Name = args.Name,
-            Type = args.Type,
-            Description = args.Description,
-            MiniumAge = args.MiniumAge,
-            Capacity = args.Capacity,
-            CurrentVisitors = args.CurrentVisitor,
-            Available = args.Available
-        };
+        var attraction = MapToEntity(args);
 
         _attractionRepository.Add(attraction);
 
@@ -43,6 +32,8 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
 
     public Attraction MapToEntity(AttractionArgs args)
     {
+        ValidateAttractionName(args.Name);
+
         var attraction = new Attraction
         {
             Name = args.Name,

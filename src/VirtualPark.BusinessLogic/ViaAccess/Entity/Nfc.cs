@@ -1,12 +1,12 @@
-using VirtualPark.BusinessLogic.Visitors.Entity;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
 namespace VirtualPark.BusinessLogic.ViaAccess.Entity;
 
 public class Nfc : IViaAccess
 {
-    private readonly Visitor _visitor;
+    private readonly VisitorProfile _visitor;
 
-    public Nfc(Visitor visitor)
+    public Nfc(VisitorProfile visitor)
     {
         _visitor = visitor;
         NfcId = _visitor.NfcId;
@@ -14,7 +14,7 @@ public class Nfc : IViaAccess
 
     public Guid NfcId { get; }
 
-    public Visitor IdentifyVisitor()
+    public VisitorProfile IdentifyVisitor()
     {
         return _visitor;
     }

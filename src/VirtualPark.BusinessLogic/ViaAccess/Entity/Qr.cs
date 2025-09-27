@@ -1,5 +1,5 @@
 using VirtualPark.BusinessLogic.Tickets.Entity;
-using VirtualPark.BusinessLogic.Visitors.Entity;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
 namespace VirtualPark.BusinessLogic.ViaAccess.Entity;
 
@@ -9,5 +9,5 @@ public sealed class Qr(Ticket ticket) : IViaAccess
 
     public Guid QrId { get; } = ticket.QrId;
 
-    public Visitor IdentifyVisitor() => _ticket.Visitor;
+    public VisitorProfile IdentifyVisitor() => _ticket.Visitor;
 }

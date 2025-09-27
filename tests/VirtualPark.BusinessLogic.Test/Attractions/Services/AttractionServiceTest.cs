@@ -285,4 +285,59 @@ public class AttractionServiceTest
         entity.Available.Should().Be(_attractionArgs.Available);
     }
     #endregion
+    #region Update
+    [TestMethod]
+    [TestCategory("Validations")]
+    public void Update_ShouldCopyAllPropertiesFromArgs_AndPersist()
+    {
+        var id = Guid.NewGuid();
+
+        var existing = new Attraction
+        {
+            Id = id,
+            Name = "Old name",
+            Type = AttractionType.RollerCoaster,
+            MiniumAge = 10,
+            Capacity = 100,
+            Description = "Old desc",
+            CurrentVisitors = 0,
+            Available = false
+        };
+
+        _mockAttractionRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(existing);
+
+        Attraction? updated = null;
+        _mockAttractionRepository
+            .Setup(r => r.Update(It.IsAny<Attraction>()))
+            .Callback<Attraction>(a => updated = a);
+
+        var args = new AttractionArgs(
+            type: "Simulator",
+            name: "Example Attraction",
+            miniumAge: "13",
+            capacity: "500",
+            description: "New description",
+            currentVisitor: "50",
+            available: "true"
+            );
+
+        _attractionService.Update(args, id);
+
+        updated.Should().NotBeNull();
+        updated!.Id.Should().Be(id);
+        updated.Name.Should().Be("Example Attraction");
+        updated.Type.Should().Be(AttractionType.Simulator);
+        updated.MiniumAge.Should().Be(13);
+        updated.Capacity.Should().Be(500);
+        updated.Description.Should().Be("New description");
+        updated.CurrentVisitors.Should().Be(50);
+        updated.Available.Should().BeTrue();
+
+        _mockAttractionRepository.Verify(r => r.Update(It.IsAny<Attraction>()), Times.Once);
+        _mockAttractionRepository.VerifyAll();
+    }
+
+    #endregion
 }

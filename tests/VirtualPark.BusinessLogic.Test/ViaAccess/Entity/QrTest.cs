@@ -2,6 +2,7 @@ using FluentAssertions;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.ViaAccess.Entity;
 using VirtualPark.BusinessLogic.Visitors.Entity;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
 namespace VirtualPark.BusinessLogic.Test.ViaAccess.Entity;
 
@@ -15,7 +16,7 @@ public sealed class QrTest
     [TestCategory("Behaviour")]
     public void IdentifyTicketVisitor_WhenCreatedWithTicket_ShouldReturnSameTicketVisitor()
     {
-        var visitor = new Visitor();
+        var visitor = new VisitorProfile();
         var ticket = new Ticket { Visitor = visitor };
 
         var qr = new Qr(ticket);
@@ -29,7 +30,7 @@ public sealed class QrTest
     [TestCategory("Behaviour")]
     public void NfcId_WhenCreatedWithVisitor_ShouldMatchVisitorsNfcId()
     {
-        var visitor = new Visitor();
+        var visitor = new VisitorProfile();
         var ticket = new Ticket { Visitor = visitor };
 
         var qr = new Qr(ticket);

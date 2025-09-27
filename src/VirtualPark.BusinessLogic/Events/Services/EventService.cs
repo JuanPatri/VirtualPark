@@ -42,11 +42,18 @@ public class EventService(IRepository<Event> eventrepository)
     {
         var ev = _eventRepository.Get(e => e.Id == id);
 
-        ev.Name     = args.Name;
-        ev.Date     = args.Date.ToDateTime(TimeOnly.MinValue);
-        ev.Capacity = args.Capacity;
-        ev.Cost     = args.Cost;
+        if(ev != null)
+        {
+            ApplyArgsToEntity(ev, args);
+            _eventRepository.Update(ev);
+        }
+    }
 
-        _eventRepository.Update(ev);
+    public static void ApplyArgsToEntity(Event entity, EventsArgs args)
+    {
+        entity.Name = args.Name;
+        entity.Date =  args.Date.ToDateTime(TimeOnly.MinValue);
+        entity.Capacity = args.Capacity;
+        entity.Cost = args.Cost;
     }
 }

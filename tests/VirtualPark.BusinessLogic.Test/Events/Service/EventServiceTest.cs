@@ -121,6 +121,7 @@ public sealed class EventServiceTest
     }
     #endregion
 
+    #region Update
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Update_WhenEventExists_ShouldApplyChangesAndPersist()
@@ -139,7 +140,6 @@ public sealed class EventServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(existing);
 
-        var attractionIds = new[] { Guid.NewGuid().ToString() };
         var args = new EventsArgs("New Name", "2026-01-10", 300, 1500);
 
         Event? captured = null;
@@ -158,4 +158,5 @@ public sealed class EventServiceTest
 
         _repositoryMock.Verify(r => r.Update(It.IsAny<Event>()), Times.Once);
     }
+    #endregion
 }

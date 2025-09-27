@@ -363,5 +363,24 @@ public class AttractionServiceTest
         _mockAttractionRepository.Verify(r => r.Remove(It.Is<Attraction>(a => a.Id == id)), Times.Once);
         _mockAttractionRepository.VerifyAll();
     }
+
+    [TestMethod]
+    public void Remove_WhenAttractionDoesNotExist_ShouldThrow_AndNotCallRemove()
+    {
+        var id = Guid.NewGuid();
+
+        _mockAttractionRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns((Attraction?)null);
+
+        Action act = () => _attractionService.Remove(id);
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage($"Attraction with id {id} not found.");
+
+        _mockAttractionRepository.Verify(r => r.Remove(It.IsAny<Attraction>()), Times.Never);
+        _mockAttractionRepository.VerifyAll();
+    }
     #endregion
 }

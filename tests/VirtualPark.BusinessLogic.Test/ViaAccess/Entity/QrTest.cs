@@ -1,7 +1,6 @@
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.ViaAccess.Entity;
-using VirtualPark.BusinessLogic.Visitors.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
 namespace VirtualPark.BusinessLogic.Test.ViaAccess.Entity;

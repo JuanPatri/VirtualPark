@@ -1,5 +1,4 @@
 using VirtualPark.BusinessLogic.Attractions.Entity;
-using VirtualPark.BusinessLogic.Visitors.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
 namespace VirtualPark.BusinessLogic.VisitRegistrations.Entity;

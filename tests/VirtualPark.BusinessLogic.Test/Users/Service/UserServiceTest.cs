@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.Users.Models;
 using VirtualPark.BusinessLogic.Users.Service;
@@ -13,13 +14,15 @@ namespace VirtualPark.BusinessLogic.Test.Users.Service;
 public class UserServiceTest
 {
     private Mock<IRepository<User>> _usersRepositoryMock = null!;
+    private Mock<IReadOnlyRepository<Role>> _rolesRepositoryMock = null!;
     private UserService _userService = null!;
 
     [TestInitialize]
     public void Initialize()
     {
         _usersRepositoryMock = new Mock<IRepository<User>>(MockBehavior.Strict);
-        _userService = new UserService(_usersRepositoryMock.Object);
+        _rolesRepositoryMock = new Mock<IReadOnlyRepository<Role>>(MockBehavior.Strict);
+        _userService = new UserService(_usersRepositoryMock.Object, _rolesRepositoryMock.Object);
     }
 
     #region Create
@@ -73,6 +76,32 @@ public class UserServiceTest
             .WithMessage("Email already exists");
 
         _usersRepositoryMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Create_WhenRoleDoesNotExist_ThrowsInvalidOperationException()
+    {
+        var id = Guid.NewGuid();
+        var roles = new List<string> { id.ToString() };
+        var args = new UserArgs("Ana", "Gomez", "ana@mail.com", "Password123!", roles);
+
+        _usersRepositoryMock
+            .Setup(r => r.Exist(u => u.Email == args.Email))
+            .Returns(false);
+
+        _rolesRepositoryMock
+            .Setup(r => r.Get(role => role.Id == id))
+            .Returns((Role?)null);
+
+        Action act = () => _userService.Create(args);
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("One or more roles do not exist");
+
+        _usersRepositoryMock.VerifyAll();
+        _rolesRepositoryMock.VerifyAll();
     }
     #endregion
     #endregion

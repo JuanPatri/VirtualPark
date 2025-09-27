@@ -33,7 +33,5 @@ public class UserService(IRepository<User> userRepository)
         LastName = args.LastName,
         Email = args.Email,
         Password = args.Password,
-
-        // crear visitor profile y role
     };
 }

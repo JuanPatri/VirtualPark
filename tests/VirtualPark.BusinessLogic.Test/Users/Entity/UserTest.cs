@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
@@ -133,5 +134,30 @@ public class UserTest
         user.VisitorProfileId = id;
         user.VisitorProfileId.Should().Be(id);
     }
+    #endregion
+
+    #region Roles
+    #region Get
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Roles_Getter_ReturnsAssignedValue()
+    {
+        var roles = new List<Role> { new Role { Name = "Admin" } };
+        var user = new User { Roles = roles };
+        user.Roles.Should().BeEquivalentTo(roles);
+    }
+    #endregion
+
+    #region Set
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Roles_Setter_ReturnsAssignedValue()
+    {
+        var roles = new List<Role> { new Role { Name = "Admin" } };
+        var user = new User();
+        user.Roles = roles;
+        user.Roles.Should().BeEquivalentTo(roles);
+    }
+    #endregion
     #endregion
 }

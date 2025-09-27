@@ -43,6 +43,7 @@ public class ValidationServicesTest
             .WithMessage("The value 'abc' is not a valid integer.");
     }
     #endregion
+
     #region ParseBool
 
     [TestClass]
@@ -94,6 +95,7 @@ public class ValidationServicesTest
         }
     }
     #endregion
+
     #region ParseGuid
     [TestMethod]
     [TestCategory("Validations")]
@@ -134,6 +136,7 @@ public class ValidationServicesTest
     }
 
     #endregion
+
     #region ParseAttractionTypeEnum
     [DataTestMethod]
     [DataRow("RollerCoaster", AttractionType.RollerCoaster)]
@@ -185,6 +188,7 @@ public class ValidationServicesTest
         StringAssert.Contains(ex.Message, "cannot be null or empty");
     }
     #endregion
+
     #region ValidateAge
     [DataTestMethod]
     [DataRow(1)]
@@ -226,5 +230,67 @@ public class ValidationServicesTest
         Action act = () => ValidationServices.ValidateAge(age);
         act.Should().Throw<ArgumentOutOfRangeException>();
     }
+    #endregion
+
+    #region ValidateEmail
+    #region Success
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ValidateEmail_WithValidEmail_ReturnsSameEmail()
+    {
+        var email = "test.user@mail.com";
+
+        var result = ValidationServices.ValidateEmail(email);
+
+        result.Should().Be(email);
+    }
+    #endregion
+
+    #region Failure
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ValidateEmail_WithInvalidEmail_ThrowsArgumentException()
+    {
+        var invalidEmail = "invalidEmail";
+
+        Action act = () => ValidationServices.ValidateEmail(invalidEmail);
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage($"*Invalid email format*")
+            .And.ParamName.Should().Be("email");
+    }
+    #endregion
+    #endregion
+
+    #region ValidatePassword
+    #region Success
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ValidatePassword_WithValidPassword_ReturnsSamePassword()
+    {
+        var password = "Password123!";
+
+        var result = ValidationServices.ValidatePassword(password);
+
+        result.Should().Be(password);
+    }
+    #endregion
+
+    #region Failure
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ValidatePassword_WithInvalidPassword_ThrowsArgumentException()
+    {
+        var invalidPassword = "pass";
+
+        Action act = () => ValidationServices.ValidatePassword(invalidPassword);
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage("*Password must be at least 8 characters long*")
+            .And.ParamName.Should().Be("password");
+    }
+    #endregion
     #endregion
 }

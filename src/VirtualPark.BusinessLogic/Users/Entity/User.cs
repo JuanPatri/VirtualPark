@@ -1,3 +1,4 @@
+using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
 namespace VirtualPark.BusinessLogic.Users.Entity;
@@ -11,6 +12,7 @@ public sealed class User
     public string Password { get; set; } = null!;
     public VisitorProfile? VisitorProfile { get; set; }
     public Guid? VisitorProfileId { get; set; }
+    public List<Role> Roles { get; set; } = null!;
 
     public User()
     {

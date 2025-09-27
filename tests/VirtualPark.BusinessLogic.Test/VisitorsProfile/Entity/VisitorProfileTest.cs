@@ -67,4 +67,13 @@ public class VisitorProfileTest
         visitorProfile.Score.Should().Be(0);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Constructor")]
+    public void NfcId_WhenVisitorIsCreated_ShouldNotBeEmpty()
+    {
+        var visitorProfile = new VisitorProfile();
+
+        visitorProfile.NfcId.Should().NotBe(Guid.Empty);
+    }
 }

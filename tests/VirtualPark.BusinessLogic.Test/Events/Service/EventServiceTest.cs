@@ -81,5 +81,19 @@ public sealed class EventServiceTest
         _repositoryMock.Verify(r => r.Remove(ev), Times.Once);
     }
     #endregion
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Remove_WhenEventDoesNotExist_ShouldThrowInvalidOperationException()
+    {
+        var id = Guid.NewGuid();
+        _repositoryMock.Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
+            .Returns((Event?)null);
+
+        Action act = () => _service.Remove(id);
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage($"Event with id {id} not found.");
+    }
     #endregion
 }

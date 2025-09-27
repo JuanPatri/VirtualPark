@@ -6,12 +6,12 @@ namespace VirtualPark.BusinessLogic.Events.Services;
 
 public class EventService(IRepository<Event> eventrepository)
 {
-    private readonly IRepository<Event> _Eventrepository = eventrepository;
+    private readonly IRepository<Event> _eventRepository = eventrepository;
 
     public Guid Create(EventsArgs args)
     {
         var entity = MapToEntity(args);
-        _Eventrepository.Add(entity);
+        _eventRepository.Add(entity);
         return entity.Id;
     }
 
@@ -22,8 +22,8 @@ public class EventService(IRepository<Event> eventrepository)
 
     public void Remove(Guid id)
     {
-        Event existingEvent = _Eventrepository.Get(a => a.Id == id) ??
+        Event existingEvent = _eventRepository.Get(a => a.Id == id) ??
                               throw new InvalidOperationException($"Event with id {id} not found.");
-        _Eventrepository.Remove(existingEvent);
+        _eventRepository.Remove(existingEvent);
     }
 }

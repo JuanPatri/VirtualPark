@@ -96,7 +96,6 @@ public class VisitorTest
     }
     #endregion
 
-    #region NfcId
     [TestMethod]
     [TestCategory("Constructor")]
     public void NfcId_WhenVisitorIsCreated_ShouldNotBeEmpty()
@@ -105,5 +104,4 @@ public class VisitorTest
 
         visitor.NfcId.Should().NotBe(Guid.Empty);
     }
-    #endregion
 }

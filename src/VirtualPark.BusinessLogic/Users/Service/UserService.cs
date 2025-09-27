@@ -1,20 +1,26 @@
 using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.Users.Models;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
+using VirtualPark.BusinessLogic.VisitorsProfile.Models;
+using VirtualPark.BusinessLogic.VisitorsProfile.Service;
 using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Users.Service;
 
-public class UserService(IRepository<User> userRepository, IReadOnlyRepository<Role> rolesRepository)
+public class UserService(IRepository<User> userRepository, IReadOnlyRepository<Role> rolesRepository, IVisitorProfile visitorProfileService)
 {
     private readonly IRepository<User> _userRepository = userRepository;
     private readonly IReadOnlyRepository<Role> _rolesRepository = rolesRepository;
+    private readonly IVisitorProfile _visitorProfileService = visitorProfileService;
 
     public Guid Create(UserArgs args)
     {
         ValidateEmail(args);
 
-        var user = MapToEntity(args);
+        var visitorProfile = CreateVisitorProfile(args.VisitorProfile);
+
+        var user = MapToEntity(args, visitorProfile);
 
         _userRepository.Add(user);
         return user.Id;
@@ -29,14 +35,26 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
         }
     }
 
-    private User MapToEntity(UserArgs args) => new User
+    private User MapToEntity(UserArgs args, VisitorProfile? visitorProfile) => new User
     {
         Name = args.Name,
         LastName = args.LastName,
         Email = args.Email,
         Password = args.Password,
-        Roles = GetRolesFromIds(args.RolesIds)
+        Roles = GetRolesFromIds(args.RolesIds),
+        VisitorProfile = visitorProfile,
+        VisitorProfileId = visitorProfile?.Id,
     };
+
+    private VisitorProfile? CreateVisitorProfile(VisitorProfileArgs? visitorArgs)
+    {
+        if (visitorArgs != null)
+        {
+            return _visitorProfileService.Create(visitorArgs);
+        }
+
+        return null;
+    }
 
     private List<Role> GetRolesFromIds(List<Guid> roleIds)
     {

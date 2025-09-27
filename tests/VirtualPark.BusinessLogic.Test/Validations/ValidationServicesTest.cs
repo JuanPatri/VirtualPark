@@ -228,9 +228,10 @@ public class ValidationServicesTest
     }
     #endregion
 
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
-    public void ValidateEmail_ok()
+    public void ValidateEmail_WithValidEmail_ReturnsSameEmail()
     {
         var email = "test.user@mail.com";
 
@@ -238,4 +239,5 @@ public class ValidationServicesTest
 
         result.Should().Be(email);
     }
+    #endregion
 }

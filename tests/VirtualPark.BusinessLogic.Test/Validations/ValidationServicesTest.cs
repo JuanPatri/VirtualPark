@@ -263,9 +263,10 @@ public class ValidationServicesTest
     #endregion
     #endregion
 
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
-    public void ValidatePassword_ok()
+    public void ValidatePassword_WithValidPassword_ReturnsSamePassword()
     {
         var password = "Password123!";
 
@@ -273,4 +274,5 @@ public class ValidationServicesTest
 
         result.Should().Be(password);
     }
+    #endregion
 }

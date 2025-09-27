@@ -153,7 +153,7 @@ public class AttractionServiceTest
     {
         _mockAttractionRepository
             .Setup(r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()))
-            .Returns(new List<Attraction>());
+            .Returns([]);
 
         var result = _attractionService.GetAll();
 
@@ -320,8 +320,7 @@ public class AttractionServiceTest
             capacity: "500",
             description: "New description",
             currentVisitor: "50",
-            available: "true"
-            );
+            available: "true");
 
         _attractionService.Update(args, id);
 

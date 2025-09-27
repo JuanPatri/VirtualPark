@@ -176,6 +176,7 @@ public class EventsArgsTest
     }
     #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenAttractionIdsContainEmptyGuid_ShouldThrowArgumentException()
@@ -187,5 +188,6 @@ public class EventsArgsTest
             .Throw<ArgumentException>()
             .WithMessage("Attractions list contains invalid Guid");
     }
+    #endregion
     #endregion
 }

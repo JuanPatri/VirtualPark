@@ -172,9 +172,10 @@ public class UserServiceTest
     #endregion
 
     #region Get
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
-    public void Get_ok()
+    public void Get_ShouldReturnUserWithVisitorProfile_WhenUserExists()
     {
         var vpId = Guid.NewGuid();
 
@@ -218,5 +219,6 @@ public class UserServiceTest
         _visitorProfileRepositoryMock.VerifyAll();
         _rolesRepositoryMock.VerifyNoOtherCalls();
     }
+    #endregion
     #endregion
 }

@@ -147,7 +147,7 @@ public sealed class EventServiceTest
             .Setup(r => r.Update(It.IsAny<Event>()))
             .Callback<Event>(e => captured = e);
 
-        _service.Update(id, args);
+        _service.Update(args, id);
 
         captured.Should().NotBeNull();
         captured!.Id.Should().Be(id);

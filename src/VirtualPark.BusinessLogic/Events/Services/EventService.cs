@@ -37,4 +37,16 @@ public class EventService(IRepository<Event> eventrepository)
 
         return _eventRepository.GetAll(predicate).ToList();
     }
+
+    public void Update(EventsArgs args, Guid id)
+    {
+        var ev = _eventRepository.Get(e => e.Id == id);
+
+        ev.Name     = args.Name;
+        ev.Date     = args.Date.ToDateTime(TimeOnly.MinValue);
+        ev.Capacity = args.Capacity;
+        ev.Cost     = args.Cost;
+
+        _eventRepository.Update(ev);
+    }
 }

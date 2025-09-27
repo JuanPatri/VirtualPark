@@ -103,7 +103,7 @@ public sealed class EventServiceTest
     #region GetAll
     #region Success
     [TestMethod]
-    public void GGetAll_WhenEventsExist_ShouldReturnAllEvents()
+    public void GetAll_WhenEventsExist_ShouldReturnAllEvents()
     {
         var ev1 = new Event { Id = Guid.NewGuid(), Name = "Halloween" };
         var ev2 = new Event { Id = Guid.NewGuid(), Name = "Christmas" };

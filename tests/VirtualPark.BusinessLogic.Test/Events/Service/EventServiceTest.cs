@@ -81,6 +81,8 @@ public sealed class EventServiceTest
         _repositoryMock.Verify(r => r.Remove(ev), Times.Once);
     }
     #endregion
+
+    #region Failure
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Remove_WhenEventDoesNotExist_ShouldThrowInvalidOperationException()
@@ -96,4 +98,23 @@ public sealed class EventServiceTest
             .WithMessage($"Event with id {id} not found.");
     }
     #endregion
+    #endregion
+
+    [TestMethod]
+    public void GetAll_ShouldReturnAllEvents()
+    {
+        var ev1 = new Event { Id = Guid.NewGuid(), Name = "Halloween" };
+        var ev2 = new Event { Id = Guid.NewGuid(), Name = "Christmas" };
+        var events = new List<Event> { ev1, ev2 };
+
+        _repositoryMock
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Event, bool>>>()))
+            .Returns(events);
+
+        var result = _service.GetAll();
+
+        result.Should().HaveCount(2);
+        result.Should().Contain(ev1);
+        result.Should().Contain(ev2);
+    }
 }

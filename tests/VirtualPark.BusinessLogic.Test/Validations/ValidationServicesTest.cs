@@ -43,6 +43,7 @@ public class ValidationServicesTest
             .WithMessage("The value 'abc' is not a valid integer.");
     }
     #endregion
+
     #region ParseBool
 
     [TestClass]
@@ -94,6 +95,7 @@ public class ValidationServicesTest
         }
     }
     #endregion
+
     #region ParseGuid
     [TestMethod]
     [TestCategory("Validations")]
@@ -134,6 +136,7 @@ public class ValidationServicesTest
     }
 
     #endregion
+
     #region ParseAttractionTypeEnum
     [DataTestMethod]
     [DataRow("RollerCoaster", AttractionType.RollerCoaster)]
@@ -185,6 +188,7 @@ public class ValidationServicesTest
         StringAssert.Contains(ex.Message, "cannot be null or empty");
     }
     #endregion
+
     #region ValidateAge
     [DataTestMethod]
     [DataRow(1)]
@@ -228,6 +232,7 @@ public class ValidationServicesTest
     }
     #endregion
 
+    #region ValidateEmail
     #region Success
     [TestMethod]
     [TestCategory("Validation")]
@@ -241,11 +246,12 @@ public class ValidationServicesTest
     }
     #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void ValidateEmail_error()
+    public void ValidateEmail_WithInvalidEmail_ThrowsArgumentException()
     {
-        var invalidEmail = "inavalidEmail";
+        var invalidEmail = "invalidEmail";
 
         Action act = () => ValidationServices.ValidateEmail(invalidEmail);
 
@@ -254,4 +260,6 @@ public class ValidationServicesTest
             .WithMessage($"*Invalid email format*")
             .And.ParamName.Should().Be("email");
     }
+    #endregion
+    #endregion
 }

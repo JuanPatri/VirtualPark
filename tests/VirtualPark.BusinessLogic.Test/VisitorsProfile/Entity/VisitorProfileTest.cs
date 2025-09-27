@@ -56,4 +56,13 @@ public class VisitorProfileTest
         visitorProfile.Membership.Should().Be(Membership.Standard);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Constructor")]
+    public void Score_WhenVisitorIsCreated_ShouldBeZeroByDefault()
+    {
+        var visitorProfile = new VisitorProfile();
+
+        visitorProfile.Score.Should().Be(0);
+    }
 }

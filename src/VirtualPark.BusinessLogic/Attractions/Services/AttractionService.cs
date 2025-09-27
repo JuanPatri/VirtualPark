@@ -39,6 +39,17 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
         return _attractionRepository.Exist(predicate);
     }
 
+    public static void ApplyArgsToEntity(Attraction entity, AttractionArgs args)
+    {
+        entity.Type = args.Type;
+        entity.Name = args.Name;
+        entity.MiniumAge = args.MiniumAge;
+        entity.Capacity = args.Capacity;
+        entity.Description = args.Description;
+        entity.CurrentVisitors = args.CurrentVisitor;
+        entity.Available = args.Available;
+    }
+
     public void ValidateAttractionName(string name)
     {
         if(string.IsNullOrWhiteSpace(name))

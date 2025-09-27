@@ -141,6 +141,7 @@ public class EventsArgsTest
     #endregion
     #endregion
 
+    #region Attracions
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Constructor_WhenAttractionIdsAreValid_ShouldInitializeSuccessfully()
@@ -154,4 +155,5 @@ public class EventsArgsTest
         args.Capacity.Should().Be(100);
         args.Cost.Should().Be(500);
     }
+    #endregion
 }

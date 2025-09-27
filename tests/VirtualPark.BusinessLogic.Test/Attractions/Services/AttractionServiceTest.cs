@@ -222,5 +222,21 @@ public class AttractionServiceTest
             Times.Once);
     }
 
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Exist_WhenAttractionDoesNotExist_ShouldReturnFalse()
+    {
+        _mockAttractionRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(false);
+
+        var result = _attractionService.Exist(a => a.Name == "GhostTrain");
+
+        result.Should().BeFalse();
+
+        _mockAttractionRepository.Verify(
+            r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()),
+            Times.Once);
+    }
     #endregion
 }

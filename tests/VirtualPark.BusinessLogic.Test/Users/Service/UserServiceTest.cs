@@ -31,14 +31,18 @@ public class UserServiceTest
     [TestCategory("Validation")]
     public void CreateUser_ShouldCreateUser_WhenEmailDoesNotExist()
     {
-        var guid = Guid.NewGuid();
-        var roles = new List<string> { guid.ToString() };
+        var roleId = Guid.NewGuid();
+        var roles = new List<string> { roleId.ToString() };
 
         var args = new UserArgs("Pepe", "Perez", "pepe@mail.com", "Password123!", roles);
 
         _usersRepositoryMock
             .Setup(r => r.Exist(u => u.Email == args.Email))
             .Returns(false);
+
+        _rolesRepositoryMock
+            .Setup(r => r.Get(role => role.Id == roleId))
+            .Returns(new Role { Name = "Visitor" });
 
         _usersRepositoryMock
             .Setup(r => r.Add(It.Is<User>(u =>
@@ -98,7 +102,7 @@ public class UserServiceTest
 
         act.Should()
             .Throw<InvalidOperationException>()
-            .WithMessage("One or more roles do not exist");
+            .WithMessage($"Role with id {id} does not exist.");
 
         _usersRepositoryMock.VerifyAll();
         _rolesRepositoryMock.VerifyAll();

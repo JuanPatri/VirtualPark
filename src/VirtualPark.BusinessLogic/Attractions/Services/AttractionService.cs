@@ -29,6 +29,12 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
         return _attractionRepository.GetAll(predicate);
     }
 
+    public Attraction? Get(Expression<Func<Attraction, bool>> predicate)
+    {
+        Attraction? attraction = _attractionRepository.Get(predicate);
+        return attraction;
+    }
+
     public void ValidateAttractionName(string name)
     {
         if(string.IsNullOrWhiteSpace(name))

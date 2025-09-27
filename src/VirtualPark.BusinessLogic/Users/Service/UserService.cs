@@ -106,8 +106,11 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
     {
         foreach(var u in users)
         {
+            if(u.VisitorProfileId.HasValue)
+            {
                 u.VisitorProfile =
                     _visitorProfileRepository.Get(visitorProfile => visitorProfile.Id == u.VisitorProfileId);
+            }
         }
 
         return users;

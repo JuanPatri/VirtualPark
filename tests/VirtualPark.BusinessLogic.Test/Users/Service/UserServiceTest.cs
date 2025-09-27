@@ -244,4 +244,68 @@ public class UserServiceTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAll_ok()
+    {
+        var vpId1 = Guid.NewGuid();
+
+        var user1 = new User
+        {
+            Name = "Pepe",
+            LastName = "Perez",
+            Email = "pepe@mail.com",
+            Password = "Password123!",
+            VisitorProfileId = vpId1
+        };
+
+        var user2 = new User
+        {
+            Name = "Ana",
+            LastName = "Gomez",
+            Email = "ana@mail.com",
+            Password = "Password123!",
+            VisitorProfileId = null
+        };
+
+        var usersFromRepo = new List<User> { user1, user2 };
+
+        var vp1 = new VisitorProfile
+        {
+            Id = vpId1,
+            DateOfBirth = new DateOnly(2000, 1, 1),
+            Membership = VirtualPark.BusinessLogic.Visitors.Entity.Membership.Standard
+        };
+
+        _usersRepositoryMock
+            .Setup(r => r.GetAll(null))
+            .Returns(usersFromRepo);
+
+        _visitorProfileRepositoryMock
+            .Setup(r => r.Get(vp => vp.Id == user1.VisitorProfileId))
+            .Returns(vp1);
+
+        var result = _userService.GetAll();
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+
+        var r1 = result[0];
+        r1.Id.Should().Be(user1.Id);
+        r1.VisitorProfileId.Should().Be(vpId1);
+        r1.VisitorProfile.Should().NotBeNull();
+        r1.VisitorProfile!.Id.Should().Be(vpId1);
+        r1.VisitorProfile.DateOfBirth.Should().Be(vp1.DateOfBirth);
+        r1.VisitorProfile.Membership.Should().Be(vp1.Membership);
+
+        var r2 = result[1];
+        r2.Id.Should().Be(user2.Id);
+        r2.VisitorProfileId.Should().BeNull();
+        r2.VisitorProfile.Should().BeNull();
+
+        _usersRepositoryMock.VerifyAll();
+        _visitorProfileRepositoryMock.VerifyAll();
+        _rolesRepositoryMock.VerifyAll();
+    }
 }

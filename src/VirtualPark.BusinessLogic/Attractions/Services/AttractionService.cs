@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Attractions.Models;
 using VirtualPark.BusinessLogic.Validations.Services;
@@ -16,6 +17,18 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
         _attractionRepository.Add(attraction);
 
         return attraction;
+    }
+
+    public List<Attraction> GetAll(Expression<Func<Attraction, bool>>? predicate = null)
+    {
+        if (predicate == null)
+        {
+            return _attractionRepository.GetAll();
+        }
+        else
+        {
+            return _attractionRepository.GetAll(predicate);
+        }
     }
 
     public void ValidateAttractionName(string name)

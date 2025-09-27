@@ -234,7 +234,7 @@ public class ValidationServicesTest
     {
         var email = "test.user@mail.com";
 
-        var result = ValidateEmail(email);
+        var result = ValidationServices.ValidateEmail(email);
 
         result.Should().Be(email);
     }

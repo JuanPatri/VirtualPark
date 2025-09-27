@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using VirtualPark.BusinessLogic.Attractions;
 
 namespace VirtualPark.BusinessLogic.Validations.Services;
@@ -99,5 +100,18 @@ public static class ValidationServices
         }
 
         return name;
+    }
+
+    public static string ValidateEmail(string email)
+    {
+        try
+        {
+            var ok = new MailAddress(email);
+            return email;
+        }
+        catch
+        {
+            throw new ArgumentException($"Invalid email format: {email}", nameof(email));
+        }
     }
 }

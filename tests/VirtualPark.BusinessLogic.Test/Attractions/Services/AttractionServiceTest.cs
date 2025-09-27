@@ -122,6 +122,7 @@ public class AttractionServiceTest
     #region getAll
 
     [TestMethod]
+    [TestCategory("Validation")]
     public void GetAll_WhenAttractionsExist_ShouldReturnAllAttractions()
     {
         var attractions = new List<Attraction>
@@ -147,6 +148,7 @@ public class AttractionServiceTest
     }
 
     [TestMethod]
+    [TestCategory("Validation")]
     public void GetAll_WhenNoAttractionsExist_ShouldReturnEmptyList()
     {
         _mockAttractionRepository
@@ -163,5 +165,27 @@ public class AttractionServiceTest
             Times.Once);
     }
     #endregion
+    #region Get
 
+    [TestMethod]
+    public void Get_WhenAttractionExists_ShouldReturnAttraction()
+    {
+        var expected = new Attraction { Name = "RollerCoaster", Capacity = 50 };
+
+        _mockAttractionRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(expected);
+
+        var result = _attractionService.Get(a => a.Name == "RollerCoaster");
+
+        result.Should().NotBeNull();
+        result!.Name.Should().Be("RollerCoaster");
+        result.Capacity.Should().Be(50);
+
+        _mockAttractionRepository.Verify(
+            r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()),
+            Times.Once);
+    }
+
+    #endregion
 }

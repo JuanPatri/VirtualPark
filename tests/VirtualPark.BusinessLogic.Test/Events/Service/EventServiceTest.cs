@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
+using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Events.Models;
 using VirtualPark.BusinessLogic.Events.Services;
@@ -13,14 +14,16 @@ namespace VirtualPark.BusinessLogic.Test.Events.Service;
 [TestCategory("Event")]
 public sealed class EventServiceTest
 {
-    private Mock<IRepository<Event>> _repositoryMock = null!;
+    private Mock<IRepository<Event>> _eventRepositoryMock = null!;
     private EventService _service = null!;
+    private Mock<IRepository<Attraction>> _attractionRepositoryMock = null!;
 
     [TestInitialize]
     public void Setup()
     {
-        _repositoryMock = new Mock<IRepository<Event>>();
-        _service = new EventService(_repositoryMock.Object);
+        _eventRepositoryMock = new Mock<IRepository<Event>>();
+        _attractionRepositoryMock = new Mock<IRepository<Attraction>>();
+        _service = new EventService(_eventRepositoryMock.Object);
     }
 
     #region Id
@@ -28,12 +31,13 @@ public sealed class EventServiceTest
     [TestCategory("Behaviour")]
     public void Create_WhenArgsAreValid_ShouldReturnEventId()
     {
-        var args = new EventsArgs("Halloween", "2025-12-30", 100, 500);
+        var attractions = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+        var args = new EventsArgs("Halloween", "2025-12-30", 100, 500, attractions);
 
         var result = _service.Create(args);
 
         result.Should().NotBe(Guid.Empty);
-        _repositoryMock.Verify(r => r.Add(It.IsAny<Event>()), Times.Once);
+        _eventRepositoryMock.Verify(r => r.Add(It.IsAny<Event>()), Times.Once);
     }
     #endregion
 
@@ -42,10 +46,12 @@ public sealed class EventServiceTest
     [TestCategory("Behaviour")]
     public void Create_ShouldCallRepositoryAddWithMappedEntity()
     {
-        var args = new EventsArgs("Christmas Party", "2025-12-24", 200, 1000);
+        var attractions = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+
+        var args = new EventsArgs("Christmas Party", "2025-12-24", 200, 1000, attractions);
 
         Event? capturedEvent = null;
-        _repositoryMock.Setup(r => r.Add(It.IsAny<Event>()))
+        _eventRepositoryMock.Setup(r => r.Add(It.IsAny<Event>()))
             .Callback<Event>(e => capturedEvent = e);
 
         var id = _service.Create(args);
@@ -72,13 +78,13 @@ public sealed class EventServiceTest
             Cost = 200
         };
 
-        _repositoryMock
+        _eventRepositoryMock
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(ev);
 
         _service.Remove(ev.Id);
 
-        _repositoryMock.Verify(r => r.Remove(ev), Times.Once);
+        _eventRepositoryMock.Verify(r => r.Remove(ev), Times.Once);
     }
     #endregion
 
@@ -88,7 +94,7 @@ public sealed class EventServiceTest
     public void Remove_WhenEventDoesNotExist_ShouldThrowInvalidOperationException()
     {
         var id = Guid.NewGuid();
-        _repositoryMock.Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
+        _eventRepositoryMock.Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns((Event?)null);
 
         Action act = () => _service.Remove(id);
@@ -109,7 +115,7 @@ public sealed class EventServiceTest
         var ev2 = new Event { Id = Guid.NewGuid(), Name = "Christmas" };
         var events = new List<Event> { ev1, ev2 };
 
-        _repositoryMock
+        _eventRepositoryMock
             .Setup(r => r.GetAll(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(events);
 
@@ -136,14 +142,15 @@ public sealed class EventServiceTest
             Cost = 200
         };
 
-        _repositoryMock
+        _eventRepositoryMock
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(existing);
 
-        var args = new EventsArgs("New Name", "2026-01-10", 300, 1500);
+        var attractions = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+        var args = new EventsArgs("New Name", "2026-01-10", 300, 1500, attractions);
 
         Event? captured = null;
-        _repositoryMock
+        _eventRepositoryMock
             .Setup(r => r.Update(It.IsAny<Event>()))
             .Callback<Event>(e => captured = e);
 
@@ -156,7 +163,49 @@ public sealed class EventServiceTest
         captured.Capacity.Should().Be(300);
         captured.Cost.Should().Be(1500);
 
-        _repositoryMock.Verify(r => r.Update(It.IsAny<Event>()), Times.Once);
+        _eventRepositoryMock.Verify(r => r.Update(It.IsAny<Event>()), Times.Once);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Create_WhenAttractionsExist_ShouldAssignThemToEvent()
+    {
+        var attractionId1 = Guid.NewGuid();
+        var attractionId2 = Guid.NewGuid();
+        var args = new EventsArgs("Concert", "2025-12-31", 500, 2000, new List<Guid> { attractionId1, attractionId2 });
+
+        var attraction1 = new Attraction { Id = attractionId1, Name = "Roller Coaster" };
+        var attraction2 = new Attraction { Id = attractionId2, Name = "Ferris Wheel" };
+
+        _attractionRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns<Expression<Func<Attraction, bool>>>(expr =>
+            {
+                if (expr.Compile().Invoke(attraction1))
+                {
+                    return attraction1;
+                }
+
+                if (expr.Compile().Invoke(attraction2))
+                {
+                    return attraction2;
+                }
+
+                return null!;
+            });
+
+        Event? capturedEvent = null;
+        _eventRepositoryMock
+            .Setup(r => r.Add(It.IsAny<Event>()))
+            .Callback<Event>(e => capturedEvent = e);
+
+        var id = _service.Create(args);
+
+        capturedEvent.Should().NotBeNull();
+        capturedEvent!.Id.Should().Be(id);
+        capturedEvent.Attractions.Should().HaveCount(2);
+        capturedEvent.Attractions.Should().Contain(a => a.Id == attractionId1);
+        capturedEvent.Attractions.Should().Contain(a => a.Id == attractionId2);
+    }
 }

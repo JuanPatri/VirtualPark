@@ -28,7 +28,10 @@ public class UserServiceTest
     [TestCategory("Validation")]
     public void CreateUser_ShouldCreateUser_WhenEmailDoesNotExist()
     {
-        var args = new UserArgs("Pepe", "Perez", "pepe@mail.com", "Password123!");
+        var guid = Guid.NewGuid();
+        var roles = new List<string> { guid.ToString() };
+
+        var args = new UserArgs("Pepe", "Perez", "pepe@mail.com", "Password123!", roles);
 
         _usersRepositoryMock
             .Setup(r => r.Exist(u => u.Email == args.Email))
@@ -54,7 +57,10 @@ public class UserServiceTest
     [TestCategory("Validation")]
     public void Create_WhenEmailAlreadyExists_ThrowsInvalidOperationException()
     {
-        var args = new UserArgs("Pepe", "Perez", "pepe@mail.com", "Password123!");
+        var guid = Guid.NewGuid();
+        var roles = new List<string> { guid.ToString() };
+
+        var args = new UserArgs("Pepe", "Perez", "pepe@mail.com", "Password123!", roles);
 
         _usersRepositoryMock
             .Setup(r => r.Exist(u => u.Email == args.Email))

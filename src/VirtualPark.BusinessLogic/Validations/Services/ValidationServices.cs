@@ -104,14 +104,7 @@ public static class ValidationServices
 
     public static string ValidateEmail(string email)
     {
-        try
-        {
             var ok = new MailAddress(email);
             return email;
-        }
-        catch
-        {
-            throw new ArgumentException($"Invalid email format: {email}", nameof(email));
-        }
     }
 }

@@ -240,4 +240,18 @@ public class ValidationServicesTest
         result.Should().Be(email);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ValidateEmail_error()
+    {
+        var invalidEmail = "not-an-email";
+
+        Action act = () => ValidationServices.ValidateEmail(invalidEmail);
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage($"*Invalid email format*")
+            .And.ParamName.Should().Be("email");
+    }
 }

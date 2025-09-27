@@ -338,6 +338,30 @@ public class AttractionServiceTest
         _mockAttractionRepository.Verify(r => r.Update(It.IsAny<Attraction>()), Times.Once);
         _mockAttractionRepository.VerifyAll();
     }
+    #endregion
+    #region Remove
+    [TestMethod]
+    public void Remove_WhenAttractionExists_ShouldRemoveOnce()
+    {
+        var id = Guid.NewGuid();
+        var existing = new Attraction { Id = id, Name = "To Remove" };
 
+        _mockAttractionRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(existing);
+
+        Attraction? removed = null;
+        _mockAttractionRepository
+            .Setup(r => r.Remove(It.IsAny<Attraction>()))
+            .Callback<Attraction>(a => removed = a);
+
+        _attractionService.Remove(id);
+
+        removed.Should().NotBeNull();
+        removed!.Id.Should().Be(id);
+
+        _mockAttractionRepository.Verify(r => r.Remove(It.Is<Attraction>(a => a.Id == id)), Times.Once);
+        _mockAttractionRepository.VerifyAll();
+    }
     #endregion
 }

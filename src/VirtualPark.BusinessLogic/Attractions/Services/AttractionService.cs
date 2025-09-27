@@ -25,10 +25,8 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
         {
             return _attractionRepository.GetAll();
         }
-        else
-        {
-            return _attractionRepository.GetAll(predicate);
-        }
+
+        return _attractionRepository.GetAll(predicate);
     }
 
     public void ValidateAttractionName(string name)

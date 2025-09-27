@@ -34,6 +34,12 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
         return _attractionRepository.Get(predicate);
     }
 
+    public bool Exist(Expression<Func<Attraction, bool>> predicate)
+    {
+        var exist = _attractionRepository.Exist(predicate);
+        return exist;
+    }
+
     public void ValidateAttractionName(string name)
     {
         if(string.IsNullOrWhiteSpace(name))

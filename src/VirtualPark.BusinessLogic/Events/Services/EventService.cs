@@ -30,6 +30,11 @@ public class EventService(IRepository<Event> eventrepository)
 
     public List<Event> GetAll(Expression<Func<Event, bool>>? predicate = null)
     {
+        if (predicate == null)
+        {
+            return _eventRepository.GetAll().ToList();
+        }
+
         return _eventRepository.GetAll(predicate).ToList();
     }
 }

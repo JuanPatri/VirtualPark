@@ -101,8 +101,8 @@ public sealed class EventServiceTest
     #endregion
 
     #region GetAll
-    #region Success
     [TestMethod]
+    [TestCategory("Behaviour")]
     public void GetAll_WhenEventsExist_ShouldReturnAllEvents()
     {
         var ev1 = new Event { Id = Guid.NewGuid(), Name = "Halloween" };
@@ -120,5 +120,42 @@ public sealed class EventServiceTest
         result.Should().Contain(ev2);
     }
     #endregion
-    #endregion
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Update_WhenEventExists_ShouldApplyChangesAndPersist()
+    {
+        var id = Guid.NewGuid();
+        var existing = new Event
+        {
+            Id = id,
+            Name = "Old Name",
+            Date = new DateTime(2025, 12, 1),
+            Capacity = 50,
+            Cost = 200
+        };
+
+        _repositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
+            .Returns(existing);
+
+        var attractionIds = new[] { Guid.NewGuid().ToString() };
+        var args = new EventsArgs("New Name", "2026-01-10", 300, 1500);
+
+        Event? captured = null;
+        _repositoryMock
+            .Setup(r => r.Update(It.IsAny<Event>()))
+            .Callback<Event>(e => captured = e);
+
+        _service.Update(id, args);
+
+        captured.Should().NotBeNull();
+        captured!.Id.Should().Be(id);
+        captured.Name.Should().Be("New Name");
+        captured.Date.Should().Be(new DateTime(2026, 1, 10));
+        captured.Capacity.Should().Be(300);
+        captured.Cost.Should().Be(1500);
+
+        _repositoryMock.Verify(r => r.Update(It.IsAny<Event>()), Times.Once);
+    }
 }

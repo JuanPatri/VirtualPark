@@ -59,6 +59,8 @@ public sealed class PermissionArgsTest
     #endregion
     #endregion
 
+    #region Roles
+    #region Failure
     [TestMethod]
     [DataRow(null, DisplayName = "Null list")]
     [DataRow("empty", DisplayName = "Empty list")]
@@ -76,4 +78,6 @@ public sealed class PermissionArgsTest
             .Throw<ArgumentException>()
             .WithMessage("Roles list cannot be null or empty");
     }
+    #endregion
+    #endregion
 }

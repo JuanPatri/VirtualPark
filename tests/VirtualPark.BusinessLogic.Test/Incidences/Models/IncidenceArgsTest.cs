@@ -65,4 +65,22 @@ public class IncidenceArgsTest
         incidenceArgs.End.Should().Be(expected);
     }
     #endregion
+    #region Id
+
+    [TestMethod]
+    public void IdAttraction_ShouldParseStringGuid_ToGuidProperty()
+    {
+        var expectedId = Guid.Parse("c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010");
+        var incidenceArgs = new IncidenceArgs(
+            "c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010",
+            "Description",
+            "2025-09-27 15:30",
+            "2025-09-27 15:30",
+            "c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010"
+        );
+        incidenceArgs.AttractionId.Should().Be(expectedId);
+    }
+
+    Incidence
+    #endregion
 }

@@ -316,11 +316,6 @@ public class ValidationServicesTest
     #endregion
 
     #region ValidateDateTime
-
-    [TestClass]
-    [TestCategory("Validation")]
-    public class ValidateDateTimeTests
-    {
         private static DateTime Call(string input)
             => ValidationServices.ValidateDateTime(input);
 
@@ -380,7 +375,5 @@ public class ValidationServicesTest
 
             act.Should().Throw<ArgumentException>();
         }
-
         #endregion
-    }
 }

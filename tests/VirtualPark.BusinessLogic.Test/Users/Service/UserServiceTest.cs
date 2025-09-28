@@ -329,9 +329,10 @@ public class UserServiceTest
     }
     #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void GetAll_error()
+    public void GetAll_ShouldThrow_WhenRepositoryReturnsNull()
     {
         _usersRepositoryMock
             .Setup(r => r.GetAll(null))
@@ -347,5 +348,6 @@ public class UserServiceTest
         _visitorProfileRepositoryMock.VerifyAll();
         _rolesRepositoryMock.VerifyAll();
     }
+    #endregion
     #endregion
 }

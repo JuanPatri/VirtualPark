@@ -11,12 +11,9 @@ public sealed class TypeIncidenceService(IRepository<TypeIncidence> typeIncidenc
 
     public TypeIncidence MapToEntity(TypeIncidenceArgs args)
     {
-        TypeIncidence typeIncidence = new TypeIncidence
+        return new TypeIncidence
         {
             Type = args.Type
         };
-
-        return typeIncidence;
     }
-
 }

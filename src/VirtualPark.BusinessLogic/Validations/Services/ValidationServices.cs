@@ -94,6 +94,24 @@ public static class ValidationServices
         return parsedDate;
     }
 
+    public static DateTime ValidateDateTime(string date)
+    {
+        var formats = new[]
+        {
+            "yyyy-MM-dd",
+            "yyyy-MM-dd HH:mm",
+            "yyyy-MM-dd HH:mm:ss"
+        };
+
+        if (!DateTime.TryParseExact(date, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+        {
+            throw new ArgumentException(
+                $"Invalid date format: {date}. Expected format is yyyy-MM-dd or yyyy-MM-dd HH:mm[:ss]");
+        }
+
+        return parsedDate;
+    }
+
     public static string ValidateNullOrEmpty(string name)
     {
         if(string.IsNullOrWhiteSpace(name))

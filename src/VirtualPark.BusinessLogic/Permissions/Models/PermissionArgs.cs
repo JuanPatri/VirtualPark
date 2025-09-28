@@ -15,6 +15,11 @@ public sealed class PermissionArgs(string description, string key, List<Guid> ro
             throw new ArgumentException("Roles list cannot be null or empty");
         }
 
+        if(ids.Any(id => id == Guid.Empty))
+        {
+            throw new ArgumentException("Roles list contains invalid Guid");
+        }
+
         return ids;
     }
 }

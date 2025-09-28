@@ -381,9 +381,10 @@ public class UserServiceTest
     }
     #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void Remove_fail()
+    public void Remove_ShouldThrow_WhenUserDoesNotExist()
     {
         var id = Guid.NewGuid();
 
@@ -402,6 +403,6 @@ public class UserServiceTest
         _rolesRepositoryMock.VerifyAll();
         _visitorProfileRepositoryMock.VerifyAll();
     }
-
+    #endregion
     #endregion
 }

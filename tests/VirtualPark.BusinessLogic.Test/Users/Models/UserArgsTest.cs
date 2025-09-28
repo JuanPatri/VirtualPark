@@ -158,7 +158,7 @@ public class UserArgsTest
         var userArgs = new UserArgs("Pepe", "Perez", "pepePerez@gmail.com", "Password123.", roles);
 
         userArgs.RolesIds.Should().HaveCount(2);
-        userArgs.RolesIds.Should().Contain(new[] { guid1, guid2 });
+        userArgs.RolesIds.Should().Contain([guid1, guid2]);
     }
     #endregion
 

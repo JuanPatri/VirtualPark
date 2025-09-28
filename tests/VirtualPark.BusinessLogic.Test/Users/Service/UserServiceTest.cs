@@ -4,7 +4,6 @@ using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.Users.Models;
 using VirtualPark.BusinessLogic.Users.Service;
-using VirtualPark.BusinessLogic.Visitors.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Models;
 using VirtualPark.BusinessLogic.VisitorsProfile.Service;
@@ -269,7 +268,7 @@ public class UserServiceTest
         {
             Id = vpId1,
             DateOfBirth = new DateOnly(2000, 1, 1),
-            Membership = VirtualPark.BusinessLogic.Visitors.Entity.Membership.Standard
+            Membership = Membership.Standard
         };
 
         _usersRepositoryMock
@@ -437,7 +436,7 @@ public class UserServiceTest
             lastName: "NewLast",
             email: "user@mail.com",
             password: "NewPass1!",
-            roles: new List<string>())
+            roles: [])
         {
             VisitorProfile = null
         };
@@ -499,7 +498,7 @@ public class UserServiceTest
             lastName: "NewLast",
             email: "user@mail.com",
             password: "NewPass1!",
-            roles: new List<string>())
+            roles: [])
         {
             VisitorProfile = newVpArgs
         };
@@ -541,7 +540,7 @@ public class UserServiceTest
             lastName: "Body",
             email: "user@mail.com",
             password: "Password123!",
-            roles: new List<string>());
+            roles: []);
 
         var userId = Guid.NewGuid();
 

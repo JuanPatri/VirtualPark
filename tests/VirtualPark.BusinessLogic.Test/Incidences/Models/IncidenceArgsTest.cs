@@ -1,5 +1,4 @@
 using FluentAssertions;
-using VirtualPark.BusinessLogic.Incidences.Entity;
 using VirtualPark.BusinessLogic.Incidences.Models;
 
 namespace VirtualPark.BusinessLogic.Test.Incidences.Models;
@@ -12,15 +11,14 @@ public class IncidenceArgsTest
     [TestMethod]
     public void TypeIncidence_ShouldParseStringGuid_ToGuidProperty()
     {
-        Guid expectedId = Guid.Parse("c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010");
+        var expectedId = Guid.Parse("c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010");
         var incidenceArgs = new IncidenceArgs(
             "c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010",
             "Description",
             "2025-09-27 15:30",
             "2025-09-27 15:30",
             "c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010",
-            "true"
-        );
+            "true");
         incidenceArgs.TypeIncidence.Should().Be(expectedId);
     }
     #endregion
@@ -35,8 +33,7 @@ public class IncidenceArgsTest
             "2025-09-27 15:30",
             "2025-09-27 15:30",
             "c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010",
-            "true"
-        );
+            "true");
         incidenceArgs.Description.Should().Be("Description");
     }
     #endregion
@@ -51,8 +48,7 @@ public class IncidenceArgsTest
             "2025-09-27 15:30",
             "2025-09-27 15:30",
             "c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010",
-            "true"
-        );
+            "true");
         incidenceArgs.Start.Should().Be(expected);
     }
     #endregion
@@ -68,8 +64,7 @@ public class IncidenceArgsTest
             "2025-09-27 15:30",
             "2025-09-27 15:30",
             "c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010",
-            "true"
-        );
+            "true");
         incidenceArgs.End.Should().Be(expected);
     }
     #endregion
@@ -84,8 +79,7 @@ public class IncidenceArgsTest
             "2025-09-27 15:30",
             "2025-09-27 15:30",
             "c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010",
-            "true"
-        );
+            "true");
         incidenceArgs.AttractionId.Should().Be(expectedId);
     }
     #endregion
@@ -100,8 +94,7 @@ public class IncidenceArgsTest
             "2025-09-27 15:30",
             "2025-09-27 15:30",
             "c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010",
-            "true"
-        );
+            "true");
         incidenceArgs.Active.Should().BeTrue();
     }
     #endregion

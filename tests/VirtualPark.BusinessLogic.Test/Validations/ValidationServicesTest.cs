@@ -316,64 +316,64 @@ public class ValidationServicesTest
     #endregion
 
     #region ValidateDateTime
-        private static DateTime Call(string input)
-            => ValidationServices.ValidateDateTime(input);
+    private static DateTime Call(string input)
+        => ValidationServices.ValidateDateTime(input);
 
-        [DataTestMethod]
-        [DataRow("2025-09-27", 2025, 9, 27, 0, 0, 0)]
-        [DataRow("2025-09-27 15:30", 2025, 9, 27, 15, 30, 0)]
-        [DataRow("2025-09-27 15:30:45", 2025, 9, 27, 15, 30, 45)]
-        public void ValidateDateTime_ValidFormats_ShouldReturnExpectedDateTime(
-            string input, int y, int m, int d, int hh, int mm, int ss)
+    [DataTestMethod]
+    [DataRow("2025-09-27", 2025, 9, 27, 0, 0, 0)]
+    [DataRow("2025-09-27 15:30", 2025, 9, 27, 15, 30, 0)]
+    [DataRow("2025-09-27 15:30:45", 2025, 9, 27, 15, 30, 45)]
+    public void ValidateDateTime_ValidFormats_ShouldReturnExpectedDateTime(
+        string input, int y, int m, int d, int hh, int mm, int ss)
+    {
+        var dt = Call(input);
+
+        dt.Should().Be(new DateTime(y, m, d, hh, mm, ss));
+    }
+
+    [DataTestMethod]
+    [DataRow("27/09/2025")]
+    [DataRow("2025/09/27")]
+    [DataRow("2025-09-27T15:30")]
+    [DataRow("2025-09-27 15:30:45.123")]
+    [DataRow("2025-02-30")]
+    public void ValidateDateTime_InvalidFormats_ShouldThrowArgumentException(string input)
+    {
+        Action act = () => Call(input);
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage($"Invalid date format: {input}*");
+    }
+
+    [TestMethod]
+    public void ValidateDateTime_ShouldNotDependOnCurrentCulture()
+    {
+        var original = Thread.CurrentThread.CurrentCulture;
+
+        try
         {
-            var dt = Call(input);
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("es-UY");
+            Call("2025-09-27").Should().Be(new DateTime(2025, 9, 27));
 
-            dt.Should().Be(new DateTime(y, m, d, hh, mm, ss));
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Call("2025-09-27 15:30").Should().Be(new DateTime(2025, 9, 27, 15, 30, 0));
         }
-
-        [DataTestMethod]
-        [DataRow("27/09/2025")]
-        [DataRow("2025/09/27")]
-        [DataRow("2025-09-27T15:30")]
-        [DataRow("2025-09-27 15:30:45.123")]
-        [DataRow("2025-02-30")]
-        public void ValidateDateTime_InvalidFormats_ShouldThrowArgumentException(string input)
+        finally
         {
-            Action act = () => Call(input);
-
-            act.Should()
-                .Throw<ArgumentException>()
-                .WithMessage($"Invalid date format: {input}*");
+            Thread.CurrentThread.CurrentCulture = original;
         }
+    }
 
-        [TestMethod]
-        public void ValidateDateTime_ShouldNotDependOnCurrentCulture()
-        {
-            var original = Thread.CurrentThread.CurrentCulture;
+    [DataTestMethod]
+    [DataRow(" 2025-09-27")]
+    [DataRow("2025-09-27 ")]
+    [DataRow(" 2025-09-27 15:30 ")]
+    public void ValidateDateTime_WithLeadingOrTrailingSpaces_ShouldThrow(string input)
+    {
+        Action act = () => Call(input);
 
-            try
-            {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo("es-UY");
-                Call("2025-09-27").Should().Be(new DateTime(2025, 9, 27));
-
-                Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-                Call("2025-09-27 15:30").Should().Be(new DateTime(2025, 9, 27, 15, 30, 0));
-            }
-            finally
-            {
-                Thread.CurrentThread.CurrentCulture = original;
-            }
-        }
-
-        [DataTestMethod]
-        [DataRow(" 2025-09-27")]
-        [DataRow("2025-09-27 ")]
-        [DataRow(" 2025-09-27 15:30 ")]
-        public void ValidateDateTime_WithLeadingOrTrailingSpaces_ShouldThrow(string input)
-        {
-            Action act = () => Call(input);
-
-            act.Should().Throw<ArgumentException>();
-        }
-        #endregion
+        act.Should().Throw<ArgumentException>();
+    }
+    #endregion
 }

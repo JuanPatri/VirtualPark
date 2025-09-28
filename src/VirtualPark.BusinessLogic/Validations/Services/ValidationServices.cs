@@ -103,7 +103,7 @@ public static class ValidationServices
             "yyyy-MM-dd HH:mm:ss"
         };
 
-        if (!DateTime.TryParseExact(date, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+        if(!DateTime.TryParseExact(date, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
         {
             throw new ArgumentException(
                 $"Invalid date format: {date}. Expected format is yyyy-MM-dd or yyyy-MM-dd HH:mm[:ss]");

@@ -212,5 +212,55 @@ public class TypeIncidenceServiceTest
     }
 
     #endregion
+    #region Update
+
+    [TestMethod]
+    public void Update_WhenEntityExists_ShouldApplyArgsAndCallRepositoryUpdate()
+    {
+        var id = Guid.NewGuid();
+        var existing = new TypeIncidence { Id = id, Type = "OldType" };
+        var args = new TypeIncidenceArgs("NewType");
+
+        _mockTypeIncidenceRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
+            .Returns(existing);
+
+        TypeIncidence? captured = null;
+        _mockTypeIncidenceRepository
+            .Setup(r => r.Update(It.IsAny<TypeIncidence>()))
+            .Callback<TypeIncidence>(ti => captured = ti);
+
+        _typeIncidenceService.Update(id, args);
+
+        captured.Should().NotBeNull();
+        captured!.Id.Should().Be(id);
+        captured.Type.Should().Be("NewType");
+
+        _mockTypeIncidenceRepository.Verify(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()), Times.Once);
+        _mockTypeIncidenceRepository.Verify(r => r.Update(It.IsAny<TypeIncidence>()), Times.Once);
+        _mockTypeIncidenceRepository.VerifyAll();
+    }
+
+    [TestMethod]
+    public void Update_WhenEntityDoesNotExist_ShouldThrowInvalidOperationException()
+    {
+        var id = Guid.NewGuid();
+        var args = new TypeIncidenceArgs("NewType");
+
+        _mockTypeIncidenceRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
+            .Returns((TypeIncidence?)null);
+
+        Action act = () => _typeIncidenceService.Update(id, args);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage($"TypeIncidence with id {id} not found.");
+
+        _mockTypeIncidenceRepository.Verify(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()), Times.Once);
+        _mockTypeIncidenceRepository.Verify(r => r.Update(It.IsAny<TypeIncidence>()), Times.Never);
+        _mockTypeIncidenceRepository.VerifyAll();
+    }
+
+    #endregion
 
 }

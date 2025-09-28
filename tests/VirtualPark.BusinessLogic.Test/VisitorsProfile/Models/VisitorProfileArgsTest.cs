@@ -49,7 +49,7 @@ public class VisitorProfileArgsTest
     #region failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void Constructor_WithInvalidMembershipFormat_ThrowsArgumentException()
+    public void Constructor_ok()
     {
         var act = () => new VisitorProfileArgs("2002-07-30", "Gold");
 
@@ -60,4 +60,12 @@ public class VisitorProfileArgsTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Score_Getter_ReturnsAssignedValue()
+    {
+        var visitorProfileArgs = new VisitorProfileArgs("2002-07-30", "Standard", "85");
+        visitorProfileArgs.Score.Should().Be(85);
+    }
 }

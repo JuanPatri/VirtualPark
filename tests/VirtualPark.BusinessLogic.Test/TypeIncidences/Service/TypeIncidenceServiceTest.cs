@@ -262,5 +262,58 @@ public class TypeIncidenceServiceTest
     }
 
     #endregion
+    #region Delete
+
+    [TestMethod]
+    public void Delete_WhenEntityExists_ShouldCallRepositoryRemove()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var existing = new TypeIncidence { Id = id, Type = "Locked" };
+
+        _mockTypeIncidenceRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
+            .Returns(existing);
+
+        TypeIncidence? captured = null;
+        _mockTypeIncidenceRepository
+            .Setup(r => r.Remove(It.IsAny<TypeIncidence>()))
+            .Callback<TypeIncidence>(ti => captured = ti);
+
+        // Act
+        _typeIncidenceService.Delete(id);
+
+        // Assert
+        captured.Should().NotBeNull();
+        captured!.Id.Should().Be(id);
+
+        _mockTypeIncidenceRepository.Verify(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()), Times.Once);
+        _mockTypeIncidenceRepository.Verify(r => r.Remove(It.IsAny<TypeIncidence>()), Times.Once);
+        _mockTypeIncidenceRepository.VerifyAll();
+    }
+
+    [TestMethod]
+    public void Delete_WhenEntityDoesNotExist_ShouldThrowInvalidOperationException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+
+        _mockTypeIncidenceRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
+            .Returns((TypeIncidence?)null);
+
+        // Act
+        Action act = () => _typeIncidenceService.Delete(id);
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage($"TypeIncidence with id {id} not found.");
+
+        _mockTypeIncidenceRepository.Verify(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()), Times.Once);
+        _mockTypeIncidenceRepository.Verify(r => r.Remove(It.IsAny<TypeIncidence>()), Times.Never);
+        _mockTypeIncidenceRepository.VerifyAll();
+    }
+
+    #endregion
 
 }

@@ -43,6 +43,8 @@ public sealed class PermissionArgsTest
     #endregion
     #endregion
 
+    #region Key
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
     [DataRow("")]
@@ -55,4 +57,6 @@ public sealed class PermissionArgsTest
             .Throw<ArgumentException>()
             .WithMessage("Value cannot be null or empty.");
     }
+    #endregion
+    #endregion
 }

@@ -54,6 +54,18 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
         return users;
     }
 
+    public void Remove(Guid id)
+    {
+        var user = _userRepository.Get(u => u.Id == id);
+
+        if(user == null)
+        {
+            throw new InvalidOperationException("User don't exist");
+        }
+
+        _userRepository.Remove(user);
+    }
+
     private void ValidateEmail(UserArgs args)
     {
         var isEmailTaken = _userRepository.Exist(u => u.Email == args.Email);

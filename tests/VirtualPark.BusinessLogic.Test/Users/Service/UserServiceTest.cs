@@ -353,7 +353,7 @@ public class UserServiceTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Remove_ShouldDeleteUser_WhenUserExists()
+    public void Remove_ok()
     {
         var dbUser = new User
         {

@@ -331,7 +331,7 @@ public class UserServiceTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void GetAll_ShouldThrow_WhenRepositoryReturnsNull()
+    public void GetAll_error()
     {
         _usersRepositoryMock
             .Setup(r => r.GetAll(null))

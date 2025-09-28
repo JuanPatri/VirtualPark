@@ -45,6 +45,11 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
     {
         var users = _userRepository.GetAll();
 
+        if(users == null)
+        {
+            throw new InvalidOperationException("Dont have any users");
+        }
+
         UploadVisitorProfile(users);
         return users;
     }

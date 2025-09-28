@@ -32,6 +32,13 @@ public sealed class TypeIncidenceService(IRepository<TypeIncidence> typeIncidenc
         return _typeIncidenceRepository.Exist(predicate);
     }
 
+    public void Update(Guid id, TypeIncidenceArgs args)
+    {
+        TypeIncidence typeIncidence = Get(t => t.Id == id) ?? throw new InvalidOperationException($"TypeIncidence with id {id} not found.");
+        ApplyArgsToEntity(typeIncidence, args);
+        _typeIncidenceRepository.Update(typeIncidence);
+    }
+
     public static void ApplyArgsToEntity(TypeIncidence entity, TypeIncidenceArgs args)
     {
         entity.Type = args.Type;

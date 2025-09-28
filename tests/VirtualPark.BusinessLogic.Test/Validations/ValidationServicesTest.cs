@@ -295,6 +295,7 @@ public class ValidationServicesTest
     #endregion
 
     #region ParseDateOfBirth
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void ParseDateOfBirth_ShouldReturnDate_WhenFormatIsValid()
@@ -307,10 +308,12 @@ public class ValidationServicesTest
         result.Month.Should().Be(7);
         result.Day.Should().Be(30);
     }
+    #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void ParseDateOfBirth_Failure()
+    public void ParseDateOfBirth_ShouldThrow_WhenFormatIsInvalid()
     {
         var input = "30-07-2002";
 
@@ -320,5 +323,6 @@ public class ValidationServicesTest
             .WithMessage("Invalid date format: 30-07-2002. Expected format is yyyy-MM-dd*")
             .And.ParamName.Should().Be("dateOfBirth");
     }
+    #endregion
     #endregion
 }

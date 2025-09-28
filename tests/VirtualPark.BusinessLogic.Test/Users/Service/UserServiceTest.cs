@@ -351,9 +351,11 @@ public class UserServiceTest
     #endregion
     #endregion
 
+    #region remove
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
-    public void Remove_ok()
+    public void Remove_ShouldDeleteUser_WhenUserExists()
     {
         var dbUser = new User
         {
@@ -377,4 +379,6 @@ public class UserServiceTest
         _rolesRepositoryMock.VerifyAll();
         _visitorProfileRepositoryMock.VerifyAll();
     }
+    #endregion
+    #endregion
 }

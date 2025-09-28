@@ -7,5 +7,5 @@ public sealed class IncidenceArgs(string typeIncidence, string description, stri
     public Guid TypeIncidence { get; init; } = ValidationServices.ValidateAndParseGuid(typeIncidence);
     public string Description { get; init; } = ValidationServices.ValidateNullOrEmpty(description);
     public DateTime Start { get; init; } = ValidationServices.ValidateDateTime(start);
-    public DateTime End { get; set; } = ValidationServices.ValidateDateTime(end);
+    public DateTime End { get; init; } = ValidationServices.ValidateDateTime(end);
 }

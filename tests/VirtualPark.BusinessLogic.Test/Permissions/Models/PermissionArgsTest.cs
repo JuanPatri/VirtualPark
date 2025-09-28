@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Permissions.Models;
 
@@ -25,13 +26,31 @@ public sealed class PermissionArgsTest
 
     #endregion
 
+    #region Description
+    #region Failure
     [TestMethod]
+    [TestCategory("Validation")]
     [DataRow("")]
     [DataRow(null)]
     public void Constructor_WhenDescriptionIsNullOrEmpty_ShouldThrow(string? description)
     {
         FluentActions
-            .Invoking(() => new PermissionArgs(description!, "event.create", new List<Guid> { Guid.NewGuid() }))
+            .Invoking(() => new PermissionArgs(description!, "event.create", [Guid.NewGuid()]))
+            .Should()
+            .Throw<ArgumentException>()
+            .WithMessage("Value cannot be null or empty.");
+    }
+    #endregion
+    #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    [DataRow("")]
+    [DataRow(null)]
+    public void Constructor_WhenKeyIsNullOrEmpty_ShouldThrow(string? description)
+    {
+        FluentActions
+            .Invoking(() => new PermissionArgs("Can create users", description!, [Guid.NewGuid()]))
             .Should()
             .Throw<ArgumentException>()
             .WithMessage("Value cannot be null or empty.");

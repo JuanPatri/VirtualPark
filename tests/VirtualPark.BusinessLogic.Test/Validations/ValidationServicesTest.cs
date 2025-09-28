@@ -294,9 +294,10 @@ public class ValidationServicesTest
     #endregion
     #endregion
 
+    #region ParseDateOfBirth
     [TestMethod]
     [TestCategory("Validation")]
-    public void ParseDateOfBirth_ok()
+    public void ParseDateOfBirth_ShouldReturnDate_WhenFormatIsValid()
     {
         var input = "2002-07-30";
 
@@ -306,4 +307,5 @@ public class ValidationServicesTest
         result.Month.Should().Be(7);
         result.Day.Should().Be(30);
     }
+    #endregion
 }

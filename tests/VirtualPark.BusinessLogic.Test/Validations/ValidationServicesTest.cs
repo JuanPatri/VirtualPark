@@ -1,6 +1,7 @@
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.Validations.Services;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
 namespace VirtualPark.BusinessLogic.Test.Validations;
 
@@ -325,4 +326,15 @@ public class ValidationServicesTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ParseMembership_ShouldReturnEnum_WhenValueIsValidIgnoringCase()
+    {
+        var input = "Standard";
+
+        var result = ValidationServices.ParseMembership(input);
+
+        result.Should().Be(Membership.Standard);
+    }
 }

@@ -1,4 +1,3 @@
-using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Validations.Services;
 
 namespace VirtualPark.BusinessLogic.Events.Models;
@@ -20,12 +19,12 @@ public sealed class EventsArgs(string name, string date, int capacity, int cost,
 
     private static List<Guid> ValidateGuids(List<Guid> ids)
     {
-        if (ids == null || !ids.Any())
+        if(ids == null || ids.Count == 0)
         {
             throw new ArgumentException("Attractions list cannot be null or empty");
         }
 
-        if (ids.Any(id => id == Guid.Empty))
+        if(ids.Any(id => id == Guid.Empty))
         {
             throw new ArgumentException("Attractions list contains invalid Guid");
         }

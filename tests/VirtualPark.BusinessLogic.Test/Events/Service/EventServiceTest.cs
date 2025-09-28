@@ -26,8 +26,7 @@ public sealed class EventServiceTest
 
         _service = new EventService(
             _eventRepositoryMock.Object,
-            _attractionRepositoryMock.Object
-        );
+            _attractionRepositoryMock.Object);
     }
 
     #region Id
@@ -36,7 +35,7 @@ public sealed class EventServiceTest
     [TestCategory("Behaviour")]
     public void Create_WhenArgsAreValid_ShouldReturnEventId()
     {
-        var attractions = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+        List<Guid> attractions = [Guid.NewGuid(), Guid.NewGuid()];
 
         var attraction1 = new Attraction { Id = attractions[0], Name = "Roller Coaster" };
         var attraction2 = new Attraction { Id = attractions[1], Name = "Ferris Wheel" };
@@ -74,7 +73,7 @@ public sealed class EventServiceTest
     [TestCategory("Behaviour")]
     public void Create_ShouldCallRepositoryAddWithMappedEntity()
     {
-        var attractions = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+        List<Guid> attractions = [Guid.NewGuid(), Guid.NewGuid()];
 
         var attraction1 = new Attraction { Id = attractions[0], Name = "Roller Coaster" };
         var attraction2 = new Attraction { Id = attractions[1], Name = "Ferris Wheel" };
@@ -150,7 +149,7 @@ public sealed class EventServiceTest
             Date = new DateTime(2025, 12, 1),
             Capacity = 50,
             Cost = 200,
-            Attractions = new List<Attraction>()
+            Attractions = []
         };
 
         _eventRepositoryMock
@@ -184,7 +183,7 @@ public sealed class EventServiceTest
             "2026-01-10",
             300,
             1500,
-            new List<Guid> { attractionId1, attractionId2 });
+            []);
 
         Event? captured = null;
         _eventRepositoryMock
@@ -214,7 +213,7 @@ public sealed class EventServiceTest
     {
         var attractionId1 = Guid.NewGuid();
         var attractionId2 = Guid.NewGuid();
-        var args = new EventsArgs("Concert", "2025-12-31", 500, 2000, new List<Guid> { attractionId1, attractionId2 });
+        var args = new EventsArgs("Concert", "2025-12-31", 500, 2000, [attractionId1, attractionId2]);
 
         var attraction1 = new Attraction { Id = attractionId1, Name = "Roller Coaster" };
         var attraction2 = new Attraction { Id = attractionId2, Name = "Ferris Wheel" };

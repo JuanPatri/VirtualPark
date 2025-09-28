@@ -1,5 +1,4 @@
 using FluentAssertions;
-using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Events.Models;
 
 namespace VirtualPark.BusinessLogic.Test.Events.Modules;
@@ -10,7 +9,9 @@ namespace VirtualPark.BusinessLogic.Test.Events.Modules;
 public class EventsArgsTest
 {
     #region Name
+
     #region Success
+
     [TestMethod]
     [TestCategory("Validation")]
     public void Name_Getter_ReturnsAssignedValue()
@@ -19,9 +20,11 @@ public class EventsArgsTest
         var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 50, 200, attractions);
         eventsArgs.Name.Should().Be("Halloween");
     }
+
     #endregion
 
     #region Failure
+
     [TestMethod]
     [TestCategory("Validation")]
     [DataRow(null)]
@@ -30,17 +33,21 @@ public class EventsArgsTest
     public void Constructor_WithInvalidName_ThrowsArgumentException(string name)
     {
         var attractions = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
-        var act = () => new EventsArgs(name, "2002-07-30", 50, 200, attractions);
+        Func<EventsArgs> act = () => new EventsArgs(name, "2002-07-30", 50, 200, attractions);
 
         act.Should()
             .Throw<ArgumentException>()
             .WithMessage("Value cannot be null or empty.");
     }
+
     #endregion
+
     #endregion
 
     #region Date
+
     #region Success
+
     [TestMethod]
     [TestCategory("Validation")]
     public void DateOfBirth_Getter_ReturnsAssignedValue()
@@ -49,9 +56,11 @@ public class EventsArgsTest
         var eventArgs = new EventsArgs("Halloween", "2025-12-30", 50, 200, attractions);
         eventArgs.Date.Should().Be(new DateOnly(2025, 12, 30));
     }
+
     #endregion
 
     #region Failure
+
     [TestMethod]
     [TestCategory("Validation")]
     public void EventsArgs_ShouldThrowArgumentException_WhenDateFormatIsInvalid()
@@ -68,9 +77,11 @@ public class EventsArgsTest
             .Throw<ArgumentException>()
             .WithMessage($"Invalid date format: {invalidDate}. Expected format is yyyy-MM-dd");
     }
+
     #endregion
 
     #region Failure
+
     [TestCategory("Validation")]
     [TestMethod]
     public void Constructor_WithPastDate_ThrowsArgumentException()
@@ -87,11 +98,15 @@ public class EventsArgsTest
             .Throw<ArgumentException>()
             .WithMessage($"Invalid date: {invalidDate}. Date cannot be in the past");
     }
+
     #endregion
+
     #endregion
 
     #region Capacity
+
     #region Success
+
     [TestMethod]
     [TestCategory("Validation")]
     public void Capacity_Getter_ReturnsAssignedValue()
@@ -100,23 +115,30 @@ public class EventsArgsTest
         var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 100, 200, attractions);
         eventsArgs.Capacity.Should().Be(100);
     }
+
     #endregion
+
     #region Failure
+
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WithNegativeCapacity_ThrowsArgumentException()
     {
         var attractions = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
-        var act = () => new EventsArgs("Halloween", "2025-12-30", -10, 200, attractions);
+        Func<EventsArgs> act = () => new EventsArgs("Halloween", "2025-12-30", -10, 200, attractions);
 
         act.Should()
             .Throw<ArgumentOutOfRangeException>();
     }
+
     #endregion
+
     #endregion
 
     #region Cost
+
     #region Success
+
     [TestMethod]
     [TestCategory("Validation")]
     public void Cost_Getter_ReturnsAssignedValue()
@@ -125,23 +147,28 @@ public class EventsArgsTest
         var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 100, 500, attractions);
         eventsArgs.Cost.Should().Be(500);
     }
+
     #endregion
 
     #region Failure
+
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WithNegativeCost_ThrowsArgumentException()
     {
         var attractions = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
-        var act = () => new EventsArgs("Halloween", "2025-12-30", 100, -200, attractions);
+        Func<EventsArgs> act = () => new EventsArgs("Halloween", "2025-12-30", 100, -200, attractions);
 
         act.Should()
             .Throw<ArgumentOutOfRangeException>();
     }
+
     #endregion
+
     #endregion
 
     #region Attracions
+
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Constructor_WhenAttractionIdsAreValid_ShouldInitializeSuccessfully()
@@ -157,6 +184,7 @@ public class EventsArgsTest
     }
 
     #region Failure
+
     [TestMethod]
     [DataRow(null, DisplayName = "Null list")]
     [DataRow("empty", DisplayName = "Empty list")]
@@ -165,7 +193,7 @@ public class EventsArgsTest
     {
         List<Guid>? ids = caseType switch
         {
-            "empty" => new List<Guid>(),
+            "empty" => [],
             _ => null
         };
 
@@ -174,9 +202,11 @@ public class EventsArgsTest
             .Throw<ArgumentException>()
             .WithMessage("Attractions list cannot be null or empty");
     }
+
     #endregion
 
     #region Failure
+
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenAttractionIdsContainEmptyGuid_ShouldThrowArgumentException()
@@ -188,6 +218,8 @@ public class EventsArgsTest
             .Throw<ArgumentException>()
             .WithMessage("Attractions list contains invalid Guid");
     }
+
     #endregion
+
     #endregion
 }

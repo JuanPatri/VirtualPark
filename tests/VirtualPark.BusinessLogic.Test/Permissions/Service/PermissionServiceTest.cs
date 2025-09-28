@@ -58,8 +58,8 @@ public sealed class PermissionServiceTest
         captured.Roles.Should().ContainSingle(r => r.Id == role.Id);
     }
     #endregion
-    #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Service")]
     [TestCategory("Permission")]
@@ -80,4 +80,6 @@ public sealed class PermissionServiceTest
             .Throw<InvalidOperationException>()
             .WithMessage($"Role with id {roleId} not found.");
     }
+    #endregion
+    #endregion
 }

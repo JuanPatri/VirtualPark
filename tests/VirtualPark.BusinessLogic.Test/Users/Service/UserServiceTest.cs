@@ -469,6 +469,68 @@ public class UserServiceTest
         _visitorProfileRepositoryMock.VerifyAll();
         _rolesRepositoryMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Update_ok()
+    {
+        var existingVp = new VisitorProfile
+        {
+            DateOfBirth = new DateOnly(1990, 1, 1),
+            Membership = VirtualPark.BusinessLogic.Visitors.Entity.Membership.Standard
+        };
+
+        var vpId = existingVp.Id;
+
+        var existingUser = new User
+        {
+            Name = "OldName",
+            LastName = "OldLast",
+            Email = "user@mail.com",
+            Password = "OldPass1!",
+            VisitorProfileId = vpId
+        };
+
+        var userId = existingUser.Id;
+
+        var newVpArgs = new VisitorProfileArgs("2002-07-30", "Premium");
+
+        var args = new UserArgs(
+            name: "NewName",
+            lastName: "NewLast",
+            email: "user@mail.com",
+            password: "NewPass1!",
+            roles: new List<string>()
+        )
+        {
+            VisitorProfile = newVpArgs
+        };
+
+        _usersRepositoryMock
+            .Setup(r => r.Get(u => u.Id == userId))
+            .Returns(existingUser);
+
+        _visitorProfileRepositoryMock
+            .Setup(r => r.Get(vp => vp.Id == existingUser.VisitorProfileId))
+            .Returns(existingVp);
+
+        _usersRepositoryMock
+            .Setup(r => r.Update(It.Is<User>(u =>
+                u.Id == userId &&
+                u.Name == args.Name &&
+                u.LastName == args.LastName &&
+                u.Password == args.Password &&
+                u.Email == "user@mail.com" &&
+                u.VisitorProfileId == vpId &&
+                u.VisitorProfile!.Id == vpId &&
+                u.VisitorProfile.DateOfBirth == new DateOnly(2002, 7, 30) &&
+                u.VisitorProfile.Membership == VirtualPark.BusinessLogic.Visitors.Entity.Membership.Premium)));
+        _userService.Update(args, userId);
+
+        _usersRepositoryMock.VerifyAll();
+        _visitorProfileRepositoryMock.VerifyAll();
+        _rolesRepositoryMock.VerifyNoOtherCalls();
+    }
     #endregion
     #endregion
 }

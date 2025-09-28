@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.TypeIncidences.Entity;
@@ -26,23 +27,25 @@ public class TypeIncidenceServiceTest
     #region Create
 
     [TestMethod]
-    public void Create_WhenArgsAreValid_ShouldCreateTypeIncidence()
+    public void Create_WhenArgsAreValid_ShouldReturnNewGuid_AndAddEntityWithSameId()
     {
         TypeIncidence? captured = null;
 
         _mockTypeIncidenceRepository
-            .Setup(x => x.Add(It.IsAny<TypeIncidence>()))
+            .Setup(r => r.Add(It.IsAny<TypeIncidence>()))
             .Callback<TypeIncidence>(ti => captured = ti);
 
-        var typeIncidence = _typeIncidenceService.Create(_typeIncidenceArgs);
+        Guid id = _typeIncidenceService.Create(_typeIncidenceArgs);
 
-        typeIncidence.Should().NotBe(Guid.Empty);
-
+        id.Should().NotBe(Guid.Empty);
         captured.Should().NotBeNull();
-        captured!.Type.Should().Be(_typeIncidenceArgs.Type);
+        captured!.Id.Should().Be(id);
+        captured.Type.Should().Be(_typeIncidenceArgs.Type);
 
-        _mockTypeIncidenceRepository.Verify(x => x.Add(It.IsAny<TypeIncidence>()), Times.Once);
+        _mockTypeIncidenceRepository.Verify(r => r.Add(It.IsAny<TypeIncidence>()), Times.Once);
+        _mockTypeIncidenceRepository.VerifyAll();
     }
+
     #endregion
     #region MapToEntity
 
@@ -54,6 +57,55 @@ public class TypeIncidenceServiceTest
         typeIncidence.Id.Should().NotBe(Guid.Empty);
         typeIncidence.Type.Should().Be(_typeIncidenceArgs.Type);
     }
+    #endregion
+    #region GetAll
+    [TestMethod]
+    public void GetAll_WhenPredicateProvided_ShouldReturnFiltered_AndCallWithPredicate()
+    {
+        var data = new List<TypeIncidence>
+        {
+            new() { Id = Guid.NewGuid(), Type = "Locked" },
+            new() { Id = Guid.NewGuid(), Type = "Broken" },
+            new() { Id = Guid.NewGuid(), Type = "Locked" }
+        };
+
+        _mockTypeIncidenceRepository
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
+            .Returns<Expression<Func<TypeIncidence, bool>>>(pred =>
+                data.Where(pred.Compile()).ToList());
+
+        Expression<Func<TypeIncidence, bool>> predicate = t => t.Type == "Locked";
+
+        var result = _typeIncidenceService.GetAll(predicate);
+
+        result.Should().HaveCount(2);
+        result.All(t => t.Type == "Locked").Should().BeTrue();
+
+        _mockTypeIncidenceRepository.Verify(
+            r => r.GetAll(It.IsAny<Expression<Func<TypeIncidence, bool>>>()),
+            Times.Once);
+
+        _mockTypeIncidenceRepository.Verify(r => r.GetAll(null), Times.Never);
+
+        _mockTypeIncidenceRepository.VerifyAll();
+    }
+
+    [TestMethod]
+    public void GetAll_WhenRepositoryReturnsEmpty_ShouldReturnEmptyList()
+    {
+        _mockTypeIncidenceRepository
+            .Setup(r => r.GetAll(null))
+            .Returns(new List<TypeIncidence>());
+
+        var result = _typeIncidenceService.GetAll();
+
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+
+        _mockTypeIncidenceRepository.Verify(r => r.GetAll(null), Times.Once);
+        _mockTypeIncidenceRepository.VerifyAll();
+    }
+
     #endregion
 
 }

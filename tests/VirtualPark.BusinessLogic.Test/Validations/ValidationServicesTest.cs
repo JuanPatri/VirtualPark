@@ -338,5 +338,18 @@ public class ValidationServicesTest
 
         result.Should().Be(Membership.Standard);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ParseMembership_failure()
+    {
+        var input = "InvalidValue";
+
+        Action act = () => ValidationServices.ParseMembership(input);
+
+        var ex = act.Should().Throw<ArgumentException>().Which;
+        ex.ParamName.Should().Be("membership");
+        ex.Message.Should().StartWith("Invalid membership value: InvalidValue");
+    }
     #endregion
 }

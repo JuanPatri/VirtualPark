@@ -328,6 +328,7 @@ public class ValidationServicesTest
     #endregion
 
     #region ParseMembership
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void ParseMembership_ShouldReturnEnum_WhenValueIsValidIgnoringCase()
@@ -338,10 +339,12 @@ public class ValidationServicesTest
 
         result.Should().Be(Membership.Standard);
     }
+    #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void ParseMembership_failure()
+    public void ParseMembership_ShouldThrow_WhenValueIsInvalid()
     {
         var input = "InvalidValue";
 
@@ -351,5 +354,6 @@ public class ValidationServicesTest
         ex.ParamName.Should().Be("membership");
         ex.Message.Should().StartWith("Invalid membership value: InvalidValue");
     }
+    #endregion
     #endregion
 }

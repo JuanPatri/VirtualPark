@@ -89,6 +89,7 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
         {
             user.VisitorProfile.Membership = args.VisitorProfile.Membership;
             user.VisitorProfile.DateOfBirth = args.VisitorProfile.DateOfBirth;
+            user.VisitorProfile.Score = args.VisitorProfile.Score;
         }
     }
 

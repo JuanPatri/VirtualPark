@@ -17,7 +17,7 @@ public class VisitorProfileService(IRepository<VisitorProfile> visitorProfileRep
         return entity;
     }
 
-    public void Remove(Guid id)
+    public void Remove(Guid? id)
     {
         var visitorProfile = _visitorProfileRepository.Get(v => v.Id == id);
 

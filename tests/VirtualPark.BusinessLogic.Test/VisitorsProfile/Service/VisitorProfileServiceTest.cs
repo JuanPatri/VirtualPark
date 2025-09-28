@@ -48,7 +48,7 @@ public class VisitorProfileServiceTest
     public void RemoveVisitorProfile_ShouldRemove_WhenVisitorExists()
     {
         var visitor = new VisitorProfile();
-        var id = visitor.Id;
+        Guid? id = visitor.Id;
 
         _repositoryMock
             .Setup(r => r.Get(v => v.Id == id))
@@ -68,7 +68,7 @@ public class VisitorProfileServiceTest
     [TestCategory("Validation")]
     public void RemoveVisitorProfile_ShouldThrow_WhenVisitorDoesNotExist()
     {
-        var id = Guid.NewGuid();
+        Guid? id = Guid.NewGuid();
 
         _repositoryMock
             .Setup(r => r.Get(v => v.Id == id))

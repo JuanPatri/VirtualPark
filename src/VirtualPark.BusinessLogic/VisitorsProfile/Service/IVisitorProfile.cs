@@ -7,5 +7,5 @@ public interface IVisitorProfile
 {
     public VisitorProfile Create(VisitorProfileArgs args);
 
-    public void Remove(Guid id);
+    public void Remove(Guid? id);
 }

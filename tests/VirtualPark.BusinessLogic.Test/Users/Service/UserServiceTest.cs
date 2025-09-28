@@ -379,6 +379,39 @@ public class UserServiceTest
         _rolesRepositoryMock.VerifyAll();
         _visitorProfileRepositoryMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Remove_ok()
+    {
+        var visitorProfileId = Guid.NewGuid();
+        var dbUser = new User
+        {
+            Name = "Pepe",
+            LastName = "Perez",
+            Email = "pepe@mail.com",
+            Password = "Password123!",
+            VisitorProfileId = visitorProfileId
+        };
+        var id = dbUser.Id;
+
+        _usersRepositoryMock
+            .Setup(r => r.Get(u => u.Id == id))
+            .Returns(dbUser);
+
+        _visitorProfileServiceMock
+            .Setup(s => s.Remove(visitorProfileId));
+
+        _usersRepositoryMock
+            .Setup(r => r.Remove(dbUser));
+
+        _userService.Remove(id);
+
+        _usersRepositoryMock.VerifyAll();
+        _visitorProfileServiceMock.VerifyAll();
+        _rolesRepositoryMock.VerifyAll();
+        _visitorProfileRepositoryMock.VerifyAll();
+    }
     #endregion
 
     #region Failure

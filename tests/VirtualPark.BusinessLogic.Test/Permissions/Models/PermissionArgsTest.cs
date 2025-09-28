@@ -4,9 +4,13 @@ using VirtualPark.BusinessLogic.Permissions.Models;
 namespace VirtualPark.BusinessLogic.Test.Permissions.Models;
 
 [TestClass]
+[TestCategory("Args")]
+[TestCategory("Permission")]
 public sealed class PermissionArgsTest
 {
+    #region Constructor
     [TestMethod]
+    [TestCategory("Behaviour")]
     public void Constructor_WhenValidInputs_ShouldCreatePermissionArgs()
     {
         var roles = new List<Guid> { Guid.NewGuid() };
@@ -17,4 +21,5 @@ public sealed class PermissionArgsTest
         args.Key.Should().Be("event.create");
         args.Roles.Should().HaveCount(1);
     }
+    #endregion
 }

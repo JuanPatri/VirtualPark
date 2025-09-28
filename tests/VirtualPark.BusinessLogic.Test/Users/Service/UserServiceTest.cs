@@ -472,7 +472,7 @@ public class UserServiceTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Update_ok()
+    public void Update_ShouldUpdateVisitorProfile_WhenArgsHasVisitorProfile()
     {
         var existingVp = new VisitorProfile
         {

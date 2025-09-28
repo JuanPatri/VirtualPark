@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Permissions.Models;
 
@@ -59,4 +58,22 @@ public sealed class PermissionArgsTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [DataRow(null, DisplayName = "Null list")]
+    [DataRow("empty", DisplayName = "Empty list")]
+    [TestCategory("Validation")]
+    public void Constructor_WhenRolesIdsAreNullOrEmpty_ShouldThrowArgumentException(string caseType)
+    {
+        List<Guid>? ids = caseType switch
+        {
+            "empty" => [],
+            _ => null
+        };
+
+        FluentActions.Invoking(() => new PermissionArgs("Can create users", "create-user", ids!))
+            .Should()
+            .Throw<ArgumentException>()
+            .WithMessage("Events list cannot be null or empty");
+    }
 }

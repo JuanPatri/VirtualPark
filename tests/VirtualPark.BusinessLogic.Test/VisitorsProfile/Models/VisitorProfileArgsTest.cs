@@ -69,5 +69,15 @@ public class VisitorProfileArgsTest
         var visitorProfileArgs = new VisitorProfileArgs("2002-07-30", "Standard", "85");
         visitorProfileArgs.Score.Should().Be(85);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_fail()
+    {
+        var act = () => new VisitorProfileArgs("2002-07-30", "Standard", "abc");
+
+        act.Should().Throw<FormatException>()
+            .WithMessage("The value 'abc' is not a valid integer*");
+    }
     #endregion
 }

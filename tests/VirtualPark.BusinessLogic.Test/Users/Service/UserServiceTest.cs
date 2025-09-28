@@ -407,6 +407,8 @@ public class UserServiceTest
     #endregion
     #endregion
 
+    #region Update
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void Update_ShouldUpdateBasicFields_WhenArgsWithoutVisitorProfile()
@@ -459,8 +461,7 @@ public class UserServiceTest
                 u.VisitorProfileId == vpId &&
                 u.VisitorProfile!.Id == vpId &&
                 u.VisitorProfile.DateOfBirth == existingVp.DateOfBirth &&
-                u.VisitorProfile.Membership == existingVp.Membership
-            )));
+                u.VisitorProfile.Membership == existingVp.Membership)));
 
         _userService.Update(args, userId);
 
@@ -468,4 +469,6 @@ public class UserServiceTest
         _visitorProfileRepositoryMock.VerifyAll();
         _rolesRepositoryMock.VerifyAll();
     }
+    #endregion
+    #endregion
 }

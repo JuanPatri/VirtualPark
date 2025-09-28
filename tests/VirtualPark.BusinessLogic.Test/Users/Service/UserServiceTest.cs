@@ -531,9 +531,10 @@ public class UserServiceTest
     }
     #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void Update_failure()
+    public void Update_ShouldThrow_WhenUserDoesNotExist()
     {
         var args = new UserArgs(
             name: "Any",
@@ -558,5 +559,6 @@ public class UserServiceTest
         _visitorProfileRepositoryMock.VerifyNoOtherCalls();
         _rolesRepositoryMock.VerifyNoOtherCalls();
     }
+    #endregion
     #endregion
 }

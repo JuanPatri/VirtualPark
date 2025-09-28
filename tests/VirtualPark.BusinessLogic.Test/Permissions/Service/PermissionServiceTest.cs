@@ -29,6 +29,8 @@ public sealed class PermissionServiceTest
             _permissionRepositoryMock.Object);
     }
 
+    #region Create
+    #region Success
     [TestMethod]
     [TestCategory("Service")]
     [TestCategory("Permission")]
@@ -55,4 +57,6 @@ public sealed class PermissionServiceTest
         captured!.Key.Should().Be("user.manage");
         captured.Roles.Should().ContainSingle(r => r.Id == role.Id);
     }
+    #endregion
+    #endregion
 }

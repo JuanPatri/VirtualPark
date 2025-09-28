@@ -12,25 +12,32 @@ public sealed class PermissionService(IRepository<Role> roleRepository, IReposit
 
     public Guid Create(PermissionArgs args)
     {
-        var entity = new Permission
-        {
-            Description = args.Description,
-            Key = args.Key
-        };
+        List<Role> roles = ValidateAndLoadRoles(args.Roles);
+        Permission entity = MapToEntity(args, roles);
+        _permissionRepository.Add(entity);
+        return entity.Id;
+    }
 
-        foreach (Guid id in args.Roles)
+    private static Permission MapToEntity(PermissionArgs args, List<Role> roles)
+    {
+        return new Permission { Key = args.Key, Description = args.Description, Roles = roles };
+    }
+
+    private List<Role> ValidateAndLoadRoles(List<Guid> rolesIds)
+    {
+        var attractions = new List<Role>();
+
+        foreach(Guid id in rolesIds)
         {
-            Role? role = _roleRepository.Get(r => r.Id == id);
-            if (role == null)
+            Role? attraction = _roleRepository.Get(a => a.Id == id);
+            if(attraction == null)
             {
-                throw new InvalidOperationException($"Role with id {id} not found.");
+                throw new InvalidOperationException($"Attraction with id {id} not found.");
             }
 
-            entity.Roles.Add(role);
+            attractions.Add(attraction);
         }
 
-        _permissionRepository.Add(entity);
-
-        return entity.Id;
+        return attractions;
     }
 }

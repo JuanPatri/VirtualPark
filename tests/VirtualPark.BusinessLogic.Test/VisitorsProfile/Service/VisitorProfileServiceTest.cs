@@ -42,6 +42,7 @@ public class VisitorProfileServiceTest
     #endregion
 
     #region Remove
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void RemoveVisitorProfile_ShouldRemove_WhenVisitorExists()
@@ -60,10 +61,12 @@ public class VisitorProfileServiceTest
 
         _repositoryMock.VerifyAll();
     }
+    #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void RemoveVisitorProfile_failure()
+    public void RemoveVisitorProfile_ShouldThrow_WhenVisitorDoesNotExist()
     {
         var id = Guid.NewGuid();
 
@@ -77,5 +80,6 @@ public class VisitorProfileServiceTest
             .WithMessage("Visitor don't exist");
         _repositoryMock.VerifyAll();
     }
+    #endregion
     #endregion
 }

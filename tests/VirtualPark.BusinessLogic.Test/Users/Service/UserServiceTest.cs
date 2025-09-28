@@ -328,5 +328,24 @@ public class UserServiceTest
         _rolesRepositoryMock.VerifyAll();
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAll_ShouldThrow_WhenRepositoryReturnsNull()
+    {
+        _usersRepositoryMock
+            .Setup(r => r.GetAll(null))
+            .Returns((List<User>)null!);
+
+        Action act = () => _userService.GetAll();
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("Dont have any users");
+
+        _usersRepositoryMock.VerifyAll();
+        _visitorProfileRepositoryMock.VerifyAll();
+        _rolesRepositoryMock.VerifyAll();
+    }
     #endregion
 }

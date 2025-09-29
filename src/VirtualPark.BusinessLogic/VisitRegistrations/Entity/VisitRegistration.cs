@@ -10,6 +10,6 @@ public sealed class VisitRegistration
     public DateTime Date { get; set; } = DateTime.Today;
     public List<Attraction> Attractions { get; set; } = [];
     public VisitorProfile Visitor { get; set; } = null!;
-    public Guid VisitorId { get; init; }
+    public Guid VisitorId { get; set; }
     public Ticket Ticket { get; set; } = null!;
 }

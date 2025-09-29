@@ -359,4 +359,38 @@ public sealed class IncidenceTest
     }
 
     #endregion
+    #region Exist
+
+    [TestMethod]
+    public void Exist_WhenRepositoryReturnsTrue_ShouldReturnTrue()
+    {
+        Expression<Func<Incidence, bool>> predicate = i => i.Active;
+        _mockIncidenceRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Incidence, bool>>>()))
+            .Returns(true);
+
+        var result = _incidenceService.Exist(predicate);
+
+        result.Should().BeTrue();
+        _mockIncidenceRepository.Verify(
+            r => r.Exist(It.IsAny<Expression<Func<Incidence, bool>>>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void Exist_WhenRepositoryReturnsFalse_ShouldReturnFalse()
+    {
+        Expression<Func<Incidence, bool>> predicate = i => i.Active;
+        _mockIncidenceRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Incidence, bool>>>()))
+            .Returns(false);
+
+        var result = _incidenceService.Exist(predicate);
+
+        result.Should().BeFalse();
+        _mockIncidenceRepository.Verify(
+            r => r.Exist(It.IsAny<Expression<Func<Incidence, bool>>>()), Times.Once);
+    }
+
+    #endregion
+
 }

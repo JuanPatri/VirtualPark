@@ -41,6 +41,22 @@ public class VisitorProfileService(IRepository<VisitorProfile> visitorProfileRep
         return visitorProfile;
     }
 
+    public void Update(VisitorProfileArgs args, Guid visitorId)
+    {
+        var visitorProfile = Get(visitorId);
+
+        ApplyChange(visitorProfile!, args);
+
+        _visitorProfileRepository.Update(visitorProfile!);
+    }
+
+    private void ApplyChange(VisitorProfile visitorProfile, VisitorProfileArgs args)
+    {
+        visitorProfile.Membership = args.Membership;
+        visitorProfile.DateOfBirth = args.DateOfBirth;
+        visitorProfile.Score = args.Score;
+    }
+
     private static VisitorProfile MapToEntity(VisitorProfileArgs args) => new VisitorProfile
     {
         DateOfBirth = args.DateOfBirth,

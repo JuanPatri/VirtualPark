@@ -95,7 +95,7 @@ public class VisitorProfileServiceTest
             Membership = Membership.Standard,
             Score = 85
         };
-        var id = expected.Id;
+        Guid? id = expected.Id;
 
         _repositoryMock
             .Setup(r => r.Get(v => v.Id == id))
@@ -104,7 +104,7 @@ public class VisitorProfileServiceTest
         var result = _service.Get(id);
 
         result.Should().NotBeNull();
-        result!.Id.Should().Be(id);
+        result!.Id.Should().Be((Guid)id);
         result.DateOfBirth.Should().Be(new DateOnly(2000, 1, 1));
         result.Membership.Should().Be(Membership.Standard);
         result.Score.Should().Be(85);
@@ -118,7 +118,7 @@ public class VisitorProfileServiceTest
     [TestCategory("Validation")]
     public void GetVisitorProfile_ShouldThrow_WhenVisitorDoesNotExist()
     {
-        var id = Guid.NewGuid();
+        Guid? id = Guid.NewGuid();
 
         _repositoryMock
             .Setup(r => r.Get(v => v.Id == id))

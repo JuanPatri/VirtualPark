@@ -19,7 +19,7 @@ public class VisitorProfileService(IRepository<VisitorProfile> visitorProfileRep
 
     public void Remove(Guid? id)
     {
-        var visitorProfile = _visitorProfileRepository.Get(v => v.Id == id);
+        var visitorProfile = Get(id);
 
         if(visitorProfile == null)
         {
@@ -29,7 +29,7 @@ public class VisitorProfileService(IRepository<VisitorProfile> visitorProfileRep
         _visitorProfileRepository.Remove(visitorProfile);
     }
 
-    public VisitorProfile? Get(Guid id)
+    public VisitorProfile? Get(Guid? id)
     {
         var visitorProfile = _visitorProfileRepository.Get(v => v.Id == id);
 

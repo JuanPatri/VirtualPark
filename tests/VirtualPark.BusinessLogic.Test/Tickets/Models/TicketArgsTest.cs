@@ -86,5 +86,20 @@ public sealed class TicketArgsTest
         args.Type.Should().Be(EntranceType.Event);
     }
     #endregion
-    #endregion 
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_WhenTypeIsInvalid_ShouldThrowArgumentException()
+    {
+        const string invalidType = "InvalidType";
+
+        Action act = () =>
+        {
+            var ticketArgs = new TicketArgs("2025-12-15", invalidType, Guid.NewGuid(), Guid.NewGuid());
+        };
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage($"Invalid entrance type value: {invalidType}");
+    }
+    #endregion
 }

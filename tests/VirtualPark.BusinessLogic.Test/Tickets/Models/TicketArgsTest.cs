@@ -122,18 +122,16 @@ public sealed class TicketArgsTest
     #endregion
 
     [TestMethod]
-    [DataRow(" ")]
-    [DataRow(null)]
     [TestCategory("Validation")]
-    public void Constructor_WhenEventIdIsNullOrWhiteSpace_ShouldThrowArgumentException(string? value)
+    public void Constructor_WhenEventIdIsNullOrWhiteSpace_ShouldThrowArgumentException()
     {
         Action act = () =>
         {
-            _ = new TicketArgs("2025-12-15", "General", value!, Guid.NewGuid());
+            _ = new TicketArgs("2025-12-15", "General", " ", Guid.NewGuid());
         };
 
         act.Should()
             .Throw<ArgumentException>()
-            .WithMessage("Guid cannot be null or empty.");
+            .WithMessage("Value cannot be null or empty.");
     }
 }

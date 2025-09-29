@@ -8,21 +8,6 @@ public sealed class TicketArgs(string date, string type, string eventId, Guid vi
 
     public EntranceType Type { get; } = ValidationServices.ParseEntranceType(type);
 
-    public Guid EventId { get; } = ValidateAndParseGuid(eventId);
+    public Guid EventId { get; } = ValidationServices.ValidateAndParseGuid(eventId);
     public Guid VisitorId { get; } = visitorId;
-
-    private static Guid ValidateAndParseGuid(string value)
-    {
-        if(string.IsNullOrWhiteSpace(value))
-        {
-            throw new ArgumentException("Value cannot be null or empty.");
-        }
-
-        if(!Guid.TryParse(value, out var result))
-        {
-            throw new FormatException($"The value '{value}' is not a valid GUID.");
-        }
-
-        return result;
-    }
 }

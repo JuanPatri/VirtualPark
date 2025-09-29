@@ -91,7 +91,6 @@ public sealed class PermissionServiceTest
     [TestCategory("Behaviour")]
     public void Update_WhenRoleDoesNotExist_ShouldThrow()
     {
-        var id = Guid.NewGuid();
         var existing = new Permission
         {
             Key = "user.view",
@@ -111,12 +110,46 @@ public sealed class PermissionServiceTest
 
         var args = new PermissionArgs("New description", "user.edit", new List<Guid> { roleId });
 
-        Action act = () => _service.Update(id, args);
+        Action act = () => _service.Update(existing.Id, args);
 
         act.Should()
             .Throw<InvalidOperationException>()
             .WithMessage($"Role with id {roleId} not found.");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Service")]
+    [TestCategory("Permission")]
+    [TestCategory("Behaviour")]
+    public void Update_WhenPermissionExists_ShouldApplyChangesAndPersist()
+    {
+        var existing = new Permission
+        {
+            Key = "user.view",
+            Description = "Old description",
+            Roles = new List<Role>()
+        };
+
+        _permissionRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()))
+            .Returns(existing);
+
+        var role = new Role { Name = "Admin", Description = "Administrator role" };
+
+        _roleRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Role, bool>>>()))
+            .Returns(role);
+
+        var args = new PermissionArgs("New description", "user.edit", new List<Guid> { role.Id });
+
+        _service.Update(existing.Id, args);
+
+        existing.Description.Should().Be("New description");
+        existing.Key.Should().Be("user.edit");
+        existing.Roles.Should().ContainSingle(r => r.Id == role.Id);
+
+        _permissionRepositoryMock.Verify(r => r.Update(existing), Times.Once);
+    }
     #endregion
 }

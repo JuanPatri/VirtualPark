@@ -75,9 +75,10 @@ public class VisitRegistrationArgsTest
     }
     #endregion
 
+    #region AttractionId
     [TestMethod]
     [TestCategory("Validation")]
-    public void AttractionsId_success()
+    public void AttractionsId_ShouldParseAllGuids_InOrder()
     {
         var g1 = Guid.NewGuid();
         var g2 = Guid.NewGuid();
@@ -91,4 +92,5 @@ public class VisitRegistrationArgsTest
         args.AttractionsId.Should().HaveCount(2);
         args.AttractionsId.Should().ContainInOrder(new[] { g1, g2 });
     }
+    #endregion
 }

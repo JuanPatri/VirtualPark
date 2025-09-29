@@ -25,6 +25,12 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
         return _incidenceRepository.GetAll(predicate);
     }
 
+    public Incidence Get(Expression<Func<Incidence, bool>> predicate)
+    {
+        Incidence incidece = _incidenceRepository.Get(predicate);
+        return incidece;
+    }
+
     public Incidence MapToEntity(IncidenceArgs incidenceArgs)
     {
         return new Incidence

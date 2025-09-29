@@ -86,6 +86,7 @@ public sealed class TicketArgsTest
         args.Type.Should().Be(EntranceType.Event);
     }
     #endregion
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenTypeIsInvalid_ShouldThrowArgumentException()
@@ -101,5 +102,6 @@ public sealed class TicketArgsTest
             .Throw<ArgumentException>()
             .WithMessage($"Invalid entrance type value: {invalidType}");
     }
+    #endregion
     #endregion
 }

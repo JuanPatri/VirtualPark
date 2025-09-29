@@ -1,7 +1,7 @@
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Events.Models;
 
-namespace VirtualPark.BusinessLogic.Test.Events.Modules;
+namespace VirtualPark.BusinessLogic.Test.Events.Models;
 
 [TestClass]
 [TestCategory("Models")]

@@ -1,4 +1,6 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
+using VirtualPark.BusinessLogic.VisitorsProfile.Models;
 using VirtualPark.BusinessLogic.VisitRegistrations.Models;
 
 namespace VirtualPark.BusinessLogic.Test.VisitRegistrations.Models;
@@ -43,4 +45,20 @@ public class VisitRegistrationArgsTest
     #endregion
 
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void VisitorProfile_ok()
+    {
+        var vp = new VisitorProfileArgs("2002-07-30", "Standard", "85");
+
+        var args = new VisitRegistrationArgs("2025-09-30", vp);
+
+        args.VisitorProfile.Should().NotBeNull();
+        args.VisitorProfile.Should().BeSameAs(vp);
+        args.VisitorProfile.DateOfBirth.Should().Be(new DateOnly(2002, 7, 30));
+        args.VisitorProfile.Membership.Should().Be(Membership.Standard);
+        args.VisitorProfile.Score.Should().Be(85);
+    }
+
 }

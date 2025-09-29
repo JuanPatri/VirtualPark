@@ -32,8 +32,6 @@ public sealed class PermissionServiceTest
     #region Create
     #region Success
     [TestMethod]
-    [TestCategory("Service")]
-    [TestCategory("Permission")]
     [TestCategory("Behaviour")]
     public void Create_WhenArgsAreValid_ShouldReturnPermissionId()
     {
@@ -61,8 +59,6 @@ public sealed class PermissionServiceTest
 
     #region Failure
     [TestMethod]
-    [TestCategory("Service")]
-    [TestCategory("Permission")]
     [TestCategory("Behaviour")]
     public void Create_WhenRoleDoesNotExist_ShouldThrow()
     {
@@ -86,8 +82,6 @@ public sealed class PermissionServiceTest
     #region Update
     #region Failure
     [TestMethod]
-    [TestCategory("Service")]
-    [TestCategory("Permission")]
     [TestCategory("Behaviour")]
     public void Update_WhenRoleDoesNotExist_ShouldThrow()
     {
@@ -120,8 +114,6 @@ public sealed class PermissionServiceTest
 
     #region Success
     [TestMethod]
-    [TestCategory("Service")]
-    [TestCategory("Permission")]
     [TestCategory("Behaviour")]
     public void Update_WhenPermissionExists_ShouldApplyChangesAndPersist()
     {
@@ -158,8 +150,6 @@ public sealed class PermissionServiceTest
     #region Delete
     #region Success
     [TestMethod]
-    [TestCategory("Service")]
-    [TestCategory("Permission")]
     [TestCategory("Behaviour")]
     public void Remove_WhenPermissionExists_ShouldCallRepositoryRemove()
     {
@@ -181,8 +171,6 @@ public sealed class PermissionServiceTest
 
     #region Failure
     [TestMethod]
-    [TestCategory("Service")]
-    [TestCategory("Permission")]
     [TestCategory("Behaviour")]
     public void Remove_WhenPermissionDoesNotExist_ShouldThrow()
     {
@@ -204,8 +192,6 @@ public sealed class PermissionServiceTest
     #region GetAll
     #region NoPredicate
     [TestMethod]
-    [TestCategory("Service")]
-    [TestCategory("Permission")]
     [TestCategory("Behaviour")]
     public void GetAll_WhenNoPredicate_ShouldReturnAllPermissions()
     {
@@ -227,8 +213,6 @@ public sealed class PermissionServiceTest
     }
     #endregion
     [TestMethod]
-    [TestCategory("Service")]
-    [TestCategory("Permission")]
     [TestCategory("Behaviour")]
     public void GetAll_WhenPredicateProvided_ShouldReturnFilteredPermissions()
     {

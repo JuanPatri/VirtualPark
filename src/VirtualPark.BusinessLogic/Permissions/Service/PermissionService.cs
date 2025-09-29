@@ -70,6 +70,11 @@ public sealed class PermissionService(IRepository<Role> roleRepository, IReposit
 
     public List<Permission> GetAll(Expression<Func<Permission, bool>>? predicate = null)
     {
-        return _permissionRepository.GetAll().ToList();
+        if(predicate == null)
+        {
+            return _permissionRepository.GetAll().ToList();
+        }
+
+        return _permissionRepository.GetAll(predicate).ToList();
     }
 }

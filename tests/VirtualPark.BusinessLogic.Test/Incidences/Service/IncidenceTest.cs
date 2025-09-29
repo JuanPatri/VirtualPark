@@ -392,5 +392,69 @@ public sealed class IncidenceTest
     }
 
     #endregion
+    #region Update
+
+        [TestMethod]
+        public void Update_WhenEntityExists_ShouldApplyArgsAndCallRepositoryUpdate()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var existing = new Incidence
+            {
+                Id = id,
+                Description = "Old",
+                Start = new DateTime(2020,1,1,8,0,0),
+                End = new DateTime(2020,1,1,9,0,0),
+                AttractionId = Guid.NewGuid(),
+                Active = false,
+                Type = null
+            };
+
+            _mockIncidenceRepository
+                .Setup(r => r.Get(It.IsAny<Expression<Func<Incidence, bool>>>()))
+                .Returns(existing);
+
+            _mockTypeIncidenceRepository
+                .Setup(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
+                .Returns(new TypeIncidence { Id = Guid.Parse(_incidenceArgs.TypeIncidence!.ToString()), Type = "Locked" });
+
+            Incidence? captured = null;
+            _mockIncidenceRepository
+                .Setup(r => r.Update(It.IsAny<Incidence>()))
+                .Callback<Incidence>(i => captured = i);
+
+            _incidenceService.Update(id, _incidenceArgs);
+
+            captured.Should().NotBeNull();
+            captured!.Id.Should().Be(id);
+            captured.Description.Should().Be(_incidenceArgs.Description);
+            captured.Start.Should().Be(_incidenceArgs.Start);
+            captured.End.Should().Be(_incidenceArgs.End);
+            captured.AttractionId.Should().Be(_incidenceArgs.AttractionId);
+            captured.Active.Should().BeTrue();
+
+            _mockIncidenceRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Incidence, bool>>>()), Times.Once);
+            _mockIncidenceRepository.Verify(r => r.Update(It.IsAny<Incidence>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void Update_WhenEntityDoesNotExist_ShouldThrowInvalidOperationException_AndNotCallUpdate()
+        {
+            var id = Guid.NewGuid();
+
+            _mockIncidenceRepository
+                .Setup(r => r.Get(It.IsAny<Expression<Func<Incidence, bool>>>()))
+                .Returns((Incidence?)null);
+
+            Action act = () => _incidenceService.Update(id, _incidenceArgs);
+
+            act.Should().Throw<InvalidOperationException>()
+               .WithMessage($"Incidence with id {id} not found.");
+
+            _mockIncidenceRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Incidence, bool>>>()), Times.Once);
+            _mockIncidenceRepository.Verify(r => r.Update(It.IsAny<Incidence>()), Times.Never);
+        }
+
+        #endregion
 
 }

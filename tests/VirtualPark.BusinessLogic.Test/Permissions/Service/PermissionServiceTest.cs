@@ -212,6 +212,8 @@ public sealed class PermissionServiceTest
         result.Should().Contain(p => p.Key == "user.edit");
     }
     #endregion
+
+    #region Predicate
     [TestMethod]
     [TestCategory("Behaviour")]
     public void GetAll_WhenPredicateProvided_ShouldReturnFilteredPermissions()
@@ -231,5 +233,6 @@ public sealed class PermissionServiceTest
         result.Should().HaveCount(1);
         result[0].Key.Should().Be("user.edit");
     }
+    #endregion
     #endregion
 }

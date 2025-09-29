@@ -118,6 +118,7 @@ public sealed class PermissionServiceTest
     }
     #endregion
 
+    #region Success
     [TestMethod]
     [TestCategory("Service")]
     [TestCategory("Permission")]
@@ -151,5 +152,6 @@ public sealed class PermissionServiceTest
 
         _permissionRepositoryMock.Verify(r => r.Update(existing), Times.Once);
     }
+    #endregion
     #endregion
 }

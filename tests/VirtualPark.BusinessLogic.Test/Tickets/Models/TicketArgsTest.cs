@@ -143,6 +143,8 @@ public sealed class TicketArgsTest
     #endregion
     #endregion
 
+    #region VisitorId
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenVisitorIdIsValid_ShouldAssignVisitorId()
@@ -153,4 +155,6 @@ public sealed class TicketArgsTest
 
         args.VisitorId.Should().Be(visitorId);
     }
+    #endregion
+    #endregion
 }

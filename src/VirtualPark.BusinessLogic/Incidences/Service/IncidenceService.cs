@@ -26,6 +26,21 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
         return incidence.Id;
     }
 
+    public Incidence MapToEntity(IncidenceArgs incidenceArgs)
+    {
+        Incidence incidence = new Incidence
+        {
+            Type = FindTypeIncidenceById(incidenceArgs.TypeIncidence),
+            Description = incidenceArgs.Description,
+            Start = incidenceArgs.Start,
+            End = incidenceArgs.End,
+            AttractionId = incidenceArgs.AttractionId,
+            Active = incidenceArgs.Active
+        };
+
+        return incidence;
+    }
+
     public TypeIncidence? FindTypeIncidenceById(Guid typeIncidenceId)
     {
         return _typeIncidenceRepository.Get(t => t.Id == typeIncidenceId);

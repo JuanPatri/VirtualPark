@@ -179,6 +179,7 @@ public sealed class PermissionServiceTest
     }
     #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Service")]
     [TestCategory("Permission")]
@@ -197,5 +198,6 @@ public sealed class PermissionServiceTest
             .Throw<InvalidOperationException>()
             .WithMessage($"Permission with id {id} not found.");
     }
+    #endregion
     #endregion
 }

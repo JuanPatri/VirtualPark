@@ -94,5 +94,18 @@ public sealed class VisitRegistrationTest
 
         visit.VisitorId.Should().Be(id);
     }
+
+    [TestMethod]
+    [TestCategory("GetterSetter")]
+    public void VisitorId_shouldBeSettable()
+    {
+        var id = Guid.NewGuid();
+
+        var visit = new VisitRegistration();
+
+        visit.VisitorId = id;
+
+        visit.VisitorId.Should().Be(id);
+    }
     #endregion
 }

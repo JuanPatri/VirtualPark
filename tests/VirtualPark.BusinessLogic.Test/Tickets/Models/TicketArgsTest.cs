@@ -55,5 +55,21 @@ public sealed class TicketArgsTest
             .WithMessage($"Invalid date format: {invalidDate}. Expected format is yyyy-MM-dd");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_WithPastDate_ThrowsArgumentException()
+    {
+        const string pastDate = "2000-01-01";
+
+        Action act = () =>
+        {
+            var unused = new TicketArgs(pastDate, EntranceType.General, Guid.NewGuid(), Guid.NewGuid());
+        };
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage($"Invalid date: {pastDate}. Date cannot be in the past");
+    }
     #endregion
 }

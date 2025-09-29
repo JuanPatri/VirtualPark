@@ -66,4 +66,21 @@ public class VisitRegistrationArgsTest
         args.VisitorProfile.Score.Should().Be(85);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void AttractionsId_ShouldParseAllGuids_InOrder()
+    {
+        var g1 = Guid.NewGuid();
+        var g2 = Guid.NewGuid();
+        var attractions = new List<string> { g1.ToString(), g2.ToString() };
+
+        var vp = new VisitorProfileArgs("2002-07-30", "Standard", "85");
+
+        var args = new VisitRegistrationArgs("2025-09-30", vp, attractions);
+
+        args.AttractionsId.Should().NotBeNull();
+        args.AttractionsId.Should().HaveCount(2);
+        args.AttractionsId.Should().ContainInOrder(new[] { g1, g2 });
+    }
 }

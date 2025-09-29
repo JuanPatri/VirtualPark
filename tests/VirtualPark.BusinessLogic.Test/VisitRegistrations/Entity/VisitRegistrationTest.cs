@@ -84,6 +84,7 @@ public sealed class VisitRegistrationTest
     #endregion
 
     #region VisitorId
+    #region Get
     [TestMethod]
     [TestCategory("GetterVisitorProfileId")]
     public void VisitorId_Getter_ShouldReturnAssignedInstance()
@@ -94,10 +95,12 @@ public sealed class VisitRegistrationTest
 
         visit.VisitorId.Should().Be(id);
     }
+    #endregion
 
+    #region Set
     [TestMethod]
     [TestCategory("GetterSetter")]
-    public void VisitorId_shouldBeSettable()
+    public void VisitorId_Setter_ShouldReturnAssignedInstance()
     {
         var id = Guid.NewGuid();
 
@@ -107,5 +110,6 @@ public sealed class VisitRegistrationTest
 
         visit.VisitorId.Should().Be(id);
     }
+    #endregion
     #endregion
 }

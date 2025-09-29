@@ -11,6 +11,7 @@
     <Folder Include="Events\Services\" />
     <Folder Include="Attractions\Models\" />
     <Folder Include="Attractions\Services\" />
+    <Folder Include="VisitRegistrations\Service\" />
   </ItemGroup>
 
   <ItemGroup>

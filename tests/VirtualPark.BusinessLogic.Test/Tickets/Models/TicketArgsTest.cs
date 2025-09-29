@@ -156,6 +156,8 @@ public sealed class TicketArgsTest
         args.VisitorId.Should().Be(visitorId);
     }
     #endregion
+
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenVisitorIdIsNullOrWhiteSpace_ShouldThrowArgumentException()
@@ -170,5 +172,6 @@ public sealed class TicketArgsTest
             .Throw<ArgumentException>()
             .WithMessage("Value cannot be null or empty.");
     }
+    #endregion
     #endregion
 }

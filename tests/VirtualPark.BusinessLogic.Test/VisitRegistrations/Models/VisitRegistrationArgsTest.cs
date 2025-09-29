@@ -76,6 +76,7 @@ public class VisitRegistrationArgsTest
     #endregion
 
     #region AttractionId
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void AttractionsId_ShouldParseAllGuids_InOrder()
@@ -92,10 +93,12 @@ public class VisitRegistrationArgsTest
         args.AttractionsId.Should().HaveCount(2);
         args.AttractionsId.Should().ContainInOrder(new[] { g1, g2 });
     }
+    #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void AttractionsId_failure()
+    public void AttractionsId_ShouldThrow_WhenAnyValueIsNotAGuid()
     {
         var invalid = "not-a-guid";
         var attractions = new List<string> { invalid };
@@ -107,5 +110,6 @@ public class VisitRegistrationArgsTest
         act.Should().Throw<FormatException>()
             .Where(ex => ex.Message.Contains(invalid));
     }
+    #endregion
     #endregion
 }

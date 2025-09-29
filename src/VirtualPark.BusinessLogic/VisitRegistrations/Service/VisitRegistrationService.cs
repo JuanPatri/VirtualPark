@@ -5,6 +5,6 @@ using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.VisitRegistrations.Service;
 
-public class VisitRegistrationService()
+public class VisitRegistrationService
 {
 }

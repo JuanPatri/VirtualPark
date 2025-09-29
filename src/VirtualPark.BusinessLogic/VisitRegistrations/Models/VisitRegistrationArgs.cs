@@ -3,9 +3,9 @@ using VirtualPark.BusinessLogic.VisitorsProfile.Models;
 
 namespace VirtualPark.BusinessLogic.VisitRegistrations.Models;
 
-public sealed class VisitRegistrationArgs(VisitorProfileArgs visitorProfile, List<string> attractions)
+public sealed class VisitRegistrationArgs(List<string> attractions)
 {
-    public VisitorProfileArgs VisitorProfile { get; init; } = visitorProfile;
+    public VisitorProfileArgs VisitorProfile { get; set; } = null!;
     public List<Guid> AttractionsId { get; init; } = ValidateAndParseGuidList(attractions);
 
     private static List<Guid> ValidateAndParseGuidList(List<string> values)

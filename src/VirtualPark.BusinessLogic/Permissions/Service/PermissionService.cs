@@ -58,4 +58,13 @@ public sealed class PermissionService(IRepository<Role> roleRepository, IReposit
         entity.Description = args.Description;
         entity.Roles = roles;
     }
+
+    public void Remove(Guid id)
+    {
+        var permission = _permissionRepository.Get(p => p.Id == id);
+        if (permission != null)
+        {
+            _permissionRepository.Remove(permission);
+        }
+    }
 }

@@ -61,10 +61,9 @@ public sealed class PermissionService(IRepository<Role> roleRepository, IReposit
 
     public void Remove(Guid id)
     {
-        var permission = _permissionRepository.Get(p => p.Id == id);
-        if (permission != null)
-        {
-            _permissionRepository.Remove(permission);
-        }
+        var permission = _permissionRepository.Get(p => p.Id == id)
+                         ?? throw new InvalidOperationException($"Permission with id {id} not found.");
+
+        _permissionRepository.Remove(permission);
     }
 }

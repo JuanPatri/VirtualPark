@@ -10,5 +10,5 @@ public sealed class VisitRegistration
     public DateTime Date { get; set; } = DateTime.Today;
     public List<Attraction> Attractions { get; set; } = [];
     public VisitorProfile Visitor { get; set; } = null!;
-    public Ticket Ticket { get; init; } = null!;
+    public Ticket Ticket { get; set; } = null!;
 }

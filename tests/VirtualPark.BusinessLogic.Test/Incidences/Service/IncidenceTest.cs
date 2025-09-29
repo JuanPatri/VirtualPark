@@ -39,39 +39,65 @@ public sealed class IncidenceTest
     }
 
     #region Create
+       [TestMethod]
+        public void Create_WhenTypeIncidenceExists_ShouldAddAndReturnNewId_WithTypeSet()
+        {
+            Guid _typeId = Guid.NewGuid();
+            var expectedType = new TypeIncidence { Id = _typeId, Type = "Locked" };
 
-    [TestMethod]
-    public void Create_WhenNotExists_ShouldMapArgsAndAddOnce()
-    {
-        Incidence? captured = null;
+            _mockTypeIncidenceRepository
+                .Setup(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
+                .Returns(expectedType);
 
-        _mockIncidenceRepository
-            .Setup(r => r.Add(It.IsAny<Incidence>()))
-            .Callback<Incidence>(i => captured = i);
+            Incidence? added = null;
+            _mockIncidenceRepository
+                .Setup(r => r.Add(It.IsAny<Incidence>()))
+                .Callback<Incidence>(i => added = i);
 
-        var incidence = _incidenceService.Create(_incidenceArgs);
+            Guid id = _incidenceService.Create(_incidenceArgs);
 
-        incidence.Should().NotBeNull();
-        incidence.Description.Should().Be(_incidenceArgs.Description);
-        incidence.Start.Should().Be(_incidenceArgs.Start);
-        incidence.End.Should().Be(_incidenceArgs.End);
-        incidence.Active.Should().BeTrue();
-        incidence.AttractionId.Should().Be(_incidenceArgs.AttractionId);
+            id.Should().NotBe(Guid.Empty);
+            added.Should().NotBeNull();
+            added!.Id.Should().Be(id);
+            added.Description.Should().Be(_incidenceArgs.Description);
+            added.Start.Should().Be(_incidenceArgs.Start);
+            added.End.Should().Be(_incidenceArgs.End);
+            added.Active.Should().BeTrue();
+            added.AttractionId.Should().Be(_incidenceArgs.AttractionId);
+            added.Type.Should().NotBeNull();
+            added.Type!.Id.Should().Be(_typeId);
 
-        _mockIncidenceRepository.Verify(r => r.Exist(It.IsAny<Expression<Func<Incidence, bool>>>()), Times.Once);
-        _mockIncidenceRepository.Verify(
-            r => r.Add(It.Is<Incidence>(i =>
-                i.Description == _incidenceArgs.Description &&
-                i.Start == _incidenceArgs.Start &&
-                i.End == _incidenceArgs.End &&
-                i.Active == _incidenceArgs.Active &&
-                i.AttractionId == _incidenceArgs.AttractionId
-            )),
-            Times.Once);
+            _mockTypeIncidenceRepository.Verify(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()), Times.Once);
+            _mockIncidenceRepository.Verify(r => r.Add(It.IsAny<Incidence>()), Times.Once);
+            _mockTypeIncidenceRepository.VerifyAll();
+            _mockIncidenceRepository.VerifyAll();
+        }
 
-        _mockIncidenceRepository.VerifyAll();
-    }
+        [TestMethod]
+        public void Create_WhenTypeIncidenceNotFound_ShouldAddWithNullType_AndReturnNewId()
+        {
+            _mockTypeIncidenceRepository
+                .Setup(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
+                .Returns((TypeIncidence?)null);
 
+            Incidence? added = null;
+            _mockIncidenceRepository
+                .Setup(r => r.Add(It.IsAny<Incidence>()))
+                .Callback<Incidence>(i => added = i);
+
+            Guid id = _incidenceService.Create(_incidenceArgs);
+
+            id.Should().NotBe(Guid.Empty);
+            added.Should().NotBeNull();
+            added!.Id.Should().Be(id);
+            added.Type.Should().BeNull();
+            added.Description.Should().Be(_incidenceArgs.Description);
+
+            _mockTypeIncidenceRepository.Verify(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()), Times.Once);
+            _mockIncidenceRepository.Verify(r => r.Add(It.IsAny<Incidence>()), Times.Once);
+            _mockTypeIncidenceRepository.VerifyAll();
+            _mockIncidenceRepository.VerifyAll();
+        }
     #endregion
     #region FindTypeIncidenceById
     [TestMethod]
@@ -84,7 +110,7 @@ public sealed class IncidenceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
             .Returns(expected);
 
-        var result = _typeIncidenceService.FindTypeIncidenceById(id);
+        var result = _incidenceService.FindTypeIncidenceById(id);
 
         result.Should().NotBeNull();
         result!.Id.Should().Be(id);

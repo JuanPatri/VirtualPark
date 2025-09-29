@@ -14,14 +14,15 @@ public sealed class TicketArgsTest
     [TestCategory("Validation")]
     public void Constructor_WhenValuesAreValid_ShouldCreateArgs()
     {
-        var visitorId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid().ToString();
         const string eventId = "d85b1407-351d-4694-9392-03acc5870eb1";
 
-        var args = new TicketArgs("2025-12-15", "Event", eventId);
+        var args = new TicketArgs("2025-12-15", "Event", eventId, visitorId);
 
         args.Date.Should().Be(new DateOnly(2025, 12, 15));
         args.Type.Should().Be(EntranceType.Event);
         args.EventId.Should().Be(Guid.Parse(eventId));
+        args.VisitorId.Should().Be(Guid.Parse(visitorId));
     }
 
     #endregion
@@ -32,7 +33,8 @@ public sealed class TicketArgsTest
     [TestCategory("Validation")]
     public void Date_Getter_ReturnsAssignedValue()
     {
-        var args = new TicketArgs("2025-12-15", "General", "d85b1407-351d-4694-9392-03acc5870eb1");
+        var visitorId = Guid.NewGuid().ToString();
+        var args = new TicketArgs("2025-12-15", "General", "d85b1407-351d-4694-9392-03acc5870eb1", visitorId);
 
         args.Date.Should().Be(new DateOnly(2025, 12, 15));
     }
@@ -43,11 +45,12 @@ public sealed class TicketArgsTest
     [TestCategory("Validation")]
     public void Constructor_WithInvalidDateFormat_ThrowsArgumentException()
     {
+        var visitorId = Guid.NewGuid().ToString();
         const string invalidDate = "15/12/2025";
 
         Action act = () =>
         {
-            _ = new TicketArgs(invalidDate, "General", "d85b1407-351d-4694-9392-03acc5870eb1");
+            _ = new TicketArgs(invalidDate, "General", "d85b1407-351d-4694-9392-03acc5870eb1", visitorId);
         };
 
         act.Should()
@@ -61,11 +64,12 @@ public sealed class TicketArgsTest
     [TestCategory("Validation")]
     public void Constructor_WithPastDate_ThrowsArgumentException()
     {
+        var visitorId = Guid.NewGuid().ToString();
         const string pastDate = "2000-01-01";
 
         Action act = () =>
         {
-            var unused = new TicketArgs(pastDate, "General", "d85b1407-351d-4694-9392-03acc5870eb1");
+            var unused = new TicketArgs(pastDate, "General", "d85b1407-351d-4694-9392-03acc5870eb1", visitorId);
         };
 
         act.Should()
@@ -81,7 +85,8 @@ public sealed class TicketArgsTest
     [TestCategory("Validation")]
     public void Constructor_WhenTypeIsValid_ShouldParseEntranceType()
     {
-        var args = new TicketArgs("2025-12-15", "Event", "d85b1407-351d-4694-9392-03acc5870eb1");
+        var visitorId = Guid.NewGuid().ToString();
+        var args = new TicketArgs("2025-12-15", "Event", "d85b1407-351d-4694-9392-03acc5870eb1", visitorId);
 
         args.Type.Should().Be(EntranceType.Event);
     }
@@ -91,11 +96,12 @@ public sealed class TicketArgsTest
     [TestCategory("Validation")]
     public void Constructor_WhenTypeIsInvalid_ShouldThrowArgumentException()
     {
+        var visitorId = Guid.NewGuid().ToString();
         const string invalidType = "InvalidType";
 
         Action act = () =>
         {
-            _ = new TicketArgs("2025-12-15", invalidType, "d85b1407-351d-4694-9392-03acc5870eb1");
+            _ = new TicketArgs("2025-12-15", invalidType, "d85b1407-351d-4694-9392-03acc5870eb1", visitorId);
         };
 
         act.Should()
@@ -111,9 +117,10 @@ public sealed class TicketArgsTest
     [TestCategory("Validation")]
     public void Constructor_WhenEventIdIsValid_ShouldAssignEventId()
     {
+        var visitorId = Guid.NewGuid().ToString();
         const string eventId = "d85b1407-351d-4694-9392-03acc5870eb1";
 
-        var args = new TicketArgs("2025-12-15", "General", eventId);
+        var args = new TicketArgs("2025-12-15", "General", eventId, visitorId);
 
         args.EventId.Should().Be(eventId);
     }
@@ -123,9 +130,10 @@ public sealed class TicketArgsTest
     [TestCategory("Validation")]
     public void Constructor_WhenEventIdIsNullOrWhiteSpace_ShouldThrowArgumentException()
     {
+        var visitorId = Guid.NewGuid().ToString();
         Action act = () =>
         {
-            _ = new TicketArgs("2025-12-15", "General", " ");
+            _ = new TicketArgs("2025-12-15", "General", " ", visitorId);
         };
 
         act.Should()

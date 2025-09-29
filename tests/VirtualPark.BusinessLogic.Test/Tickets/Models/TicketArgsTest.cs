@@ -105,6 +105,8 @@ public sealed class TicketArgsTest
     #endregion
     #endregion
 
+    #region Event
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenEventIdIsValid_ShouldAssignEventId()
@@ -115,4 +117,6 @@ public sealed class TicketArgsTest
 
         args.EventId.Should().Be(eventId);
     }
+    #endregion
+    #endregion
 }

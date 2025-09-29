@@ -83,6 +83,8 @@ public sealed class PermissionServiceTest
     #endregion
     #endregion
 
+    #region Update
+    #region Failure
     [TestMethod]
     [TestCategory("Service")]
     [TestCategory("Permission")]
@@ -115,4 +117,6 @@ public sealed class PermissionServiceTest
             .Throw<InvalidOperationException>()
             .WithMessage($"Role with id {roleId} not found.");
     }
+    #endregion
+    #endregion
 }

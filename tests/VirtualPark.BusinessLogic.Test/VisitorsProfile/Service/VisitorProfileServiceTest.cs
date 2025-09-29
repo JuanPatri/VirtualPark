@@ -95,7 +95,7 @@ public class VisitorProfileServiceTest
             Membership = Membership.Standard,
             Score = 85
         };
-        Guid? id = expected.Id;
+        var id = expected.Id;
 
         _repositoryMock
             .Setup(r => r.Get(v => v.Id == id))
@@ -104,7 +104,7 @@ public class VisitorProfileServiceTest
         var result = _service.Get(id);
 
         result.Should().NotBeNull();
-        result!.Id.Should().Be((Guid)id);
+        result!.Id.Should().Be(id);
         result.DateOfBirth.Should().Be(new DateOnly(2000, 1, 1));
         result.Membership.Should().Be(Membership.Standard);
         result.Score.Should().Be(85);
@@ -118,7 +118,7 @@ public class VisitorProfileServiceTest
     [TestCategory("Validation")]
     public void GetVisitorProfile_ShouldThrow_WhenVisitorDoesNotExist()
     {
-        Guid? id = Guid.NewGuid();
+        var id = Guid.NewGuid();
 
         _repositoryMock
             .Setup(r => r.Get(v => v.Id == id))
@@ -133,4 +133,34 @@ public class VisitorProfileServiceTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void UpdateVisitorProfile_ok()
+    {
+        var existing = new VisitorProfile
+        {
+            DateOfBirth = new DateOnly(1990, 1, 1),
+            Membership = Membership.Standard,
+            Score = 10
+        };
+        var id = existing.Id;
+
+        var args = new VisitorProfileArgs("2002-07-30", "Premium", "85");
+
+        _repositoryMock
+            .Setup(r => r.Get(v => v.Id == id))
+            .Returns(existing);
+
+        _repositoryMock
+            .Setup(r => r.Update(It.Is<VisitorProfile>(v =>
+                v.Id == id &&
+                v.DateOfBirth == args.DateOfBirth &&
+                v.Membership == args.Membership &&
+                v.Score == args.Score)));
+
+        _service.Update(args, id);
+
+        _repositoryMock.VerifyAll();
+    }
 }

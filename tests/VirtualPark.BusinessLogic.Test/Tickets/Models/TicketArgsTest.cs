@@ -75,6 +75,8 @@ public sealed class TicketArgsTest
     #endregion
     #endregion
 
+    #region EntranceType
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenTypeIsValid_ShouldParseEntranceType()
@@ -83,4 +85,6 @@ public sealed class TicketArgsTest
 
         args.Type.Should().Be(EntranceType.Event);
     }
+    #endregion
+    #endregion 
 }

@@ -6,9 +6,15 @@ public sealed class TicketArgs(string date, string type, Guid eventId, Guid visi
 {
     public DateOnly Date { get; } = ValidationServices.ValidateDateOnly(date);
 
-    public EntranceType Type { get; } = Enum.TryParse<EntranceType>(type, true, out var parsedType)
-        ? parsedType
-        : default;
+    public EntranceType Type { get; } = GenerateEntranceType(type);
+
+    private static EntranceType GenerateEntranceType(string type)
+    {
+        return Enum.TryParse<EntranceType>(type, true, out var parsedType)
+            ? parsedType
+            : default;
+    }
+
     public Guid EventId { get; } = eventId;
     public Guid VisitorId { get; } = visitorId;
 }

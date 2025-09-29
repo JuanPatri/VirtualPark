@@ -236,6 +236,8 @@ public sealed class PermissionServiceTest
     #endregion
     #endregion
 
+    #region GetById
+    #region Success
     [TestMethod]
     [TestCategory("Behaviour")]
     public void GetById_WhenPermissionExists_ShouldReturnPermission()
@@ -252,4 +254,6 @@ public sealed class PermissionServiceTest
         result.Id.Should().Be(permission.Id);
         result.Key.Should().Be("user.view");
     }
+    #endregion
+    #endregion
 }

@@ -32,8 +32,7 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
 
     public bool Exist(Expression<Func<Incidence, bool>> predicate)
     {
-        var exist = _incidenceRepository.Exist(predicate);
-        return exist;
+        return _incidenceRepository.Exist(predicate);
     }
 
     public Incidence MapToEntity(IncidenceArgs incidenceArgs)

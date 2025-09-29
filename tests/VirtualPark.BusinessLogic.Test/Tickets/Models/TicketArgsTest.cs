@@ -17,7 +17,7 @@ public sealed class TicketArgsTest
         var visitorId = Guid.NewGuid();
         var eventId = Guid.NewGuid();
 
-        var args = new TicketArgs("2025-12-15", EntranceType.Event, eventId, visitorId);
+        var args = new TicketArgs("2025-12-15", "Event", eventId, visitorId);
 
         args.Date.Should().Be(new DateOnly(2025, 12, 15));
         args.Type.Should().Be(EntranceType.Event);
@@ -32,7 +32,7 @@ public sealed class TicketArgsTest
     [TestCategory("Validation")]
     public void Date_Getter_ReturnsAssignedValue()
     {
-        var args = new TicketArgs("2025-12-15", EntranceType.General, Guid.NewGuid(), Guid.NewGuid());
+        var args = new TicketArgs("2025-12-15", "General", Guid.NewGuid(), Guid.NewGuid());
 
         args.Date.Should().Be(new DateOnly(2025, 12, 15));
     }
@@ -47,7 +47,7 @@ public sealed class TicketArgsTest
 
         Action act = () =>
         {
-            _ = new TicketArgs(invalidDate, EntranceType.General, Guid.NewGuid(), Guid.NewGuid());
+            _ = new TicketArgs(invalidDate, "General", Guid.NewGuid(), Guid.NewGuid());
         };
 
         act.Should()
@@ -65,7 +65,7 @@ public sealed class TicketArgsTest
 
         Action act = () =>
         {
-            var unused = new TicketArgs(pastDate, EntranceType.General, Guid.NewGuid(), Guid.NewGuid());
+            var unused = new TicketArgs(pastDate, "General", Guid.NewGuid(), Guid.NewGuid());
         };
 
         act.Should()
@@ -81,6 +81,6 @@ public sealed class TicketArgsTest
     {
         var args = new TicketArgs("2025-12-15", "Event", Guid.NewGuid(), Guid.NewGuid());
 
-        args.Type.Should().Be(Entity.EntranceType.Event);
+        args.Type.Should().Be(EntranceType.Event);
     }
 }

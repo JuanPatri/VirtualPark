@@ -45,7 +45,7 @@ public sealed class PermissionService(IRepository<Role> roleRepository, IReposit
     public void Update(Guid id, PermissionArgs args)
     {
         Permission? permission = _permissionRepository.Get(p => p.Id == id);
-        if (permission != null)
+        if(permission != null)
         {
             List<Role> roles = ValidateAndLoadRoles(args.Roles);
             ApplyArgsToEntity(permission, args, roles);

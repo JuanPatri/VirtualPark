@@ -89,7 +89,7 @@ public sealed class PermissionServiceTest
         {
             Key = "user.view",
             Description = "View users",
-            Roles = new List<Role>()
+            Roles = []
         };
 
         _permissionRepositoryMock
@@ -102,7 +102,7 @@ public sealed class PermissionServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Role, bool>>>()))
             .Returns((Role?)null);
 
-        var args = new PermissionArgs("New description", "user.edit", new List<Guid> { roleId });
+        var args = new PermissionArgs("New description", "user.edit", [roleId]);
 
         Action act = () => _service.Update(existing.Id, args);
 
@@ -121,7 +121,7 @@ public sealed class PermissionServiceTest
         {
             Key = "user.view",
             Description = "Old description",
-            Roles = new List<Role>()
+            Roles = []
         };
 
         _permissionRepositoryMock
@@ -134,7 +134,7 @@ public sealed class PermissionServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Role, bool>>>()))
             .Returns(role);
 
-        var args = new PermissionArgs("New description", "user.edit", new List<Guid> { role.Id });
+        var args = new PermissionArgs("New description", "user.edit", [role.Id]);
 
         _service.Update(existing.Id, args);
 

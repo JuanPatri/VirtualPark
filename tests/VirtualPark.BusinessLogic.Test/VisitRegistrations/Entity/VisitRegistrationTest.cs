@@ -83,9 +83,10 @@ public sealed class VisitRegistrationTest
     #endregion
     #endregion
 
+    #region VisitorId
     [TestMethod]
     [TestCategory("GetterVisitorProfileId")]
-    public void VisitorId_shpouldBeGettable()
+    public void VisitorId_Getter_ShouldReturnAssignedInstance()
     {
         var id = Guid.NewGuid();
 
@@ -93,4 +94,5 @@ public sealed class VisitRegistrationTest
 
         visit.VisitorId.Should().Be(id);
     }
+    #endregion
 }

@@ -251,9 +251,23 @@ public sealed class PermissionServiceTest
         var result = _service.GetById(permission.Id);
 
         result.Should().NotBeNull();
-        result.Id.Should().Be(permission.Id);
-        result.Key.Should().Be("user.view");
+        result?.Id.Should().Be(permission.Id);
+        result?.Key.Should().Be("user.view");
     }
     #endregion
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetById_WhenPermissionDoesNotExist_ShouldReturnNull()
+    {
+        _permissionRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()))
+            .Returns((Permission?)null);
+
+        var id = Guid.NewGuid();
+
+        var result = _service.GetById(id);
+
+        result.Should().BeNull();
+    }
     #endregion
 }

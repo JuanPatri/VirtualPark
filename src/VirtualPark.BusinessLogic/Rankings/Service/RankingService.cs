@@ -9,5 +9,13 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
 {
     private readonly IRepository<Ranking> _rankingRepository = rankingRepository;
     private readonly IReadOnlyRepository<User> _userReadOnlyRepository = userReadOnlyRepository;
-    
+
+    public List<User> GuidToUser(List<Guid> entries)
+    {
+        ArgumentNullException.ThrowIfNull(entries);
+
+        var users = entries.Select(guid => _userReadOnlyRepository.Get(u => u.Id == guid) ?? throw new KeyNotFoundException($"User with id {guid} does not exist")).ToList();
+
+        return users;
+    }
 }

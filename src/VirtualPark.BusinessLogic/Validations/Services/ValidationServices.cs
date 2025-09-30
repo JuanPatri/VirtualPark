@@ -128,7 +128,7 @@ public static class ValidationServices
     {
         try
         {
-            var ok = new MailAddress(email);
+            var unused = new MailAddress(email);
             return email;
         }
         catch
@@ -181,7 +181,7 @@ public static class ValidationServices
     public static EntranceType ParseEntranceType(string type)
     {
         var isNotValid = !Enum.TryParse<EntranceType>(type, true, out var parsedType);
-        if (isNotValid)
+        if(isNotValid)
         {
             throw new ArgumentException(
                 $"Invalid entrance type value: {type}");

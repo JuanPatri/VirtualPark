@@ -30,6 +30,7 @@ public class VisitRegistrationServiceTest
     }
 
     #region Create
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void Create_ShouldCreateVisitRegistration_WhenVisitorAndAttractionsExist()
@@ -79,10 +80,12 @@ public class VisitRegistrationServiceTest
         _attractionRepoMock.VerifyAll();
         _repositoryMock.VerifyAll();
     }
+    #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void Create_Failure()
+    public void Create_ShouldThrow_WhenVisitorDoesNotExist()
     {
         var visitorId = Guid.NewGuid();
         var args = new VisitRegistrationArgs(new List<string>(), visitorId.ToString());
@@ -100,5 +103,6 @@ public class VisitRegistrationServiceTest
         _attractionRepoMock.VerifyNoOtherCalls();
         _repositoryMock.VerifyNoOtherCalls();
     }
+    #endregion
     #endregion
 }

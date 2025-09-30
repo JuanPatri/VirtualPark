@@ -56,5 +56,18 @@ public class VisitRegistrationArgsTest
 
         args.VisitorProfileId.Should().Be(vpId);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void VisitorProfileId_ShouldThrow_WhenGuidStringIsInvalid()
+    {
+        var invalidId = "not-a-guid";
+        var attractions = new List<string> { Guid.NewGuid().ToString() };
+
+        var act = () => new VisitRegistrationArgs(attractions, invalidId);
+
+        act.Should().Throw<FormatException>()
+            .Where(ex => ex.Message.Contains(invalidId));
+    }
     #endregion
 }

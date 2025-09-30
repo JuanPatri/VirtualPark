@@ -21,8 +21,7 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
 
     public List<Ranking> GetAll()
     {
-        var rankings = _rankingRepository.GetAll();
-        return rankings.ToList();
+        return _rankingRepository.GetAll();
     }
 
     public Ranking MapToEntity(RankingArgs rankingArgs)

@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Rankings.Entity;
 using VirtualPark.BusinessLogic.Rankings.Models;
 using VirtualPark.BusinessLogic.Users.Entity;
@@ -22,6 +24,12 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
     public List<Ranking> GetAll()
     {
         return _rankingRepository.GetAll();
+    }
+
+    public Ranking? Get(Expression<Func<Ranking, bool>> predicate)
+    {
+        var ranking = _rankingRepository.Get(predicate);
+        return ranking;
     }
 
     public Ranking MapToEntity(RankingArgs rankingArgs)

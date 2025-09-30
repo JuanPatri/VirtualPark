@@ -201,5 +201,41 @@ public sealed class RankingServiceTest
         _mockRankingRepository.VerifyNoOtherCalls();
     }
     #endregion
+    #region Get
+    [TestMethod]
+    public void Get_WhenRankingExists_ShouldReturnRanking()
+    {
+        var ranking = new Ranking
+        {
+            Date = new DateTime(2025, 9, 27),
+            Period = Period.Daily
+        };
+
+        _mockRankingRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Ranking, bool>>>()))
+            .Returns(ranking);
+
+        var result = _rankingService.Get(r => r.Period == Period.Daily);
+
+        result.Should().NotBeNull();
+        result.Should().BeSameAs(ranking);
+        _mockRankingRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Ranking, bool>>>()), Times.Once);
+        _mockRankingRepository.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    public void Get_WhenRankingDoesNotExist_ShouldReturnNull()
+    {
+        _mockRankingRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Ranking, bool>>>()))
+            .Returns((Ranking?)null);
+
+        var result = _rankingService.Get(r => r.Period == Period.Weekly);
+
+        result.Should().BeNull();
+        _mockRankingRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Ranking, bool>>>()), Times.Once);
+        _mockRankingRepository.VerifyNoOtherCalls();
+    }
+    #endregion
 
 }

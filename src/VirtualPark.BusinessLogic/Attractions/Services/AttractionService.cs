@@ -24,11 +24,6 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
         return _attractionRepository.GetAll(predicate);
     }
 
-    public Attraction? Get(Expression<Func<Attraction, bool>> predicate)
-    {
-        return _attractionRepository.Get(predicate);
-    }
-
     public bool Exist(Expression<Func<Attraction, bool>> predicate)
     {
         return _attractionRepository.Exist(predicate);

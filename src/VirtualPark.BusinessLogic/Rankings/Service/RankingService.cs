@@ -28,8 +28,7 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
 
     public Ranking? Get(Expression<Func<Ranking, bool>> predicate)
     {
-        var ranking = _rankingRepository.Get(predicate);
-        return ranking;
+        return _rankingRepository.Get(predicate);
     }
 
     public Ranking MapToEntity(RankingArgs rankingArgs)

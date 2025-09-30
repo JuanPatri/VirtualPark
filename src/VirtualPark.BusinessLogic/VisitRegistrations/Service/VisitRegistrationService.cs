@@ -40,6 +40,13 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         return visitRegistration;
     }
 
+    public void Remove(Guid id)
+    {
+        var visitRegistration = _visitRegistrationRepository.Get(v => v.Id == id);
+
+        _visitRegistrationRepository.Remove(visitRegistration!);
+    }
+
     private VisitRegistration MapToEntity(VisitRegistrationArgs args)
     {
         var visitor = SearchVisitorProfile(args.VisitorProfileId);

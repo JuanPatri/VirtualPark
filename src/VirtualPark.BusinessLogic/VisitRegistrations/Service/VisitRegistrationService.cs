@@ -23,6 +23,10 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     private VisitRegistration MapToEntity(VisitRegistrationArgs args)
     {
         var visitor = _visitorProfileRepository.Get(v => v.Id == args.VisitorProfileId);
+        if (visitor is null)
+        {
+            throw new InvalidOperationException("Visitor don't exist");
+        }
 
         List<Attraction> attractions = new List<Attraction>();
         foreach(var attractionId in args.AttractionsId)

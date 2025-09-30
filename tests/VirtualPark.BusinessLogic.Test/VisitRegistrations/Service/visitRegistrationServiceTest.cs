@@ -79,5 +79,26 @@ public class VisitRegistrationServiceTest
         _attractionRepoMock.VerifyAll();
         _repositoryMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Create_Failure()
+    {
+        var visitorId = Guid.NewGuid();
+        var args = new VisitRegistrationArgs(new List<string>(), visitorId.ToString());
+
+        _visitorRepoMock
+            .Setup(r => r.Get(v => v.Id == args.VisitorProfileId))
+            .Returns((VisitorProfile?)null);
+
+        Action act = () => _service.Create(args);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Visitor don't exist");
+
+        _visitorRepoMock.VerifyAll();
+        _attractionRepoMock.VerifyNoOtherCalls();
+        _repositoryMock.VerifyNoOtherCalls();
+    }
     #endregion
 }

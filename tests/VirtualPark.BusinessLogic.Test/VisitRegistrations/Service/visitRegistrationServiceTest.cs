@@ -313,5 +313,23 @@ public class VisitRegistrationServiceTest
 
         _repositoryMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Remove_Failure()
+    {
+        var id = Guid.NewGuid();
+
+        _repositoryMock
+            .Setup(r => r.Get(v => v.Id == id))
+            .Returns((VisitRegistration?)null);
+
+        Action act = () => _service.Remove(id);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Visitor don't exist");
+
+        _repositoryMock.VerifyAll();
+    }
     #endregion
 }

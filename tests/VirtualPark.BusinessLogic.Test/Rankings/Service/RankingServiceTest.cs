@@ -51,8 +51,8 @@ public sealed class RankingServiceTest
 
         act.Should().Throw<ArgumentNullException>();
     }
-
     #endregion
+
     #region MapToEntity
     [TestMethod]
     public void MapToEntity_WhenArgsAreValid_ShouldReturnRankingEntity()
@@ -77,10 +77,9 @@ public sealed class RankingServiceTest
         ranking.Period.Should().Be(args.Period);
         ranking.Entries.Should().HaveCount(2);
     }
-
     #endregion
 
-    #region ApllyArgsToEntity
+    #region ApplyArgsToEntity
     [TestMethod]
     public void ApplyArgsToEntity_ValidArgs_ShouldCopyFieldsAndMapEntries()
     {
@@ -100,14 +99,13 @@ public sealed class RankingServiceTest
 
         _rankingService.ApplyArgsToEntity(entity, args);
 
-        Assert.AreEqual(args.Date, entity.Date);
-        Assert.AreEqual(args.Period, entity.Period);
-        Assert.IsNotNull(entity.Entries);
-        Assert.AreEqual(2, entity.Entries.Count);
+        entity.Date.Should().Be(args.Date);
+        entity.Period.Should().Be(args.Period);
+        entity.Entries.Should().NotBeNull();
+        entity.Entries.Should().HaveCount(2);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(KeyNotFoundException))]
     public void ApplyArgsToEntity_WhenAGuidDoesNotResolve_ShouldThrowKeyNotFound()
     {
         var g1 = Guid.NewGuid();
@@ -123,7 +121,9 @@ public sealed class RankingServiceTest
 
         var entity = new Ranking();
 
-        _rankingService.ApplyArgsToEntity(entity, args);
+        Action act = () => _rankingService.ApplyArgsToEntity(entity, args);
+
+        act.Should().Throw<KeyNotFoundException>();
     }
     #endregion
 
@@ -167,6 +167,7 @@ public sealed class RankingServiceTest
         act.Should().Throw<KeyNotFoundException>();
     }
     #endregion
+
     #region GetAll
     [TestMethod]
     public void GetAll_WhenRepositoryReturnsRankings_ShouldReturnSameList()
@@ -200,6 +201,7 @@ public sealed class RankingServiceTest
         _mockRankingRepository.VerifyNoOtherCalls();
     }
     #endregion
+
     #region Get
     [TestMethod]
     public void Get_WhenRankingExists_ShouldReturnRanking()
@@ -236,6 +238,7 @@ public sealed class RankingServiceTest
         _mockRankingRepository.VerifyNoOtherCalls();
     }
     #endregion
+
     #region Exist
     [TestMethod]
     public void Exist_WhenRepositoryReturnsTrue_ShouldReturnTrue()
@@ -265,6 +268,7 @@ public sealed class RankingServiceTest
         _mockRankingRepository.VerifyNoOtherCalls();
     }
     #endregion
+
     #region Update
     [TestMethod]
     public void Update_WhenRankingExists_ShouldApplyArgsAndCallRepositoryUpdate()
@@ -314,7 +318,7 @@ public sealed class RankingServiceTest
     public void Update_WhenRankingDoesNotExist_ShouldThrowInvalidOperation()
     {
         var id = Guid.NewGuid();
-        var args = new RankingArgs("2025-09-27 00:00", Array.Empty<string>(), "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [], "Daily");
 
         _mockRankingRepository
             .Setup(r => r.Get(It.IsAny<Expression<Func<Ranking, bool>>>()))
@@ -331,11 +335,11 @@ public sealed class RankingServiceTest
         _mockUserReadOnlyRepository.VerifyNoOtherCalls();
     }
     #endregion
+
     #region Remove
     [TestMethod]
     public void Remove_WhenRankingExists_ShouldCallRepositoryRemove()
     {
-        // Arrange
         var id = Guid.NewGuid();
         var existing = new Ranking
         {
@@ -352,10 +356,8 @@ public sealed class RankingServiceTest
         _mockRankingRepository
             .Setup(r => r.Remove(existing));
 
-        // Act
         _rankingService.Remove(id);
 
-        // Assert
         _mockRankingRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Ranking, bool>>>()), Times.Once);
         _mockRankingRepository.Verify(r => r.Remove(existing), Times.Once);
 
@@ -366,17 +368,14 @@ public sealed class RankingServiceTest
     [TestMethod]
     public void Remove_WhenRankingDoesNotExist_ShouldThrowInvalidOperation()
     {
-        // Arrange
         var id = Guid.NewGuid();
 
         _mockRankingRepository
             .Setup(r => r.Get(It.IsAny<Expression<Func<Ranking, bool>>>()))
             .Returns((Ranking?)null);
 
-        // Act
         Action act = () => _rankingService.Remove(id);
 
-        // Assert
         act.Should().Throw<InvalidOperationException>()
             .WithMessage($"Ranking with id {id} not found.");
 
@@ -387,5 +386,4 @@ public sealed class RankingServiceTest
         _mockUserReadOnlyRepository.VerifyNoOtherCalls();
     }
     #endregion
-
 }

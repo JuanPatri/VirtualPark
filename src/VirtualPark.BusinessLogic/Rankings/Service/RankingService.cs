@@ -20,6 +20,13 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
         };
     }
 
+    public void ApplyArgsToEntity(Ranking entity, RankingArgs args)
+    {
+        entity.Date = args.Date;
+        entity.Entries = GuidToUser(args.Entries);
+        entity.Period = args.Period;
+    }
+
     public List<User> GuidToUser(List<Guid> entries)
     {
         ArgumentNullException.ThrowIfNull(entries);

@@ -74,4 +74,17 @@ public class VisitRegistrationArgsTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void TicketId_ShouldParseValidGuidString()
+    {
+        var vpId = Guid.NewGuid();
+        var TicketId = Guid.NewGuid();
+        var attractions = new List<string> { Guid.NewGuid().ToString() };
+
+        var args = new VisitRegistrationArgs(attractions, vpId.ToString(), TicketId);
+
+        args.TicketId.Should().Be(TicketId);
+    }
 }

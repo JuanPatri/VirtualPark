@@ -20,7 +20,7 @@ public class VisitRegistrationArgsTest
         var g2 = Guid.NewGuid();
         var attractions = new List<string> { g1.ToString(), g2.ToString() };
 
-        var args = new VisitRegistrationArgs(attractions);
+        var args = new VisitRegistrationArgs(attractions, Guid.NewGuid().ToString());
 
         args.AttractionsId.Should().NotBeNull();
         args.AttractionsId.Should().HaveCount(2);
@@ -36,7 +36,7 @@ public class VisitRegistrationArgsTest
         var invalid = "not-a-guid";
         var attractions = new List<string> { invalid };
 
-        var act = () => new VisitRegistrationArgs(attractions);
+        var act = () => new VisitRegistrationArgs(attractions, Guid.NewGuid().ToString());
 
         act.Should().Throw<FormatException>()
             .Where(ex => ex.Message.Contains(invalid));

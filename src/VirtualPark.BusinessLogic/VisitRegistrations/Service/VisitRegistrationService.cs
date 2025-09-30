@@ -29,6 +29,11 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     {
         var visitRegistration = _visitRegistrationRepository.Get(v => v.Id == id);
 
+        if(visitRegistration == null)
+        {
+            throw new InvalidOperationException("Visitor don't exist");
+        }
+
         visitRegistration.Visitor = SearchVisitorProfile(visitRegistration.VisitorId);
         visitRegistration.Attractions = RefreshAttractions(visitRegistration.Attractions);
         visitRegistration.Ticket = SearchTicket(visitRegistration.TicketId);

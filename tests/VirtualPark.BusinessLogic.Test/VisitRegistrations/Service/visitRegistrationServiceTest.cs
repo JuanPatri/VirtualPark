@@ -193,7 +193,8 @@ public class VisitRegistrationServiceTest
         var ticketId = ticket.Id;
         visit.TicketId = ticketId;
 
-        visit.Attractions = new List<Attraction>();
+        var a1 = new Attraction { Name = "Placeholder" };
+        visit.Attractions = new List<Attraction> { a1 };
 
         _repositoryMock
             .Setup(r => r.Get(v => v.Id == id))
@@ -202,6 +203,10 @@ public class VisitRegistrationServiceTest
         _visitorRepoMock
             .Setup(r => r.Get(v => v.Id == visitorId))
             .Returns(visitor);
+
+        _attractionRepoMock
+            .Setup(r => r.Get(x => x.Id == a1.Id))
+            .Returns(a1);
 
         _ticketRepoMock
             .Setup(r => r.Get(t => t.Id == ticketId))
@@ -215,7 +220,7 @@ public class VisitRegistrationServiceTest
         result.VisitorId.Should().Be(visitor.Id);
         result.Ticket.Should().BeSameAs(ticket);
         result.TicketId.Should().Be(ticket.Id);
-        result.Attractions.Should().BeEmpty();
+        result.Attractions[0].Id.Should().Be(a1.Id);
 
         _repositoryMock.VerifyAll();
         _visitorRepoMock.VerifyAll();

@@ -44,7 +44,12 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     {
         var visitRegistration = _visitRegistrationRepository.Get(v => v.Id == id);
 
-        _visitRegistrationRepository.Remove(visitRegistration!);
+        if(visitRegistration == null)
+        {
+            throw new InvalidOperationException("Visitor don't exist");
+        }
+
+        _visitRegistrationRepository.Remove(visitRegistration);
     }
 
     private VisitRegistration MapToEntity(VisitRegistrationArgs args)

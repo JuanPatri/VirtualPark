@@ -25,7 +25,7 @@ public class RankingArgsTest
     {
         var expected = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
 
-        var rankingArgs = new RankingArgs("2025-09-27 00:00", Array.Empty<string>(),"Daily")
+        var rankingArgs = new RankingArgs("2025-09-27 00:00", Array.Empty<string>(), "Daily")
         {
             Entries = expected
         };

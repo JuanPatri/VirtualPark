@@ -26,8 +26,7 @@ public sealed class RankingServiceTest
 
         _rankingService = new RankingService(
             _mockRankingRepository.Object,
-            _mockUserReadOnlyRepository.Object
-        );
+            _mockUserReadOnlyRepository.Object);
     }
 
     #region GuidToUser
@@ -60,7 +59,7 @@ public sealed class RankingServiceTest
     {
         var g1 = Guid.NewGuid();
         var g2 = Guid.NewGuid();
-        var args = new RankingArgs("2025-09-27 00:00", new[] { g1.ToString(), g2.ToString() }, "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString(), g2.ToString()], "Daily");
 
         var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
         var user2 = new User { Name = "Bob", LastName = "Jones", Email = "b@test.com", Password = "456", Roles = [] };
@@ -69,7 +68,7 @@ public sealed class RankingServiceTest
 
         _mockUserReadOnlyRepository
             .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
-            .Returns(() => queue.Dequeue());
+            .Returns(queue.Dequeue);
 
         var ranking = _rankingService.MapToEntity(args);
 
@@ -83,49 +82,49 @@ public sealed class RankingServiceTest
 
     #region ApllyArgsToEntity
     [TestMethod]
-        public void ApplyArgsToEntity_ValidArgs_ShouldCopyFieldsAndMapEntries()
-        {
-            var g1 = Guid.NewGuid();
-            var g2 = Guid.NewGuid();
-            var args = new RankingArgs("2025-09-27 00:00", new[] { g1.ToString(), g2.ToString() }, "Daily");
+    public void ApplyArgsToEntity_ValidArgs_ShouldCopyFieldsAndMapEntries()
+    {
+        var g1 = Guid.NewGuid();
+        var g2 = Guid.NewGuid();
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString(), g2.ToString()], "Daily");
 
-            var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
-            var user2 = new User { Name = "Bob",   LastName = "Jones", Email = "b@test.com", Password = "456", Roles = [] };
+        var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
+        var user2 = new User { Name = "Bob", LastName = "Jones", Email = "b@test.com", Password = "456", Roles = [] };
 
-            var queue = new Queue<User>(new[] { user1, user2 });
-            _mockUserReadOnlyRepository
-                .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
-                .Returns(() => queue.Dequeue());
+        var queue = new Queue<User>(new[] { user1, user2 });
+        _mockUserReadOnlyRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
+            .Returns(queue.Dequeue);
 
-            var entity = new Ranking();
+        var entity = new Ranking();
 
-            _rankingService.ApplyArgsToEntity(entity, args);
+        _rankingService.ApplyArgsToEntity(entity, args);
 
-            Assert.AreEqual(args.Date, entity.Date);
-            Assert.AreEqual(args.Period, entity.Period);
-            Assert.IsNotNull(entity.Entries);
-            Assert.AreEqual(2, entity.Entries.Count);
-        }
+        Assert.AreEqual(args.Date, entity.Date);
+        Assert.AreEqual(args.Period, entity.Period);
+        Assert.IsNotNull(entity.Entries);
+        Assert.AreEqual(2, entity.Entries.Count);
+    }
 
-        [TestMethod]
-        [ExpectedException(typeof(KeyNotFoundException))]
-        public void ApplyArgsToEntity_WhenAGuidDoesNotResolve_ShouldThrowKeyNotFound()
-        {
-            var g1 = Guid.NewGuid();
-            var gMissing = Guid.NewGuid();
-            var args = new RankingArgs("2025-09-27 00:00", new[] { g1.ToString(), gMissing.ToString() }, "Daily");
+    [TestMethod]
+    [ExpectedException(typeof(KeyNotFoundException))]
+    public void ApplyArgsToEntity_WhenAGuidDoesNotResolve_ShouldThrowKeyNotFound()
+    {
+        var g1 = Guid.NewGuid();
+        var gMissing = Guid.NewGuid();
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString(), gMissing.ToString()], "Daily");
 
-            var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
+        var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
 
-            var step = 0;
-            _mockUserReadOnlyRepository
-                .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
-                .Returns(() => step++ == 0 ? user1 : null);
+        var step = 0;
+        _mockUserReadOnlyRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
+            .Returns(() => step++ == 0 ? user1 : null);
 
-            var entity = new Ranking();
+        var entity = new Ranking();
 
-            _rankingService.ApplyArgsToEntity(entity, args);
-        }
+        _rankingService.ApplyArgsToEntity(entity, args);
+    }
     #endregion
 
     #region Create
@@ -133,7 +132,7 @@ public sealed class RankingServiceTest
     public void Create_WhenArgsValid_ShouldAddAndReturnId()
     {
         var g1 = Guid.NewGuid();
-        var args = new RankingArgs("2025-09-27 00:00", new[] { g1.ToString() }, "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString()], "Daily");
 
         var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
 
@@ -157,7 +156,7 @@ public sealed class RankingServiceTest
     public void Create_WhenUserNotFound_ShouldThrow()
     {
         var g1 = Guid.NewGuid();
-        var args = new RankingArgs("2025-09-27 00:00", new[] { g1.ToString() }, "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString()], "Daily");
 
         _mockUserReadOnlyRepository
             .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
@@ -177,7 +176,7 @@ public sealed class RankingServiceTest
 
         _mockRankingRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<Ranking> { r1, r2 });
+            .Returns([r1, r2]);
 
         var result = _rankingService.GetAll();
 
@@ -192,7 +191,7 @@ public sealed class RankingServiceTest
     {
         _mockRankingRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<Ranking>());
+            .Returns([]);
 
         var result = _rankingService.GetAll();
 
@@ -274,14 +273,14 @@ public sealed class RankingServiceTest
         var g1 = Guid.NewGuid();
         var g2 = Guid.NewGuid();
 
-        var args = new RankingArgs("2025-09-27 00:00", new[] { g1.ToString(), g2.ToString() }, "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString(), g2.ToString()], "Daily");
 
         var existing = new Ranking
         {
             Id = id,
             Date = new DateTime(2024, 1, 1),
             Period = Period.Weekly,
-            Entries = new List<User>()
+            Entries = []
         };
 
         _mockRankingRepository
@@ -289,12 +288,12 @@ public sealed class RankingServiceTest
             .Returns(existing);
 
         var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "x", Roles = [] };
-        var user2 = new User { Name = "Bob",   LastName = "Jones",  Email = "b@test.com", Password = "y", Roles = [] };
+        var user2 = new User { Name = "Bob", LastName = "Jones", Email = "b@test.com", Password = "y", Roles = [] };
         var queue = new Queue<User>(new[] { user1, user2 });
 
         _mockUserReadOnlyRepository
             .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
-            .Returns(() => queue.Dequeue());
+            .Returns(queue.Dequeue);
 
         _mockRankingRepository
             .Setup(r => r.Update(It.IsAny<Ranking>()));
@@ -343,7 +342,7 @@ public sealed class RankingServiceTest
             Id = id,
             Date = new DateTime(2025, 9, 27),
             Period = Period.Daily,
-            Entries = new List<User>()
+            Entries = []
         };
 
         _mockRankingRepository

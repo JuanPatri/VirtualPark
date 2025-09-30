@@ -33,8 +33,7 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
 
     public bool Exist(Expression<Func<Ranking, bool>> predicate)
     {
-        var exist = _rankingRepository.Exist(predicate);
-        return exist;
+        return _rankingRepository.Exist(predicate);
     }
 
     public Ranking MapToEntity(RankingArgs rankingArgs)

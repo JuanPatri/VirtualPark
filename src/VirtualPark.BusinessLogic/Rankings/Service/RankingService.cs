@@ -10,6 +10,18 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
     private readonly IRepository<Ranking> _rankingRepository = rankingRepository;
     private readonly IReadOnlyRepository<User> _userReadOnlyRepository = userReadOnlyRepository;
 
+    public Ranking MapToEntity(RankingArgs rankingArgs)
+    {
+        var ranking = new Ranking
+        {
+            Date = rankingArgs.Date,
+            Entries = GuidToUser(rankingArgs.Entries),
+            Period = rankingArgs.Period
+        };
+
+        return ranking;
+    }
+
     public List<User> GuidToUser(List<Guid> entries)
     {
         ArgumentNullException.ThrowIfNull(entries);

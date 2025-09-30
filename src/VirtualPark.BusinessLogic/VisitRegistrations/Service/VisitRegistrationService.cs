@@ -100,15 +100,11 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     private List<Attraction> RefreshAttractions(List<Attraction> attractionsOnlyId)
     {
         List<Attraction> attractions = new List<Attraction>();
-        foreach(var a in attractions)
+        foreach(var a in attractionsOnlyId)
         {
             var attraction = _attractionRepository.Get(x => x.Id == a.Id);
-            if(attraction is null)
-            {
-                throw new InvalidOperationException("Attraction don't exist");
-            }
 
-            attractions.Add(attraction);
+            attractions.Add(attraction!);
         }
 
         return attractions;

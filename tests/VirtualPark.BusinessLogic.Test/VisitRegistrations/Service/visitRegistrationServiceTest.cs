@@ -245,6 +245,51 @@ public class VisitRegistrationServiceTest
         _ticketRepoMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Get_ShouldThrow_WhenAnyAttractionDoesNotExist()
+    {
+        var visit = new VisitRegistration();
+        var id = visit.Id;
+
+        var visitor = new VisitorProfile();
+        var visitorId = visitor.Id;
+        visit.VisitorId = visitorId;
+
+        var ticket = new Ticket();
+        var ticketId = ticket.Id;
+        visit.TicketId = ticketId;
+
+        var a1 = new Attraction { Name = "Placeholder" };
+        visit.Attractions = new List<Attraction> { a1 };
+
+        _repositoryMock
+            .Setup(r => r.Get(v => v.Id == id))
+            .Returns(visit);
+
+        _visitorRepoMock
+            .Setup(r => r.Get(v => v.Id == visitorId))
+            .Returns(visitor);
+
+        _ticketRepoMock
+            .Setup(r => r.Get(t => t.Id == ticketId))
+            .Returns(ticket);
+
+        _attractionRepoMock
+            .Setup(r => r.Get(x => x.Id == a1.Id))
+            .Returns((Attraction?)null);
+
+        var act = () => _service.Get(id);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Attraction don't exist");
+
+        _repositoryMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
     #endregion
     #endregion
 }

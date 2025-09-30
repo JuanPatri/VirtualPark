@@ -176,9 +176,10 @@ public class VisitRegistrationServiceTest
     #endregion
     #endregion
 
+    #region Get
     [TestMethod]
     [TestCategory("Validation")]
-    public void Get_success()
+    public void Get_ShouldReturnVisitRegistration_WhenExists()
     {
         var visit = new VisitRegistration();
         var id = visit.Id;
@@ -220,4 +221,5 @@ public class VisitRegistrationServiceTest
         _ticketRepoMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
     }
+    #endregion
 }

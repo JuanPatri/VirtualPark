@@ -1,6 +1,9 @@
+using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
-using VirtualPark.BusinessLogic.Rankings.Entity; using VirtualPark.BusinessLogic.Rankings.Service;
+using VirtualPark.BusinessLogic.Rankings.Entity;
+using VirtualPark.BusinessLogic.Rankings.Models;
+using VirtualPark.BusinessLogic.Rankings.Service;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.Repository;
 
@@ -47,6 +50,32 @@ public sealed class RankingServiceTest
         Action act = () => _rankingService.GuidToUser(null!);
 
         act.Should().Throw<ArgumentNullException>();
+    }
+
+    #endregion
+    #region MapToEntity
+    [TestMethod]
+    public void MapToEntity_WhenArgsAreValid_ShouldReturnRankingEntity()
+    {
+        var g1 = Guid.NewGuid();
+        var g2 = Guid.NewGuid();
+        var args = new RankingArgs("2025-09-27 00:00", new[] { g1.ToString(), g2.ToString() }, "Daily");
+
+        var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
+        var user2 = new User { Name = "Bob", LastName = "Jones", Email = "b@test.com", Password = "456", Roles = [] };
+
+        var queue = new Queue<User>(new[] { user1, user2 });
+
+        _mockUserReadOnlyRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
+            .Returns(() => queue.Dequeue());
+
+        var ranking = _rankingService.MapToEntity(args);
+
+        ranking.Should().NotBeNull();
+        ranking.Date.Should().Be(args.Date);
+        ranking.Period.Should().Be(args.Period);
+        ranking.Entries.Should().HaveCount(2);
     }
 
     #endregion

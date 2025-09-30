@@ -337,9 +337,10 @@ public class VisitRegistrationServiceTest
     #endregion
     #endregion
 
+    #region Update
     [TestMethod]
     [TestCategory("Validation")]
-    public void Update_Success()
+    public void Update_ShouldApplyChanges_AndPersist_WhenVisitExists()
     {
         var visit = new VisitRegistration();
         var visitId = visit.Id;
@@ -405,4 +406,5 @@ public class VisitRegistrationServiceTest
         _ticketRepoMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
     }
+    #endregion
 }

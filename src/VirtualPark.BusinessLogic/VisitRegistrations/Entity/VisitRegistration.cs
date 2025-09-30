@@ -12,4 +12,5 @@ public sealed class VisitRegistration
     public VisitorProfile Visitor { get; set; } = null!;
     public Guid VisitorId { get; set; }
     public Ticket Ticket { get; set; } = null!;
+    public Guid TicketId { get; init; }
 }

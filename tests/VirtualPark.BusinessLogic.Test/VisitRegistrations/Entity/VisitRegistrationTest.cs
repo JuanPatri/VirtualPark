@@ -123,5 +123,16 @@ public sealed class VisitRegistrationTest
 
         visit.TicketId.Should().Be(ticketId);
     }
+
+    [TestMethod]
+    [TestCategory("SetterTicketId")]
+    public void TicketId_shouldBeSettable()
+    {
+        var ticketId = Guid.NewGuid();
+        var visit = new VisitRegistration();
+        visit.TicketId = ticketId;
+
+        visit.TicketId.Should().Be(ticketId);
+    }
     #endregion
 }

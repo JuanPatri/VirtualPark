@@ -76,6 +76,7 @@ public class VisitRegistrationArgsTest
     #endregion
 
     #region TicketId
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void TicketId_ShouldParseValidGuidString()
@@ -88,10 +89,12 @@ public class VisitRegistrationArgsTest
 
         args.TicketId.Should().Be(ticketId);
     }
+    #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void TicketId_fail()
+    public void TicketId_ShouldThrow_WhenGuidStringIsInvalid()
     {
         var invalidId = "not-a-guid";
         var attractions = new List<string> { Guid.NewGuid().ToString() };
@@ -101,5 +104,6 @@ public class VisitRegistrationArgsTest
         act.Should().Throw<FormatException>()
             .Where(ex => ex.Message.Contains(invalidId));
     }
+    #endregion
     #endregion
 }

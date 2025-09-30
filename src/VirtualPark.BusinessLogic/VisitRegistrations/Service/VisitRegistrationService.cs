@@ -25,6 +25,16 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         return entity;
     }
 
+    public VisitRegistration? Get(Guid id)
+    {
+        var visitRegistration = _visitRegistrationRepository.Get(v => v.Id == id);
+
+        visitRegistration.Visitor = SearchVisitorProfile(visitRegistration.VisitorId);
+        visitRegistration.Attractions = RefreshAttractions(visitRegistration.Attractions);
+        visitRegistration.Ticket = SearchTicket(visitRegistration.TicketId);
+        return visitRegistration;
+    }
+
     private VisitRegistration MapToEntity(VisitRegistrationArgs args)
     {
         var visitor = SearchVisitorProfile(args.VisitorProfileId);
@@ -71,6 +81,23 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         foreach(var attractionId in attractionsIds)
         {
             var attraction = _attractionRepository.Get(x => x.Id == attractionId);
+            if(attraction is null)
+            {
+                throw new InvalidOperationException("Attraction don't exist");
+            }
+
+            attractions.Add(attraction);
+        }
+
+        return attractions;
+    }
+
+    private List<Attraction> RefreshAttractions(List<Attraction> attractionsOnlyId)
+    {
+        List<Attraction> attractions = new List<Attraction>();
+        foreach(var a in attractions)
+        {
+            var attraction = _attractionRepository.Get(x => x.Id == a.Id);
             if(attraction is null)
             {
                 throw new InvalidOperationException("Attraction don't exist");

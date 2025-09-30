@@ -54,7 +54,7 @@ public class VisitRegistrationServiceTest
             visitorId.ToString(), ticketId.ToString());
 
         _visitorRepoMock
-            .Setup(r => r.Get(v => v.Id == args.VisitorProfileId))
+            .Setup(r => r.Get(v => v.Id == visitorId))
             .Returns(visitor);
 
         _attractionRepoMock
@@ -62,7 +62,7 @@ public class VisitRegistrationServiceTest
             .Returns(a1);
 
         _ticketRepoMock
-            .Setup(r => r.Get(t => t.Id == args.TicketId))
+            .Setup(r => r.Get(t => t.Id == ticketId))
             .Returns(ticket);
 
         _attractionRepoMock
@@ -102,7 +102,7 @@ public class VisitRegistrationServiceTest
         var args = new VisitRegistrationArgs(new List<string>(), visitorId.ToString(), Guid.NewGuid().ToString());
 
         _visitorRepoMock
-            .Setup(r => r.Get(v => v.Id == args.VisitorProfileId))
+            .Setup(r => r.Get(v => v.Id == visitorId))
             .Returns((VisitorProfile?)null);
 
         Action act = () => _service.Create(args);
@@ -129,7 +129,7 @@ public class VisitRegistrationServiceTest
             visitorId.ToString(), Guid.NewGuid().ToString());
 
         _visitorRepoMock
-            .Setup(r => r.Get(v => v.Id == args.VisitorProfileId))
+            .Setup(r => r.Get(v => v.Id == visitorId))
             .Returns(visitor);
 
         _attractionRepoMock
@@ -157,11 +157,11 @@ public class VisitRegistrationServiceTest
         var args = new VisitRegistrationArgs(new List<string>(), visitorId.ToString(), ticketId.ToString());
 
         _visitorRepoMock
-            .Setup(r => r.Get(v => v.Id == args.VisitorProfileId))
+            .Setup(r => r.Get(v => v.Id == visitorId))
             .Returns(visitor);
 
         _ticketRepoMock
-            .Setup(r => r.Get(t => t.Id == args.TicketId))
+            .Setup(r => r.Get(t => t.Id == ticketId))
             .Returns((Ticket?)null);
 
         Action act = () => _service.Create(args);

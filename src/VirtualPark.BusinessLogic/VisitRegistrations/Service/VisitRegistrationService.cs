@@ -1,6 +1,7 @@
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
+using VirtualPark.BusinessLogic.VisitorsProfile.Models;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Models;
 using VirtualPark.Repository;
@@ -26,11 +27,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
     private VisitRegistration MapToEntity(VisitRegistrationArgs args)
     {
-        var visitor = _visitorProfileRepository.Get(v => v.Id == args.VisitorProfileId);
-        if (visitor is null)
-        {
-            throw new InvalidOperationException("Visitor don't exist");
-        }
+        var visitor = SearchVisitorProfile(args.VisitorProfileId);
 
         List<Attraction> attractions = new List<Attraction>();
         foreach(var attractionId in args.AttractionsId)
@@ -44,11 +41,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
             attractions.Add(attraction);
         }
 
-        var ticket = _ticketRepository.Get(t => t.Id == args.TicketId);
-        if (ticket is null)
-        {
-            throw new InvalidOperationException("Ticket don't exist");
-        }
+        var ticket = SearchTicket(args.TicketId);
 
         return new VisitRegistration
         {
@@ -58,5 +51,27 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
             Ticket = ticket,
             TicketId = ticket.Id
         };
+    }
+
+    private Ticket SearchTicket(Guid id)
+    {
+        var ticket = _ticketRepository.Get(t => t.Id == id);
+        if (ticket is null)
+        {
+            throw new InvalidOperationException("Ticket don't exist");
+        }
+
+        return ticket;
+    }
+
+    private VisitorProfile SearchVisitorProfile(Guid id)
+    {
+        var visitor = _visitorProfileRepository.Get(v => v.Id == id);
+        if (visitor is null)
+        {
+            throw new InvalidOperationException("Visitor don't exist");
+        }
+
+        return visitor;
     }
 }

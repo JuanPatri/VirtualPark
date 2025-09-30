@@ -45,6 +45,7 @@ public class VisitRegistrationArgsTest
     #endregion
 
     #region VisitorProfileId
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void VisitorProfileId_ShouldParseValidGuidString()
@@ -56,7 +57,9 @@ public class VisitRegistrationArgsTest
 
         args.VisitorProfileId.Should().Be(vpId);
     }
+    #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
     public void VisitorProfileId_ShouldThrow_WhenGuidStringIsInvalid()
@@ -69,5 +72,6 @@ public class VisitRegistrationArgsTest
         act.Should().Throw<FormatException>()
             .Where(ex => ex.Message.Contains(invalidId));
     }
+    #endregion
     #endregion
 }

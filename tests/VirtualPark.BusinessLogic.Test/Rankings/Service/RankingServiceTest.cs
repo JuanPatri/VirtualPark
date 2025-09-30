@@ -65,7 +65,7 @@ public sealed class RankingServiceTest
         var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
         var user2 = new User { Name = "Bob", LastName = "Jones", Email = "b@test.com", Password = "456", Roles = [] };
 
-        var queue = new Queue<User>(new[] { user1, user2 });
+        var queue = new Queue<User>([user1, user2]);
 
         _mockUserReadOnlyRepository
             .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
@@ -91,7 +91,7 @@ public sealed class RankingServiceTest
         var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
         var user2 = new User { Name = "Bob", LastName = "Jones", Email = "b@test.com", Password = "456", Roles = [] };
 
-        var queue = new Queue<User>(new[] { user1, user2 });
+        var queue = new Queue<User>([user1, user2]);
         _mockUserReadOnlyRepository
             .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
             .Returns(queue.Dequeue);
@@ -294,7 +294,7 @@ public sealed class RankingServiceTest
 
         var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "x", Roles = [] };
         var user2 = new User { Name = "Bob", LastName = "Jones", Email = "b@test.com", Password = "y", Roles = [] };
-        var queue = new Queue<User>(new[] { user1, user2 });
+        var queue = new Queue<User>([user1, user2]);
 
         _mockUserReadOnlyRepository
             .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))

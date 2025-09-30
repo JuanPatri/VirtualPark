@@ -43,6 +43,12 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
         _rankingRepository.Update(ranking);
     }
 
+    public void Remove(Guid id)
+    {
+        var ranking = Get(r => r.Id == id) ?? throw new InvalidOperationException($"Ranking with id {id} not found.");
+        _rankingRepository.Remove(ranking);
+    }
+
     public Ranking MapToEntity(RankingArgs rankingArgs)
     {
         return new Ranking

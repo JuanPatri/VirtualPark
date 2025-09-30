@@ -103,6 +103,42 @@ public class VisitRegistrationServiceTest
         _attractionRepoMock.VerifyNoOtherCalls();
         _repositoryMock.VerifyNoOtherCalls();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Create_failure()
+    {
+        var visitor = new VisitorProfile();
+        var visitorId = visitor.Id;
+
+        var okAttraction = new Attraction { Name = "Roller" };
+        var missingId = Guid.NewGuid();
+
+        var args = new VisitRegistrationArgs(
+            new List<string> { okAttraction.Id.ToString(), missingId.ToString() },
+            visitorId.ToString());
+
+        _visitorRepoMock
+            .Setup(r => r.Get(v => v.Id == args.VisitorProfileId))
+            .Returns(visitor);
+
+        _attractionRepoMock
+            .Setup(r => r.Get(x => x.Id == okAttraction.Id))
+            .Returns(okAttraction);
+
+        _attractionRepoMock
+            .Setup(r => r.Get(x => x.Id == missingId))
+            .Returns((Attraction?)null);
+
+        var act = () => _service.Create(args);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Attraction don't exist");
+
+        _visitorRepoMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+        _repositoryMock.VerifyNoOtherCalls();
+    }
     #endregion
     #endregion
 }

@@ -148,7 +148,7 @@ public class VisitRegistrationServiceTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Create_fail()
+    public void Create_ShouldThrow_WhenTicketDoesNotExist()
     {
         var visitor = new VisitorProfile();
         var visitorId = visitor.Id;

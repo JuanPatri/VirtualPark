@@ -126,4 +126,46 @@ public sealed class RankingServiceTest
             _rankingService.ApplyArgsToEntity(entity, args);
         }
     #endregion
+
+    #region Create
+    [TestMethod]
+    public void Create_WhenArgsValid_ShouldAddAndReturnId()
+    {
+        var g1 = Guid.NewGuid();
+        var args = new RankingArgs("2025-09-27 00:00", new[] { g1.ToString() }, "Daily");
+
+        var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
+
+        _mockUserReadOnlyRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
+            .Returns(user1);
+
+        _mockRankingRepository
+            .Setup(r => r.Add(It.IsAny<Ranking>()));
+
+        var id = _rankingService.Create(args);
+
+        id.Should().NotBe(Guid.Empty);
+        _mockRankingRepository.Verify(r => r.Add(It.IsAny<Ranking>()), Times.Once);
+        _mockUserReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()), Times.Once);
+        _mockRankingRepository.VerifyNoOtherCalls();
+        _mockUserReadOnlyRepository.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    public void Create_WhenUserNotFound_ShouldThrow()
+    {
+        var g1 = Guid.NewGuid();
+        var args = new RankingArgs("2025-09-27 00:00", new[] { g1.ToString() }, "Daily");
+
+        _mockUserReadOnlyRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<User, bool>>>()))
+            .Returns((User?)null);
+
+        Action act = () => _rankingService.Create(args);
+
+        act.Should().Throw<KeyNotFoundException>();
+    }
+    #endregion
+
 }

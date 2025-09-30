@@ -29,9 +29,10 @@ public class VisitRegistrationServiceTest
         _service = new VisitRegistrationService(_repositoryMock.Object, _visitorRepoMock.Object, _attractionRepoMock.Object);
     }
 
+    #region Create
     [TestMethod]
     [TestCategory("Validation")]
-    public void Create_success()
+    public void Create_ShouldCreateVisitRegistration_WhenVisitorAndAttractionsExist()
     {
         var visitor = new VisitorProfile();
         var visitorId = visitor.Id;
@@ -78,4 +79,5 @@ public class VisitRegistrationServiceTest
         _attractionRepoMock.VerifyAll();
         _repositoryMock.VerifyAll();
     }
+    #endregion
 }

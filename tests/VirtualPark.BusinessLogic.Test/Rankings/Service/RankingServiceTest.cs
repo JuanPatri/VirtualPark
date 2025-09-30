@@ -34,9 +34,10 @@ public sealed class RankingServiceTest
     public void GuidToUser_WhenUserDoesNotExist_ShouldThrowKeyNotFound()
     {
         var g1 = Guid.NewGuid();
-        _mockUserReadOnlyRepository.Setup(r => r.Get(u => u.Id == g1)).Returns((User?)null);
+        _mockUserReadOnlyRepository.Setup(r => r.Get(u => u.Id == g1))
+            .Returns((User?)null);
 
-        var entries = new List<Guid> { g1 };
+        List<Guid> entries = [g1];
 
         Action act = () => _rankingService.GuidToUser(entries);
 

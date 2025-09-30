@@ -9,23 +9,22 @@ namespace VirtualPark.BusinessLogic.Test.Rankings.Models;
 public class RankingArgsTest
 {
     #region Date
-
     [TestMethod]
     public void Date_Getter_ReturnsAssignedValue()
     {
         var expected = new DateTime(2025, 9, 27, 00, 00, 00);
-        var rankingArgs = new RankingArgs("2025-09-27 00:00", Array.Empty<string>(), "Daily");
+        var rankingArgs = new RankingArgs("2025-09-27 00:00", [], "Daily");
         rankingArgs.Date.Should().Be(expected);
     }
     #endregion Date
-    #region Users
 
+    #region Users
     [TestMethod]
     public void Entries_InitSetter_SetsValue_OnInitialization()
     {
-        var expected = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+        List<Guid> expected = [Guid.NewGuid(), Guid.NewGuid()];
 
-        var rankingArgs = new RankingArgs("2025-09-27 00:00", Array.Empty<string>(), "Daily")
+        var rankingArgs = new RankingArgs("2025-09-27 00:00", [], "Daily")
         {
             Entries = expected
         };
@@ -37,8 +36,8 @@ public class RankingArgsTest
     [TestMethod]
     public void Entries_InitSetter_OverridesCtorDefault()
     {
-        var ctorEntries = new[] { Guid.NewGuid().ToString() };
-        var expected = new List<Guid> { Guid.NewGuid() };
+        string[] ctorEntries = [Guid.NewGuid().ToString()];
+        List<Guid> expected = [Guid.NewGuid()];
 
         var rankingArgs = new RankingArgs("2025-09-27 00:00", ctorEntries, "Daily")
         {
@@ -51,13 +50,11 @@ public class RankingArgsTest
     #endregion Users
 
     #region Period
-
     [TestMethod]
     public void Period_Getter_ReturnsAssignedValue()
     {
-        var rankingArgs = new RankingArgs("2025-09-27 00:00", Array.Empty<string>(), "Daily");
+        var rankingArgs = new RankingArgs("2025-09-27 00:00", [], "Daily");
         rankingArgs.Period.Should().Be(Period.Daily);
     }
     #endregion
-
 }

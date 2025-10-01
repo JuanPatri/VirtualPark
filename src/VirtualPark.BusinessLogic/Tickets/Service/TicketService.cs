@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.Tickets.Models;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
@@ -42,5 +43,10 @@ public class TicketService(IRepository<Ticket> ticketRepository, VisitorProfileS
     {
         var ticket = _ticketRepository.Get(t => t.Id == ticketId);
         return ticket;
+    }
+
+    public Ticket? Get(Expression<Func<Ticket, bool>> predicate)
+    {
+        return _ticketRepository.Get(predicate);
     }
 }

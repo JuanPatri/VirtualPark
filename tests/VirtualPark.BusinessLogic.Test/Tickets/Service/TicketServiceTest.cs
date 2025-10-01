@@ -27,6 +27,7 @@ public class TicketServiceTest
         _service = new TicketService(_ticketRepositoryMock.Object, _visitorProfileService);
     }
 
+    #region Create
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Create_WhenArgsAreValid_ShouldAddTicketAndReturnEntity()
@@ -51,4 +52,5 @@ public class TicketServiceTest
 
         _ticketRepositoryMock.Verify(r => r.Add(It.IsAny<Ticket>()), Times.Once);
     }
+    #endregion
 }

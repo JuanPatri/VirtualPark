@@ -1,5 +1,6 @@
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.Tickets.Models;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Service;
 using VirtualPark.Repository;
 
@@ -12,12 +13,20 @@ public class TicketService(IRepository<Ticket> ticketRepository, VisitorProfileS
 
     public Ticket Create(TicketArgs args)
     {
-        Ticket ticket = new Ticket();
-        ticket.Date = args.Date;
-        ticket.Type = args.Type;
-        ticket.EventId = args.EventId;
-        ticket.Visitor = _visitorProfileService.Get(args.VisitorId);
+        Ticket ticket = MapToEntity(args);
         _ticketRepository.Add(ticket);
         return ticket;
+    }
+
+    private Ticket MapToEntity(TicketArgs args)
+    {
+        VisitorProfile visitor = GetVisitorEntity(args);
+        Ticket ticket = new Ticket { Date = args.Date, Type = args.Type, EventId = args.EventId, Visitor = visitor };
+        return ticket;
+    }
+
+    private VisitorProfile? GetVisitorEntity(TicketArgs args)
+    {
+        return _visitorProfileService.Get(args.VisitorId);
     }
 }

@@ -128,6 +128,8 @@ public class TicketServiceTest
     #endregion
     #endregion
 
+    #region GetAll
+    #region Success
     [TestMethod]
     [TestCategory("Behaviour")]
     public void GetAll_WhenTicketsExist_ShouldReturnList()
@@ -147,4 +149,6 @@ public class TicketServiceTest
         result.Should().Contain(ticket1);
         result.Should().Contain(ticket2);
     }
+    #endregion
+    #endregion
 }

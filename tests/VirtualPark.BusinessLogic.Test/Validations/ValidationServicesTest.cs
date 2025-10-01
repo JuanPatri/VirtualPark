@@ -1,6 +1,7 @@
 using System.Globalization;
 using FluentAssertions;
 using VirtualPark.BusinessLogic.Attractions;
+using VirtualPark.BusinessLogic.Rankings;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
@@ -438,5 +439,54 @@ public class ValidationServicesTest
         ex.Message.Should().StartWith("Invalid membership value: InvalidValue");
     }
     #endregion
+    #endregion
+
+    #region ParsePeriod
+    [TestMethod]
+    public void ValidateAndParsePeriod_ValidName_ReturnsEnumValue()
+    {
+        var anyName = Enum.GetNames(typeof(Period)).First();
+        var expected = Enum.Parse<Period>(anyName, ignoreCase: true);
+
+        var result = ValidationServices.ValidateAndParsePeriod(anyName);
+
+        result.Should().Be(expected);
+    }
+
+    [TestMethod]
+    public void ValidateAndParsePeriod_IgnoresCase()
+    {
+        var anyName = Enum.GetNames(typeof(Period)).First();
+        var lower = anyName.ToLowerInvariant();
+        var expected = Enum.Parse<Period>(anyName, ignoreCase: true);
+
+        var result = ValidationServices.ValidateAndParsePeriod(lower);
+
+        result.Should().Be(expected);
+    }
+
+    [TestMethod]
+    public void ValidateAndParsePeriod_Null_ThrowsArgumentException()
+    {
+        Action act = () => ValidationServices.ValidateAndParsePeriod(null!);
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [TestMethod]
+    public void ValidateAndParsePeriod_EmptyOrWhitespace_ThrowsArgumentException()
+    {
+        Action act1 = () => ValidationServices.ValidateAndParsePeriod(string.Empty);
+        Action act2 = () => ValidationServices.ValidateAndParsePeriod("   ");
+
+        act1.Should().Throw<ArgumentException>();
+        act2.Should().Throw<ArgumentException>();
+    }
+
+    [TestMethod]
+    public void ValidateAndParsePeriod_InvalidName_ThrowsArgumentException()
+    {
+        Action act = () => ValidationServices.ValidateAndParsePeriod("__INVALID__");
+        act.Should().Throw<ArgumentException>();
+    }
     #endregion
 }

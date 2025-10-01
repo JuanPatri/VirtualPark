@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using VirtualPark.BusinessLogic.Attractions;
+using VirtualPark.BusinessLogic.Rankings;
 using VirtualPark.BusinessLogic.Tickets;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
@@ -66,6 +67,22 @@ public static class ValidationServices
             throw new ArgumentException(
                 $"The value '{value}' is not a valid AttractionType. " +
                 $"Valid values are: {string.Join(", ", Enum.GetNames(typeof(AttractionType)))}");
+        }
+
+        return result;
+    }
+
+    public static Period ValidateAndParsePeriod(string value)
+    {
+        if(string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentException("Period type cannot be null or empty.");
+        }
+
+        if(!Enum.TryParse<Period>(value, true, out var result))
+        {
+            throw new ArgumentException(
+                $"The value '{value}' is not a valid Period.");
         }
 
         return result;

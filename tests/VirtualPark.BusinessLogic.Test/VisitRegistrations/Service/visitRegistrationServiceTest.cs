@@ -477,5 +477,24 @@ public class VisitRegistrationServiceTest
         _ticketRepoMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAll_Failure()
+    {
+        _repositoryMock
+            .Setup(r => r.GetAll(null))
+            .Returns((List<VisitRegistration>)null!);
+
+        var act = () => _service.GetAll();
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Dont have any visit registrations");
+
+        _repositoryMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
     #endregion
 }

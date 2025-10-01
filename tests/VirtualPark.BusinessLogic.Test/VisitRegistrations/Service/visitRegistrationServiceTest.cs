@@ -409,6 +409,7 @@ public class VisitRegistrationServiceTest
     #endregion
 
     #region GetAll
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void GetAll_ShouldReturnVisitRegistrations_WithAllData()
@@ -477,10 +478,12 @@ public class VisitRegistrationServiceTest
         _ticketRepoMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
     }
+    #endregion
 
+    #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void GetAll_Failure()
+    public void GetAll_ShouldThrow_WhenRepositoryReturnsNull()
     {
         _repositoryMock
             .Setup(r => r.GetAll(null))
@@ -496,5 +499,6 @@ public class VisitRegistrationServiceTest
         _ticketRepoMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
     }
+    #endregion
     #endregion
 }

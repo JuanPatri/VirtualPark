@@ -1,22 +1,54 @@
+using FluentAssertions;
+using Moq;
+using VirtualPark.BusinessLogic.Tickets;
+using VirtualPark.BusinessLogic.Tickets.Entity;
+using VirtualPark.BusinessLogic.Tickets.Models;
+using VirtualPark.BusinessLogic.Tickets.Service;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
+using VirtualPark.BusinessLogic.VisitorsProfile.Service;
+using VirtualPark.Repository;
+
 namespace VirtualPark.BusinessLogic.Test.Tickets.Service;
 
+[TestClass]
 public class TicketServiceTest
 {
+    private Mock<IRepository<Ticket>> _ticketRepositoryMock = null!;
+    private Mock<IRepository<VisitorProfile>> _visitorRepositoryMock = null!;
+    private TicketService _service = null!;
+    private VisitorProfileService _visitorProfileService = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _ticketRepositoryMock = new Mock<IRepository<Ticket>>();
+        _visitorRepositoryMock = new Mock<IRepository<VisitorProfile>>();
+        _visitorProfileService = new VisitorProfileService(_visitorRepositoryMock.Object);
+        _service = new TicketService(_ticketRepositoryMock.Object, _visitorProfileService);
+    }
+
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Create_WhenArgsAreValid_ShouldAddTicketAndReturnEntity()
     {
         var visitorId = Guid.NewGuid();
         var eventId = Guid.NewGuid().ToString();
-        var args = new TicketArgs("2025-12-15", "General", eventId, visitorId);
+        var visitorProfile = new VisitorProfile { Id = visitorId };
+
+        _visitorRepositoryMock
+            .Setup(r => r.Get(It.IsAny<System.Linq.Expressions.Expression<Func<VisitorProfile, bool>>>()))
+            .Returns(visitorProfile);
+
+        var args = new TicketArgs("2025-12-15", "General", eventId, visitorId.ToString());
 
         var result = _service.Create(args);
 
         result.Should().NotBeNull();
         result.EventId.Should().Be(Guid.Parse(eventId));
+        result.Visitor.Should().NotBeNull();
         result.Visitor.Id.Should().Be(visitorId);
         result.Type.Should().Be(EntranceType.General);
 
-        _repositoryMock.Verify(r => r.Add(It.IsAny<Ticket>()), Times.Once);
+        _ticketRepositoryMock.Verify(r => r.Add(It.IsAny<Ticket>()), Times.Once);
     }
 }

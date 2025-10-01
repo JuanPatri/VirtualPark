@@ -202,6 +202,8 @@ public class TicketServiceTest
     #endregion
     #endregion
 
+    #region ValidateTicket
+    #region Success
     [TestMethod]
     [TestCategory("Behaviour")]
     public void ValidateTicket_WhenTicketExistsAndIsGeneralAndDateMatches_ShouldReturnTrue()
@@ -227,4 +229,23 @@ public class TicketServiceTest
 
         result.Should().BeTrue();
     }
+    #endregion
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void ValidateTicket_WhenTicketDoesNotExist_ShouldThrowInvalidOperationException()
+    {
+        var qrId = Guid.NewGuid();
+        var today = DateOnly.FromDateTime(DateTime.Today);
+
+        _ticketRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns((Ticket?)null);
+
+        Action act = () => _service.IsTicketValidForEntry(Guid.NewGuid(), qrId);
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage($"No ticket found with QR: {qrId}");
+    }
+    #endregion
 }

@@ -166,6 +166,9 @@ public class TicketServiceTest
     }
     #endregion
     #endregion
+
+    #region HasTicketForVisitor
+    #region Success
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Exist_WhenTicketWithVisitorExists_ShouldReturnTrue()
@@ -176,8 +179,10 @@ public class TicketServiceTest
             .Setup(r => r.Exist(It.IsAny<Expression<Func<Ticket, bool>>>()))
             .Returns(true);
 
-        var result = _service.ExistTicketByVisitor(visitorId);
+        var result = _service.HasTicketForVisitor(visitorId);
 
         result.Should().BeTrue();
     }
+    #endregion
+    #endregion
 }

@@ -53,4 +53,21 @@ public class TicketService(IRepository<Ticket> ticketRepository, VisitorProfileS
     {
         return _ticketRepository.Exist(t => t.Visitor.Id == visitorId);
     }
+
+    public bool ValidateTicket(Guid ticketId, Guid qrId)
+    {
+        var ticket = _ticketRepository.Get(t => t.QrId == qrId)
+                     ?? throw new InvalidOperationException($"Ticket with QR {qrId} not found.");
+
+        if(ticket.Date != DateOnly.FromDateTime(DateTime.Today))
+        {
+            return false;
+        }
+
+        return ticket.Type switch
+        {
+            EntranceType.General or EntranceType.Event => true,
+            _ => false
+        };
+    }
 }

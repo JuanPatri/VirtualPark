@@ -201,16 +201,19 @@ public class TicketServiceTest
     }
     #endregion
     #endregion
+
     [TestMethod]
     [TestCategory("Behaviour")]
     public void ValidateTicket_WhenTicketExistsAndIsGeneralAndDateMatches_ShouldReturnTrue()
     {
+        var qrId = Guid.NewGuid();
         var visitorId = Guid.NewGuid();
         var today = DateOnly.FromDateTime(DateTime.Today);
 
         var ticket = new Ticket
         {
-            Date = DateOnly.FromDateTime(DateTime.Today),
+            QrId = qrId,
+            Date = today,
             Type = EntranceType.General,
             EventId = Guid.Empty,
             Visitor = new VisitorProfile { Id = visitorId }
@@ -220,7 +223,7 @@ public class TicketServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>()))
             .Returns(ticket);
 
-        var result = _service.ValidateTicket(ticket.Id);
+        var result = _service.ValidateTicket(qrId, visitorId);
 
         result.Should().BeTrue();
     }

@@ -32,11 +32,17 @@ public class TicketService(IRepository<Ticket> ticketRepository, VisitorProfileS
 
     public void Remove(Guid ticketId)
     {
-        var ticket = _ticketRepository.Get(t => t.Id == ticketId);
+        Ticket? ticket = GetTicket(ticketId);
 
         if(ticket != null)
         {
             _ticketRepository.Remove(ticket);
         }
+    }
+
+    private Ticket? GetTicket(Guid ticketId)
+    {
+        var ticket = _ticketRepository.Get(t => t.Id == ticketId);
+        return ticket;
     }
 }

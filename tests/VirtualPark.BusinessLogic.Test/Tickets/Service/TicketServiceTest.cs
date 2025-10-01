@@ -55,6 +55,8 @@ public class TicketServiceTest
     }
     #endregion
 
+    #region Remove
+    #region Success
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Remove_WhenTicketExists_ShouldRemoveFromRepository()
@@ -70,4 +72,6 @@ public class TicketServiceTest
 
         _ticketRepositoryMock.Verify(r => r.Remove(ticket), Times.Once);
     }
+    #endregion
+    #endregion
 }

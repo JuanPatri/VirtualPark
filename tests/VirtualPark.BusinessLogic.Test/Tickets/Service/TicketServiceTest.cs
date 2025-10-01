@@ -184,6 +184,7 @@ public class TicketServiceTest
         result.Should().BeTrue();
     }
     #endregion
+    #region Failure
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Exist_WhenTicketWithVisitorDoesNotExist_ShouldReturnFalse()
@@ -198,5 +199,6 @@ public class TicketServiceTest
 
         result.Should().BeFalse();
     }
+    #endregion
     #endregion
 }

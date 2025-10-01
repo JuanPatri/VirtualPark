@@ -113,4 +113,17 @@ public class TicketServiceTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Get_WhenTicketDoesNotExist_ShouldReturnNull()
+    {
+        _ticketRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns((Ticket?)null);
+
+        var result = _service.Get(t => t.Id == Guid.NewGuid());
+
+        result.Should().BeNull();
+    }
 }

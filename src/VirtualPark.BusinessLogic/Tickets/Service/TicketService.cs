@@ -32,12 +32,10 @@ public class TicketService(IRepository<Ticket> ticketRepository, VisitorProfileS
 
     public void Remove(Guid ticketId)
     {
-        Ticket? ticket = GetTicket(ticketId);
+        var ticket = GetTicket(ticketId)
+                     ?? throw new InvalidOperationException($"Ticket with id {ticketId} not found.");
 
-        if(ticket != null)
-        {
-            _ticketRepository.Remove(ticket);
-        }
+        _ticketRepository.Remove(ticket);
     }
 
     private Ticket? GetTicket(Guid ticketId)

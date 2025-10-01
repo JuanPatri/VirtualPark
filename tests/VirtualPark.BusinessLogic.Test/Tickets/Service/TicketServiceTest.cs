@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Tickets;
@@ -53,4 +54,20 @@ public class TicketServiceTest
         _ticketRepositoryMock.Verify(r => r.Add(It.IsAny<Ticket>()), Times.Once);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Remove_WhenTicketExists_ShouldRemoveFromRepository()
+    {
+        var ticketId = Guid.NewGuid();
+        var ticket = new Ticket { Id = ticketId };
+
+        _ticketRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(ticket);
+
+        _service.Remove(ticketId);
+
+        _ticketRepositoryMock.Verify(r => r.Remove(ticket), Times.Once);
+    }
 }

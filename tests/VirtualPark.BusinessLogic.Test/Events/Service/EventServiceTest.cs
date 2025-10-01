@@ -1,5 +1,8 @@
+using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
+using VirtualPark.BusinessLogic.Attractions.Entity;
+using VirtualPark.BusinessLogic.Attractions.Services;
 using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Events.Models;
 using VirtualPark.BusinessLogic.Events.Services;
@@ -12,14 +15,18 @@ namespace VirtualPark.BusinessLogic.Test.Events.Service;
 [TestCategory("Event")]
 public sealed class EventServiceTest
 {
-    private Mock<IRepository<Event>> _repositoryMock = null!;
-    private EventService _service = null!;
+    private Mock<IRepository<Event>> _eventRepositoryMock = null!;
+    private EventService _eventService = null!;
+    private Mock<IRepository<Attraction>> _attractionRepositoryMock = null!;
+    private AttractionService _attractionService = null!;
 
     [TestInitialize]
     public void Setup()
     {
-        _repositoryMock = new Mock<IRepository<Event>>();
-        _service = new EventService(_repositoryMock.Object);
+        _eventRepositoryMock = new Mock<IRepository<Event>>();
+        _attractionRepositoryMock = new Mock<IRepository<Attraction>>();
+        _attractionService = new AttractionService(_attractionRepositoryMock.Object);
+        _eventService = new EventService(_eventRepositoryMock.Object, _attractionService);
     }
 
     #region Id
@@ -27,12 +34,19 @@ public sealed class EventServiceTest
     [TestCategory("Behaviour")]
     public void Create_WhenArgsAreValid_ShouldReturnEventId()
     {
-        var args = new EventsArgs("Halloween", "2025-12-30", 100, 500);
+        var attractionId = Guid.NewGuid();
+        var attractions = new List<string> { attractionId.ToString() };
+        var args = new EventsArgs("Halloween", "2025-12-30", 100, 500, attractions);
 
-        var result = _service.Create(args);
+        var attraction = new Attraction { Id = attractionId, Name = "Roller Coaster" };
+
+        _attractionRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(attraction);
+        var result = _eventService.Create(args);
 
         result.Should().NotBe(Guid.Empty);
-        _repositoryMock.Verify(r => r.Add(It.IsAny<Event>()), Times.Once);
+        _eventRepositoryMock.Verify(r => r.Add(It.IsAny<Event>()), Times.Once);
     }
     #endregion
 
@@ -41,19 +55,29 @@ public sealed class EventServiceTest
     [TestCategory("Behaviour")]
     public void Create_ShouldCallRepositoryAddWithMappedEntity()
     {
-        var args = new EventsArgs("Christmas Party", "2025-12-24", 200, 1000);
+        var attractionId = Guid.NewGuid();
+        var attractions = new List<string> { attractionId.ToString() };
+        var args = new EventsArgs("Christmas Party", "2025-12-24", 200, 1000, attractions);
+
+        var attraction = new Attraction { Id = attractionId, Name = "Roller Coaster" };
+
+        _attractionRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(attraction);
 
         Event? capturedEvent = null;
-        _repositoryMock.Setup(r => r.Add(It.IsAny<Event>()))
+        _eventRepositoryMock.Setup(r => r.Add(It.IsAny<Event>()))
             .Callback<Event>(e => capturedEvent = e);
 
-        var id = _service.Create(args);
+        var id = _eventService.Create(args);
 
         capturedEvent.Should().NotBeNull();
         capturedEvent!.Id.Should().Be(id);
         capturedEvent.Name.Should().Be("Christmas Party");
         capturedEvent.Capacity.Should().Be(200);
         capturedEvent.Cost.Should().Be(1000);
+        capturedEvent.Attractions.Should().Contain(attraction);
     }
+
     #endregion
 }

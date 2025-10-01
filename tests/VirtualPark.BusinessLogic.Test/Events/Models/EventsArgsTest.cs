@@ -16,7 +16,9 @@ public class EventsArgsTest
     [TestCategory("Validation")]
     public void Name_Getter_ReturnsAssignedValue()
     {
-        var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 50, 200);
+        var attractionId = Guid.NewGuid().ToString();
+        var attractions = new List<string> { attractionId };
+        var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 50, 200, attractions);
         eventsArgs.Name.Should().Be("Halloween");
     }
 
@@ -31,7 +33,10 @@ public class EventsArgsTest
     [DataRow(" ")]
     public void Constructor_WithInvalidName_ThrowsArgumentException(string name)
     {
-        var act = () => new EventsArgs(name, "2002-07-30", 50, 200);
+        var attractionId = Guid.NewGuid().ToString();
+        var attractions = new List<string> { attractionId };
+
+        var act = () => new EventsArgs(name, "2002-07-30", 50, 200, attractions);
 
         act.Should()
             .Throw<ArgumentException>()
@@ -50,7 +55,10 @@ public class EventsArgsTest
     [TestCategory("Validation")]
     public void DateOfBirth_Getter_ReturnsAssignedValue()
     {
-        var eventArgs = new EventsArgs("Halloween", "2025-12-30", 50, 200);
+        var attractionId = Guid.NewGuid().ToString();
+        var attractions = new List<string> { attractionId };
+        var eventArgs = new EventsArgs("Halloween", "2025-12-30", 50, 200, attractions);
+
         eventArgs.Date.Should().Be(new DateOnly(2025, 12, 30));
     }
 
@@ -62,11 +70,13 @@ public class EventsArgsTest
     [TestCategory("Validation")]
     public void EventsArgs_ShouldThrowArgumentException_WhenDateFormatIsInvalid()
     {
-        var invalidDate = "2025/12/30";
+        var attractionId = Guid.NewGuid().ToString();
+        var attractions = new List<string> { attractionId };
+        const string invalidDate = "2025/12/30";
 
         Action act = () =>
         {
-            _ = new EventsArgs("Halloween", invalidDate, 50, 200);
+            _ = new EventsArgs("Halloween", invalidDate, 50, 200, attractions);
         };
 
         act.Should()
@@ -82,11 +92,14 @@ public class EventsArgsTest
     [TestMethod]
     public void Constructor_WithPastDate_ThrowsArgumentException()
     {
-        var invalidDate = "2002-07-30";
+        var attractionId = Guid.NewGuid().ToString();
+        var attractions = new List<string> { attractionId };
+
+        const string invalidDate = "2002-07-30";
 
         Action act = () =>
         {
-            _ = new EventsArgs("Halloween", invalidDate, 50, 200);
+            _ = new EventsArgs("Halloween", invalidDate, 50, 200, attractions);
         };
 
         act.Should()
@@ -106,7 +119,10 @@ public class EventsArgsTest
     [TestCategory("Validation")]
     public void Capacity_Getter_ReturnsAssignedValue()
     {
-        var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 100, 200);
+        var attractionId = Guid.NewGuid().ToString();
+        var attractions = new List<string> { attractionId };
+
+        var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 100, 200, attractions);
         eventsArgs.Capacity.Should().Be(100);
     }
 
@@ -118,7 +134,10 @@ public class EventsArgsTest
     [TestCategory("Validation")]
     public void Constructor_WithNegativeCapacity_ThrowsArgumentException()
     {
-        var act = () => new EventsArgs("Halloween", "2025-12-30", -10, 200);
+        var attractionId = Guid.NewGuid().ToString();
+        var attractions = new List<string> { attractionId };
+
+        var act = () => new EventsArgs("Halloween", "2025-12-30", -10, 200, attractions);
 
         act.Should()
             .Throw<ArgumentOutOfRangeException>();
@@ -136,7 +155,10 @@ public class EventsArgsTest
     [TestCategory("Validation")]
     public void Cost_Getter_ReturnsAssignedValue()
     {
-        var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 100, 500);
+        var attractionId = Guid.NewGuid().ToString();
+        var attractions = new List<string> { attractionId };
+
+        var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 100, 500, attractions);
         eventsArgs.Cost.Should().Be(500);
     }
 
@@ -148,16 +170,19 @@ public class EventsArgsTest
     [TestCategory("Validation")]
     public void Constructor_WithNegativeCost_ThrowsArgumentException()
     {
-        var act = () => new EventsArgs("Halloween", "2025-12-30", 100, -200);
+        var attractionId = Guid.NewGuid().ToString();
+        var attractions = new List<string> { attractionId };
+        var act = () => new EventsArgs("Halloween", "2025-12-30", 100, -200, attractions);
 
         act.Should()
             .Throw<ArgumentOutOfRangeException>();
     }
 
     #endregion
-
     #endregion
 
+    #region Attractions
+    #region Success
     [TestClass]
     [TestCategory("Models")]
     [TestCategory("EventsArgs")]
@@ -178,4 +203,6 @@ public class EventsArgsTest
             args.AttractionIds.Should().Contain(Guid.Parse(attractionId2));
         }
     }
+    #endregion
+    #endregion
 }

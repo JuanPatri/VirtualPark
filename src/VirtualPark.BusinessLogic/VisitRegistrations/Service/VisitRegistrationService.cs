@@ -74,6 +74,11 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     {
         var visitRegistrations = _visitRegistrationRepository.GetAll();
 
+        if(visitRegistrations == null)
+        {
+            throw new InvalidOperationException("Dont have any visit registrations");
+        }
+
         UploadData(visitRegistrations);
         return visitRegistrations;
     }

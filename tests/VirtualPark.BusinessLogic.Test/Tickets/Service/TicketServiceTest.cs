@@ -296,4 +296,41 @@ public class TicketServiceTest
 
         result.Should().BeTrue();
     }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void ValidateTicket_WhenEventTicketAndCapacityExceeded_ShouldReturnFalse()
+    {
+        var qrId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var eventId = Guid.NewGuid();
+
+        var ticket = new Ticket
+        {
+            QrId = qrId,
+            Date = today,
+            Type = EntranceType.Event,
+            EventId = eventId,
+            Visitor = new VisitorProfile { Id = visitorId }
+        };
+
+        var ev = new Event { Id = eventId, Capacity = 1 };
+
+        _ticketRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(ticket);
+
+        _eventRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
+            .Returns(ev);
+
+        _ticketRepositoryMock
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns([ticket, new Ticket { EventId = eventId }]);
+
+        var result = _ticketService.IsTicketValidForEntry(qrId);
+
+        result.Should().BeFalse();
+    }
 }

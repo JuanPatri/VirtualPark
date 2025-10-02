@@ -210,7 +210,7 @@ public class EventsArgsTest
     {
         Action act = () =>
         {
-            var eventsArgs = new EventsArgs("Halloween", "2025-12-30", 100, 200, null!);
+            _ = new EventsArgs("Halloween", "2025-12-30", 100, 200, null!);
         };
 
         act.Should()

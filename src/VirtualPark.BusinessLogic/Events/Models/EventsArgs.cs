@@ -8,8 +8,10 @@ public sealed class EventsArgs(string name, string date, int capacity, int cost,
     public DateOnly Date { get; init; } = ValidationServices.ValidateDateOnly(date);
     public int Capacity { get; set; } = ValidatePositive(capacity);
     public int Cost { get; set; } = ValidatePositive(cost);
-    public List<Guid> AttractionIds { get; init; } = attractionsIds.Select(Guid.Parse).ToList();
-
+    public List<Guid> AttractionIds { get; init; } =
+        attractionsIds is null
+            ? throw new ArgumentException("Attractions list cannot be null.")
+            : attractionsIds.Select(Guid.Parse).ToList();
     private static int ValidatePositive(int number)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(number);

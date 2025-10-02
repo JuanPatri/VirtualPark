@@ -106,6 +106,11 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
             age--;
         }
 
+        if (attraction.CurrentVisitors >= attraction.Capacity)
+        {
+            return false;
+        }
+
         return age >= attraction.MiniumAge && attraction.Available;
     }
 }

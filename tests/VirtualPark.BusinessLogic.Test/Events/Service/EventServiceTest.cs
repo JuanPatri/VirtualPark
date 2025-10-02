@@ -80,4 +80,21 @@ public sealed class EventServiceTest
     }
 
     #endregion
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Get_WhenEventExists_ShouldReturnEvent()
+    {
+        var eventId = Guid.NewGuid();
+        var ev = new Event { Id = eventId, Name = "New Year Party" };
+
+        _eventRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
+            .Returns(ev);
+
+        var result = _eventService.Get(e => e.Id == eventId);
+
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(eventId);
+        result.Name.Should().Be("New Year Party");
+    }
 }

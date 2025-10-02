@@ -37,7 +37,7 @@ public class TicketServiceTest
         _attractionService = new AttractionService(_attractionRepositoryMock.Object);
         _eventService = new EventService(_eventRepositoryMock.Object, _attractionService);
         _visitorProfileService = new VisitorProfileService(_visitorRepositoryMock.Object);
-        _ticketService = new TicketService(_ticketRepositoryMock.Object, _visitorProfileService);
+        _ticketService = new TicketService(_ticketRepositoryMock.Object, _visitorProfileService, _eventService);
     }
 
     #region Create

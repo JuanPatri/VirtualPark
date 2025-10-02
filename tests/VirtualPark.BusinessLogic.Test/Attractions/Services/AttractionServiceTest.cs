@@ -405,5 +405,21 @@ public class AttractionServiceTest
         result.Should().Be(false);
     }
     #endregion
+    [TestMethod]
+    public void ValidateEntryByNfc_WhenVisitorIsTooYoung_ShouldReturnFalse()
+    {
+        var attractionId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        var attraction = new Attraction { Id = attractionId, MiniumAge = 18, Available = true };
+        var visitor = new VisitorProfile { Id = visitorId, DateOfBirth = new DateOnly(2018, 03, 20) };
+
+        _mockAttractionRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>())).Returns(attraction);
+        _mockVisitorProfileRepository.Setup(r => r.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>())).Returns(visitor);
+
+        var result = _attractionService.ValidateEntryByNfc(attractionId, visitorId);
+
+        result.Should().Be(false);
+    }
     #endregion
 }

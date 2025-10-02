@@ -64,9 +64,10 @@ public sealed class RoleArgsTest
 
     #endregion
 
+    #region UsersIds
     [TestMethod]
     [TestCategory("Validation")]
-    public void UsersId_ok()
+    public void UsersId_getter_ReturnsAssignedValue()
     {
         var g1 = Guid.NewGuid();
         var g2 = Guid.NewGuid();
@@ -79,4 +80,5 @@ public sealed class RoleArgsTest
         roleArgs.UsersIds.Should().HaveCount(1);
         roleArgs.UsersIds.Should().Contain([g3]);
     }
+    #endregion
 }

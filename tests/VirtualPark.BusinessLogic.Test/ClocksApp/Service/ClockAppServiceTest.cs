@@ -4,5 +4,4 @@ namespace VirtualPark.BusinessLogic.Test.ClocksApp.Service;
 [TestCategory("ClockAppService")]
 public class ClockAppServiceTest
 {
-    
 }

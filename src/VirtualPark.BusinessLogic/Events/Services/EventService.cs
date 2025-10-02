@@ -7,15 +7,15 @@ using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Events.Services;
 
-public class EventService(IRepository<Event> repository, AttractionService attractionService)
+public class EventService(IRepository<Event> eventRepository, AttractionService attractionService)
 {
-    private readonly IRepository<Event> _repository = repository;
+    private readonly IRepository<Event> _eventRepository = eventRepository;
     private readonly AttractionService _attractionService = attractionService;
 
     public Guid Create(EventsArgs args)
     {
         var entity = MapToEntity(args);
-        _repository.Add(entity);
+        _eventRepository.Add(entity);
         return entity.Id;
     }
 
@@ -54,11 +54,11 @@ public class EventService(IRepository<Event> repository, AttractionService attra
 
     public Event? Get(Expression<Func<Event, bool>> predicate)
     {
-       return _repository.Get(predicate);
+       return _eventRepository.Get(predicate);
     }
 
     public List<Event> GetAll(Expression<Func<Event, bool>>? predicate = null)
     {
-        return _repository.GetAll(predicate);
+        return _eventRepository.GetAll(predicate);
     }
 }

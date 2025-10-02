@@ -439,5 +439,41 @@ public class AttractionServiceTest
         result.Should().Be(false);
     }
     #endregion
+
+    [TestMethod]
+    public void ValidateEntryByNfc_WhenVisitorMeetsAllRequirements_ShouldReturnTrueAndIncrementCurrentVisitors()
+    {
+        var attractionId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        var attraction = new Attraction
+        {
+            Id = attractionId,
+            Name = "Montaña Rusa",
+            Capacity = 10,
+            CurrentVisitors = 5,
+            MiniumAge = 12,
+            Available = true
+        };
+
+        var visitor = new VisitorProfile
+        {
+            Id = visitorId,
+            DateOfBirth = new DateOnly(2002, 02, 15)
+        };
+
+        _mockAttractionRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(attraction);
+
+        _mockVisitorProfileRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>()))
+            .Returns(visitor);
+
+        var result = _attractionService.ValidateEntryByNfc(attractionId, visitorId);
+
+        result.Should().Be(true);
+        attraction.CurrentVisitors.Should().Be(6);
+    }
     #endregion
 }

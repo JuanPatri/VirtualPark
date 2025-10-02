@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Permissions.Entity;
+using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Roles.Models;
 using VirtualPark.BusinessLogic.Roles.Service;
 using VirtualPark.Repository;
@@ -76,6 +77,62 @@ public sealed class RoleServiceTest
 
         _mockPermissionReadOnlyRepository
             .Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()));
+    }
+    #endregion
+    #region MapToEntity
+     [TestMethod]
+    public void MapToEntity_WhenArgsIsNull_ThrowsArgumentNullException()
+    {
+        Action act = () => _roleService.MapToEntity(null!);
+        act.Should().Throw<ArgumentNullException>();
+        _mockPermissionReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void MapToEntity_WithValidArgs_MapsFields_AndResolvesPermissions()
+    {
+        var p1 = new Permission { Key = "Read",  Description = "Read permission"  };
+        var p2 = new Permission { Key = "Write", Description = "Write permission" };
+        var table = new[] { p1, p2 }.AsQueryable();
+
+        _mockPermissionReadOnlyRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()))
+            .Returns((Expression<Func<Permission, bool>> pred) => table.FirstOrDefault(pred));
+
+        var args = new RoleArgs(
+            name: "Visitor",
+            description: "Description",
+            permissions: new[] { p1.Id.ToString(), p2.Id.ToString() }
+        );
+
+        Role result = _roleService.MapToEntity(args);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("Visitor");
+        result.Description.Should().Be("Description");
+        result.Permissions.Should().HaveCount(2);
+        result.Permissions.Select(x => x.Id).Should().ContainInOrder(p1.Id, p2.Id);
+
+        _mockPermissionReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()), Times.Exactly(2));
+    }
+
+    [TestMethod]
+    public void MapToEntity_WithNoPermissions_ReturnsEmptyPermissions_AndNoRepoCalls()
+    {
+        var args = new RoleArgs(
+            name: "Visitor",
+            description: "Description",
+            permissions: Array.Empty<string>()
+        );
+
+        Role result = _roleService.MapToEntity(args);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("Visitor");
+        result.Description.Should().Be("Description");
+        result.Permissions.Should().NotBeNull().And.BeEmpty();
+
+        _mockPermissionReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()), Times.Never);
     }
     #endregion
 }

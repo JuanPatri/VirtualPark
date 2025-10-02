@@ -399,6 +399,6 @@ public class AttractionServiceTest
 
         var result = _attractionService.ValidateEntryByNfc(attractionId, visitorId);
 
-        result.Should().BeFalse();
+        result.Should().Be(false);
     }
 }

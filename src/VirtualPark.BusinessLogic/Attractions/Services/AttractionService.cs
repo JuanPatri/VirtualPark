@@ -92,4 +92,12 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
 
         return attraction;
     }
+
+    public object ValidateEntryByNfc(Guid attractionId, Guid visitorId)
+    {
+        var attraction = _attractionRepository.Get(a => a.Id == attractionId);
+        var visitor = _visitorProfileRepository.Get(v => v.Id == visitorId);
+
+        return attraction.Available;
+    }
 }

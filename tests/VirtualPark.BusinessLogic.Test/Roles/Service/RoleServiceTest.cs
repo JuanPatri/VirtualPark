@@ -267,5 +267,37 @@ public sealed class RoleServiceTest
         _mockPermissionReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()), Times.Never);
     }
     #endregion
+    #region GetAll
+    [TestMethod]
+    public void GetAll_WhenPredicateIsNull_ReturnsAllFromRepository()
+    {
+        var data = new List<Role> { new Role { Name="Admin" }, new Role { Name="User" } };
+
+        _mockRoleRepository
+            .Setup(r => r.GetAll(It.Is<Expression<Func<Role,bool>>?>(p => p == null)))
+            .Returns(data);
+
+        var result = _roleService.GetAll();
+
+        result.Should().BeEquivalentTo(data);
+        _mockRoleRepository.Verify(r => r.GetAll(null), Times.Once);
+    }
+
+    [TestMethod]
+    public void GetAll_WithPredicate_ReturnsFilteredFromRepository()
+    {
+        var data = new List<Role> { new Role { Name="Admin" }, new Role { Name="User" } };
+
+        _mockRoleRepository
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Role,bool>>?>()))
+            .Returns((Expression<Func<Role,bool>>? pred) => data.AsQueryable().Where(pred!).ToList());
+
+        var result = _roleService.GetAll(r => r.Name == "Admin");
+
+        result.Should().HaveCount(1);
+        result.Single().Name.Should().Be("Admin");
+        _mockRoleRepository.Verify(r => r.GetAll(It.IsAny<Expression<Func<Role,bool>>?>()), Times.Once);
+    }
+    #endregion
 
 }

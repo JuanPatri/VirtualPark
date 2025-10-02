@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Roles.Models;
@@ -20,6 +22,7 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
 
         return role.Id;
     }
+
 
     public void ApplyArgsToEntity(Role role, RoleArgs args)
     {

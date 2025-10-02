@@ -56,4 +56,9 @@ public class EventService(IRepository<Event> repository, AttractionService attra
     {
        return _repository.Get(predicate);
     }
+
+    public List<Event> GetAll(Expression<Func<Event, bool>>? predicate = null)
+    {
+        return _repository.GetAll(predicate);
+    }
 }

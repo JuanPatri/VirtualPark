@@ -10,13 +10,19 @@ public sealed class EventsArgs(string name, string date, int capacity, int cost,
     public int Cost { get; set; } = ValidatePositive(cost);
     public List<Guid> AttractionIds { get; init; } = ValidateAttractionList(attractionsIds);
 
-    private static List<Guid> ValidateAttractionList(List<string> attractionsIds)
+    private static List<Guid> ValidateAttractionList(List<string> attractionIds)
     {
-        return attractionsIds is null
-            ? throw new ArgumentException("Attractions list cannot be null.")
-            : !attractionsIds.Any()
-                ? throw new ArgumentException("Attractions list cannot be empty.")
-                : attractionsIds.Select(Guid.Parse).ToList();
+        if (attractionIds is null)
+        {
+            throw new ArgumentException("Attraction IDs list cannot be null.", nameof(attractionIds));
+        }
+
+        if (!attractionIds.Any())
+        {
+            throw new ArgumentException("Attraction IDs list cannot be empty.", nameof(attractionIds));
+        }
+
+        return attractionIds.Select(Guid.Parse).ToList();
     }
 
     private static int ValidatePositive(int number)

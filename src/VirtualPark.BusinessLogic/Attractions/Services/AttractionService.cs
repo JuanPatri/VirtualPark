@@ -98,6 +98,19 @@ public sealed class AttractionService(IRepository<Attraction> attractionReposito
         var attraction = _attractionRepository.Get(a => a.Id == attractionId);
         var visitor = _visitorProfileRepository.Get(v => v.Id == visitorId);
 
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var age = today.Year - visitor.DateOfBirth.Year;
+
+        if (visitor.DateOfBirth > today.AddYears(-age))
+        {
+            age--;
+        }
+
+        if (age < attraction.MiniumAge)
+        {
+            return false;
+        }
+
         return attraction.Available;
     }
 }

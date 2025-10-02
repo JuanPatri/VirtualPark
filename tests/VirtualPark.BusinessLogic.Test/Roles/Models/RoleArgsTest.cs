@@ -12,7 +12,7 @@ public sealed class RoleArgsTest
     [TestMethod]
     public void Name_Getter_ReturnsAssignedValue()
     {
-        var roleArgs = new RoleArgs("Visitor", "Description", new List<string>(), new List<string>());
+        var roleArgs = new RoleArgs("Visitor", "Description", new List<string>());
         roleArgs.Name.Should().Be("Visitor");
     }
     #endregion
@@ -21,7 +21,7 @@ public sealed class RoleArgsTest
     [TestMethod]
     public void Description_Getter_ReturnsAssignedValue()
     {
-        var roleArgs = new RoleArgs("Visitor", "Description", new List<string>(), new List<string>());
+        var roleArgs = new RoleArgs("Visitor", "Description", new List<string>());
         roleArgs.Description.Should().Be("Description");
     }
     #endregion
@@ -34,7 +34,7 @@ public sealed class RoleArgsTest
         var g2 = Guid.NewGuid();
         var permissions = new List<string> { g1.ToString(), g2.ToString() };
 
-        var roleArgs = new RoleArgs("Visitor", "Description", permissions, new List<string>());
+        var roleArgs = new RoleArgs("Visitor", "Description", permissions);
 
         roleArgs.PermissionIds.Should().HaveCount(2);
         roleArgs.PermissionIds.Should().ContainInOrder(g1, g2);
@@ -43,46 +43,13 @@ public sealed class RoleArgsTest
     [TestMethod]
     public void PermissionIds_WhenInvalidGuid_ShouldThrowFormatException()
     {
-        var g3 = Guid.NewGuid();
-        var users = new List<string> { g3.ToString() };
         var invalidPermissions = new List<string>() { "not-a-guid" };
 
         FluentAssertions.FluentActions
-            .Invoking(() => new RoleArgs("Visitor", "Description", invalidPermissions, users))
+            .Invoking(() => new RoleArgs("Visitor", "Description", invalidPermissions))
             .Should().Throw<FormatException>()
             .WithMessage("The value 'not-a-guid' is not a valid Guid.");
     }
 
-    #endregion
-
-    #region UsersIds
-    #region Success
-    [TestMethod]
-    [TestCategory("Validation")]
-    public void UsersId_getter_ReturnsAssignedValue()
-    {
-        var g3 = Guid.NewGuid();
-        var users = new List<string> { g3.ToString() };
-
-        var roleArgs = new RoleArgs("Visitor", "Description", new List<string>(), users);
-
-        roleArgs.UsersIds.Should().HaveCount(1);
-        roleArgs.UsersIds.Should().Contain([g3]);
-    }
-    #endregion
-
-    #region Failure
-    [TestMethod]
-    [TestCategory("Validation")]
-    public void UsersIds_WithInvalidUserId_ThrowsFormatException()
-    {
-        var users = new List<string> { "guid" };
-
-        var act = () => new RoleArgs("Visitor", "Description", new List<string>(), users);
-
-        act.Should()
-            .Throw<FormatException>();
-    }
-    #endregion
     #endregion
 }

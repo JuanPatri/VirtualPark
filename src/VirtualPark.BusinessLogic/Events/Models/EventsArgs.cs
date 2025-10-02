@@ -14,7 +14,9 @@ public sealed class EventsArgs(string name, string date, int capacity, int cost,
     {
         return attractionsIds is null
             ? throw new ArgumentException("Attractions list cannot be null.")
-            : attractionsIds.Select(Guid.Parse).ToList();
+            : !attractionsIds.Any()
+                ? throw new ArgumentException("Attractions list cannot be empty.")
+                : attractionsIds.Select(Guid.Parse).ToList();
     }
 
     private static int ValidatePositive(int number)

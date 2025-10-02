@@ -265,4 +265,17 @@ public sealed class EventServiceTest
 
         result.Should().BeTrue();
     }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Exist_WhenNoEventMatchesPredicate_ShouldReturnFalse()
+    {
+        _eventRepositoryMock
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Event, bool>>>()))
+            .Returns(false);
+
+        var result = _eventService.Exist(e => e.Name == "NotExists");
+
+        result.Should().BeFalse();
+    }
 }

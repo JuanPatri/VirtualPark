@@ -35,8 +35,7 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
 
     public bool Exists(Expression<Func<Role, bool>> predicate)
     {
-        var exist = _roleRepository.Exist(predicate);
-        return exist;
+        return _roleRepository.Exist(predicate);
     }
 
     public void ApplyArgsToEntity(Role role, RoleArgs args)

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Attractions.Services;
 using VirtualPark.BusinessLogic.Events.Entity;
@@ -49,5 +50,10 @@ public class EventService(IRepository<Event> repository, AttractionService attra
         }
 
         return attractions;
+    }
+
+    public Event? Get(Expression<Func<Event, bool>> predicate)
+    {
+       return _repository.Get(predicate);
     }
 }

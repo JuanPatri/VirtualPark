@@ -26,7 +26,10 @@ public sealed class RoleServiceTest
         _roleService = new RoleService(_mockRoleRepository.Object, _mockPermissionReadOnlyRepository.Object);
 
         var permissions = new[] { Guid.NewGuid().ToString() };
-        _roleArgs = new RoleArgs("Visitor", "Description", permissions);
+        var g3 = Guid.NewGuid();
+        var users = new List<string> { g3.ToString() };
+
+        _roleArgs = new RoleArgs("Visitor", "Description", permissions, users);
     }
 
     #region GuidToPermission
@@ -81,6 +84,7 @@ public sealed class RoleServiceTest
             .Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()));
     }
     #endregion
+
     #region MapToEntity
     [TestMethod]
     public void MapToEntity_WhenArgsIsNull_ThrowsArgumentNullException()
@@ -104,7 +108,8 @@ public sealed class RoleServiceTest
         var args = new RoleArgs(
             name: "Visitor",
             description: "Description",
-            permissions: [p1.Id.ToString(), p2.Id.ToString()]);
+            permissions: [p1.Id.ToString(), p2.Id.ToString()],
+            users: new List<string>() { Guid.NewGuid().ToString() });
 
         Role result = _roleService.MapToEntity(args);
 
@@ -123,7 +128,8 @@ public sealed class RoleServiceTest
         var args = new RoleArgs(
             name: "Visitor",
             description: "Description",
-            permissions: Array.Empty<string>());
+            permissions: Array.Empty<string>(),
+            users: new List<string>() {Guid.NewGuid().ToString()});
 
         Role result = _roleService.MapToEntity(args);
 
@@ -135,6 +141,7 @@ public sealed class RoleServiceTest
         _mockPermissionReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()), Times.Never);
     }
     #endregion
+
     #region ValidateRoleName
     [DataTestMethod]
     [DataRow(null)]
@@ -184,6 +191,7 @@ public sealed class RoleServiceTest
         _mockRoleRepository.Verify(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()), Times.Once);
     }
     #endregion
+
     #region ApplyArgsToEntity
     [TestMethod]
     public void ApplyArgsToEntity_MapsFields_AndResolvesPermissions()
@@ -192,11 +200,14 @@ public sealed class RoleServiceTest
         var p2 = new Permission { Key = "Write", Description = "W" };
         var table = new[] { p1, p2 }.AsQueryable();
 
+        var g3 = Guid.NewGuid();
+        var users = new List<string> { g3.ToString() };
+
         _mockPermissionReadOnlyRepository
             .Setup(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()))
             .Returns((Expression<Func<Permission, bool>> pred) => table.FirstOrDefault(pred));
 
-        var args = new RoleArgs("Manager", "Desc", [p1.Id.ToString(), p2.Id.ToString()]);
+        var args = new RoleArgs("Manager", "Desc", [p1.Id.ToString(), p2.Id.ToString()], users);
         var role = new Role();
 
         _roleService.ApplyArgsToEntity(role, args);
@@ -210,7 +221,7 @@ public sealed class RoleServiceTest
     [TestMethod]
     public void ApplyArgsToEntity_WithNoPermissions_SetsEmptyList_AndNoRepoCalls()
     {
-        var args = new RoleArgs("Visitor", "Description", Array.Empty<string>());
+        var args = new RoleArgs("Visitor", "Description", Array.Empty<string>(), new List<string>());
         var role = new Role { Permissions = [new Permission { Key = "X", Description = "X" }] };
 
         _roleService.ApplyArgsToEntity(role, args);
@@ -221,6 +232,7 @@ public sealed class RoleServiceTest
         _mockPermissionReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()), Times.Never);
     }
     #endregion
+
     #region Create
     [TestMethod]
     public void Create_Valid_AddsAndReturnsId()
@@ -234,7 +246,7 @@ public sealed class RoleServiceTest
             .Setup(r => r.Add(It.IsAny<Role>()))
             .Callback<Role>(r => agregado = r);
 
-        var args = new RoleArgs("Manager", "Desc", Array.Empty<string>());
+        var args = new RoleArgs("Manager", "Desc", Array.Empty<string>(), new List<string>());
 
         var id = _roleService.Create(args);
 
@@ -256,7 +268,7 @@ public sealed class RoleServiceTest
             .Setup(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()))
             .Returns(true);
 
-        var args = new RoleArgs("Admin", "Desc", Array.Empty<string>());
+        var args = new RoleArgs("Admin", "Desc", Array.Empty<string>(), new List<string>());
 
         Action act = () => _roleService.Create(args);
 
@@ -265,6 +277,7 @@ public sealed class RoleServiceTest
         _mockPermissionReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()), Times.Never);
     }
     #endregion
+
     #region GetAll
     [TestMethod]
     public void GetAll_WhenPredicateIsNull_ReturnsAllFromRepository()
@@ -297,6 +310,7 @@ public sealed class RoleServiceTest
         _mockRoleRepository.Verify(r => r.GetAll(It.IsAny<Expression<Func<Role, bool>>?>()), Times.Once);
     }
     #endregion
+
     #region Get
     [TestMethod]
     public void Get_WithMatchingPredicate_ReturnsRole()
@@ -331,6 +345,7 @@ public sealed class RoleServiceTest
         _mockRoleRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Role, bool>>>()), Times.Once);
     }
     #endregion
+
     #region Exists
     [TestMethod]
     public void Exists_WithMatchingPredicate_ReturnsTrue()
@@ -362,6 +377,7 @@ public sealed class RoleServiceTest
         _mockRoleRepository.Verify(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()), Times.Once);
     }
     #endregion
+
     #region Update
     [TestMethod]
     public void Update_Valid_MapsAndCallsUpdate()
@@ -381,7 +397,7 @@ public sealed class RoleServiceTest
         _mockRoleRepository
             .Setup(r => r.Update(It.IsAny<Role>()));
 
-        var args = new RoleArgs("Manager", "Desc", Array.Empty<string>());
+        var args = new RoleArgs("Manager", "Desc", Array.Empty<string>(), new List<string>());
 
         _roleService.Update(args, roleId);
 
@@ -403,7 +419,7 @@ public sealed class RoleServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Role, bool>>>()))
             .Returns((Role?)null);
 
-        var args = new RoleArgs("Manager", "Desc", Array.Empty<string>());
+        var args = new RoleArgs("Manager", "Desc", Array.Empty<string>(), new List<string>());
 
         Action act = () => _roleService.Update(args, roleId);
 
@@ -421,7 +437,7 @@ public sealed class RoleServiceTest
             .Setup(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()))
             .Returns(true);
 
-        var args = new RoleArgs("Admin", "Desc", Array.Empty<string>());
+        var args = new RoleArgs("Admin", "Desc", Array.Empty<string>(), new List<string>());
 
         Action act = () => _roleService.Update(args, roleId);
 
@@ -430,6 +446,7 @@ public sealed class RoleServiceTest
         _mockRoleRepository.Verify(r => r.Update(It.IsAny<Role>()), Times.Never);
     }
     #endregion
+
     #region Remove
     [TestMethod]
     public void Remove_WhenRoleExists_CallsRepositoryRemove()

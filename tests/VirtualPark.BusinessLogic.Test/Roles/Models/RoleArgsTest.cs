@@ -12,7 +12,10 @@ public sealed class RoleArgsTest
     [TestMethod]
     public void Name_Getter_ReturnsAssignedValue()
     {
-        var roleArgs = new RoleArgs("Visitor", "Description", Array.Empty<string>());
+        var g3 = Guid.NewGuid();
+        var users = new List<string> { g3.ToString() };
+
+        var roleArgs = new RoleArgs("Visitor", "Description", Array.Empty<string>(), users);
         roleArgs.Name.Should().Be("Visitor");
     }
     #endregion
@@ -21,7 +24,10 @@ public sealed class RoleArgsTest
     [TestMethod]
     public void Description_Getter_ReturnsAssignedValue()
     {
-        var roleArgs = new RoleArgs("Visitor", "Description", Array.Empty<string>());
+        var g3 = Guid.NewGuid();
+        var users = new List<string> { g3.ToString() };
+
+        var roleArgs = new RoleArgs("Visitor", "Description", Array.Empty<string>(), users);
         roleArgs.Description.Should().Be("Description");
     }
     #endregion
@@ -34,7 +40,10 @@ public sealed class RoleArgsTest
         var g2 = Guid.NewGuid();
         var permissions = new[] { g1.ToString(), g2.ToString() };
 
-        var roleArgs = new RoleArgs("Visitor", "Description", permissions);
+        var g3 = Guid.NewGuid();
+        var users = new List<string> { g3.ToString() };
+
+        var roleArgs = new RoleArgs("Visitor", "Description", permissions, users);
 
         roleArgs.PermissionIds.Should().HaveCount(2);
         roleArgs.PermissionIds.Should().ContainInOrder(g1, g2);
@@ -43,10 +52,12 @@ public sealed class RoleArgsTest
     [TestMethod]
     public void PermissionIds_WhenInvalidGuid_ShouldThrowFormatException()
     {
+        var g3 = Guid.NewGuid();
+        var users = new List<string> { g3.ToString() };
         var invalidPermissions = new[] { "not-a-guid" };
 
         FluentAssertions.FluentActions
-            .Invoking(() => new RoleArgs("Visitor", "Description", invalidPermissions))
+            .Invoking(() => new RoleArgs("Visitor", "Description", invalidPermissions, users))
             .Should().Throw<FormatException>()
             .WithMessage("The value 'not-a-guid' is not a valid Guid.");
     }
@@ -65,7 +76,7 @@ public sealed class RoleArgsTest
 
         var roleArgs = new RoleArgs("Visitor", "Description", permissions, users);
 
-        roleArgs.UsersId.Should().HaveCount(1);
-        roleArgs.UsersId.Should().Contain([g3]);
+        roleArgs.UsersIds.Should().HaveCount(1);
+        roleArgs.UsersIds.Should().Contain([g3]);
     }
 }

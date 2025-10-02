@@ -12,7 +12,7 @@ public sealed class RoleArgsTest
     [TestMethod]
     public void Name_Getter_ReturnsAssignedValue()
     {
-        var roleArgs = new RoleArgs("Visitor", "Description", new List<string>());
+        var roleArgs = new RoleArgs("Visitor", "Description", []);
         roleArgs.Name.Should().Be("Visitor");
     }
     #endregion
@@ -21,7 +21,7 @@ public sealed class RoleArgsTest
     [TestMethod]
     public void Description_Getter_ReturnsAssignedValue()
     {
-        var roleArgs = new RoleArgs("Visitor", "Description", new List<string>());
+        var roleArgs = new RoleArgs("Visitor", "Description", []);
         roleArgs.Description.Should().Be("Description");
     }
     #endregion

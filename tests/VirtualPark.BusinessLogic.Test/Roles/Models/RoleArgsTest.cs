@@ -80,5 +80,20 @@ public sealed class RoleArgsTest
         roleArgs.UsersIds.Should().HaveCount(1);
         roleArgs.UsersIds.Should().Contain([g3]);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void UsersId_failure()
+    {
+        var g1 = Guid.NewGuid();
+        var permissions = new[] { g1.ToString() };
+
+        var users = new List<string> { "guid" };
+
+        var act = () => new RoleArgs("Visitor", "Description", permissions, users);
+
+        act.Should()
+            .Throw<FormatException>();
+    }
     #endregion
 }

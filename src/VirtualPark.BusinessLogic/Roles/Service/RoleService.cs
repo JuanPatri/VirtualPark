@@ -30,8 +30,7 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
 
     public Role? Get(Expression<Func<Role, bool>> predicate)
     {
-        var role =  _roleRepository.Get(predicate);
-        return role;
+        return _roleRepository.Get(predicate);
     }
 
     public void ApplyArgsToEntity(Role role, RoleArgs args)

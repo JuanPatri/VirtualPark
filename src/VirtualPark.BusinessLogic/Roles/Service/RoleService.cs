@@ -10,6 +10,15 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
     private readonly IRepository<Role> _roleRepository = roleRepository;
     private readonly IReadOnlyRepository<Permission> _permissionReadOnlyRepositor = permissionReadOnlyRepositor;
 
+    public Guid Create(RoleArgs args)
+    {
+        ValidateRoleName(args.Name);
+
+        Role role = MapToEntity(args);
+
+        return role.Id;
+    }
+
     public void ApplyArgsToEntity(Role role, RoleArgs args)
     {
         role.Name = args.Name;

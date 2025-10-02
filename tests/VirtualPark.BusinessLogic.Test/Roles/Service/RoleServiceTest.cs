@@ -223,5 +223,39 @@ public sealed class RoleServiceTest
         _mockPermissionReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()), Times.Never);
     }
     #endregion
+    #region Create (breves)
+    [TestMethod]
+    public void Create_ConNombreValido_DevuelveGuid_YConsultaExistencia()
+    {
+        _mockRoleRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()))
+            .Returns(false);
+
+        var args = new RoleArgs("Manager", "Desc", Array.Empty<string>());
+
+        var id = _roleService.Create(args);
+
+        id.Should().NotBeEmpty();
+        _mockRoleRepository.Verify(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()), Times.Once);
+        _mockPermissionReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void Create_CuandoNombreExiste_LanzaException()
+    {
+        _mockRoleRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()))
+            .Returns(true);
+
+        var args = new RoleArgs("Admin", "Desc", Array.Empty<string>());
+
+        Action act = () => _roleService.Create(args);
+
+        act.Should().Throw<Exception>()
+            .WithMessage("Role name already exists.");
+        _mockRoleRepository.Verify(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()), Times.Once);
+        _mockPermissionReadOnlyRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()), Times.Never);
+    }
+    #endregion
 
 }

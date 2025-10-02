@@ -1,9 +1,6 @@
-using VirtualPark.BusinessLogic.Attractions.Entity;
-using VirtualPark.BusinessLogic.Attractions.Models;
 using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Roles.Models;
-using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Roles.Service;

@@ -10,7 +10,7 @@ namespace VirtualPark.BusinessLogic.Roles.Service;
 
 public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepository<Permission> permissionReadOnlyRepositor)
 {
-    private readonly IRepository<Role> _roleRepostiory = roleRepository;
+    private readonly IRepository<Role> _roleRepository = roleRepository;
     private readonly IReadOnlyRepository<Permission> _permissionReadOnlyRepositor = permissionReadOnlyRepositor;
 
     public void ApplyArgsToEntity(Role role, RoleArgs args)
@@ -27,7 +27,7 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
             throw new ArgumentException("Role name cannot be empty.", nameof(name));
         }
 
-        if(_roleRepostiory.Exist(r => r.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
+        if(_roleRepository.Exist(r => r.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
         {
             throw new Exception("Role name already exists.");
         }

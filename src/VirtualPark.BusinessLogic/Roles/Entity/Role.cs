@@ -9,5 +9,5 @@ public class Role
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;
     public List<Permission> Permissions { get; set; } = [];
-    public List<User> Users { get; init; } = [];
+    public List<User> Users { get; set; } = [];
 }

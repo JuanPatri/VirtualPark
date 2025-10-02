@@ -364,5 +364,73 @@ public sealed class RoleServiceTest
         _mockRoleRepository.Verify(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()), Times.Once);
     }
     #endregion
+    #region Update
+    [TestMethod]
+    public void Update_Valid_MapsAndCallsUpdate()
+    {
+        var role = new Role { Name = "Old", Description = "Old desc" };
+        var roleId = role.Id;
+
+        _mockRoleRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()))
+            .Returns(false);
+
+        _mockRoleRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Role, bool>>>()))
+            .Returns((Expression<Func<Role, bool>> pred) =>
+                new[] { role }.AsQueryable().FirstOrDefault(pred));
+
+        _mockRoleRepository
+            .Setup(r => r.Update(It.IsAny<Role>()));
+
+        var args = new RoleArgs("Manager", "Desc", Array.Empty<string>());
+
+        _roleService.Update(args, roleId);
+
+        role.Name.Should().Be("Manager");
+        role.Description.Should().Be("Desc");
+        _mockRoleRepository.Verify(r => r.Update(It.IsAny<Role>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void Update_WhenRoleNotFound_ThrowsInvalidOperationException()
+    {
+        var roleId = Guid.NewGuid();
+
+        _mockRoleRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()))
+            .Returns(false);
+
+        _mockRoleRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Role, bool>>>()))
+            .Returns((Role?)null);
+
+        var args = new RoleArgs("Manager", "Desc", Array.Empty<string>());
+
+        Action act = () => _roleService.Update(args, roleId);
+
+        act.Should().Throw<InvalidOperationException>()
+           .WithMessage($"Role with id {roleId} not found.");
+        _mockRoleRepository.Verify(r => r.Update(It.IsAny<Role>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void Update_WhenNameAlreadyExists_ThrowsAndDoesNotUpdate()
+    {
+        var roleId = Guid.NewGuid();
+
+        _mockRoleRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()))
+            .Returns(true);
+
+        var args = new RoleArgs("Admin", "Desc", Array.Empty<string>());
+
+        Action act = () => _roleService.Update(args, roleId);
+
+        act.Should().Throw<Exception>()
+           .WithMessage("Role name already exists.");
+        _mockRoleRepository.Verify(r => r.Update(It.IsAny<Role>()), Times.Never);
+    }
+    #endregion
 
 }

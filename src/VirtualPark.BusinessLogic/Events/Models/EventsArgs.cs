@@ -14,12 +14,12 @@ public sealed class EventsArgs(string name, string date, int capacity, int cost,
     {
         if (attractionIds is null)
         {
-            throw new ArgumentException("Attraction IDs list cannot be null.", nameof(attractionIds));
+            throw new ArgumentException("Attraction IDs list cannot be null.");
         }
 
         if (!attractionIds.Any())
         {
-            throw new ArgumentException("Attraction IDs list cannot be empty.", nameof(attractionIds));
+            throw new ArgumentException("Attraction IDs list cannot be empty.");
         }
 
         return attractionIds.Select(Guid.Parse).ToList();

@@ -216,7 +216,7 @@ public class EventsArgsTest
 
         act.Should()
             .Throw<ArgumentException>()
-            .WithMessage("Attractions list cannot be null.");
+            .WithMessage("Attractions IDs list cannot be null.");
     }
     #endregion
     [TestMethod]
@@ -232,7 +232,23 @@ public class EventsArgsTest
 
         act.Should()
             .Throw<ArgumentException>()
-            .WithMessage("Attractions list cannot be empty.");
+            .WithMessage("Attractions IDs List cannot be empty.");
+    }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_WhenAttractionsListHasInvalidGuid_ShouldThrowFormatException()
+    {
+        var attractions = new List<string> { "not-a-guid" };
+
+        Action act = () =>
+        {
+            _ = new EventsArgs("Halloween", "2025-12-30", 100, 200, attractions);
+        };
+
+        act.Should()
+            .Throw<FormatException>()
+            .WithMessage("The value 'not-a-guid' is not a valid GUID.");
     }
     #endregion
 }

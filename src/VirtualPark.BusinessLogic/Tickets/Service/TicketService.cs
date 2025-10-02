@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using VirtualPark.BusinessLogic.Events.Services;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.Tickets.Models;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
@@ -7,10 +8,11 @@ using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Tickets.Service;
 
-public class TicketService(IRepository<Ticket> ticketRepository, VisitorProfileService visitorProfileService)
+public class TicketService(IRepository<Ticket> ticketRepository, VisitorProfileService visitorProfileService, EventService eventService)
 {
     private readonly IRepository<Ticket> _ticketRepository = ticketRepository;
     private readonly VisitorProfileService _visitorProfileService = visitorProfileService;
+    private readonly EventService _eventService = eventService;
 
     public Ticket Create(TicketArgs args)
     {
@@ -56,14 +58,34 @@ public class TicketService(IRepository<Ticket> ticketRepository, VisitorProfileS
 
     public bool IsTicketValidForEntry(Guid qrId)
     {
-        var ticket = _ticketRepository.Get(t => t.QrId == qrId)
-                     ?? throw new InvalidOperationException($"No ticket found with QR: {qrId}");
+        var ticket = GetTicket(qrId);
 
-        if(ticket.Date != DateOnly.FromDateTime(DateTime.Today))
+        if(!IsDateValid(ticket.Date))
         {
             return false;
         }
 
-        return ticket.Type is EntranceType.General or EntranceType.Event;
+        return ticket.Type switch
+        {
+            EntranceType.General => true,
+            EntranceType.Event => IsEventValid(ticket),
+            _ => false
+        };
+    }
+
+    private Ticket GetTicket(Guid qrId) =>
+        _ticketRepository.Get(t => t.QrId == qrId)
+        ?? throw new InvalidOperationException($"No ticket found with QR: {qrId}");
+
+    private static bool IsDateValid(DateOnly ticketDate) =>
+        ticketDate == DateOnly.FromDateTime(DateTime.Today);
+
+    private bool IsEventValid(Ticket ticket)
+    {
+        var ev = _eventService.Get(e => e.Id == ticket.EventId)
+                 ?? throw new InvalidOperationException($"Event with id {ticket.EventId} not found.");
+
+        var issuedCount = _ticketRepository.GetAll(t => t.EventId == ticket.EventId).Count;
+        return issuedCount < ev.Capacity;
     }
 }

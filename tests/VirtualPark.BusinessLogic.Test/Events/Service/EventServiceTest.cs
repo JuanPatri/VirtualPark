@@ -190,6 +190,9 @@ public sealed class EventServiceTest
     }
     #endregion
     #endregion
+
+    #region Update
+    #region Success
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Update_WhenEventExists_ShouldApplyChangesAndPersist()
@@ -228,4 +231,6 @@ public sealed class EventServiceTest
 
         _eventRepositoryMock.Verify(r => r.Update(existing), Times.Once);
     }
+    #endregion
+    #endregion
 }

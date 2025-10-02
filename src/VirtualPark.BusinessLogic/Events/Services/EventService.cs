@@ -74,12 +74,17 @@ public class EventService(IRepository<Event> eventRepository, AttractionService 
         var ev = _eventRepository.Get(e => e.Id == existingId)
                  ?? throw new InvalidOperationException($"Event with id {existingId} not found.");
 
+        ApplyArgsToEntity(args, ev);
+
+        _eventRepository.Update(ev);
+    }
+
+    private void ApplyArgsToEntity(EventsArgs args, Event ev)
+    {
         ev.Name = args.Name;
         ev.Date = args.Date.ToDateTime(TimeOnly.MinValue);
         ev.Capacity = args.Capacity;
         ev.Cost = args.Cost;
         ev.Attractions = MapAttractionsList(args.AttractionIds);
-
-        _eventRepository.Update(ev);
     }
 }

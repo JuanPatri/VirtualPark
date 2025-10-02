@@ -63,6 +63,7 @@ public sealed class RoleTest
     #endregion
 
     #region Users
+    #region Get
     [TestMethod]
     [TestCategory("Validation")]
     public void User_Getter_ReturnsAssignedValue()
@@ -71,15 +72,18 @@ public sealed class RoleTest
         var role = new Role { Users = users };
         role.Users.Should().BeEquivalentTo(users);
     }
+    #endregion
 
+    #region Set
     [TestMethod]
     [TestCategory("Validation")]
-    public void User_ShoulBeSettable()
+    public void User_Setter_ReturnsAssignedValue()
     {
         var users = new List<User> { new User { Name = "Admin" } };
         var role = new Role();
         role.Users = users;
         role.Users.Should().BeEquivalentTo(users);
     }
+    #endregion
     #endregion
 }

@@ -32,7 +32,7 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
     {
         return _roleRepository.Get(predicate);
     }
-
+    
     public void ApplyArgsToEntity(Role role, RoleArgs args)
     {
         role.Name = args.Name;

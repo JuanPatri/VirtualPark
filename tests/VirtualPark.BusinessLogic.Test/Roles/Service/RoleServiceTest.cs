@@ -333,5 +333,36 @@ public sealed class RoleServiceTest
         _mockRoleRepository.Verify(r => r.Get(It.IsAny<Expression<Func<Role, bool>>>()), Times.Once);
     }
     #endregion
+    #region Exists
+    [TestMethod]
+    public void Exists_WithMatchingPredicate_ReturnsTrue()
+    {
+        var data = new[] { new Role { Name = "Admin" }, new Role { Name = "User" } }.AsQueryable();
+
+        _mockRoleRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()))
+            .Returns((Expression<Func<Role, bool>> pred) => data.Any(pred));
+
+        var result = _roleService.Exists(r => r.Name == "Admin");
+
+        result.Should().BeTrue();
+        _mockRoleRepository.Verify(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void Exists_WithNoMatch_ReturnsFalse()
+    {
+        var data = new[] { new Role { Name = "Admin" } }.AsQueryable();
+
+        _mockRoleRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()))
+            .Returns((Expression<Func<Role, bool>> pred) => data.Any(pred));
+
+        var result = _roleService.Exists(r => r.Name == "Manager");
+
+        result.Should().BeFalse();
+        _mockRoleRepository.Verify(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()), Times.Once);
+    }
+    #endregion
 
 }

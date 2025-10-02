@@ -171,6 +171,7 @@ public sealed class EventServiceTest
         _eventRepositoryMock.Verify(r => r.Remove(ev), Times.Once);
     }
     #endregion
+    #region Failure
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Remove_WhenEventDoesNotExist_ShouldThrowInvalidOperationException()
@@ -187,5 +188,6 @@ public sealed class EventServiceTest
             .Throw<InvalidOperationException>()
             .WithMessage($"Event with id {eventId} not found.");
     }
+    #endregion
     #endregion
 }

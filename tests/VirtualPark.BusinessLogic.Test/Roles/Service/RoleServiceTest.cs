@@ -33,7 +33,7 @@ public sealed class RoleServiceTest
     [TestMethod]
     public void GuidToPermission_WithValidIds_ReturnsPermissionsInOrder()
     {
-        var p1 = new Permission { Key = "Read",  Description = "Read permission"  };
+        var p1 = new Permission { Key = "Read", Description = "Read permission" };
         var p2 = new Permission { Key = "Write", Description = "Write permission" };
         var data = new[] { p1, p2 }.AsQueryable();
 
@@ -62,7 +62,7 @@ public sealed class RoleServiceTest
     [TestMethod]
     public void GuidToPermission_WhenAnyIdDoesNotExist_ShouldThrowKeyNotFoundException()
     {
-        var existing  = new Permission { Key = "OnlyOne", Description = "Only one exists" };
+        var existing = new Permission { Key = "OnlyOne", Description = "Only one exists" };
         var missingId = Guid.NewGuid();
         var data = new[] { existing }.AsQueryable();
 
@@ -82,7 +82,7 @@ public sealed class RoleServiceTest
     }
     #endregion
     #region MapToEntity
-     [TestMethod]
+    [TestMethod]
     public void MapToEntity_WhenArgsIsNull_ThrowsArgumentNullException()
     {
         Action act = () => _roleService.MapToEntity(null!);
@@ -93,7 +93,7 @@ public sealed class RoleServiceTest
     [TestMethod]
     public void MapToEntity_WithValidArgs_MapsFields_AndResolvesPermissions()
     {
-        var p1 = new Permission { Key = "Read",  Description = "Read permission"  };
+        var p1 = new Permission { Key = "Read", Description = "Read permission" };
         var p2 = new Permission { Key = "Write", Description = "Write permission" };
         var table = new[] { p1, p2 }.AsQueryable();
 
@@ -104,8 +104,7 @@ public sealed class RoleServiceTest
         var args = new RoleArgs(
             name: "Visitor",
             description: "Description",
-            permissions: new[] { p1.Id.ToString(), p2.Id.ToString() }
-        );
+            permissions: [p1.Id.ToString(), p2.Id.ToString()]);
 
         Role result = _roleService.MapToEntity(args);
 
@@ -124,8 +123,7 @@ public sealed class RoleServiceTest
         var args = new RoleArgs(
             name: "Visitor",
             description: "Description",
-            permissions: Array.Empty<string>()
-        );
+            permissions: Array.Empty<string>());
 
         Role result = _roleService.MapToEntity(args);
 
@@ -190,7 +188,7 @@ public sealed class RoleServiceTest
     [TestMethod]
     public void ApplyArgsToEntity_MapsFields_AndResolvesPermissions()
     {
-        var p1 = new Permission { Key = "Read",  Description = "R" };
+        var p1 = new Permission { Key = "Read", Description = "R" };
         var p2 = new Permission { Key = "Write", Description = "W" };
         var table = new[] { p1, p2 }.AsQueryable();
 
@@ -198,7 +196,7 @@ public sealed class RoleServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Permission, bool>>>()))
             .Returns((Expression<Func<Permission, bool>> pred) => table.FirstOrDefault(pred));
 
-        var args = new RoleArgs("Manager", "Desc", new[] { p1.Id.ToString(), p2.Id.ToString() });
+        var args = new RoleArgs("Manager", "Desc", [p1.Id.ToString(), p2.Id.ToString()]);
         var role = new Role();
 
         _roleService.ApplyArgsToEntity(role, args);
@@ -213,7 +211,7 @@ public sealed class RoleServiceTest
     public void ApplyArgsToEntity_WithNoPermissions_SetsEmptyList_AndNoRepoCalls()
     {
         var args = new RoleArgs("Visitor", "Description", Array.Empty<string>());
-        var role = new Role { Permissions = new List<Permission> { new Permission { Key="X", Description="X" } } };
+        var role = new Role { Permissions = [new Permission { Key = "X", Description = "X" }] };
 
         _roleService.ApplyArgsToEntity(role, args);
 
@@ -271,10 +269,10 @@ public sealed class RoleServiceTest
     [TestMethod]
     public void GetAll_WhenPredicateIsNull_ReturnsAllFromRepository()
     {
-        var data = new List<Role> { new Role { Name="Admin" }, new Role { Name="User" } };
+        var data = new List<Role> { new Role { Name = "Admin" }, new Role { Name = "User" } };
 
         _mockRoleRepository
-            .Setup(r => r.GetAll(It.Is<Expression<Func<Role,bool>>?>(p => p == null)))
+            .Setup(r => r.GetAll(It.Is<Expression<Func<Role, bool>>?>(p => p == null)))
             .Returns(data);
 
         var result = _roleService.GetAll();
@@ -286,17 +284,17 @@ public sealed class RoleServiceTest
     [TestMethod]
     public void GetAll_WithPredicate_ReturnsFilteredFromRepository()
     {
-        var data = new List<Role> { new Role { Name="Admin" }, new Role { Name="User" } };
+        var data = new List<Role> { new Role { Name = "Admin" }, new Role { Name = "User" } };
 
         _mockRoleRepository
-            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Role,bool>>?>()))
-            .Returns((Expression<Func<Role,bool>>? pred) => data.AsQueryable().Where(pred!).ToList());
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Role, bool>>?>()))
+            .Returns((Expression<Func<Role, bool>>? pred) => data.AsQueryable().Where(pred!).ToList());
 
         var result = _roleService.GetAll(r => r.Name == "Admin");
 
         result.Should().HaveCount(1);
         result.Single().Name.Should().Be("Admin");
-        _mockRoleRepository.Verify(r => r.GetAll(It.IsAny<Expression<Func<Role,bool>>?>()), Times.Once);
+        _mockRoleRepository.Verify(r => r.GetAll(It.IsAny<Expression<Func<Role, bool>>?>()), Times.Once);
     }
     #endregion
     #region Get
@@ -304,7 +302,7 @@ public sealed class RoleServiceTest
     public void Get_WithMatchingPredicate_ReturnsRole()
     {
         var admin = new Role { Name = "Admin" };
-        var user  = new Role { Name = "User" };
+        var user = new Role { Name = "User" };
         var table = new[] { admin, user }.AsQueryable();
 
         _mockRoleRepository

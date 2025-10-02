@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Roles.Models;
@@ -42,7 +41,7 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        if (_roleRepository.Exist(r => r.Id != roleId && r.Name.Equals(args.Name, StringComparison.CurrentCultureIgnoreCase)))
+        if(_roleRepository.Exist(r => r.Id != roleId && r.Name.Equals(args.Name, StringComparison.CurrentCultureIgnoreCase)))
         {
             throw new Exception("Role name already exists.");
         }

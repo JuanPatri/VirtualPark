@@ -16,20 +16,14 @@ public class ClockAppTest
     }
     #endregion
 
-    #region OffSetMinutes
+    #region DateSystem
 
     [TestMethod]
-    public void OffsetMinutes_GetAfterSet_ShouldReturnSameValue()
+    public void DateSystem_GetAfterSet_ShouldReturnSameValue()
     {
-        var clock = new ClockApp{ OffsetMinutes = 100 };
-        clock.OffsetMinutes.Should().Be(100);
-    }
-
-    [TestMethod]
-    public void OffsetMinutes_WhenClockIsCreated_ShouldBe0()
-    {
-        var clock = new ClockApp();
-        clock.OffsetMinutes.Should().Be(0);
+        var expected = new DateTime(2025, 10, 3, 15, 30, 0);
+        var clock = new ClockApp{ DateSystem = expected};
+        clock.DateSystem.Should().Be(expected);
     }
     #endregion
 }

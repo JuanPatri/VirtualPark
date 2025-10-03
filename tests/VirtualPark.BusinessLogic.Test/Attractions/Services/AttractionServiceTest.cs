@@ -514,6 +514,34 @@ public class AttractionServiceTest
 
         result.Should().BeFalse();
     }
+
+    [TestMethod]
+    public void ValidateEntryByQr_WhenAttractionIsFull_ShouldReturnFalse()
+    {
+        var qrId = Guid.NewGuid();
+        var ticket = new Ticket
+        {
+            QrId = qrId,
+            Date = DateOnly.FromDateTime(DateTime.Today),
+            Type = EntranceType.General
+        };
+
+        var attraction = new Attraction
+        {
+            Id = Guid.NewGuid(),
+            Capacity = 2,
+            CurrentVisitors = 2,
+            Available = true
+        };
+
+        _mockTicketRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>())).Returns(ticket);
+        _mockAttractionRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>())).Returns(attraction);
+
+        var result = _attractionService.ValidateEntryByQr(attraction.Id, qrId);
+
+        result.Should().BeFalse();
+    }
+
     #endregion
     #endregion
 }

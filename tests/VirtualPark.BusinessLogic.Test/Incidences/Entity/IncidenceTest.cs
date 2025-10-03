@@ -124,23 +124,30 @@ public class IncidenceTest
     #endregion
 
     #region Attraction
+    #region Get
     [TestMethod]
     [TestCategory("Validation")]
     public void Attraction_Getter_ReturnsAssignedValue()
     {
         var attraction = new Attraction();
         var incidence = new Incidence { Attraction = attraction };
+
         incidence.Attraction.Should().Be(attraction);
     }
+    #endregion
 
+    #region Set
     [TestMethod]
     [TestCategory("Validation")]
-    public void Attraction_setter()
+    public void Attraction_setter_ReturnsAssignedValue()
     {
         var attraction = new Attraction();
         var incidence = new Incidence();
+
         incidence.Attraction = attraction;
+
         incidence.Attraction.Should().Be(attraction);
     }
+    #endregion
     #endregion
 }

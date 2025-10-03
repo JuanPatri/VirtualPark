@@ -573,6 +573,39 @@ public class AttractionServiceTest
         result.Should().BeFalse();
     }
     #endregion
+    [TestMethod]
+    public void ValidateEntryByQr_WhenSpecialEventOutsideTimeWindow_ShouldReturnFalse()
+    {
+        var attractionId = Guid.NewGuid();
+        var qrId = Guid.NewGuid();
+        var eventId = Guid.NewGuid();
+
+        var attraction = new Attraction { Id = attractionId, Capacity = 10, Available = true };
+
+        var ev = new Event
+        {
+            Id = eventId,
+            Date = DateTime.Now,
+            Capacity = 10,
+            Attractions = [attraction]
+        };
+
+        var ticket = new Ticket
+        {
+            QrId = qrId,
+            Date = DateTime.Now.AddHours(-5);
+            Type = EntranceType.Event,
+            EventId = eventId
+        };
+
+        _mockTicketRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>())).Returns(ticket);
+        _mockEventRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>())).Returns(ev);
+
+        var result = _attractionService.ValidateEntryByQr(attractionId, qrId);
+
+        result.Should().BeFalse();
+    }
+
     #endregion
 
     #region Success

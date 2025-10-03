@@ -493,6 +493,9 @@ public class AttractionServiceTest
     public void ValidateEntryByQr_WhenTicketDoesNotExist_ShouldReturnFalse()
     {
         _mockTicketRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>())).Returns((Ticket?)null);
+        _mockAttractionRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns((Attraction)null!);
 
         var result = _attractionService.ValidateEntryByQr(Guid.NewGuid(), Guid.NewGuid());
 
@@ -510,6 +513,9 @@ public class AttractionServiceTest
             Type = EntranceType.General
         };
 
+        _mockAttractionRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns((Attraction)null!);
         _mockTicketRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>())).Returns(ticket);
 
         var result = _attractionService.ValidateEntryByQr(Guid.NewGuid(), qrId);
@@ -555,6 +561,9 @@ public class AttractionServiceTest
             Type = EntranceType.Event,
             EventId = Guid.NewGuid()
         };
+        _mockAttractionRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns((Attraction)null!);
 
         _mockTicketRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>())).Returns(ticket);
         _mockEventRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>())).Returns((Event?)null);
@@ -564,5 +573,38 @@ public class AttractionServiceTest
         result.Should().BeFalse();
     }
     #endregion
+    #endregion
+
+    #region Success
+    [TestMethod]
+    public void ValidateEntryByQr_WhenTicketIsGeneralAndValid_ShouldReturnTrueAndIncrementCurrentVisitors()
+    {
+        var attractionId = Guid.NewGuid();
+        var qrId = Guid.NewGuid();
+
+        var ticket = new Ticket
+        {
+            QrId = qrId,
+            Date = DateOnly.FromDateTime(DateTime.Today),
+            Type = EntranceType.General
+        };
+
+        var attraction = new Attraction
+        {
+            Id = attractionId,
+            Capacity = 5,
+            CurrentVisitors = 2,
+            MiniumAge = 0,
+            Available = true
+        };
+
+        _mockTicketRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>())).Returns(ticket);
+        _mockAttractionRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>())).Returns(attraction);
+
+        var result = _attractionService.ValidateEntryByQr(attractionId, qrId);
+
+        result.Should().BeTrue();
+        attraction.CurrentVisitors.Should().Be(3);
+    }
     #endregion
 }

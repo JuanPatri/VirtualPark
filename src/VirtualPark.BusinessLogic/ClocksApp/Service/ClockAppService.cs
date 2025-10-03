@@ -6,4 +6,6 @@ namespace VirtualPark.BusinessLogic.ClocksApp.Service;
 
 public class ClockAppService (IRepository<ClockApp> clockAppRepository) : IClockAppService
 {
+
+
 }

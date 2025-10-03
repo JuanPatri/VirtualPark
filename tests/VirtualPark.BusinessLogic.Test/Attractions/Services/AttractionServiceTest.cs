@@ -5,6 +5,7 @@ using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Attractions.Models;
 using VirtualPark.BusinessLogic.Attractions.Services;
+using VirtualPark.BusinessLogic.Tickets;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.Repository;
@@ -492,6 +493,24 @@ public class AttractionServiceTest
         _mockTicketRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>())).Returns((Ticket?)null);
 
         var result = _attractionService.ValidateEntryByQr(Guid.NewGuid(), Guid.NewGuid());
+
+        result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void ValidateEntryByQr_WhenTicketIsExpired_ShouldReturnFalse()
+    {
+        var qrId = Guid.NewGuid();
+        var ticket = new Ticket
+        {
+            QrId = qrId,
+            Date = DateOnly.FromDateTime(DateTime.Today.AddDays(-1)),
+            Type = EntranceType.General
+        };
+
+        _mockTicketRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>())).Returns(ticket);
+
+        var result = _attractionService.ValidateEntryByQr(Guid.NewGuid(), qrId);
 
         result.Should().BeFalse();
     }

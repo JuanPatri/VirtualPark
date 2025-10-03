@@ -483,6 +483,9 @@ public class AttractionServiceTest
     }
     #endregion
     #endregion
+
+    #region ValidateEntryByQr
+    #region Failure
     [TestMethod]
     public void ValidateEntryByQr_WhenTicketDoesNotExist_ShouldReturnFalse()
     {
@@ -492,4 +495,6 @@ public class AttractionServiceTest
 
         result.Should().BeFalse();
     }
+    #endregion
+    #endregion
 }

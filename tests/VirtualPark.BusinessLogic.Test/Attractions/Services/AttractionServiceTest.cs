@@ -5,6 +5,7 @@ using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Attractions.Models;
 using VirtualPark.BusinessLogic.Attractions.Services;
+using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.Repository;
 
@@ -17,6 +18,8 @@ public class AttractionServiceTest
 {
     private Mock<IRepository<Attraction>> _mockAttractionRepository = null!;
     private Mock<IRepository<VisitorProfile>> _mockVisitorProfileRepository = null!;
+    private Mock<IRepository<Ticket>> _mockTicketRepository = null!;
+
     private AttractionService _attractionService = null!;
     private AttractionArgs _attractionArgs = null!;
 
@@ -25,7 +28,8 @@ public class AttractionServiceTest
     {
         _mockAttractionRepository = new Mock<IRepository<Attraction>>(MockBehavior.Strict);
         _mockVisitorProfileRepository = new Mock<IRepository<VisitorProfile>>(MockBehavior.Strict);
-        _attractionService = new AttractionService(_mockAttractionRepository.Object,  _mockVisitorProfileRepository.Object);
+        _mockTicketRepository = new Mock<IRepository<Ticket>>(MockBehavior.Strict);
+        _attractionService = new AttractionService(_mockAttractionRepository.Object,  _mockVisitorProfileRepository.Object, _mockTicketRepository.Object);
         _attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
     }
 
@@ -479,4 +483,13 @@ public class AttractionServiceTest
     }
     #endregion
     #endregion
+    [TestMethod]
+    public void ValidateEntryByQr_WhenTicketDoesNotExist_ShouldReturnFalse()
+    {
+        _mockTicketRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>())).Returns((Ticket?)null);
+
+        var result = _attractionService.ValidateEntryByQr(Guid.NewGuid(), Guid.NewGuid());
+
+        result.Should().BeFalse();
+    }
 }

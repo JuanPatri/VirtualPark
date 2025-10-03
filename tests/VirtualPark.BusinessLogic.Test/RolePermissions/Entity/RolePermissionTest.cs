@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.RolePermissions.Entity;
 using VirtualPark.BusinessLogic.Roles.Entity;
 
@@ -33,4 +34,13 @@ public class RolePermissionTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void RolePermission_Getter()
+    {
+        var permission = new Permission();
+        var rolePermission = new RolePermission { PermissionId = permission.Id };
+        rolePermission.PermissionId.Should().Be(role.Id);
+    }
 }

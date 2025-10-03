@@ -222,16 +222,11 @@ public static class ValidationServices
         return ids;
     }
 
-    public static List<Guid> ValidateAndParseGuidList(List<string> stringList)
+    public static List<Guid> ValidateAndParseGuidAttractionsList(List<string>? stringList)
     {
-        if(stringList is null)
+        if(stringList is null || stringList.Count == 0)
         {
-            throw new ArgumentException("List cannot be null.");
-        }
-
-        if(stringList.Count == 0)
-        {
-            throw new ArgumentException("List cannot be empty.");
+            return [];
         }
 
         return stringList.Select(ValidateAndParseGuid).ToList();
@@ -242,5 +237,29 @@ public static class ValidationServices
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(number);
 
         return number;
+    }
+
+    public static DateTime ValidateDateTimeTickets(string date)
+    {
+        var formats = new[]
+        {
+            "yyyy-MM-dd",
+            "yyyy-MM-dd HH:mm",
+            "yyyy-MM-dd HH:mm:ss"
+        };
+
+        if(!DateTime.TryParseExact(date, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+        {
+            throw new ArgumentException(
+                $"Invalid date format: {date}. Expected format is yyyy-MM-dd or yyyy-MM-dd HH:mm[:ss]");
+        }
+
+        if(parsedDate < DateTime.UtcNow)
+        {
+            throw new ArgumentException(
+                $"Invalid date: {parsedDate:yyyy-MM-dd}. Date cannot be in the past");
+        }
+
+        return parsedDate;
     }
 }

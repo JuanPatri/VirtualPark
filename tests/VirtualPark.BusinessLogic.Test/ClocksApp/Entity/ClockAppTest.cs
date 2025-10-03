@@ -22,15 +22,17 @@ public class ClockAppTest
     public void DateSystem_GetAfterSet_ShouldReturnSameValue()
     {
         var expected = new DateTime(2025, 10, 3, 15, 30, 0);
-        var clock = new ClockApp{ DateSystem = expected};
+        var clock = new ClockApp { DateSystem = expected };
         clock.DateSystem.Should().Be(expected);
     }
 
     [TestMethod]
-    public void DateSystem_Create_ShouldReturnDateTimeNow()
+    public void DateSystem_Create_ShouldBeCloseTo_Now()
     {
         var clock = new ClockApp();
-        clock.DateSystem.Should().Be(DateTime.Now);
+
+        clock.DateSystem.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(5));
     }
+
     #endregion
 }

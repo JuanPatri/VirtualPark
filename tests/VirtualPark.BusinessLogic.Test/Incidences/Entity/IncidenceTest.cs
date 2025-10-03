@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Incidences.Entity;
 using VirtualPark.BusinessLogic.TypeIncidences.Entity;
 
@@ -121,4 +122,13 @@ public class IncidenceTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Type_Getter_()
+    {
+        var attraction = new Attraction();
+        var incidence = new Incidence { Attraction = attraction };
+        incidence.Attraction.Should().Be(attraction);
+    }
 }

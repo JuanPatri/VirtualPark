@@ -6,7 +6,7 @@ public sealed class Incidence
 {
     public Guid Id { get; init; } = Guid.NewGuid();
     public TypeIncidence Type { get; set; } = null!;
-    public Guid TypeIncidenceId { get; init; }
+    public Guid TypeIncidenceId { get; set ; }
     public string Description { get; set; } = null!;
     public DateTime Start { get; set; }
     public DateTime End { get; set; }

@@ -45,6 +45,8 @@ public class RolePermissionTest
         rolePermission.PermissionId.Should().Be(permission.Id);
     }
 
+    [TestMethod]
+    [TestCategory("Validation")]
     public void RolePermission_Setter()
     {
         var permission = new Permission();

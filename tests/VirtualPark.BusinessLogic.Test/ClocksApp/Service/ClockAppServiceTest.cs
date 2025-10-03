@@ -59,6 +59,7 @@ public class ClockAppServiceTest
     #endregion
 
     #region GetOrCreate
+
     private static ClockApp InvokeGetOCreate(ClockAppService svc)
     {
         var mi = typeof(ClockAppService).GetMethod("GetOCreate",

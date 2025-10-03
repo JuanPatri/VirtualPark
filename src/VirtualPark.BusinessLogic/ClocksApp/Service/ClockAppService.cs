@@ -8,6 +8,18 @@ public class ClockAppService : IClockAppService
 {
     private readonly IRepository<ClockApp> _clockAppRepository;
 
+    private ClockApp GetOCreate()
+    {
+        var clock = _clockAppRepository.GetAll().FirstOrDefault();
+        if(clock is null)
+        {
+            clock = new ClockApp();
+            _clockAppRepository.Add(clock);
+        }
+
+        return clock;
+    }
+
     public ClockAppService(IRepository<ClockApp> clockAppRepository)
     {
         _clockAppRepository = clockAppRepository;

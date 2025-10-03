@@ -10,6 +10,7 @@ namespace VirtualPark.BusinessLogic.Test.RolePermissions.Entity;
 public class RolePermissionTest
 {
     #region RoleId
+    #region Get
     [TestMethod]
     [TestCategory("Validation")]
     public void RolePermission_GetterRoleId_ReturnsAssignedValue()
@@ -18,15 +19,18 @@ public class RolePermissionTest
         var rolePermission = new RolePermission { RoleId = role.Id };
         rolePermission.RoleId.Should().Be(role.Id);
     }
+    #endregion
 
+    #region Set
     [TestMethod]
     [TestCategory("Validation")]
-    public void RolePermission_Setter()
+    public void RolePermission_SetterRoleId_ReturnsAssignedValue()
     {
         var role = new Role();
         var rolePermission = new RolePermission();
         rolePermission.RoleId = role.Id;
         rolePermission.RoleId.Should().Be(role.Id);
     }
+    #endregion
     #endregion
 }

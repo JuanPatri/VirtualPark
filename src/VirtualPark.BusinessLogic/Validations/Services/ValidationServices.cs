@@ -222,7 +222,7 @@ public static class ValidationServices
         return ids;
     }
 
-    public static List<Guid> ValidateAndParseGuidList(List<string> stringList)
+    public static List<Guid> ValidateAndParseGuidAttractionsList(List<string>? stringList)
     {
         if(stringList is null || stringList.Count == 0)
         {

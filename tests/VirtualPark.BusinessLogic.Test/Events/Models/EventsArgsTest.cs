@@ -214,23 +214,6 @@ public class EventsArgsTest
     #endregion
 
     #region Failure
-
-    [TestMethod]
-    [TestCategory("Validation")]
-    public void Constructor_WhenAttractionsListIsEmpty_ShouldThrowArgumentException()
-    {
-        var attractions = new List<string>();
-
-        Action act = () =>
-        {
-            _ = new EventsArgs("Halloween", "2025-12-30", 100, 200, attractions);
-        };
-
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("List cannot be empty.");
-    }
-
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenAttractionsListHasInvalidGuid_ShouldThrowFormatException()

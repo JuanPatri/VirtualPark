@@ -36,6 +36,7 @@ public class RolePermissionTest
     #endregion
 
     #region PermissionId
+    #region Get
     [TestMethod]
     [TestCategory("Validation")]
     public void RolePermission_GetterPermissionId_ReturnsAssignedValue()
@@ -44,15 +45,18 @@ public class RolePermissionTest
         var rolePermission = new RolePermission { PermissionId = permission.Id };
         rolePermission.PermissionId.Should().Be(permission.Id);
     }
+    #endregion
 
+    #region Set
     [TestMethod]
     [TestCategory("Validation")]
-    public void RolePermission_Setter()
+    public void RolePermission_SetterPermissionId_ReturnsAssignedValue()
     {
         var permission = new Permission();
         var rolePermission = new RolePermission();
         rolePermission.PermissionId = permission.Id;
         rolePermission.PermissionId.Should().Be(permission.Id);
     }
+    #endregion
     #endregion
 }

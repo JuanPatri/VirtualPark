@@ -1,10 +1,16 @@
+using VirtualPark.BusinessLogic.ClocksApp.Entity;
+using VirtualPark.BusinessLogic.ClocksApp.Models;
+using VirtualPark.Repository;
+
 namespace VirtualPark.BusinessLogic.ClocksApp.Service;
 
 public class ClockAppService : IClockAppService
 {
-    public DateTime Now()
+    private readonly IRepository<ClockApp> _clockAppRepository;
+
+    public ClockAppService(IRepository<ClockApp> clockAppRepository)
     {
-        throw new NotImplementedException();
+        _clockAppRepository = clockAppRepository;
     }
 
     public int CalculateDifferenceInMinutes(DateTime systemDateTime)

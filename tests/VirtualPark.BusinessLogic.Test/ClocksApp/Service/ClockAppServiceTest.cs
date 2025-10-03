@@ -1,5 +1,9 @@
 using FluentAssertions;
+using Moq;
+using VirtualPark.BusinessLogic.ClocksApp.Entity;
+using VirtualPark.BusinessLogic.ClocksApp.Models;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
+using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Test.ClocksApp.Service;
 
@@ -8,11 +12,15 @@ namespace VirtualPark.BusinessLogic.Test.ClocksApp.Service;
 public class ClockAppServiceTest
 {
     private ClockAppService _clockAppService = null!;
+    private Mock<IRepository<ClockApp>> _clockAppRepository = null!;
+    private ClockAppArgs _clockArgs = null!;
 
     [TestInitialize]
     public void Initialize()
     {
-        _clockAppService = new ClockAppService();
+        _clockAppRepository = new Mock<IRepository<ClockApp>>(MockBehavior.Strict);
+        _clockAppService = new ClockAppService(_clockAppRepository.Object);
+        _clockArgs = new ClockAppArgs("2025-10-02 18:30");
     }
 
     #region CalculateDifferenceInMinutes

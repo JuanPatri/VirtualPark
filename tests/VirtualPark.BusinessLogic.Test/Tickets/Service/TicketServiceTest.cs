@@ -146,7 +146,7 @@ public class TicketServiceTest
         var tickets = new List<Ticket> { ticket1, ticket2 };
 
         _ticketRepositoryMock
-            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Setup(r => r.GetAll(null))
             .Returns(tickets);
 
         var result = _ticketService.GetAll();
@@ -155,6 +155,8 @@ public class TicketServiceTest
         result.Should().HaveCount(2);
         result.Should().Contain(ticket1);
         result.Should().Contain(ticket2);
+
+        _ticketRepositoryMock.Verify(r => r.GetAll(null), Times.Once);
     }
     #endregion
     #region Null

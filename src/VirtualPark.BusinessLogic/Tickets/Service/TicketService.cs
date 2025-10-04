@@ -45,9 +45,9 @@ public class TicketService(IRepository<Ticket> ticketRepository, IRepository<Vis
         return _ticketRepository.Get(t => t.Id == ticketId);
     }
 
-    public List<Ticket> GetAll(Expression<Func<Ticket, bool>>? predicate = null)
+    public List<Ticket> GetAll()
     {
-        return _ticketRepository.GetAll(predicate);
+        return _ticketRepository.GetAll();
     }
 
     public bool HasTicketForVisitor(Guid visitorId)

@@ -23,7 +23,14 @@ public sealed class TypeIncidenceService(IRepository<TypeIncidence> typeIncidenc
 
     public TypeIncidence Get(Guid id)
     {
-        return _typeIncidenceRepository.Get(t => t.Id == id);
+        var typeIncidence = _typeIncidenceRepository.Get(t => t.Id == id);
+
+        if(typeIncidence == null)
+        {
+            throw new InvalidOperationException("Type incidence don't exist");
+        }
+
+        return typeIncidence;
     }
 
     public void Update(Guid id, TypeIncidenceArgs args)

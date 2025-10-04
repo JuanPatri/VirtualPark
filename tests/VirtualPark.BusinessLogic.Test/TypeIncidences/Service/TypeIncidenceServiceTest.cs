@@ -125,9 +125,11 @@ public class TypeIncidenceServiceTest
             .Setup(r => r.Get(t => t.Id == missingId))
             .Returns((TypeIncidence?)null);
 
-        var result = _typeIncidenceService.Get(missingId);
+        var act = () => _typeIncidenceService.Get(missingId);
 
-        result.Should().BeNull();
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("Type incidence don't exist");
 
         _mockTypeIncidenceRepository.VerifyAll();
     }
@@ -178,10 +180,11 @@ public class TypeIncidenceServiceTest
             .Setup(r => r.Get(t => t.Id == id))
             .Returns((TypeIncidence?)null);
 
-        Action act = () => _typeIncidenceService.Update(id, args);
+        var act = () => _typeIncidenceService.Update(id, args);
 
-        act.Should().Throw<InvalidOperationException>()
-            .WithMessage($"TypeIncidence with id {id} not found.");
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("Type incidence don't exist");
 
         _mockTypeIncidenceRepository.VerifyAll();
     }

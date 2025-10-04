@@ -22,11 +22,9 @@ public sealed class ClockAppService(IRepository<ClockApp> clockAppRepository) : 
         return clock ?? new ClockApp();
     }
 
-    private ClockApp? GetSingleton() => _clockAppRepository.GetAll(null).FirstOrDefault();
-
     public void Update(ClockAppArgs clockAppArgs)
     {
-        var clockApp = GetSingleton();
+        var clockApp = _clockAppRepository.GetAll().FirstOrDefault();
 
         if (clockApp == null)
         {

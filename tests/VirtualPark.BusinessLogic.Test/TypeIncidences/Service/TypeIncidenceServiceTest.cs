@@ -59,7 +59,7 @@ public class TypeIncidenceServiceTest
 
     #region GetAll
     [TestMethod]
-    public void GetAll_WhenPredicateProvided_ShouldReturnFiltered_AndCallWithPredicate()
+    public void GetAll_WhenRepositoryReturnsData_ShouldReturnList()
     {
         var data = new List<TypeIncidence>
         {
@@ -69,22 +69,13 @@ public class TypeIncidenceServiceTest
         };
 
         _mockTypeIncidenceRepository
-            .Setup(r => r.GetAll(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
-            .Returns<Expression<Func<TypeIncidence, bool>>>(pred =>
-                data.Where(pred.Compile()).ToList());
-
-        Expression<Func<TypeIncidence, bool>> predicate = t => t.Type == "Locked";
+            .Setup(r => r.GetAll(null))
+            .Returns(data);
 
         var result = _typeIncidenceService.GetAll();
 
-        result.Should().HaveCount(2);
-        result.All(t => t.Type == "Locked").Should().BeTrue();
-
-        _mockTypeIncidenceRepository.Verify(
-            r => r.GetAll(It.IsAny<Expression<Func<TypeIncidence, bool>>>()),
-            Times.Once);
-
-        _mockTypeIncidenceRepository.Verify(r => r.GetAll(null), Times.Never);
+        result.Should().NotBeNull();
+        result.Should().HaveCount(3);
 
         _mockTypeIncidenceRepository.VerifyAll();
     }
@@ -94,17 +85,15 @@ public class TypeIncidenceServiceTest
     {
         _mockTypeIncidenceRepository
             .Setup(r => r.GetAll(null))
-            .Returns([]);
+            .Returns(new List<TypeIncidence>());
 
         var result = _typeIncidenceService.GetAll();
 
         result.Should().NotBeNull();
         result.Should().BeEmpty();
 
-        _mockTypeIncidenceRepository.Verify(r => r.GetAll(null), Times.Once);
         _mockTypeIncidenceRepository.VerifyAll();
     }
-
     #endregion
 
     #region Get

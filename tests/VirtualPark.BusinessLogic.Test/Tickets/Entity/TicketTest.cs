@@ -65,5 +65,15 @@ public sealed class TicketTest
         var ticket = new Ticket { Event = e };
         ticket.Event.Should().BeEquivalentTo(e);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Event_Setter()
+    {
+        var e = new Event();
+        var ticket = new Ticket();
+        ticket.Event = e;
+        ticket.Event.Should().BeEquivalentTo(e);
+    }
     #endregion
 }

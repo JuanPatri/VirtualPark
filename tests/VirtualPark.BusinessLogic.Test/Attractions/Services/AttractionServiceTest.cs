@@ -24,6 +24,7 @@ public class AttractionServiceTest
     private Mock<IRepository<Event>> _mockEventRepository = null!;
     private AttractionService _attractionService = null!;
     private AttractionArgs _attractionArgs = null!;
+    private Mock<IReadOnlyRepository<Attraction>> _mockReadOnlyAttractionRepository = null!;
 
     [TestInitialize]
     public void Initialize()
@@ -34,35 +35,41 @@ public class AttractionServiceTest
         _mockEventRepository = new Mock<IRepository<Event>>(MockBehavior.Strict);
         _attractionService = new AttractionService(_mockAttractionRepository.Object, _mockVisitorProfileRepository.Object, _mockTicketRepository.Object, _mockEventRepository.Object);
         _attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
+        _mockReadOnlyAttractionRepository = new Mock<IReadOnlyRepository<Attraction>>(MockBehavior.Strict);
     }
 
     #region create
     [TestMethod]
     public void Create_WhenArgsAreValid_ShouldCreateAttraction()
     {
+        var args = _attractionArgs;
+        var name = args.Name;
+
+        _mockReadOnlyAttractionRepository
+            .Setup(r => r.Exist(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
+            .Returns(false);
+
         _mockAttractionRepository
-            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Setup(r => r.Exist(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
             .Returns(false);
 
         _mockAttractionRepository
             .Setup(r => r.Add(It.IsAny<Attraction>()));
 
-        var attraction = _attractionService.Create(_attractionArgs);
+        var attraction = _attractionService.Create(args);
 
         attraction.Should().NotBeNull();
-        attraction.Name.Should().Be(_attractionArgs.Name);
-
-        _mockAttractionRepository.Verify(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()));
+        attraction.Name.Should().Be(args.Name);
 
         _mockAttractionRepository.Verify(
             r => r.Add(It.Is<Attraction>(a =>
-                a.Name == _attractionArgs.Name &&
-                a.Type == _attractionArgs.Type &&
-                a.MiniumAge == _attractionArgs.MiniumAge &&
-                a.Capacity == _attractionArgs.Capacity &&
-                a.Description == _attractionArgs.Description &&
-                a.CurrentVisitors == _attractionArgs.CurrentVisitor &&
-                a.Available == _attractionArgs.Available)),
+                a.Name == args.Name &&
+                a.Type == args.Type &&
+                a.MiniumAge == args.MiniumAge &&
+                a.Capacity == args.Capacity &&
+                a.Description == args.Description &&
+                a.CurrentVisitors == args.CurrentVisitor &&
+                a.Available == args.Available)),
             Times.Once);
     }
 

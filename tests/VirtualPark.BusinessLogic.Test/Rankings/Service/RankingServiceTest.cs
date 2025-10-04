@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Rankings;
@@ -39,7 +38,7 @@ public sealed class RankingServiceTest
             .Setup(r => r.Get(u => u.Id == g1))
             .Returns((User?)null);
 
-        List<Guid> entries = new() { g1 };
+        List<Guid> entries = [g1];
 
         Action act = () => _rankingService.GuidToUser(entries);
 
@@ -68,7 +67,7 @@ public sealed class RankingServiceTest
     {
         var g1 = Guid.NewGuid();
         var g2 = Guid.NewGuid();
-        var args = new RankingArgs("2025-09-27 00:00", new List<string> { g1.ToString(), g2.ToString() }, "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString(), g2.ToString()], "Daily");
 
         var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
         var user2 = new User { Name = "Bob", LastName = "Jones", Email = "b@test.com", Password = "456", Roles = [] };
@@ -100,7 +99,7 @@ public sealed class RankingServiceTest
     {
         var g1 = Guid.NewGuid();
         var g2 = Guid.NewGuid();
-        var args = new RankingArgs("2025-09-27 00:00", new List<string> { g1.ToString(), g2.ToString() }, "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString(), g2.ToString()], "Daily");
 
         var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
         var user2 = new User { Name = "Bob", LastName = "Jones", Email = "b@test.com", Password = "456", Roles = [] };
@@ -132,7 +131,7 @@ public sealed class RankingServiceTest
     {
         var g1 = Guid.NewGuid();
         var gMissing = Guid.NewGuid();
-        var args = new RankingArgs("2025-09-27 00:00", new List<string> { g1.ToString(), gMissing.ToString() }, "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString(), gMissing.ToString()], "Daily");
 
         var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
 
@@ -159,7 +158,7 @@ public sealed class RankingServiceTest
     public void Create_WhenArgsValid_ShouldAddAndReturnId()
     {
         var g1 = Guid.NewGuid();
-        var args = new RankingArgs("2025-09-27 00:00", new List<string> { g1.ToString() }, "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString()], "Daily");
 
         var user1 = new User { Name = "Alice", LastName = "Smith", Email = "a@test.com", Password = "123", Roles = [] };
 
@@ -186,7 +185,7 @@ public sealed class RankingServiceTest
     public void Create_WhenUserNotFound_ShouldThrow()
     {
         var g1 = Guid.NewGuid();
-        var args = new RankingArgs("2025-09-27 00:00", new List<string> { g1.ToString() }, "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString()], "Daily");
 
         _mockUserReadOnlyRepository
             .Setup(r => r.Get(u => u.Id == g1))
@@ -210,7 +209,7 @@ public sealed class RankingServiceTest
 
         _mockRankingRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<Ranking> { r1, r2 });
+            .Returns([r1, r2]);
 
         var result = _rankingService.GetAll();
 
@@ -226,7 +225,7 @@ public sealed class RankingServiceTest
     {
         _mockRankingRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<Ranking>());
+            .Returns([]);
 
         var result = _rankingService.GetAll();
 
@@ -289,7 +288,7 @@ public sealed class RankingServiceTest
         var g1 = Guid.NewGuid();
         var g2 = Guid.NewGuid();
 
-        var args = new RankingArgs("2025-09-27 00:00", new List<string> { g1.ToString(), g2.ToString() }, "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [g1.ToString(), g2.ToString()], "Daily");
 
         var existing = new Ranking
         {
@@ -332,7 +331,7 @@ public sealed class RankingServiceTest
     public void Update_WhenRankingDoesNotExist_ShouldThrowInvalidOperation()
     {
         var id = Guid.NewGuid();
-        var args = new RankingArgs("2025-09-27 00:00", new List<string>(), "Daily");
+        var args = new RankingArgs("2025-09-27 00:00", [], "Daily");
 
         _mockRankingRepository
             .Setup(r => r.Get(rk => rk.Id == id))

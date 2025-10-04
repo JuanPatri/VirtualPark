@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Permissions.Entity;
@@ -23,8 +22,7 @@ public sealed class RoleServiceTest
         _mockPermissionReadOnlyRepository = new Mock<IReadOnlyRepository<Permission>>(MockBehavior.Strict);
         _mockRoleRepository = new Mock<IRepository<Role>>(MockBehavior.Strict);
         _roleService = new RoleService(_mockRoleRepository.Object, _mockPermissionReadOnlyRepository.Object);
-
-        var permissions = new List<string>() { Guid.NewGuid().ToString() };
+        _ = new List<string>() { Guid.NewGuid().ToString() };
     }
 
     #region Create
@@ -59,7 +57,7 @@ public sealed class RoleServiceTest
         var args = new RoleArgs(
             name: "Manager",
             description: "Desc",
-            permissions: new List<string> { p1Id.ToString(), p2Id.ToString() });
+            permissions: [p1Id.ToString(), p2Id.ToString()]);
 
         var id = _roleService.Create(args);
 
@@ -150,7 +148,7 @@ public sealed class RoleServiceTest
         var existing = new Role { Name = "Old", Description = "Old desc", Permissions = [] };
         var roleId = existing.Id;
 
-        var p1 = new Permission { Key = "READ",  Description = "R" };
+        var p1 = new Permission { Key = "READ", Description = "R" };
         var p2 = new Permission { Key = "WRITE", Description = "W" };
         var p1Id = p1.Id;
         var p2Id = p2.Id;
@@ -182,7 +180,7 @@ public sealed class RoleServiceTest
         var args = new RoleArgs(
             name: "Manager",
             description: "Desc",
-            permissions: new List<string> { p1Id.ToString(), p2Id.ToString() });
+            permissions: [p1Id.ToString(), p2Id.ToString()]);
 
         _roleService.Update(args, roleId);
 

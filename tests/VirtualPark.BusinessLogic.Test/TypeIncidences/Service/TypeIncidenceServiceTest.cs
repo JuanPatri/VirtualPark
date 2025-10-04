@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.TypeIncidences.Entity;
@@ -85,7 +84,7 @@ public class TypeIncidenceServiceTest
     {
         _mockTypeIncidenceRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<TypeIncidence>());
+            .Returns([]);
 
         var result = _typeIncidenceService.GetAll();
 

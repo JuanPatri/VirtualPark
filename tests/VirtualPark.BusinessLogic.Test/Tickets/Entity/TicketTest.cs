@@ -86,6 +86,6 @@ public sealed class TicketTest
     {
         var id = Guid.NewGuid();
         var ticket = new Ticket { VisitorProfileId = id};
-        ticket.VisitorProfileId.Should().BeEquivalentTo(id);
+        ticket.VisitorProfileId.Should().Be(id);
     }
 }

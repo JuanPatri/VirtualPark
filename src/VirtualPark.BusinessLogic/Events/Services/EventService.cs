@@ -56,14 +56,20 @@ public class EventService(IRepository<Event> eventRepository, IRepository<Attrac
         return attractions;
     }
 
-    public Event? Get(Expression<Func<Event, bool>> predicate)
+    public Event? Get(Guid eventId)
     {
-        return _eventRepository.Get(predicate);
+        return _eventRepository.Get(e => e.Id == eventId);
     }
 
-    public List<Event> GetAll(Expression<Func<Event, bool>>? predicate = null)
+    public List<Event> GetAll()
     {
-        return _eventRepository.GetAll(predicate);
+        List<Event> events = _eventRepository.GetAll();
+        if(events == null)
+        {
+            throw new InvalidOperationException("Do not have any events");
+        }
+
+        return events;
     }
 
     public void Remove(Guid eventId)

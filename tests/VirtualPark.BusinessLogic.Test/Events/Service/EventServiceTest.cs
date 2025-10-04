@@ -89,7 +89,7 @@ public sealed class EventServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(ev);
 
-        var result = _eventService.Get(e => e.Id == eventId);
+        var result = _eventService.Get(eventId);
 
         result.Should().NotBeNull();
         result!.Id.Should().Be(eventId);
@@ -104,7 +104,7 @@ public sealed class EventServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns((Event?)null);
 
-        var result = _eventService.Get(e => e.Id == Guid.NewGuid());
+        var result = _eventService.Get(Guid.NewGuid());
 
         result.Should().BeNull();
     }
@@ -133,6 +133,23 @@ public sealed class EventServiceTest
         result.Should().Contain(ev2);
     }
     #endregion
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAll_ShouldThrow_WhenRepositoryReturnsNull()
+    {
+        _eventRepositoryMock
+            .Setup(r => r.GetAll(null))
+            .Returns((List<Event>)null!);
+
+        Action act = () => _eventService.GetAll();
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("Do not have any events");
+
+        _eventRepositoryMock.VerifyAll();
+    }
+
     #region EmptyList
     [TestMethod]
     [TestCategory("Behaviour")]

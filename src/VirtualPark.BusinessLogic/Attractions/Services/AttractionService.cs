@@ -15,17 +15,18 @@ public sealed class AttractionService(
     IRepository<Attraction> attractionRepository,
     IRepository<VisitorProfile> visitorProfileRepository,
     IRepository<Ticket> ticketRepository,
-    IRepository<Event> eventRepository, IRepository<VisitRegistration> visitRegistrationRepository)
+    IRepository<Event> eventRepository,
+    IRepository<VisitRegistration> visitRegistrationRepository)
 {
     private readonly IRepository<Attraction> _attractionRepository = attractionRepository;
-    private readonly IRepository<VisitorProfile> _visitorProfileRepository = visitorProfileRepository;
-    private readonly IRepository<Ticket> _ticketRepository = ticketRepository;
     private readonly IRepository<Event> _eventRepository = eventRepository;
+    private readonly IRepository<Ticket> _ticketRepository = ticketRepository;
+    private readonly IRepository<VisitorProfile> _visitorProfileRepository = visitorProfileRepository;
     private readonly IRepository<VisitRegistration> _visitRegistrationRepository = visitRegistrationRepository;
 
     public Attraction Create(AttractionArgs args)
     {
-        var attraction = MapToEntity(args);
+        Attraction attraction = MapToEntity(args);
 
         _attractionRepository.Add(attraction);
 
@@ -108,8 +109,8 @@ public sealed class AttractionService(
 
     public bool ValidateEntryByNfc(Guid attractionId, Guid visitorId)
     {
-        var attraction = _attractionRepository.Get(a => a.Id == attractionId);
-        var visitor = _visitorProfileRepository.Get(v => v.Id == visitorId);
+        Attraction? attraction = _attractionRepository.Get(a => a.Id == attractionId);
+        VisitorProfile? visitor = _visitorProfileRepository.Get(v => v.Id == visitorId);
 
         if(attraction is null || visitor is null)
         {
@@ -132,19 +133,39 @@ public sealed class AttractionService(
         }
 
         VisitRegistration? visitRegistration = _visitRegistrationRepository.Get(v => v.VisitorId == visitorId);
-        if (visitRegistration.IsActive)
+
+        if(visitRegistration == null)
+        {
+            visitRegistration = new VisitRegistration
+            {
+                VisitorId = visitorId,
+                Attractions = [attraction],
+                Date = DateTime.Today,
+                IsActive = false,
+                Ticket = null!,
+                TicketId = Guid.Empty
+            };
+
+            _visitRegistrationRepository.Add(visitRegistration);
+        }
+
+        if(visitRegistration.IsActive)
         {
             return false;
         }
 
         attraction.CurrentVisitors++;
         _attractionRepository.Update(attraction);
+        visitRegistration.IsActive = true;
+        _visitRegistrationRepository.Update(visitRegistration);
 
         return true;
     }
 
-    private static bool IsAtCapacity(Attraction attraction) =>
-        attraction.CurrentVisitors >= attraction.Capacity;
+    private static bool IsAtCapacity(Attraction attraction)
+    {
+        return attraction.CurrentVisitors >= attraction.Capacity;
+    }
 
     private static bool IsOldEnough(VisitorProfile visitor, int minAge)
     {
@@ -161,8 +182,8 @@ public sealed class AttractionService(
 
     public bool ValidateEntryByQr(Guid attractionId, Guid qrId)
     {
-        var attraction = _attractionRepository.Get(a => a.Id == attractionId);
-        var ticket = _ticketRepository.Get(t => t.QrId == qrId);
+        Attraction? attraction = _attractionRepository.Get(a => a.Id == attractionId);
+        Ticket? ticket = _ticketRepository.Get(t => t.QrId == qrId);
 
         if(ticket is null || !IsTicketValidToday(ticket))
         {
@@ -182,31 +203,35 @@ public sealed class AttractionService(
         };
     }
 
-    private static bool IsTicketValidToday(Ticket ticket) =>
-        ticket.Date.Date == DateTime.Today;
+    private static bool IsTicketValidToday(Ticket ticket)
+    {
+        return ticket.Date.Date == DateTime.Today;
+    }
 
     private bool ValidateEventEntry(Ticket ticket, Attraction attraction)
     {
-        var ev = _eventRepository.Get(e => e.Id == ticket.EventId);
+        Event? ev = _eventRepository.Get(e => e.Id == ticket.EventId);
         if(ev is null || !IsAttractionInEvent(ev, attraction.Id))
         {
             return false;
         }
 
-        var startWindow = ev.Date;
-        var endWindow = ev.Date.AddHours(4);
+        DateTime startWindow = ev.Date;
+        DateTime endWindow = ev.Date.AddHours(4);
 
         if(ticket.Date < startWindow.AddSeconds(-1) || DateTime.Now > endWindow)
         {
             return false;
         }
 
-        var issuedTickets = _ticketRepository.GetAll(t => t.EventId == ticket.EventId);
+        List<Ticket> issuedTickets = _ticketRepository.GetAll(t => t.EventId == ticket.EventId);
         return issuedTickets.Count < ev.Capacity && RegisterVisitor(attraction);
     }
 
-    private static bool IsAttractionInEvent(Event ev, Guid attractionId) =>
-        ev.Attractions.Any(a => a.Id == attractionId);
+    private static bool IsAttractionInEvent(Event ev, Guid attractionId)
+    {
+        return ev.Attractions.Any(a => a.Id == attractionId);
+    }
 
     private bool RegisterVisitor(Attraction attraction)
     {

@@ -19,13 +19,7 @@ public sealed class ClockAppService(IRepository<ClockApp> clockAppRepository) : 
     public ClockApp Get()
     {
         var clock = _clockAppRepository.GetAll().FirstOrDefault();
-
-        if(clock == null)
-        {
-            clock = new ClockApp();
-        }
-
-        return clock;
+        return clock ?? new ClockApp();
     }
 
     public DateTime Now()

@@ -36,7 +36,7 @@ public class EventsArgsTest
         var attractionId = Guid.NewGuid().ToString();
         var attractions = new List<string> { attractionId };
 
-        var act = () => new EventsArgs(name, "2002-07-30", 50, 200, attractions);
+        Func<EventsArgs> act = () => new EventsArgs(name, "2002-07-30", 50, 200, attractions);
 
         act.Should()
             .Throw<ArgumentException>()
@@ -137,7 +137,7 @@ public class EventsArgsTest
         var attractionId = Guid.NewGuid().ToString();
         var attractions = new List<string> { attractionId };
 
-        var act = () => new EventsArgs("Halloween", "2025-12-30", -10, 200, attractions);
+        Func<EventsArgs> act = () => new EventsArgs("Halloween", "2025-12-30", -10, 200, attractions);
 
         act.Should()
             .Throw<ArgumentOutOfRangeException>();
@@ -172,69 +172,48 @@ public class EventsArgsTest
     {
         var attractionId = Guid.NewGuid().ToString();
         var attractions = new List<string> { attractionId };
-        var act = () => new EventsArgs("Halloween", "2025-12-30", 100, -200, attractions);
+        Func<EventsArgs> act = () => new EventsArgs("Halloween", "2025-12-30", 100, -200, attractions);
 
         act.Should()
             .Throw<ArgumentOutOfRangeException>();
     }
 
     #endregion
+
     #endregion
 
     #region Attractions
+
     #region Success
-    [TestClass]
-    [TestCategory("Models")]
-    [TestCategory("EventsArgs")]
-    public class EventsArgsAttractionsTest
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_WhenAttractionsListIsNull_ShouldInitializeEmptyList()
     {
-        [TestMethod]
-        [TestCategory("Validation")]
-        public void Constructor_WhenAttractionsAreValid_ShouldAssignGuidList()
-        {
-            var attractionId1 = Guid.NewGuid().ToString();
-            var attractionId2 = Guid.NewGuid().ToString();
-            var attractions = new List<string> { attractionId1, attractionId2 };
+        var args = new EventsArgs("Halloween", "2025-12-30", 100, 200, null);
 
-            var args = new EventsArgs("Halloween", "2025-12-30", 100, 200, attractions);
-
-            args.AttractionIds.Should().HaveCount(2);
-            args.AttractionIds.Should().Contain(Guid.Parse(attractionId1));
-            args.AttractionIds.Should().Contain(Guid.Parse(attractionId2));
-        }
+        args.AttractionIds.Should().NotBeNull();
+        args.AttractionIds.Should().BeEmpty();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_WhenAttractionsAreValid_ShouldAssignGuidList()
+    {
+        var attractionId1 = Guid.NewGuid().ToString();
+        var attractionId2 = Guid.NewGuid().ToString();
+        var attractions = new List<string> { attractionId1, attractionId2 };
+
+        var args = new EventsArgs("Halloween", "2025-12-30", 100, 200, attractions);
+
+        args.AttractionIds.Should().HaveCount(2);
+        args.AttractionIds.Should().Contain(Guid.Parse(attractionId1));
+        args.AttractionIds.Should().Contain(Guid.Parse(attractionId2));
+    }
+
     #endregion
+
     #region Failure
-    [TestMethod]
-    [TestCategory("Validation")]
-    public void Constructor_WhenAttractionsListIsNull_ShouldThrowArgumentException()
-    {
-        Action act = () =>
-        {
-            _ = new EventsArgs("Halloween", "2025-12-30", 100, 200, null!);
-        };
-
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("List cannot be null.");
-    }
-
-    [TestMethod]
-    [TestCategory("Validation")]
-    public void Constructor_WhenAttractionsListIsEmpty_ShouldThrowArgumentException()
-    {
-        var attractions = new List<string>();
-
-        Action act = () =>
-        {
-            _ = new EventsArgs("Halloween", "2025-12-30", 100, 200, attractions);
-        };
-
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("List cannot be empty.");
-    }
-
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenAttractionsListHasInvalidGuid_ShouldThrowFormatException()
@@ -250,6 +229,8 @@ public class EventsArgsTest
             .Throw<FormatException>()
             .WithMessage("The value 'not-a-guid' is not a valid GUID.");
     }
+
     #endregion
+
     #endregion
 }

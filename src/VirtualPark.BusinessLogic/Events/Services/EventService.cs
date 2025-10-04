@@ -1,16 +1,15 @@
 using System.Linq.Expressions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
-using VirtualPark.BusinessLogic.Attractions.Services;
 using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Events.Models;
 using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Events.Services;
 
-public class EventService(IRepository<Event> eventRepository, AttractionService attractionService)
+public class EventService(IRepository<Event> eventRepository, IRepository<Attraction> attractionRepository)
 {
     private readonly IRepository<Event> _eventRepository = eventRepository;
-    private readonly AttractionService _attractionService = attractionService;
+    private readonly IRepository<Attraction> _attractionRepository = attractionRepository;
 
     public Guid Create(EventsArgs args)
     {
@@ -21,16 +20,21 @@ public class EventService(IRepository<Event> eventRepository, AttractionService 
 
     private Event MapToEntity(EventsArgs args)
     {
-        List<Attraction> attractions = MapAttractionsList(args.AttractionIds);
-        var @event = new Event
+        List<Attraction>? attractions = null;
+
+        if(args.AttractionIds.Count > 0)
+        {
+            attractions = MapAttractionsList(args.AttractionIds);
+        }
+
+        return new Event
         {
             Name = args.Name,
             Date = args.Date.ToDateTime(TimeOnly.MinValue),
             Capacity = args.Capacity,
             Cost = args.Cost,
-            Attractions = attractions
+            Attractions = attractions ?? []
         };
-        return @event;
     }
 
     private List<Attraction> MapAttractionsList(List<Guid> argsAttractionIds)
@@ -39,7 +43,7 @@ public class EventService(IRepository<Event> eventRepository, AttractionService 
 
         foreach(var id in argsAttractionIds)
         {
-            var attraction = _attractionService.Get(a => a.Id == id);
+            var attraction = _attractionRepository.Get(a => a.Id == id);
 
             if(attraction is null)
             {

@@ -239,8 +239,7 @@ public sealed class AttractionService(
 
     private static VisitRegistration CreateVisitRegistration(Guid visitorId, Ticket ticket, Attraction attraction)
     {
-        VisitRegistration visitRegistration;
-        visitRegistration = new VisitRegistration
+        var visitRegistration = new VisitRegistration
         {
             VisitorId = visitorId,
             Visitor = ticket.Visitor,

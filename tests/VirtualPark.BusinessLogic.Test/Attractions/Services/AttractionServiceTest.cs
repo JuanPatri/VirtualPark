@@ -731,6 +731,68 @@ public class AttractionServiceTest
         result.Should().BeFalse();
     }
 
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void ValidateEntryByQr_WhenVisitorAlreadyInActiveVisit_ShouldReturnFalse()
+    {
+        var attractionId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+        var qrId = Guid.NewGuid();
+
+        var visitor = new VisitorProfile
+        {
+            Id = visitorId,
+            DateOfBirth = new DateOnly(2000, 1, 1)
+        };
+
+        var ticket = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            QrId = qrId,
+            Date = DateTime.Today,
+            Type = EntranceType.General,
+            Visitor = visitor
+        };
+
+        var attraction = new Attraction
+        {
+            Id = attractionId,
+            Capacity = 10,
+            CurrentVisitors = 3,
+            MiniumAge = 10,
+            Available = true
+        };
+
+        var activeVisit = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Visitor = visitor,
+            Date = DateTime.Today,
+            IsActive = true,
+            Attractions = [attraction],
+            Ticket = ticket,
+            TicketId = ticket.Id
+        };
+
+        _mockAttractionRepository
+            .Setup(r => r.Get(a => a.Id == attractionId))
+            .Returns(attraction);
+
+        _mockTicketRepository
+            .Setup(r => r.Get(t => t.QrId == qrId))
+            .Returns(ticket);
+
+        _mockVisitorRegistrationRepository
+            .Setup(r => r.Get(v => v.VisitorId == visitorId))
+            .Returns(activeVisit);
+
+        var result = _attractionService.ValidateEntryByQr(attractionId, qrId);
+
+        result.Should().BeFalse("because the visitor already has an active visit");
+        _mockVisitorRegistrationRepository.Verify(r => r.Update(It.IsAny<VisitRegistration>()), Times.Never);
+        _mockVisitorRegistrationRepository.Verify(r => r.Add(It.IsAny<VisitRegistration>()), Times.Never);
+    }
+
     #endregion
 
     #region Success

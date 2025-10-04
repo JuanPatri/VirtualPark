@@ -89,7 +89,7 @@ public sealed class EventServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(ev);
 
-        var result = _eventService.Get(e => e.Id == eventId);
+        var result = _eventService.Get(eventId);
 
         result.Should().NotBeNull();
         result!.Id.Should().Be(eventId);
@@ -104,7 +104,7 @@ public sealed class EventServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns((Event?)null);
 
-        var result = _eventService.Get(e => e.Id == Guid.NewGuid());
+        var result = _eventService.Get(Guid.NewGuid());
 
         result.Should().BeNull();
     }
@@ -133,6 +133,26 @@ public sealed class EventServiceTest
         result.Should().Contain(ev2);
     }
     #endregion
+
+    #region Failure
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAll_ShouldThrow_WhenRepositoryReturnsNull()
+    {
+        _eventRepositoryMock
+            .Setup(r => r.GetAll(null))
+            .Returns((List<Event>)null!);
+
+        Action act = () => _eventService.GetAll();
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("Do not have any events");
+
+        _eventRepositoryMock.VerifyAll();
+    }
+    #endregion
+
     #region EmptyList
     [TestMethod]
     [TestCategory("Behaviour")]
@@ -254,17 +274,23 @@ public sealed class EventServiceTest
     #region Exist
     #region True
     [TestMethod]
-    [TestCategory("Behaviour")]
-    public void Exist_WhenEventMatchesPredicate_ShouldReturnTrue()
+    [TestCategory("Validation")]
+    public void Exist_WhenEventWithGivenIdExists_ShouldReturnTrue()
     {
+        var eventId = Guid.NewGuid();
+
         _eventRepositoryMock
-            .Setup(r => r.Exist(It.IsAny<Expression<Func<Event, bool>>>()))
+            .Setup(r => r.Exist(It.Is<Expression<Func<Event, bool>>>(expr =>
+                expr.Compile().Invoke(new Event { Id = eventId }))))
             .Returns(true);
 
-        var result = _eventService.Exist(e => e.Name == "Halloween");
+        var result = _eventService.Exist(eventId);
 
         result.Should().BeTrue();
+
+        _eventRepositoryMock.Verify(r => r.Exist(It.IsAny<Expression<Func<Event, bool>>>()), Times.Once);
     }
+
     #endregion
 
     #region False
@@ -276,7 +302,7 @@ public sealed class EventServiceTest
             .Setup(r => r.Exist(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(false);
 
-        var result = _eventService.Exist(e => e.Name == "NotExists");
+        var result = _eventService.Exist(Guid.NewGuid());
 
         result.Should().BeFalse();
     }

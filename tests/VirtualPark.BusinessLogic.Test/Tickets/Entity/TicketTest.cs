@@ -89,5 +89,14 @@ public sealed class TicketTest
         var ticket = new Ticket { VisitorProfileId = id };
         ticket.VisitorProfileId.Should().Be(id);
     }
+
+    [TestMethod]
+    public void VisitorProfileId_Setter()
+    {
+        var id = Guid.NewGuid();
+        var ticket = new Ticket();
+        ticket.VisitorProfileId = id;
+        ticket.VisitorProfileId.Should().Be(id);
+    }
     #endregion
 }

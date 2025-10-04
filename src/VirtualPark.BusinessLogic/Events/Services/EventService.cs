@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Events.Models;
@@ -20,16 +19,21 @@ public class EventService(IRepository<Event> eventRepository, IRepository<Attrac
 
     private Event MapToEntity(EventsArgs args)
     {
-        List<Attraction> attractions = MapAttractionsList(args.AttractionIds);
-        var @event = new Event
+        List<Attraction>? attractions = null;
+
+        if(args.AttractionIds.Count > 0)
+        {
+            attractions = MapAttractionsList(args.AttractionIds);
+        }
+
+        return new Event
         {
             Name = args.Name,
             Date = args.Date.ToDateTime(TimeOnly.MinValue),
             Capacity = args.Capacity,
             Cost = args.Cost,
-            Attractions = attractions
+            Attractions = attractions ?? []
         };
-        return @event;
     }
 
     private List<Attraction> MapAttractionsList(List<Guid> argsAttractionIds)
@@ -51,14 +55,20 @@ public class EventService(IRepository<Event> eventRepository, IRepository<Attrac
         return attractions;
     }
 
-    public Event? Get(Expression<Func<Event, bool>> predicate)
+    public Event? Get(Guid eventId)
     {
-        return _eventRepository.Get(predicate);
+        return _eventRepository.Get(e => e.Id == eventId);
     }
 
-    public List<Event> GetAll(Expression<Func<Event, bool>>? predicate = null)
+    public List<Event> GetAll()
     {
-        return _eventRepository.GetAll(predicate);
+        List<Event> events = _eventRepository.GetAll();
+        if(events == null)
+        {
+            throw new InvalidOperationException("Do not have any events");
+        }
+
+        return events;
     }
 
     public void Remove(Guid eventId)
@@ -87,8 +97,8 @@ public class EventService(IRepository<Event> eventRepository, IRepository<Attrac
         ev.Attractions = MapAttractionsList(args.AttractionIds);
     }
 
-    public bool Exist(Expression<Func<Event, bool>> predicate)
+    public bool Exist(Guid eventId)
     {
-        return _eventRepository.Exist(predicate);
+        return _eventRepository.Exist(e => e.Id == eventId);
     }
 }

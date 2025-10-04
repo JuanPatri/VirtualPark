@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.Permissions.Models;
 using VirtualPark.BusinessLogic.Roles.Entity;
@@ -68,14 +67,9 @@ public sealed class PermissionService(IRepository<Role> roleRepository, IReposit
         _permissionRepository.Remove(permission);
     }
 
-    public List<Permission> GetAll(Expression<Func<Permission, bool>>? predicate = null)
+    public List<Permission> GetAll()
     {
-        if(predicate == null)
-        {
-            return _permissionRepository.GetAll().ToList();
-        }
-
-        return _permissionRepository.GetAll(predicate).ToList();
+        return _permissionRepository.GetAll().ToList();
     }
 
     public Permission? GetById(Guid id)

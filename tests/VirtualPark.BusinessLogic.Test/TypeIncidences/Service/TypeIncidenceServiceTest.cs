@@ -157,22 +157,14 @@ public class TypeIncidenceServiceTest
         var args = new TypeIncidenceArgs("NewType");
 
         _mockTypeIncidenceRepository
-            .Setup(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
+            .Setup(r => r.Get(t => t.Id == id))
             .Returns(existing);
 
-        TypeIncidence? captured = null;
         _mockTypeIncidenceRepository
-            .Setup(r => r.Update(It.IsAny<TypeIncidence>()))
-            .Callback<TypeIncidence>(ti => captured = ti);
+            .Setup(r => r.Update(It.Is<TypeIncidence>(ti => ti.Id == id && ti.Type == "NewType")));
 
         _typeIncidenceService.Update(id, args);
 
-        captured.Should().NotBeNull();
-        captured!.Id.Should().Be(id);
-        captured.Type.Should().Be("NewType");
-
-        _mockTypeIncidenceRepository.Verify(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()), Times.Once);
-        _mockTypeIncidenceRepository.Verify(r => r.Update(It.IsAny<TypeIncidence>()), Times.Once);
         _mockTypeIncidenceRepository.VerifyAll();
     }
 
@@ -183,7 +175,7 @@ public class TypeIncidenceServiceTest
         var args = new TypeIncidenceArgs("NewType");
 
         _mockTypeIncidenceRepository
-            .Setup(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()))
+            .Setup(r => r.Get(t => t.Id == id))
             .Returns((TypeIncidence?)null);
 
         Action act = () => _typeIncidenceService.Update(id, args);
@@ -191,8 +183,6 @@ public class TypeIncidenceServiceTest
         act.Should().Throw<InvalidOperationException>()
             .WithMessage($"TypeIncidence with id {id} not found.");
 
-        _mockTypeIncidenceRepository.Verify(r => r.Get(It.IsAny<Expression<Func<TypeIncidence, bool>>>()), Times.Once);
-        _mockTypeIncidenceRepository.Verify(r => r.Update(It.IsAny<TypeIncidence>()), Times.Never);
         _mockTypeIncidenceRepository.VerifyAll();
     }
 

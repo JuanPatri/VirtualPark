@@ -117,6 +117,21 @@ public class AttractionServiceTest
         _mockAttractionRepository.Verify(r => r.Add(It.IsAny<Attraction>()), Times.Once);
     }
 
+    [TestMethod]
+    public void ValidateAttractionName_WhenNameAlreadyExists_ShouldThrowException()
+    {
+        var name = "RollerCoaster";
+
+        _mockAttractionRepository
+            .Setup(r => r.Exist(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
+            .Returns(true);
+
+        Action act = () => _attractionService.ValidateAttractionName(name);
+
+        act.Should().Throw<Exception>()
+            .WithMessage("Attraction name already exists.");
+    }
+
     #endregion
     #region MapToEntity
 

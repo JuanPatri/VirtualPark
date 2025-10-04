@@ -209,7 +209,7 @@ public sealed class AttractionService(
 
         VisitRegistration? visitRegistration = _visitRegistrationRepository.Get(v => v.VisitorId == visitorId);
 
-        if (visitRegistration == null)
+        if(visitRegistration == null)
         {
             visitRegistration = CreateVisitRegistration(visitorId, ticket, attraction);
 
@@ -217,7 +217,7 @@ public sealed class AttractionService(
         }
         else
         {
-            if (visitRegistration.IsActive)
+            if(visitRegistration.IsActive)
             {
                 return false;
             }

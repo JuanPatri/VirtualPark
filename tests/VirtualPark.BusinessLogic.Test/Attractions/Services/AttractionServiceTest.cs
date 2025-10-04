@@ -500,7 +500,10 @@ public class AttractionServiceTest
 
         var activeVisit = new VisitRegistration
         {
-            VisitorId = visitorId, Visitor = visitor, Date = DateTime.Today, IsActive = true
+            VisitorId = visitorId,
+            Visitor = visitor,
+            Date = DateTime.Today,
+            IsActive = true
         };
 
         _mockAttractionRepository
@@ -695,7 +698,10 @@ public class AttractionServiceTest
         var qrId = Guid.NewGuid();
         var ticket = new Ticket
         {
-            QrId = qrId, Date = DateTime.Today, Type = EntranceType.Event, EventId = Guid.NewGuid()
+            QrId = qrId,
+            Date = DateTime.Today,
+            Type = EntranceType.Event,
+            EventId = Guid.NewGuid()
         };
         _mockAttractionRepository
             .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))

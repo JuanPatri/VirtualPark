@@ -134,20 +134,7 @@ public sealed class AttractionService(
 
         VisitRegistration? visitRegistration = _visitRegistrationRepository.Get(v => v.VisitorId == visitorId);
 
-        if(visitRegistration == null)
-        {
-            visitRegistration = new VisitRegistration
-            {
-                VisitorId = visitorId,
-                Attractions = [attraction],
-                Date = DateTime.Today,
-                IsActive = false,
-                Ticket = null!,
-                TicketId = Guid.Empty
-            };
-
-            _visitRegistrationRepository.Add(visitRegistration);
-        }
+        visitRegistration = ValidateVisitRegistration(visitorId, visitRegistration, attraction);
 
         if(visitRegistration.IsActive)
         {
@@ -160,6 +147,29 @@ public sealed class AttractionService(
         _visitRegistrationRepository.Update(visitRegistration);
 
         return true;
+    }
+
+    private VisitRegistration ValidateVisitRegistration(Guid visitorId, VisitRegistration? visitRegistration,
+        Attraction attraction)
+    {
+        if(visitRegistration != null)
+        {
+            return visitRegistration;
+        }
+
+        visitRegistration = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Attractions = [attraction],
+            Date = DateTime.Today,
+            IsActive = false,
+            Ticket = null!,
+            TicketId = Guid.Empty
+        };
+
+        _visitRegistrationRepository.Add(visitRegistration);
+
+        return visitRegistration;
     }
 
     private static bool IsAtCapacity(Attraction attraction)

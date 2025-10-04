@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using VirtualPark.BusinessLogic.ClocksApp.Entity;
 using VirtualPark.BusinessLogic.ClocksApp.Models;
 using VirtualPark.Repository;
@@ -26,7 +25,7 @@ public sealed class ClockAppService(IRepository<ClockApp> clockAppRepository) : 
     {
         var clockApp = _clockAppRepository.GetAll().FirstOrDefault();
 
-        if (clockApp == null)
+        if(clockApp == null)
         {
             Create(clockAppArgs);
             return;
@@ -39,7 +38,7 @@ public sealed class ClockAppService(IRepository<ClockApp> clockAppRepository) : 
     public void Remove()
     {
         var clockApp = _clockAppRepository.GetAll().FirstOrDefault();
-        if (clockApp != null)
+        if(clockApp != null)
         {
             _clockAppRepository.Remove(clockApp);
         }
@@ -49,7 +48,7 @@ public sealed class ClockAppService(IRepository<ClockApp> clockAppRepository) : 
 
     private ClockApp MapToEntity(ClockAppArgs clockAppArgs)
     {
-        ClockApp clockApp = new ClockApp { DateSystem = clockAppArgs.SystemDateTime };
+        var clockApp = new ClockApp { DateSystem = clockAppArgs.SystemDateTime };
         return clockApp;
     }
 }

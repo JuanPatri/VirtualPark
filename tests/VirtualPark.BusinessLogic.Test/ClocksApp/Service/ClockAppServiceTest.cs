@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.ClocksApp.Entity;
@@ -54,7 +53,7 @@ public class ClockAppServiceTest
     {
         _clockAppRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<ClockApp>());
+            .Returns([]);
 
         var before = DateTime.Now;
 
@@ -75,7 +74,7 @@ public class ClockAppServiceTest
     {
         _clockAppRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<ClockApp>());
+            .Returns([]);
 
         _clockAppService.Now().Should().BeOnOrBefore(DateTime.Now);
     }
@@ -91,7 +90,7 @@ public class ClockAppServiceTest
 
         _clockAppRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<ClockApp>());
+            .Returns([]);
 
         _clockAppRepository
             .Setup(r => r.Add(It.IsAny<ClockApp>()))
@@ -115,7 +114,7 @@ public class ClockAppServiceTest
 
         _clockAppRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<ClockApp> { clock });
+            .Returns([clock]);
 
         _clockAppRepository
             .Setup(r => r.Update(clock));
@@ -138,7 +137,7 @@ public class ClockAppServiceTest
 
         _clockAppRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<ClockApp> { existing });
+            .Returns([existing]);
 
         _clockAppRepository
             .Setup(r => r.Remove(existing));
@@ -154,7 +153,7 @@ public class ClockAppServiceTest
     {
         _clockAppRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<ClockApp>());
+            .Returns([]);
 
         _clockAppService.Remove();
 

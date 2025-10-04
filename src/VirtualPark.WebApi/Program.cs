@@ -1,7 +1,4 @@
-using VirtualPark.BusinessLogic.ClocksApp.Entity;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
-using VirtualPark.DataAccess;
-using VirtualPark.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -56,12 +56,14 @@ public sealed class TicketTest
     }
     #endregion
 
+    #region Event
     [TestMethod]
     [TestCategory("Validation")]
-    public void Event_Getter()
+    public void Event_Getter_ReturnsAssignedValue()
     {
         var e = new Event();
         var ticket = new Ticket { Event = e };
         ticket.Event.Should().BeEquivalentTo(e);
     }
+    #endregion
 }

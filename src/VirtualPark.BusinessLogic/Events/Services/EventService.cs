@@ -98,8 +98,8 @@ public class EventService(IRepository<Event> eventRepository, IRepository<Attrac
         ev.Attractions = MapAttractionsList(args.AttractionIds);
     }
 
-    public bool Exist(Expression<Func<Event, bool>> predicate)
+    public bool Exist(Guid eventId)
     {
-        return _eventRepository.Exist(predicate);
+        return _eventRepository.Exist(e => e.Id == eventId);
     }
 }

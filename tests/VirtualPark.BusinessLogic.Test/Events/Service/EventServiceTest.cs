@@ -292,7 +292,6 @@ public sealed class EventServiceTest
         _eventRepositoryMock.Verify(r => r.Exist(It.IsAny<Expression<Func<Event, bool>>>()), Times.Once);
     }
 
-
     #endregion
 
     #region False
@@ -304,7 +303,7 @@ public sealed class EventServiceTest
             .Setup(r => r.Exist(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(false);
 
-        var result = _eventService.Exist(e => e.Name == "NotExists");
+        var result = _eventService.Exist(Guid.NewGuid());
 
         result.Should().BeFalse();
     }

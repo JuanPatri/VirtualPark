@@ -220,12 +220,11 @@ public sealed class IncidenceTest
         entity.Type.Should().NotBeNull();
         entity.Type!.Id.Should().Be(existingType.Id);
 
-        _mockTypeIncidenceRepository.Verify(r => r.Get(t => t.Id == typeId), Times.Once);
         _mockTypeIncidenceRepository.VerifyAll();
     }
 
     [TestMethod]
-    public void ApplyArgsToEntity_WhenTypeIncidenceNotFound_ShouldSetAllFields_AndLeaveTypeNull()
+    public void ApplyArgsToEntity_WhenTypeIncidenceNotFound_ShouldThrow()
     {
         var typeId = _incidenceArgs.TypeIncidence;
 
@@ -243,17 +242,15 @@ public sealed class IncidenceTest
             Type = new TypeIncidence { Id = Guid.NewGuid(), Type = "Something" }
         };
 
-        _incidenceService.ApplyArgsToEntity(entity, _incidenceArgs);
+        Action act = () => _incidenceService.ApplyArgsToEntity(entity, _incidenceArgs);
 
-        entity.Description.Should().Be(_incidenceArgs.Description);
-        entity.Start.Should().Be(_incidenceArgs.Start);
-        entity.End.Should().Be(_incidenceArgs.End);
-        entity.AttractionId.Should().Be(_incidenceArgs.AttractionId);
-        entity.Active.Should().BeTrue();
-        entity.Type.Should().BeNull();
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("Type incidence don't exist");
 
-        _mockTypeIncidenceRepository.Verify(r => r.Get(t => t.Id == typeId), Times.Once);
         _mockTypeIncidenceRepository.VerifyAll();
+        _mockAttractionRepository.VerifyAll();
+        _mockIncidenceRepository.VerifyAll();
     }
     #endregion
 

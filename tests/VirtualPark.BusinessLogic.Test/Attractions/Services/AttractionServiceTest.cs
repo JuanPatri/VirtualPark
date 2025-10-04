@@ -80,7 +80,7 @@ public class AttractionServiceTest
     public void Create_WhenNameIsEmpty_ShouldThrowException()
     {
         _mockAttractionRepository
-            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Setup(r => r.Exist(a => a.Name.Equals(string.Empty, StringComparison.CurrentCultureIgnoreCase)))
             .Returns(true);
 
         Assert.ThrowsException<ArgumentException>(

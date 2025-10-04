@@ -11,9 +11,6 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped(typeof(IReadOnlyRepository<>), typeof(GenericRepository<>));
-
 builder.Services.AddScoped<IClockAppService, ClockAppService>();
 
 app.UseHttpsRedirection();

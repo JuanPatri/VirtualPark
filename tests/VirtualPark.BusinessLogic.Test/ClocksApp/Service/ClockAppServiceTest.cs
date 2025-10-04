@@ -68,4 +68,16 @@ public class ClockAppServiceTest
         _clockAppRepository.Verify(r => r.GetAll(null), Times.Once);
     }
     #endregion
+    #region Now
+
+    [TestMethod]
+    public void Get_WhenNoClockInDb_ShouldReturnNewWithNow_AndNotPersist()
+    {
+        _clockAppRepository
+            .Setup(r => r.GetAll(null))
+            .Returns(new List<ClockApp>());
+
+        _clockAppService.Now().Should().BeOnOrBefore(DateTime.Now);
+    }
+    #endregion
 }

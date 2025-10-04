@@ -36,6 +36,15 @@ public sealed class ClockAppService(IRepository<ClockApp> clockAppRepository) : 
         _clockAppRepository.Update(clockApp);
     }
 
+    public void Remove()
+    {
+        var clockApp = _clockAppRepository.GetAll().FirstOrDefault();
+        if (clockApp != null)
+        {
+            _clockAppRepository.Remove(clockApp);
+        }
+    }
+
     public DateTime Now() => Get().DateSystem;
 
     private ClockApp MapToEntity(ClockAppArgs clockAppArgs)

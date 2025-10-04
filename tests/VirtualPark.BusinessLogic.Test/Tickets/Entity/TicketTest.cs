@@ -58,7 +58,7 @@ public sealed class TicketTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Event_Getter_ReturnsAssignedValue()
+    public void Event_Getter()
     {
         var e = new Event();
         var ticket = new Ticket { Event = e };

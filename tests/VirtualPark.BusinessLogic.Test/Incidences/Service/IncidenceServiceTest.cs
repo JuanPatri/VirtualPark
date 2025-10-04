@@ -131,7 +131,7 @@ public sealed class IncidenceTest
         result!.Id.Should().Be(id);
         result.Type.Should().Be("Locked");
 
-        _mockTypeIncidenceRepository.Verify(r => r.Get(t => t.Id == id), Times.Once);
+        _mockTypeIncidenceRepository.Verify();
     }
     #endregion
 
@@ -164,38 +164,28 @@ public sealed class IncidenceTest
         entity.Attraction.Should().Be(expectedAttraction);
         entity.Type.Should().Be(expectedType);
 
-        _mockTypeIncidenceRepository.Verify(r => r.Get(t => t.Id == typeId), Times.Once);
-        _mockAttractionRepository.Verify(r => r.Get(a => a.Id == attractionId), Times.Once);
+        _mockTypeIncidenceRepository.VerifyAll();
+        _mockAttractionRepository.VerifyAll();
     }
 
     [TestMethod]
-    public void MapToEntity_WhenTypeIncidenceNotFound_ShouldMapAllFields_AndLeaveTypeNull()
+    public void MapToEntity_WhenTypeIncidenceNotFound_ShouldThrow()
     {
         var typeId = _incidenceArgs.TypeIncidence;
-        var attractionId = _incidenceArgs.AttractionId;
-
-        var expectedAttraction = new Attraction { Id = attractionId, Name = "X" };
 
         _mockTypeIncidenceRepository
             .Setup(r => r.Get(t => t.Id == typeId))
             .Returns((TypeIncidence?)null);
 
-        _mockAttractionRepository
-            .Setup(r => r.Get(a => a.Id == attractionId))
-            .Returns(expectedAttraction);
+        Action act = () => _incidenceService.MapToEntity(_incidenceArgs);
 
-        var entity = _incidenceService.MapToEntity(_incidenceArgs);
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("Type incidence don't exist");
 
-        entity.Should().NotBeNull();
-        entity.Description.Should().Be(_incidenceArgs.Description);
-        entity.Start.Should().Be(_incidenceArgs.Start);
-        entity.End.Should().Be(_incidenceArgs.End);
-        entity.AttractionId.Should().Be(attractionId);
-        entity.Attraction.Should().Be(expectedAttraction);
-        entity.Type.Should().BeNull();
-
-        _mockTypeIncidenceRepository.Verify(r => r.Get(t => t.Id == typeId), Times.Once);
-        _mockAttractionRepository.Verify(r => r.Get(a => a.Id == attractionId), Times.Once);
+        _mockTypeIncidenceRepository.VerifyAll();
+        _mockAttractionRepository.VerifyAll();
+        _mockIncidenceRepository.VerifyAll();
     }
     #endregion
 

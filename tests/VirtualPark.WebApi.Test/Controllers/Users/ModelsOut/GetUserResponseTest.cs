@@ -40,4 +40,13 @@ public class GetUserResponseTest
         response.LastName.Should().Be("perez");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Email_Getter()
+    {
+        var id = Guid.NewGuid().ToString();
+        var response = new GetUserResponse(id, "pepe", "perez", "pepe@gmail.com");
+        response.Email.Should().Be("pepe@gmail.com");
+    }
 }

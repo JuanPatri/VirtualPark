@@ -15,8 +15,8 @@ public class VisitRegistrationAttractionTest
     [TestMethod]
     public void VisitRegistrationAttraction_GetterVisitRegistrationId_ReturnsAssignedValue()
     {
-        VisitRegistration visit = new VisitRegistration();
-        VisitRegistrationAttraction visitRegistrationAttraction = new VisitRegistrationAttraction { VisitRegistrationId = visit.Id };
+        var visit = new VisitRegistration();
+        var visitRegistrationAttraction = new VisitRegistrationAttraction { VisitRegistrationId = visit.Id };
         visitRegistrationAttraction.VisitRegistrationId.Should().Be(visit.Id);
     }
     #endregion
@@ -24,8 +24,8 @@ public class VisitRegistrationAttractionTest
     [TestMethod]
     public void VisitRegistrationAttraction_GetterAttractionId_ReturnsAssignedValue()
     {
-        Attraction attraction = new Attraction();
-        VisitRegistrationAttraction visitRegistrationAttraction = new VisitRegistrationAttraction { AttractionId = attraction.Id };
+        var attraction = new Attraction();
+        var visitRegistrationAttraction = new VisitRegistrationAttraction { AttractionId = attraction.Id };
         visitRegistrationAttraction.AttractionId.Should().Be(attraction.Id);
     }
     #endregion

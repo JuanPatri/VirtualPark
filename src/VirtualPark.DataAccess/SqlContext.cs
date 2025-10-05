@@ -1,19 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using VirtualPark.BusinessLogic.Attractions.Entity;
-using VirtualPark.BusinessLogic.AttractionsEvents.Entity;
 using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Incidences.Entity;
 using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.Rankings.Entity;
-using VirtualPark.BusinessLogic.RolePermissions.Entity;
 using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.TypeIncidences.Entity;
-using VirtualPark.BusinessLogic.UserRoles.Entity;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
-using VirtualPark.BusinessLogic.VisitsRegistrationsAttractions.Entity;
 
 namespace VirtualPark.DataAccess;
 

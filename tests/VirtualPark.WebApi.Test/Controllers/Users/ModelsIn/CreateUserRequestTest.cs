@@ -48,12 +48,14 @@ public class CreateUserRequestTest
     }
     #endregion
 
+    #region RolesIds
     [TestMethod]
     [TestCategory("Validation")]
-    public void Roles_Getter()
+    public void Roles_Getter_ReturnsAssignedValue()
     {
         var guid = Guid.NewGuid().ToString();
         var createUserRequest = new CreateUserRequest { RolesIds = new List<string> { guid } };
         createUserRequest.RolesIds.Should().Contain([guid]);
     }
+    #endregion
 }

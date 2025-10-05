@@ -1,5 +1,6 @@
 using FluentAssertions;
 using VirtualPark.WebApi.Controllers.Users.ModelsIn;
+using VirtualPark.WebApi.Controllers.VisitorsProfile.ModelsIn;
 
 namespace VirtualPark.WebApi.Test.Controllers.Users.ModelsIn;
 
@@ -58,4 +59,28 @@ public class CreateUserRequestTest
         createUserRequest.RolesIds.Should().Contain([guid]);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void VisitorProfile_Getter()
+    {
+        var visitorProfileRequest = new CreateVisitorProfileRequest
+        {
+            DateOfBirth = "2002-07-30",
+            Membership = "Standard",
+            Score = "95"
+        };
+
+        var createUserRequest = new CreateUserRequest
+        {
+            VisitorProfile = visitorProfileRequest
+        };
+
+        var result = createUserRequest.VisitorProfile;
+
+        result.Should().NotBeNull();
+        result!.DateOfBirth.Should().Be("2002-07-30");
+        result.Membership.Should().Be("Standard");
+        result.Score.Should().Be("95");
+    }
 }

@@ -28,7 +28,7 @@ public class CreateUserRequest
 
     private List<string> ValidateRolesList(List<string>? rolesIds)
     {
-        if(rolesIds == null)
+        if(rolesIds == null || rolesIds.Count == 0)
         {
             throw new InvalidOperationException("Role list can't be null");
         }

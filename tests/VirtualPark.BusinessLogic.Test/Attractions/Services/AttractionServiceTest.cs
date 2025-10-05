@@ -346,7 +346,7 @@ public class AttractionServiceTest
         };
 
         _mockAttractionRepository
-            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Setup(r => r.Get(a => a.Id == id))
             .Returns(existing);
 
         Attraction? updated = null;

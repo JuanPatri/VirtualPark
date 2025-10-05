@@ -18,4 +18,13 @@ public class GetUserResponseTest
         response.Id.Should().Be(id);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Name_Getter_ReturnsAssignedValue()
+    {
+        var id = Guid.NewGuid().ToString();
+        var response = new GetUserResponse(id, "pepe");
+        response.Name.Should().Be("pepe");
+    }
 }

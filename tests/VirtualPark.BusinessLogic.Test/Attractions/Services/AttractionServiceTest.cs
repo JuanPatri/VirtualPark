@@ -193,7 +193,7 @@ public class AttractionServiceTest
     public void GetAll_WhenNoAttractionsExist_ShouldReturnEmptyList()
     {
         _mockAttractionRepository
-            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Setup(r => r.GetAll(null))
             .Returns([]);
 
         var result = _attractionService.GetAll();
@@ -202,7 +202,7 @@ public class AttractionServiceTest
         result.Should().BeEmpty();
 
         _mockAttractionRepository.Verify(
-            r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()),
+            r => r.GetAll(null),
             Times.Once);
     }
 

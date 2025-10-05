@@ -19,10 +19,20 @@ public class CreateUserRequest
             ValidationServices.ValidateNullOrEmpty(LastName),
             ValidationServices.ValidateNullOrEmpty(Email),
             ValidationServices.ValidateNullOrEmpty(Password),
-            RolesIds!);
+            ValidateRolesList(RolesIds));
 
         userArgs.VisitorProfile = VisitorProfile.ToArgs();
 
         return userArgs;
+    }
+
+    private List<string> ValidateRolesList(List<string>? rolesIds)
+    {
+        if(rolesIds == null)
+        {
+            throw new InvalidOperationException("Role list can't be null");
+        }
+
+        return rolesIds;
     }
 }

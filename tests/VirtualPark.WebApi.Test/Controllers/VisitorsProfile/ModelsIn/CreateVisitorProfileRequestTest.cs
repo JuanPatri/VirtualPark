@@ -38,9 +38,10 @@ public class CreateVisitorProfileRequestTest
     }
     #endregion
 
+    #region ToArgs
     [TestMethod]
     [TestCategory("Validation")]
-    public void ToArgs()
+    public void ToArgs_ShouldReturnVisitorProfileArgs_WithValidatedValues()
     {
         var request = new CreateVisitorProfileRequest
         {
@@ -56,4 +57,5 @@ public class CreateVisitorProfileRequestTest
         result.Membership.ToString().Should().Be("Standard");
         result.Score.Should().Be(90);
     }
+    #endregion
 }

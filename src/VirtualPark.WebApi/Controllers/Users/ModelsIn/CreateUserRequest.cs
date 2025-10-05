@@ -33,6 +33,11 @@ public class CreateUserRequest
             throw new InvalidOperationException("Role list can't be null");
         }
 
+        foreach(var r in rolesIds)
+        {
+            ValidationServices.ValidateNullOrEmpty(r);
+        }
+
         return rolesIds;
     }
 }

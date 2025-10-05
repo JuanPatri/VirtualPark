@@ -29,4 +29,13 @@ public class GetUserResponseTest
         response.Name.Should().Be("pepe");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void LastName_Getter()
+    {
+        var id = Guid.NewGuid().ToString();
+        var response = new GetUserResponse(id, "pepe", "perez");
+        response.LastName.Should().Be("perez");
+    }
 }

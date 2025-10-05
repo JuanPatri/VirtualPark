@@ -14,7 +14,7 @@ public class GetUserResponseTest
     public void Id_Getter_ReturnsAssignedValue()
     {
         var id = Guid.NewGuid().ToString();
-        var response = new GetUserResponse(id, "pepe");
+        var response = new GetUserResponse(id, "pepe", "perez");
         response.Id.Should().Be(id);
     }
     #endregion
@@ -25,7 +25,7 @@ public class GetUserResponseTest
     public void Name_Getter_ReturnsAssignedValue()
     {
         var id = Guid.NewGuid().ToString();
-        var response = new GetUserResponse(id, "pepe");
+        var response = new GetUserResponse(id, "pepe", "perez");
         response.Name.Should().Be("pepe");
     }
     #endregion

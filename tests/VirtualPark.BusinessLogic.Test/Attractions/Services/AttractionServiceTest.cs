@@ -218,7 +218,7 @@ public class AttractionServiceTest
         };
 
         _mockAttractionRepository
-            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Setup(r => r.GetAll(a => a.Capacity > 60))
             .Returns(filtered);
 
         var result = _attractionService.GetAll(predicate);
@@ -228,7 +228,7 @@ public class AttractionServiceTest
         result[0].Name.Should().Be("FerrisWheel");
 
         _mockAttractionRepository.Verify(
-            r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()), Times.Once);
+            r => r.GetAll(a => a.Capacity > 60), Times.Once);
         _mockAttractionRepository.Verify(r => r.GetAll(null), Times.Never);
     }
 

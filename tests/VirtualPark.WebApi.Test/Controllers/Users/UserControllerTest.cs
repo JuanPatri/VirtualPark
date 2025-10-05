@@ -1,6 +1,8 @@
+using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Users.Models;
 using VirtualPark.BusinessLogic.Users.Service;
+using VirtualPark.WebApi.Controllers.Users;
 using VirtualPark.WebApi.Controllers.Users.ModelsIn;
 using VirtualPark.WebApi.Controllers.Users.ModelsOut;
 using VirtualPark.WebApi.Controllers.VisitorsProfile.ModelsIn;
@@ -8,16 +10,16 @@ using VirtualPark.WebApi.Controllers.VisitorsProfile.ModelsIn;
 namespace VirtualPark.WebApi.Test.Controllers.Users;
 
 [TestClass]
-public class UserControllersTest
+public class UserControllerTest
 {
     private Mock<IUserService> _userServiceMock = null!;
-    private UsersController _usersController = null!;
+    private UserController _usersController = null!;
 
     [TestInitialize]
     public void Initialize()
     {
         _userServiceMock = new Mock<IUserService>(MockBehavior.Strict);
-        _usersController = new UsersController(_userServiceMock.Object);
+        _usersController = new UserController(_userServiceMock.Object);
     }
 
     [TestMethod]
@@ -56,7 +58,7 @@ public class UserControllersTest
                 a.VisitorProfile.Score == expectedArgs.VisitorProfile.Score)))
             .Returns(returnId);
 
-        var response = _usersController.Create(request);
+        var response = _usersController.CreateUser(request);
 
         response.Should().NotBeNull();
         response.Should().BeOfType<CreateUserResponse>();

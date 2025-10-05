@@ -257,7 +257,7 @@ public sealed class AttractionService(
         return ticket.Date.Date == DateTime.Today;
     }
 
-    private bool ValidateEventEntry(Ticket ticket, Attraction attraction)
+    public bool ValidateEventEntry(Ticket ticket, Attraction attraction)
     {
         Event? ev = _eventRepository.Get(e => e.Id == ticket.EventId);
         if(ev is null || !IsAttractionInEvent(ev, attraction.Id))

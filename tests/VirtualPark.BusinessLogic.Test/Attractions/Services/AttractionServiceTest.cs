@@ -946,4 +946,40 @@ public class AttractionServiceTest
         _mockAttractionRepository.VerifyAll();
     }
     #endregion
+    #region ValidateEntry
+    [TestMethod]
+    public void ValidateEventEntry_WhenEventIsNull_ShouldReturnFalse()
+    {
+        var attractionId = Guid.NewGuid();
+        var eventId = Guid.NewGuid();
+
+        var attraction = new Attraction
+        {
+            Id = attractionId,
+            Available = true,
+            Capacity = 10,
+            CurrentVisitors = 0
+        };
+
+        var ticket = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            EventId = eventId,
+            Date = DateTime.Now,
+            Type = EntranceType.Event
+        };
+
+        _mockEventRepository
+            .Setup(r => r.Get(e => e.Id == ticket.EventId))
+            .Returns((Event?)null);
+
+        var result = _attractionService.ValidateEventEntry(ticket, attraction);
+
+        result.Should().BeFalse("porque el evento no existe");
+
+        _mockEventRepository.Verify(
+            r => r.Get(e => e.Id == ticket.EventId),
+            Times.Once);
+    }
+    #endregion
 }

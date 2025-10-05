@@ -28,11 +28,13 @@ public class CreateVisitorProfileRequestTest
     }
     #endregion
 
+    #region Score
     [TestMethod]
     [TestCategory("Validation")]
-    public void Score_Getter()
+    public void Score_Getter_ReturnsAssignedValue()
     {
         var createVisitorProfileRequest = new CreateVisitorProfileRequest { Score = "10" };
         createVisitorProfileRequest.Score.Should().Be("10");
     }
+    #endregion
 }

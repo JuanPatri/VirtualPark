@@ -126,6 +126,33 @@ public class CreateUserRequestTest
         args.VisitorProfile.Membership.ToString().Should().Be("Standard");
         args.VisitorProfile.Score.Should().Be(85);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ToArgs_ShouldReturnUserArgs_WhenVisitorProfileIsNull()
+    {
+        var roleId = Guid.NewGuid().ToString();
+
+        var request = new CreateUserRequest
+        {
+            Name = "Pepe",
+            LastName = "Perez",
+            Email = "pepe@mail.com",
+            Password = "Password123!",
+            RolesIds = new List<string> { roleId },
+            VisitorProfile = null
+        };
+
+        var result = request.ToArgs();
+
+        result.Should().NotBeNull("debe devolver un UserArgs válido");
+        result.Name.Should().Be("Pepe");
+        result.LastName.Should().Be("Perez");
+        result.Email.Should().Be("pepe@mail.com");
+        result.Password.Should().Be("Password123!");
+        result.RolesIds.Should().Contain(Guid.Parse(roleId));
+        result.VisitorProfile.Should().BeNull();
+    }
     #endregion
 
     #region Failure

@@ -21,7 +21,7 @@ public class CreateUserRequest
             ValidationServices.ValidateNullOrEmpty(Password),
             ValidateRolesList(RolesIds));
 
-        userArgs.VisitorProfile = VisitorProfile.ToArgs();
+            userArgs.VisitorProfile = VisitorProfile.ToArgs();
 
         return userArgs;
     }

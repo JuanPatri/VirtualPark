@@ -6,7 +6,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Users\ModelsIn\" />
     <Folder Include="Controllers\Users\ModelsOut\" />
   </ItemGroup>
 

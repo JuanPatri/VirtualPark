@@ -410,7 +410,7 @@ public class AttractionServiceTest
         var id = Guid.NewGuid();
 
         _mockAttractionRepository
-            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Setup(r => r.Get(a => a.Id == id))
             .Returns((Attraction?)null);
 
         Action act = () => _attractionService.Remove(id);

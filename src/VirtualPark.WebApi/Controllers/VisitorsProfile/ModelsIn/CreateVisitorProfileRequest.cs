@@ -4,4 +4,5 @@ public class CreateVisitorProfileRequest
 {
     public string? DateOfBirth { get; init; }
     public string? Membership { get; init; }
+    public string? Score { get; init; }
 }

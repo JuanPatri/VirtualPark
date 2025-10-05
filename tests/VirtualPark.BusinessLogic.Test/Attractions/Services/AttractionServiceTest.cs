@@ -452,8 +452,8 @@ public class AttractionServiceTest
         var attraction = new Attraction { Id = attractionId, MiniumAge = 18, Available = true };
         var visitor = new VisitorProfile { Id = visitorId, DateOfBirth = new DateOnly(2018, 03, 20) };
 
-        _mockAttractionRepository.Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>())).Returns(attraction);
-        _mockVisitorProfileRepository.Setup(r => r.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>())).Returns(visitor);
+        _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
+        _mockVisitorProfileRepository.Setup(r => r.Get(v => v.Id == visitorId)).Returns(visitor);
 
         var result = _attractionService.ValidateEntryByNfc(attractionId, visitorId);
 

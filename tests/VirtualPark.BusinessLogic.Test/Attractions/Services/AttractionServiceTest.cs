@@ -295,7 +295,7 @@ public class AttractionServiceTest
     public void Exist_WhenAttractionDoesNotExist_ShouldReturnFalse()
     {
         _mockAttractionRepository
-            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Setup(r => r.Exist(a => a.Name == "GhostTrain"))
             .Returns(false);
 
         var result = _attractionService.Exist(a => a.Name == "GhostTrain");
@@ -303,7 +303,7 @@ public class AttractionServiceTest
         result.Should().BeFalse();
 
         _mockAttractionRepository.Verify(
-            r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()),
+            r => r.Exist(a => a.Name == "GhostTrain"),
             Times.Once);
     }
     #endregion

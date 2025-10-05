@@ -125,5 +125,30 @@ public class CreateUserRequestTest
         args.VisitorProfile.Membership.ToString().Should().Be("Standard");
         args.VisitorProfile.Score.Should().Be(85);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ToArgs()
+    {
+        var request = new CreateUserRequest
+        {
+            Name = "Pepe",
+            LastName = "Perez",
+            Email = "pepe@mail.com",
+            Password = "Password123!",
+            RolesIds = null,
+            VisitorProfile = new CreateVisitorProfileRequest
+            {
+                DateOfBirth = "2002-07-30",
+                Membership = "Standard",
+                Score = "10"
+            }
+        };
+
+        var act = () => request.ToArgs();
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Role list can't be null");
+    }
     #endregion
 }

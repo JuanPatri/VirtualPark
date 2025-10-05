@@ -30,7 +30,7 @@ public class CreateUserRequestTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void Email_Getter_ReturnsAssignedValue()
+    public void Email_Getter()
     {
         var createUserRequest = new CreateUserRequest { Email = "pepe@gmail.com" };
         createUserRequest.Email.Should().Be("pepe@gmail.com");

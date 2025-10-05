@@ -38,11 +38,13 @@ public class CreateUserRequestTest
     }
     #endregion
 
+    #region Password
     [TestMethod]
     [TestCategory("Validation")]
-    public void Password_Getter()
+    public void Password_Getter_ReturnsAssignedValue()
     {
         var createUserRequest = new CreateUserRequest { Password = "Pepit@01" };
         createUserRequest.Password.Should().Be("Pepit@01");
     }
+    #endregion
 }

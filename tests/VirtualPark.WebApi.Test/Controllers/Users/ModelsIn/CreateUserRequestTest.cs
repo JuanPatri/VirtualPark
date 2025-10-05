@@ -86,9 +86,10 @@ public class CreateUserRequestTest
     }
     #endregion
 
+    #region ToArgs
     [TestMethod]
     [TestCategory("Validation")]
-    public void ToArgs()
+    public void ToArgs_ShouldMapAllFields_AndVisitorProfile_AndRoles()
     {
         var guid1 = Guid.NewGuid().ToString();
         var guid2 = Guid.NewGuid().ToString();
@@ -124,4 +125,5 @@ public class CreateUserRequestTest
         args.VisitorProfile.Membership.ToString().Should().Be("Standard");
         args.VisitorProfile.Score.Should().Be(85);
     }
+    #endregion
 }

@@ -35,21 +35,9 @@ public class SqlContext(DbContextOptions<SqlContext> options) : DbContext(option
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Attraction>(entity =>
-        {
-
-        });
-
         modelBuilder.Entity<TypeIncidence>(entity =>
         {
-            entity.ToTable("TypeIncidences");
 
-            entity.HasKey(t => t.Id);
-            entity.Property(t => t.Id).ValueGeneratedNever();
-
-            entity.Property(t => t.Type).IsRequired();
-
-            entity.HasIndex(t => t.Type).IsUnique();
         });
 
         modelBuilder.Entity<Incidence>(entity =>

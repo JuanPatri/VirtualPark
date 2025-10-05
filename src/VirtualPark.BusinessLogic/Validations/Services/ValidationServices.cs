@@ -131,7 +131,7 @@ public static class ValidationServices
         return parsedDate;
     }
 
-    public static string ValidateNullOrEmpty(string value)
+    public static string ValidateNullOrEmpty(string? value)
     {
         if(string.IsNullOrWhiteSpace(value))
         {

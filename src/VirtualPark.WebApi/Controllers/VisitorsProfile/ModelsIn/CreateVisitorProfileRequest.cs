@@ -1,3 +1,6 @@
+using VirtualPark.BusinessLogic.Validations.Services;
+using VirtualPark.BusinessLogic.VisitorsProfile.Models;
+
 namespace VirtualPark.WebApi.Controllers.VisitorsProfile.ModelsIn;
 
 public class CreateVisitorProfileRequest

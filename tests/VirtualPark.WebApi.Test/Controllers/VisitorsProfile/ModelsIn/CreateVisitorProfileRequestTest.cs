@@ -37,4 +37,23 @@ public class CreateVisitorProfileRequestTest
         createVisitorProfileRequest.Score.Should().Be("10");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ToArgs()
+    {
+        var request = new CreateVisitorProfileRequest
+        {
+            DateOfBirth = "2002-07-30",
+            Membership = "Standard",
+            Score = "90"
+        };
+
+        var result = request.ToArgs();
+
+        result.Should().NotBeNull();
+        result.DateOfBirth.Should().Be(new DateOnly(2002, 07, 30));
+        result.Membership.ToString().Should().Be("Standard");
+        result.Score.Should().Be(90);
+    }
 }

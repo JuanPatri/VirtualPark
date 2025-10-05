@@ -153,6 +153,31 @@ public class CreateUserRequestTest
         act.Should().Throw<InvalidOperationException>()
             .WithMessage("Role list can't be null");
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ToArgs()
+    {
+        var request = new CreateUserRequest
+        {
+            Name = "Pepe",
+            LastName = "Perez",
+            Email = "pepe@mail.com",
+            Password = "Password123!",
+            RolesIds = new List<string>(),
+            VisitorProfile = new CreateVisitorProfileRequest
+            {
+                DateOfBirth = "2002-07-30",
+                Membership = "Standard",
+                Score = "10"
+            }
+        };
+
+        var act = () => request.ToArgs();
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Role list can't be null");
+    }
     #endregion
     #endregion
 }

@@ -1,6 +1,6 @@
 namespace VirtualPark.BusinessLogic.VisitsRegistrationsAttractions.Entity;
 
-public sealed VisitRegistrationAttraction
+public class VisitRegistrationAttraction
 {
-    
+    public Guid VisitRegistrationId { get; set; }
 }

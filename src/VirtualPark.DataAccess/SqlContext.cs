@@ -34,5 +34,7 @@ public class SqlContext(DbContextOptions<SqlContext> options) : DbContext(option
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(SqlContext).Assembly);
     }
 }

@@ -156,7 +156,7 @@ public class CreateUserRequestTest
 
     [TestMethod]
     [TestCategory("Validation")]
-    public void ToArgs()
+    public void ToArgs_ShouldThrow_WhenRolesIdsIsEmpty()
     {
         var request = new CreateUserRequest
         {

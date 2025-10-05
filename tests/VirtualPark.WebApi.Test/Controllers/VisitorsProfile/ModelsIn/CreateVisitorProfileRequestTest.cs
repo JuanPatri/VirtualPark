@@ -17,4 +17,12 @@ public class CreateVisitorProfileRequestTest
         createVisitorProfileRequest.DateOfBirth.Should().Be("2002-07-30");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Membership_Getter()
+    {
+        var createVisitorProfileRequest = new CreateVisitorProfileRequest { Membership = "Standard" };
+        createVisitorProfileRequest.Membership.Should().Be("Standard");
+    }
 }

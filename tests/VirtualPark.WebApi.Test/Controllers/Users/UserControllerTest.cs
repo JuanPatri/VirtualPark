@@ -22,8 +22,9 @@ public class UserControllerTest
         _usersController = new UserController(_userServiceMock.Object);
     }
 
+    #region Create
     [TestMethod]
-    public void CreateUser()
+    public void CreateUser_ValidInput_ReturnsCreatedUserResponse()
     {
         var role1 = Guid.NewGuid().ToString();
         var role2 = Guid.NewGuid().ToString();
@@ -66,4 +67,5 @@ public class UserControllerTest
 
         _userServiceMock.VerifyAll();
     }
+    #endregion
 }

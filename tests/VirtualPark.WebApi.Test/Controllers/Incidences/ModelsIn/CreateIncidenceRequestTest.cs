@@ -56,4 +56,14 @@ public class CreateIncidenceRequestTest
         createIncidenceRequest.AttractionId.Should().Be(attractionID);
     }
     #endregion
+    #region Active
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Active_Getter_ReturnsAssignedValue()
+    {
+        var createIncidenceRequest = new CreateIncidenceRequest { Active = "true" };
+        createIncidenceRequest.Active.Should().Be("true");
+    }
+    #endregion
 }

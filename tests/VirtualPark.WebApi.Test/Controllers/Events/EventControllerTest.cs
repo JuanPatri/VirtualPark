@@ -56,4 +56,44 @@ public class EventControllerTest
         _eventServiceMock.VerifyAll();
     }
     #endregion
+    #region Get
+    [TestMethod]
+    public void GetEventById_ValidInput_ReturnsGetEventResponse()
+    {
+        var attraction = new VirtualPark.BusinessLogic.Attractions.Entity.Attraction
+        {
+            Name = "Roller Coaster",
+            Capacity = 20,
+            Available = true
+        };
+
+        var ev = new VirtualPark.BusinessLogic.Events.Entity.Event
+        {
+            Name = "Halloween Party",
+            Date = new DateTime(2025, 10, 31),
+            Capacity = 200,
+            Cost = 1500,
+            Attractions = [attraction]
+        };
+
+        var id = ev.Id;
+
+        _eventServiceMock
+            .Setup(s => s.Get(id))
+            .Returns(ev);
+
+        var response = _eventController.GetEventById(id.ToString());
+
+        response.Should().NotBeNull();
+        response.Should().BeOfType<GetEventResponse>();
+        response.Id.Should().Be(id.ToString());
+        response.Name.Should().Be("Halloween Party");
+        response.Date.Should().Be(ev.Date.ToString("yyyy-MM-dd"));
+        response.Capacity.Should().Be(ev.Capacity.ToString());
+        response.Cost.Should().Be(ev.Cost.ToString());
+        response.Attractions.Should().ContainSingle(a => a.Name == "Roller Coaster");
+
+        _eventServiceMock.VerifyAll();
+    }
+    #endregion
 }

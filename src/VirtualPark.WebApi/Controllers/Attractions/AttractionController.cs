@@ -21,4 +21,24 @@ public sealed class AttractionController(IAttractionService attractionService) :
 
         return new CreateAttractionResponse(responseId.ToString());
     }
+
+    [HttpGet("attraction/{id}")]
+    public GetAttractionResponse GetAttractionById(string id)
+    {
+        var attractionId = ValidationServices.ValidateAndParseGuid(id);
+
+        var attraction = _attractionService.Get(attractionId);
+
+        var attractionResponse = new GetAttractionResponse(
+            id: attraction.Id.ToString(),
+            name: attraction.Name,
+            type: attraction.Type.ToString(),
+            miniumAge: attraction.MiniumAge.ToString(),
+            capacity: attraction.Capacity.ToString(),
+            description: attraction.Description,
+            eventsId: attraction.Events.Select(e => e.Id.ToString()).ToList(),
+            available: attraction.Available.ToString());
+
+            return attractionResponse;
+    }
 }

@@ -16,4 +16,14 @@ public class CreateIncidenceRequestTest
         createIncidenceRequest.TypeId.Should().Be(typeId);
     }
     #endregion
+    #region Description
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Description_Getter_ReturnsAssignedValue()
+    {
+        var createIncidenceRequest = new CreateIncidenceRequest { Description = "Description" };
+        createIncidenceRequest.Description.Should().Be("Description");
+    }
+    #endregion
 }

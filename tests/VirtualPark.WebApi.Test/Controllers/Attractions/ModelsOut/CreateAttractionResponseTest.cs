@@ -13,7 +13,7 @@ public class CreateAttractionResponseTest
     public void Id_Getter_ReturnsAssignedValue()
     {
         var id = Guid.NewGuid();
-        CreateAttractionResponse attraction = new CreateAttractionResponse { Id = id.ToString() };
+        CreateAttractionResponse attraction = new CreateAttractionResponse(id.ToString());
         attraction.Id.Should().Be(id.ToString());
     }
     #endregion

@@ -1,6 +1,6 @@
 namespace VirtualPark.WebApi.Controllers.Attractions.ModelsOut;
 
-public class CreateAttractionResponse
+public class CreateAttractionResponse(string id)
 {
-    public string? Id { get; init; }
+    public string? Id { get; init; } = id;
 }

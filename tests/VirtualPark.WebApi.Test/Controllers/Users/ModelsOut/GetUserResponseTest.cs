@@ -19,7 +19,8 @@ public class GetUserResponseTest
             "pepe",
             "perez",
             "pepe@gmail.com",
-            new List<string> { Guid.NewGuid().ToString() });
+            new List<string> { Guid.NewGuid().ToString() },
+            Guid.NewGuid().ToString());
         response.Id.Should().Be(id);
     }
     #endregion
@@ -34,7 +35,8 @@ public class GetUserResponseTest
             "pepe",
             "perez",
             "pepe@gmail.com",
-            new List<string> { Guid.NewGuid().ToString() });
+            new List<string> { Guid.NewGuid().ToString() },
+            Guid.NewGuid().ToString());
         response.Name.Should().Be("pepe");
     }
     #endregion
@@ -49,7 +51,8 @@ public class GetUserResponseTest
             "pepe",
             "perez",
             "pepe@gmail.com",
-            new List<string> { Guid.NewGuid().ToString() });
+            new List<string> { Guid.NewGuid().ToString() },
+            Guid.NewGuid().ToString());
         response.LastName.Should().Be("perez");
     }
     #endregion
@@ -64,7 +67,8 @@ public class GetUserResponseTest
             "pepe",
             "perez",
             "pepe@gmail.com",
-            new List<string> { Guid.NewGuid().ToString() });
+            new List<string> { Guid.NewGuid().ToString() },
+            Guid.NewGuid().ToString());
         response.Email.Should().Be("pepe@gmail.com");
     }
     #endregion
@@ -80,7 +84,8 @@ public class GetUserResponseTest
             "pepe",
             "perez",
             "pepe@gmail.com",
-            new List<string> { guid });
+            new List<string> { guid },
+            Guid.NewGuid().ToString());
         response.Roles.Should().Contain([guid]);
     }
     #endregion

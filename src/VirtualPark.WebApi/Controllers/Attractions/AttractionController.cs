@@ -55,4 +55,11 @@ public sealed class AttractionController(IAttractionService attractionService) :
                 available: a.Available.ToString()))
             .ToList();
     }
+
+    [HttpDelete("attractions/{id}")]
+    public void DeleteAttraction(string id)
+    {
+        var attractionId = ValidationServices.ValidateAndParseGuid(id);
+        _attractionService.Remove(attractionId);
+    }
 }

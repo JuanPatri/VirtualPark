@@ -9,6 +9,7 @@ namespace VirtualPark.WebApi.Test.Controllers.Events.ModelsOut;
 public class GetEventResponseTest
 {
     #region Id
+
     [TestMethod]
     [TestCategory("Validation")]
     public void Id_Getter_ReturnsAssignedValue()
@@ -19,5 +20,20 @@ public class GetEventResponseTest
 
         response.Id.Should().Be(id);
     }
+
+    #endregion
+
+    #region Name
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Name_Getter_ReturnsAssignedValue()
+    {
+        var response = new GetEventResponse(
+            Guid.NewGuid().ToString(),
+            "Halloween Party");
+        response.Name.Should().Be("Halloween Party");
+    }
+
     #endregion
 }

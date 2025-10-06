@@ -15,7 +15,7 @@ public class GetEventResponseTest
     {
         var id = Guid.NewGuid().ToString();
         var response = new GetEventResponse(
-            id, "Halloween", "2025-12-01");
+            id, "Halloween", "2025-12-01", "200");
 
         response.Id.Should().Be(id);
     }
@@ -28,7 +28,7 @@ public class GetEventResponseTest
     {
         var response = new GetEventResponse(
             Guid.NewGuid().ToString(),
-            "Halloween Party", "2025-12-01");
+            "Halloween Party", "2025-12-01", "200");
         response.Name.Should().Be("Halloween Party");
     }
     #endregion
@@ -42,7 +42,7 @@ public class GetEventResponseTest
         var response = new GetEventResponse(
             Guid.NewGuid().ToString(),
             "Halloween Party",
-            date);
+            date, "200");
         response.Date.Should().Be(date);
     }
     #endregion
@@ -57,7 +57,7 @@ public class GetEventResponseTest
             "Halloween Party",
             "2025-12-01",
             "200");
-        response.Capacity.Should().Be(200);
+        response.Capacity.Should().Be("200");
     }
     #endregion
 }

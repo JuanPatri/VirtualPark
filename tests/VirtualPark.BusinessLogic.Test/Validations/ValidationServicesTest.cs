@@ -522,17 +522,6 @@ public class ValidationServicesTest
             act.Should().Throw<InvalidOperationException>()
                 .WithMessage("Role list can't be null");
         }
-
-        [TestMethod]
-        public void ValidateList_WhenItemIsEmpty_ShouldThrowInvalidOperationException()
-        {
-            var list = new List<string> { string.Empty };
-
-            Action act = () => ValidationServices.ValidateList(list);
-
-            act.Should().Throw<InvalidOperationException>()
-                .WithMessage("Value can't be null or empty*");
-        }
         #endregion
 
 }

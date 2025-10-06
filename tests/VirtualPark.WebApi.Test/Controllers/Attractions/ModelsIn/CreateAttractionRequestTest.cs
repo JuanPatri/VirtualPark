@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.WebApi.Controllers.Attractions.ModelsIn;
 
 namespace VirtualPark.WebApi.Test.Controllers.Attractions.ModelsIn;
@@ -52,16 +53,6 @@ public class CreateAttractionRequestTest
         attraction.Description.Should().Be("Titanic");
     }
     #endregion
-    #region Events
-
-    [TestMethod]
-    public void CreateAttractionRequest_EventsProperty_GetAndSet_ShouldWorkCorrectly()
-    {
-        var guid = Guid.NewGuid().ToString();
-        var attraction = new CreateAttractionRequest() { EventIds = [guid] };
-        attraction.EventIds.Should().Contain([guid]);
-    }
-    #endregion
     #region Available
 
     [TestMethod]
@@ -69,6 +60,31 @@ public class CreateAttractionRequestTest
     {
         var attraction = new CreateAttractionRequest { Available = "true" };
         attraction.Available.Should().Be("true");
+    }
+    #endregion
+    #region ToArgs
+    [TestMethod]
+    public void ToArgs_ShouldReturnAttractionArgsWithSameValues()
+    {
+        var request = new CreateAttractionRequest
+        {
+            Name = "Roller Coaster",
+            Type = "RollerCoaster",
+            MiniumAge = "12",
+            Capacity = "30",
+            Description = "Fast ride",
+            Available = "true"
+        };
+
+        var result = request.ToArgs();
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("Roller Coaster");
+        result.Type.Should().Be(AttractionType.RollerCoaster);
+        result.MiniumAge.Should().Be(12);
+        result.Capacity.Should().Be(30);
+        result.Description.Should().Be("Fast ride");
+        result.Available.Should().BeTrue();
     }
     #endregion
 }

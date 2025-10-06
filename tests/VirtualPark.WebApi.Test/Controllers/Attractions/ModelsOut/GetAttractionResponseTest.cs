@@ -62,16 +62,6 @@ public class GetAttractionResponseTest
         attraction.Description.Should().Be("Titanic");
     }
     #endregion
-    #region Events
-
-    [TestMethod]
-    public void CreateAttractionResponse_EventsProperty_GetAndSet_ShouldWorkCorrectly()
-    {
-        var guid = Guid.NewGuid().ToString();
-        var attraction = new GetAttractionResponse() { EventIds = [guid] };
-        attraction.EventIds.Should().Contain([guid]);
-    }
-    #endregion
     #region Available
 
     [TestMethod]

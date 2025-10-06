@@ -2,9 +2,9 @@ namespace VirtualPark.WebApi.Controllers.Events.ModelsIn;
 
 public sealed class CreateEventRequest
 {
-    public string? Capacity { get; set; }
-    public string? Cost { get; set; }
+    public List<String>? AttractionsIds { get; init; }
+    public string? Capacity { get; init; }
+    public string? Cost { get; init; }
     public string? Date { get; init; }
     public string? Name { get; init; }
-    public List<String>? AttractionsIds { get; set; }
 }

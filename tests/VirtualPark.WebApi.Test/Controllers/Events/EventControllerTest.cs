@@ -173,4 +173,40 @@ public class EventControllerTest
         _eventServiceMock.VerifyAll();
     }
     #endregion
+
+    #region Update
+    [TestMethod]
+    public void UpdateEvent_ValidInput_ShouldCallServiceUpdate()
+    {
+        var id = Guid.NewGuid();
+        var attractionId = Guid.NewGuid().ToString();
+
+        var request = new CreateEventRequest
+        {
+            Name = "Updated Halloween",
+            Date = "2025-11-01",
+            Capacity = "250",
+            Cost = "2000",
+            AttractionsIds = [attractionId]
+        };
+
+        var expectedArgs = request.ToArgs();
+
+        _eventServiceMock
+            .Setup(s => s.Update(
+                It.Is<EventsArgs>(a =>
+                    a.Name == expectedArgs.Name &&
+                    a.Date == expectedArgs.Date &&
+                    a.Capacity == expectedArgs.Capacity &&
+                    a.Cost == expectedArgs.Cost &&
+                    a.AttractionIds.SequenceEqual(expectedArgs.AttractionIds)),
+                id))
+            .Verifiable();
+
+        _eventController.UpdateEvent(request, id.ToString());
+
+        _eventServiceMock.VerifyAll();
+    }
+    #endregion
+
 }

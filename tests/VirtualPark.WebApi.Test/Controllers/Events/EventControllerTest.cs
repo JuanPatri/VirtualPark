@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Events.Models;
 using VirtualPark.BusinessLogic.Events.Services;
 using VirtualPark.WebApi.Controllers.Events;
@@ -60,13 +61,13 @@ public class EventControllerTest
     [TestMethod]
     public void GetEventById_ValidInput_ReturnsGetEventResponse()
     {
-        var attraction = new VirtualPark.BusinessLogic.Attractions.Entity.Attraction
+        var attraction = new Attraction()
         {
             Name = "Roller Coaster",
             Capacity = 20,
             Available = true
         };
-
+        var attractionId = attraction.Id.ToString();
         var ev = new VirtualPark.BusinessLogic.Events.Entity.Event
         {
             Name = "Halloween Party",
@@ -91,7 +92,7 @@ public class EventControllerTest
         response.Date.Should().Be(ev.Date.ToString("yyyy-MM-dd"));
         response.Capacity.Should().Be(ev.Capacity.ToString());
         response.Cost.Should().Be(ev.Cost.ToString());
-        response.Attractions.Should().ContainSingle(a => a.Name == "Roller Coaster");
+        response.Attractions.Should().ContainSingle().Which.Should().Be(attractionId);
 
         _eventServiceMock.VerifyAll();
     }

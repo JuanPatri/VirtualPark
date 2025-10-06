@@ -57,5 +57,22 @@ public class CreateVisitorProfileRequestTest
         result.Membership.ToString().Should().Be("Standard");
         result.Score.Should().Be(90);
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ToArgs_ShouldThrow_WhenAnyFieldIsEmpty()
+    {
+        var request = new CreateVisitorProfileRequest
+        {
+            DateOfBirth = string.Empty,
+            Membership = string.Empty,
+            Score = string.Empty
+        };
+
+        Action act = () => request.ToArgs();
+
+        act.Should().Throw<ArgumentException>();
+    }
+
     #endregion
 }

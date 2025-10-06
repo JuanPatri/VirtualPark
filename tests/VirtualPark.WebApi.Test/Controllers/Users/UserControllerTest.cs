@@ -72,6 +72,42 @@ public class UserControllerTest
 
         _userServiceMock.VerifyAll();
     }
+
+    [TestMethod]
+    public void CreateUser_ShouldWork_WhenVisitorProfileIsNull()
+    {
+        var roleId = Guid.NewGuid().ToString();
+        var userId = Guid.NewGuid();
+
+        var request = new CreateUserRequest
+        {
+            Name = "Juan",
+            LastName = "Gomez",
+            Email = "juan@mail.com",
+            Password = "Secret123!",
+            RolesIds = [roleId],
+            VisitorProfile = null
+        };
+
+        var expectedArgs = request.ToArgs();
+
+        _userServiceMock
+            .Setup(s => s.Create(It.Is<UserArgs>(a =>
+                a.Name == expectedArgs.Name &&
+                a.LastName == expectedArgs.LastName &&
+                a.Email == expectedArgs.Email &&
+                a.Password == expectedArgs.Password &&
+                a.RolesIds.SequenceEqual(expectedArgs.RolesIds) &&
+                a.VisitorProfile == null)))
+            .Returns(userId);
+
+        var result = _usersController.CreateUser(request);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(userId.ToString());
+
+        _userServiceMock.VerifyAll();
+    }
     #endregion
 
     #region Get
@@ -151,6 +187,17 @@ public class UserControllerTest
         result.VisitorProfileId.Should().BeNull();
 
         _userServiceMock.VerifyAll();
+    }
+
+    [TestMethod]
+    public void GetUserById_ShouldThrow_WhenIdIsInvalid()
+    {
+        var invalidId = "not-a-guid";
+
+        Action act = () => _usersController.GetUserById(invalidId);
+
+        act.Should().Throw<FormatException>();
+        _userServiceMock.VerifyNoOtherCalls();
     }
     #endregion
 
@@ -286,6 +333,40 @@ public class UserControllerTest
                     a.VisitorProfile!.DateOfBirth == expectedArgs.VisitorProfile!.DateOfBirth &&
                     a.VisitorProfile.Membership == expectedArgs.VisitorProfile.Membership &&
                     a.VisitorProfile.Score == expectedArgs.VisitorProfile.Score),
+                id))
+            .Verifiable();
+
+        _usersController.UpdateUser(request, id.ToString());
+
+        _userServiceMock.VerifyAll();
+    }
+
+    [TestMethod]
+    public void UpdateUser_ShouldWork_WhenVisitorProfileIsNull()
+    {
+        var id = Guid.NewGuid();
+        var roleId = Guid.NewGuid().ToString();
+
+        var request = new CreateUserRequest
+        {
+            Name = "Mario",
+            LastName = "Lopez",
+            Email = "mario@mail.com",
+            Password = "Password123!",
+            RolesIds = [roleId],
+            VisitorProfile = null
+        };
+
+        var expectedArgs = request.ToArgs();
+
+        _userServiceMock
+            .Setup(s => s.Update(It.Is<UserArgs>(a =>
+                    a.Name == expectedArgs.Name &&
+                    a.LastName == expectedArgs.LastName &&
+                    a.Email == expectedArgs.Email &&
+                    a.Password == expectedArgs.Password &&
+                    a.RolesIds.SequenceEqual(expectedArgs.RolesIds) &&
+                    a.VisitorProfile == null),
                 id))
             .Verifiable();
 

@@ -4,7 +4,6 @@ using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Attractions.Models;
 using VirtualPark.BusinessLogic.Attractions.Services;
-using VirtualPark.BusinessLogic.AttractionsEvents.Entity;
 using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.WebApi.Controllers.Attractions;
 using VirtualPark.WebApi.Controllers.Attractions.ModelsIn;
@@ -101,208 +100,208 @@ public class AttractionControllerTest
     #endregion
     #region Get
     [TestMethod]
-        public void GetAttractionById_ValidInput_ReturnsGetAttractionResponse()
+    public void GetAttractionById_ValidInput_ReturnsGetAttractionResponse()
+    {
+        var ev1 = new Event { Id = Guid.NewGuid() };
+        var ev2 = new Event { Id = Guid.NewGuid() };
+
+        var attraction = new Attraction
         {
-            var ev1 = new Event { Id = Guid.NewGuid() };
-            var ev2 = new Event { Id = Guid.NewGuid() };
+            Id = Guid.NewGuid(),
+            Name = "RollerCoaster",
+            Type = AttractionType.RollerCoaster,
+            MiniumAge = 18,
+            Capacity = 50,
+            Description = "High-speed ride",
+            Available = true,
+            Events = [ev1, ev2]
+        };
 
-            var attraction = new Attraction
-            {
-                Id = Guid.NewGuid(),
-                Name = "RollerCoaster",
-                Type = AttractionType.RollerCoaster,
-                MiniumAge = 18,
-                Capacity = 50,
-                Description = "High-speed ride",
-                Available = true,
-                Events = new List<Event> { ev1, ev2 }
-            };
+        _attractionService
+            .Setup(s => s.Get(attraction.Id))
+            .Returns(attraction);
 
-            _attractionService
-                .Setup(s => s.Get(attraction.Id))
-                .Returns(attraction);
+        var response = _attractionController.GetAttractionById(attraction.Id.ToString());
 
-            var response = _attractionController.GetAttractionById(attraction.Id.ToString());
+        response.Should().NotBeNull();
+        response.Should().BeOfType<GetAttractionResponse>();
 
-            response.Should().NotBeNull();
-            response.Should().BeOfType<GetAttractionResponse>();
+        response.Id.Should().Be(attraction.Id.ToString());
+        response.Name.Should().Be("RollerCoaster");
+        response.Type.Should().Be("RollerCoaster");   // enum .ToString()
+        response.MiniumAge.Should().Be("18");          // int .ToString()
+        response.Capacity.Should().Be("50");           // int .ToString()
+        response.Description.Should().Be("High-speed ride");
+        response.Available.Should().Be("True");        // bool .ToString() => "True"/"False"
 
-            response.Id.Should().Be(attraction.Id.ToString());
-            response.Name.Should().Be("RollerCoaster");
-            response.Type.Should().Be("RollerCoaster");   // enum .ToString()
-            response.MiniumAge.Should().Be("18");          // int .ToString()
-            response.Capacity.Should().Be("50");           // int .ToString()
-            response.Description.Should().Be("High-speed ride");
-            response.Available.Should().Be("True");        // bool .ToString() => "True"/"False"
+        response.EventIds.Should().NotBeNull();
+        response.EventIds!.Should().BeEquivalentTo(
+        [
+                    ev1.Id.ToString(),
+                    ev2.Id.ToString()
+                ]);
 
-            response.EventIds.Should().NotBeNull();
-            response.EventIds!.Should().BeEquivalentTo(new[]
-            {
-                ev1.Id.ToString(),
-                ev2.Id.ToString()
-            });
-
-            _attractionService.VerifyAll();
-        }
-
-        [TestMethod]
-        public void GetAttractionById_ShouldReturnResponseWithEmptyEvents_WhenAttractionHasNoEvents()
-        {
-            var attraction = new Attraction
-            {
-                Id = Guid.NewGuid(),
-                Name = "FerrisWheel",
-                Type = AttractionType.Simulator,
-                MiniumAge = 0,
-                Capacity = 100,
-                Description = "Family ride",
-                Available = false,
-                Events = new List<Event>()
-            };
-
-            _attractionService
-                .Setup(s => s.Get(attraction.Id))
-                .Returns(attraction);
-
-            var response = _attractionController.GetAttractionById(attraction.Id.ToString());
-
-            response.Should().NotBeNull();
-            response.Name.Should().Be("FerrisWheel");
-            response.Type.Should().Be("Simulator");
-            response.MiniumAge.Should().Be("0");
-            response.Capacity.Should().Be("100");
-            response.Description.Should().Be("Family ride");
-            response.Available.Should().Be("False");
-            response.EventIds.Should().NotBeNull();
-            response.EventIds!.Should().BeEmpty();
-
-            _attractionService.VerifyAll();
-        }
-
-        [TestMethod]
-        public void GetAttractionById_ShouldThrow_WhenIdIsInvalid()
-        {
-            var invalidId = "not-a-guid";
-
-            Action act = () => _attractionController.GetAttractionById(invalidId);
-
-            act.Should().Throw<FormatException>();
-            _attractionService.VerifyNoOtherCalls();
-        }
-        #endregion
-                #region GetAll
-
-        [TestMethod]
-        public void GetAllAttractions_ShouldReturnMappedList()
-        {
-            var ev1 = new Event { Id = Guid.NewGuid() };
-            var ev2 = new Event { Id = Guid.NewGuid() };
-
-            var a1 = new Attraction
-            {
-                Id = Guid.NewGuid(),
-                Name = "RollerCoaster",
-                Type = AttractionType.RollerCoaster,
-                MiniumAge = 18,
-                Capacity = 50,
-                Description = "High-speed ride",
-                Available = true,
-                Events = new List<Event> { ev1, ev2 }
-            };
-
-            var a2 = new Attraction
-            {
-                Id = Guid.NewGuid(),
-                Name = "FerrisWheel",
-                Type = AttractionType.Simulator,
-                MiniumAge = 0,
-                Capacity = 100,
-                Description = "Family ride",
-                Available = false,
-                Events = new List<Event>()
-            };
-
-            var list = new List<Attraction> { a1, a2 };
-
-            _attractionService
-                .Setup(s => s.GetAll())
-                .Returns(list);
-
-            var result = _attractionController.GetAllAttractions();
-
-            result.Should().NotBeNull();
-            result.Should().HaveCount(2);
-
-            var first = result.First();
-            first.Id.Should().Be(a1.Id.ToString());
-            first.Name.Should().Be("RollerCoaster");
-            first.Type.Should().Be("RollerCoaster");
-            first.MiniumAge.Should().Be("18");
-            first.Capacity.Should().Be("50");
-            first.Description.Should().Be("High-speed ride");
-            first.Available.Should().Be("True");
-            first.EventIds.Should().BeEquivalentTo(new[]
-            {
-                ev1.Id.ToString(),
-                ev2.Id.ToString()
-            });
-
-            var second = result.Last();
-            second.Id.Should().Be(a2.Id.ToString());
-            second.Name.Should().Be("FerrisWheel");
-            second.Type.Should().Be("Simulator");
-            second.MiniumAge.Should().Be("0");
-            second.Capacity.Should().Be("100");
-            second.Description.Should().Be("Family ride");
-            second.Available.Should().Be("False");
-            second.EventIds.Should().NotBeNull();
-            second.EventIds!.Should().BeEmpty();
-
-            _attractionService.VerifyAll();
-        }
-
-        [TestMethod]
-        public void GetAllAttractions_ShouldReturnEmptyList_WhenNoAttractionsExist()
-        {
-            _attractionService
-                .Setup(s => s.GetAll())
-                .Returns(new List<Attraction>());
-
-            var result = _attractionController.GetAllAttractions();
-
-            result.Should().NotBeNull();
-            result.Should().BeEmpty();
-
-            _attractionService.VerifyAll();
-        }
-
-        #endregion
-        #region Delete
-
-        [TestMethod]
-        public void DeleteAttraction_ShouldRemoveAttraction_WhenIdIsValid()
-        {
-            var id = Guid.NewGuid();
-
-            _attractionService
-                .Setup(s => s.Remove(id))
-                .Verifiable();
-
-            _attractionController.DeleteAttraction(id.ToString());
-
-            _attractionService.VerifyAll();
-        }
-
-        [TestMethod]
-        public void DeleteAttraction_ShouldThrow_WhenIdIsInvalid()
-        {
-            var invalidId = "not-a-guid";
-
-            Action act = () => _attractionController.DeleteAttraction(invalidId);
-
-            act.Should().Throw<FormatException>();
-            _attractionService.VerifyNoOtherCalls();
-        }
-
-        #endregion
+        _attractionService.VerifyAll();
     }
+
+    [TestMethod]
+    public void GetAttractionById_ShouldReturnResponseWithEmptyEvents_WhenAttractionHasNoEvents()
+    {
+        var attraction = new Attraction
+        {
+            Id = Guid.NewGuid(),
+            Name = "FerrisWheel",
+            Type = AttractionType.Simulator,
+            MiniumAge = 0,
+            Capacity = 100,
+            Description = "Family ride",
+            Available = false,
+            Events = []
+        };
+
+        _attractionService
+            .Setup(s => s.Get(attraction.Id))
+            .Returns(attraction);
+
+        var response = _attractionController.GetAttractionById(attraction.Id.ToString());
+
+        response.Should().NotBeNull();
+        response.Name.Should().Be("FerrisWheel");
+        response.Type.Should().Be("Simulator");
+        response.MiniumAge.Should().Be("0");
+        response.Capacity.Should().Be("100");
+        response.Description.Should().Be("Family ride");
+        response.Available.Should().Be("False");
+        response.EventIds.Should().NotBeNull();
+        response.EventIds!.Should().BeEmpty();
+
+        _attractionService.VerifyAll();
+    }
+
+    [TestMethod]
+    public void GetAttractionById_ShouldThrow_WhenIdIsInvalid()
+    {
+        var invalidId = "not-a-guid";
+
+        Action act = () => _attractionController.GetAttractionById(invalidId);
+
+        act.Should().Throw<FormatException>();
+        _attractionService.VerifyNoOtherCalls();
+    }
+    #endregion
+    #region GetAll
+
+    [TestMethod]
+    public void GetAllAttractions_ShouldReturnMappedList()
+    {
+        var ev1 = new Event { Id = Guid.NewGuid() };
+        var ev2 = new Event { Id = Guid.NewGuid() };
+
+        var a1 = new Attraction
+        {
+            Id = Guid.NewGuid(),
+            Name = "RollerCoaster",
+            Type = AttractionType.RollerCoaster,
+            MiniumAge = 18,
+            Capacity = 50,
+            Description = "High-speed ride",
+            Available = true,
+            Events = [ev1, ev2]
+        };
+
+        var a2 = new Attraction
+        {
+            Id = Guid.NewGuid(),
+            Name = "FerrisWheel",
+            Type = AttractionType.Simulator,
+            MiniumAge = 0,
+            Capacity = 100,
+            Description = "Family ride",
+            Available = false,
+            Events = []
+        };
+
+        var list = new List<Attraction> { a1, a2 };
+
+        _attractionService
+            .Setup(s => s.GetAll())
+            .Returns(list);
+
+        var result = _attractionController.GetAllAttractions();
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+
+        var first = result.First();
+        first.Id.Should().Be(a1.Id.ToString());
+        first.Name.Should().Be("RollerCoaster");
+        first.Type.Should().Be("RollerCoaster");
+        first.MiniumAge.Should().Be("18");
+        first.Capacity.Should().Be("50");
+        first.Description.Should().Be("High-speed ride");
+        first.Available.Should().Be("True");
+        first.EventIds.Should().BeEquivalentTo(
+        [
+                ev1.Id.ToString(),
+                ev2.Id.ToString()
+            ]);
+
+        var second = result.Last();
+        second.Id.Should().Be(a2.Id.ToString());
+        second.Name.Should().Be("FerrisWheel");
+        second.Type.Should().Be("Simulator");
+        second.MiniumAge.Should().Be("0");
+        second.Capacity.Should().Be("100");
+        second.Description.Should().Be("Family ride");
+        second.Available.Should().Be("False");
+        second.EventIds.Should().NotBeNull();
+        second.EventIds!.Should().BeEmpty();
+
+        _attractionService.VerifyAll();
+    }
+
+    [TestMethod]
+    public void GetAllAttractions_ShouldReturnEmptyList_WhenNoAttractionsExist()
+    {
+        _attractionService
+            .Setup(s => s.GetAll())
+            .Returns([]);
+
+        var result = _attractionController.GetAllAttractions();
+
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+
+        _attractionService.VerifyAll();
+    }
+
+    #endregion
+    #region Delete
+
+    [TestMethod]
+    public void DeleteAttraction_ShouldRemoveAttraction_WhenIdIsValid()
+    {
+        var id = Guid.NewGuid();
+
+        _attractionService
+            .Setup(s => s.Remove(id))
+            .Verifiable();
+
+        _attractionController.DeleteAttraction(id.ToString());
+
+        _attractionService.VerifyAll();
+    }
+
+    [TestMethod]
+    public void DeleteAttraction_ShouldThrow_WhenIdIsInvalid()
+    {
+        var invalidId = "not-a-guid";
+
+        Action act = () => _attractionController.DeleteAttraction(invalidId);
+
+        act.Should().Throw<FormatException>();
+        _attractionService.VerifyNoOtherCalls();
+    }
+
+    #endregion
+}

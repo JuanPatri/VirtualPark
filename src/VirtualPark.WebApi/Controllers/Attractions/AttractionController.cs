@@ -30,15 +30,15 @@ public sealed class AttractionController(IAttractionService attractionService) :
 
         var attraction = _attractionService.Get(attractionId);
 
-            return new GetAttractionResponse(
-                id: attraction.Id.ToString(),
-                name: attraction.Name,
-                type: attraction.Type.ToString(),
-                miniumAge: attraction.MiniumAge.ToString(),
-                capacity: attraction.Capacity.ToString(),
-                description: attraction.Description,
-                eventsId: attraction.Events.Select(e => e.Id.ToString()).ToList(),
-                available: attraction.Available.ToString());
+        return new GetAttractionResponse(
+            id: attraction.Id.ToString(),
+            name: attraction.Name,
+            type: attraction.Type.ToString(),
+            miniumAge: attraction.MiniumAge.ToString(),
+            capacity: attraction.Capacity.ToString(),
+            description: attraction.Description,
+            eventsId: attraction.Events.Select(e => e.Id.ToString()).ToList(),
+            available: attraction.Available.ToString());
     }
 
     [HttpGet]

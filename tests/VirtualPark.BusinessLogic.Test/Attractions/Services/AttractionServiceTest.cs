@@ -45,42 +45,42 @@ public class AttractionServiceTest
 
     #region create
 
-        [TestMethod]
-        public void Create_WhenArgsAreValid_ShouldReturnIdAndPersistEntity()
-        {
-            var args = _attractionArgs;
+    [TestMethod]
+    public void Create_WhenArgsAreValid_ShouldReturnIdAndPersistEntity()
+    {
+        var args = _attractionArgs;
 
-            _mockReadOnlyAttractionRepository
-                .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
-                .Returns(false);
+        _mockReadOnlyAttractionRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(false);
 
-            _mockAttractionRepository
-                .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
-                .Returns(false);
+        _mockAttractionRepository
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(false);
 
-            Attraction? added = null;
-            _mockAttractionRepository
-                .Setup(r => r.Add(It.IsAny<Attraction>()))
-                .Callback<Attraction>(a => added = a);
+        Attraction? added = null;
+        _mockAttractionRepository
+            .Setup(r => r.Add(It.IsAny<Attraction>()))
+            .Callback<Attraction>(a => added = a);
 
-            Guid id = _attractionService.Create(args);
+        Guid id = _attractionService.Create(args);
 
-            id.Should().NotBeEmpty();
-            added.Should().NotBeNull();
-            added!.Id.Should().Be(id);
+        id.Should().NotBeEmpty();
+        added.Should().NotBeNull();
+        added!.Id.Should().Be(id);
 
-            added.Name.Should().Be(args.Name);
-            added.Type.Should().Be(args.Type);
-            added.MiniumAge.Should().Be(args.MiniumAge);
-            added.Capacity.Should().Be(args.Capacity);
-            added.Description.Should().Be(args.Description);
-            added.CurrentVisitors.Should().Be(args.CurrentVisitor);
-            added.Available.Should().Be(args.Available);
+        added.Name.Should().Be(args.Name);
+        added.Type.Should().Be(args.Type);
+        added.MiniumAge.Should().Be(args.MiniumAge);
+        added.Capacity.Should().Be(args.Capacity);
+        added.Description.Should().Be(args.Description);
+        added.CurrentVisitors.Should().Be(args.CurrentVisitor);
+        added.Available.Should().Be(args.Available);
 
-            _mockAttractionRepository.Verify(
-                r => r.Add(It.Is<Attraction>(a => a.Id == id)),
-                Times.Once);
-        }
+        _mockAttractionRepository.Verify(
+            r => r.Add(It.Is<Attraction>(a => a.Id == id)),
+            Times.Once);
+    }
     #endregion
     #region validationName
     [TestCategory("Validation")]

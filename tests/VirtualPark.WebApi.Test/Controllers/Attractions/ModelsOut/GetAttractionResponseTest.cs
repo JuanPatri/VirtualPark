@@ -24,7 +24,7 @@ public class GetAttractionResponseTest
             miniumAge: miniumAge ?? "18",
             capacity: capacity ?? "50",
             description: description ?? "Family ride",
-            eventsId: eventIds ?? new List<string>(),
+            eventsId: eventIds ?? [],
             available: available ?? "true");
     }
 
@@ -99,10 +99,10 @@ public class GetAttractionResponseTest
         var e1 = Guid.NewGuid().ToString();
         var e2 = Guid.NewGuid().ToString();
 
-        var attraction = Build(eventIds: new List<string> { e1, e2 });
+        var attraction = Build(eventIds: [e1, e2]);
 
         attraction.EventIds.Should().NotBeNull();
-        attraction.EventIds!.Should().BeEquivalentTo(new[] { e1, e2 });
+        attraction.EventIds!.Should().BeEquivalentTo([e1, e2]);
     }
     #endregion
 }

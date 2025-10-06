@@ -1,4 +1,5 @@
 using VirtualPark.BusinessLogic.Events.Entity;
+using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 
 namespace VirtualPark.BusinessLogic.Attractions.Entity;
 
@@ -13,4 +14,5 @@ public sealed class Attraction
     public List<Event> Events { get; set; } = [];
     public int CurrentVisitors { get; set; }
     public bool Available { get; set; } = true;
+    public List<VisitRegistration> VisitRegistrations { get; set; } = [];
 }

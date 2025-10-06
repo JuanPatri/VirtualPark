@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualPark.DataAccess;
 
@@ -11,9 +12,11 @@ using VirtualPark.DataAccess;
 namespace VirtualPark.DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    partial class SqlContextModelSnapshot : ModelSnapshot
+    [Migration("20251005231700_add-VisitRegistration-entityToDataBase")]
+    partial class addVisitRegistrationentityToDataBase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,22 +94,6 @@ namespace VirtualPark.DataAccess.Migrations
                     b.HasIndex("EventId");
 
                     b.ToTable("AttractionEvents", (string)null);
-                });
-
-            modelBuilder.Entity("VirtualPark.BusinessLogic.ClocksApp.Entity.ClockApp", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateSystem")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.ToTable("ClockApp", (string)null);
                 });
 
             modelBuilder.Entity("VirtualPark.BusinessLogic.Events.Entity.Event", b =>

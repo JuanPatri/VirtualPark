@@ -19,9 +19,9 @@ using VirtualPark.Repository;
 
 namespace VirtualPark.ApiServiceFactory;
 
-[ExcludeFromCodeCoverage]
 public static class ServiceFactory
 {
+    [ExcludeFromCodeCoverage]
     public static void RegisterServices(IServiceCollection services)
     {
         services.AddDbContext<SqlContext>(options =>

@@ -36,4 +36,12 @@ public class GetAttractionResponseTest
         attraction.TypeId.Should().Be(typeId.ToString());
     }
     #endregion
+    #region MiniumAge
+    [TestMethod]
+    public void CreateAttractionRequest_MiniumAgeProperty_GetAndSet_ShouldWorkCorrectly()
+    {
+        var attraction = new GetAttractionResponse { MiniumAge = "18" };
+        attraction.MiniumAge.Should().Be("18");
+    }
+    #endregion
 }

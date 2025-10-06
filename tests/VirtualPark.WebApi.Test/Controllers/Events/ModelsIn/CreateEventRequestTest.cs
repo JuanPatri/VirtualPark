@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtualPark.WebApi.Controllers.Events.ModelsIn;
 
 namespace VirtualPark.WebApi.Test.Controllers.Events.ModelsIn;

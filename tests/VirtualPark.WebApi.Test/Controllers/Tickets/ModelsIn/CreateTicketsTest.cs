@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Tickets;
 using VirtualPark.WebApi.Controllers.Tickets.ModelsIn;
 
 namespace VirtualPark.WebApi.Test.Controllers.Tickets.ModelsIn;
@@ -14,7 +15,7 @@ public class CreateTicketRequestTest
     public void VisitorId_Getter_ShouldReturnAssignedValue()
     {
         var guid = Guid.NewGuid().ToString();
-        var request = new CreateTicketRequest(guid);
+        var request = new CreateTicketRequest(guid, EntranceType.Event.ToString());
         request.VisitorId.Should().Be(guid);
     }
     #endregion
@@ -24,8 +25,8 @@ public class CreateTicketRequestTest
     [TestCategory("Validation")]
     public void Type_Getter_ShouldReturnAssignedValue()
     {
-        var request = new CreateTicketRequest(Guid.NewGuid().ToString());
-        request.Type.Should().Be("Event");
+        var request = new CreateTicketRequest(Guid.NewGuid().ToString(), EntranceType.General.ToString());
+        request.Type.Should().Be("General");
     }
     #endregion
 }

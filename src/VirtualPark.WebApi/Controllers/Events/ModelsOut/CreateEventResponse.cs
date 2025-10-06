@@ -1,6 +1,6 @@
 namespace VirtualPark.WebApi.Controllers.Events.ModelsOut;
 
-public class CreateEventResponse
+public sealed class CreateEventResponse(string id)
 {
-    
+    public string Id { get; } = id;
 }

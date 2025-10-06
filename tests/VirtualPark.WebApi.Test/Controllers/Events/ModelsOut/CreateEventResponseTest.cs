@@ -1,5 +1,11 @@
+using FluentAssertions;
+using VirtualPark.WebApi.Controllers.Events.ModelsOut;
+
 namespace VirtualPark.WebApi.Test.Controllers.Events.ModelsOut;
 
+[TestClass]
+[TestCategory("ModelsOut")]
+[TestCategory("CreateEventResponse")]
 public class CreateEventResponseTest
 {
     #region Id

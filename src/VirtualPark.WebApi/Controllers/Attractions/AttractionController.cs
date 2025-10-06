@@ -43,7 +43,7 @@ public sealed class AttractionController(IAttractionService attractionService) :
     [HttpGet]
     public List<GetAttractionResponse> GetAllAttractions()
     {
-        var attractions = _attractionService.GetAll().Select(a => new GetAttractionResponse(
+        return _attractionService.GetAll().Select(a => new GetAttractionResponse(
                 id: a.Id.ToString(),
                 name: a.Name,
                 type: a.Type.ToString(),
@@ -53,7 +53,5 @@ public sealed class AttractionController(IAttractionService attractionService) :
                 eventsId: a.Events.Select(e => e.Id.ToString()).ToList(),
                 available: a.Available.ToString()))
             .ToList();
-
-        return attractions;
     }
 }

@@ -5,5 +5,5 @@ public sealed class GetTicketResponse(string id, string type, string date, strin
     public string Id { get; } = id;
     public string Type { get; } = type;
     public string Date { get; } = date;
-    public string QrId { get; set; } = qrId;
+    public string QrId { get; } = qrId;
 }

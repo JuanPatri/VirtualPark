@@ -40,4 +40,14 @@ public class CreateTicketRequestTest
         request.EventId.Should().Be(guid);
     }
     #endregion
+
+    #region Date
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Date_Getter_ShouldReturnAssignedValue()
+    {
+        var request = new CreateTicketRequest(Guid.NewGuid().ToString(), EntranceType.General.ToString(), Guid.NewGuid().ToString());
+        request.Date.Should().Be("2025-10-10");
+    }
+    #endregion
 }

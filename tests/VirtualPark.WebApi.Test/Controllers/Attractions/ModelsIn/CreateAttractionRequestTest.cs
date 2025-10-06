@@ -22,8 +22,8 @@ public class CreateAttractionRequestTest
     public void CreateAttractionRequest_TypeIdProperty_GetAndSet_ShouldWorkCorrectly()
     {
         var typeId = Guid.NewGuid();
-        var attraction = new CreateAttractionRequest { TypeId = typeId.ToString() };
-        attraction.TypeId.Should().Be(typeId.ToString());
+        var attraction = new CreateAttractionRequest { Type = typeId.ToString() };
+        attraction.Type.Should().Be(typeId.ToString());
     }
     #endregion
     #region MiniumAge

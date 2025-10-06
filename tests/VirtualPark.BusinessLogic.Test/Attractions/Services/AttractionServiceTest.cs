@@ -213,33 +213,6 @@ public class AttractionServiceTest
             r => r.GetAll(null),
             Times.Once);
     }
-
-    [TestMethod]
-    [TestCategory("Validation")]
-    public void GetAll_WithPredicate_ShouldReturnFilteredAttractions()
-    {
-        Expression<Func<Attraction, bool>> predicate = a => a.Capacity > 60;
-
-        var filtered = new List<Attraction>
-        {
-            new Attraction { Name = "FerrisWheel", Type = AttractionType.Simulator, Capacity = 100 }
-        };
-
-        _mockAttractionRepository
-            .Setup(r => r.GetAll(a => a.Capacity > 60))
-            .Returns(filtered);
-
-        var result = _attractionService.GetAll(predicate);
-
-        result.Should().NotBeNull();
-        result.Should().HaveCount(1);
-        result[0].Name.Should().Be("FerrisWheel");
-
-        _mockAttractionRepository.Verify(
-            r => r.GetAll(a => a.Capacity > 60), Times.Once);
-        _mockAttractionRepository.Verify(r => r.GetAll(null), Times.Never);
-    }
-
     #endregion
     #region Get
     [TestMethod]

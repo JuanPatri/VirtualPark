@@ -43,4 +43,13 @@ public class CreateAttractionRequestTest
         attraction.Capacity.Should().Be("50");
     }
     #endregion
+    #region Description
+
+    [TestMethod]
+    public void CreateAttractionRequest_DescriptionProperty_GetAndSet_ShouldWorkCorrectly()
+    {
+        var attraction = new CreateAttractionRequest { Description = "Titanic" };
+        attraction.Description.Should().Be("Titanic");
+    }
+    #endregion
 }

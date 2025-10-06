@@ -17,4 +17,14 @@ public class CreateEventRequestTest
         request.Name.Should().Be("Halloween Party");
     }
     #endregion
+
+    #region Date
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Date_Getter_ReturnsAssignedValue()
+    {
+        var request = new CreateEventRequest { Date = "2025-10-31" };
+        request.Date.Should().Be("2025-10-31");
+    }
+    #endregion
 }

@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Sessions\Models\" />
     <Folder Include="Sessions\Service\" />
   </ItemGroup>
 

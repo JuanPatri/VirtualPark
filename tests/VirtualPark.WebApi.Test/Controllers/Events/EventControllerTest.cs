@@ -157,4 +157,20 @@ public class EventControllerTest
         _eventServiceMock.VerifyAll();
     }
     #endregion
+
+    #region Delete
+    [TestMethod]
+    public void DeleteEvent_ShouldRemoveEvent_WhenIdIsValid()
+    {
+        var id = Guid.NewGuid();
+
+        _eventServiceMock
+            .Setup(s => s.Remove(id))
+            .Verifiable();
+
+        _eventController.DeleteEvent(id.ToString());
+
+        _eventServiceMock.VerifyAll();
+    }
+    #endregion
 }

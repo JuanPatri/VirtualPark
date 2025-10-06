@@ -60,4 +60,20 @@ public class GetEventResponseTest
         response.Capacity.Should().Be("200");
     }
     #endregion
+
+    #region Cost
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Cost_Getter_ReturnsAssignedValue()
+    {
+        var response = new GetEventResponse(
+            Guid.NewGuid().ToString(),
+            "Halloween Party",
+            "2025-12-01",
+            "200",
+            "1500");
+
+        response.Cost.Should().Be("1500");
+    }
+    #endregion
 }

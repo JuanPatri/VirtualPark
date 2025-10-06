@@ -287,14 +287,14 @@ public class UserControllerTest
             LastName = "Diaz",
             Email = "lara@mail.com",
             Password = "Password123!",
-            Roles = new List<Role> { new Role { Name = "Admin" } },
+            Roles = [new Role { Name = "Admin" }],
             VisitorProfile = null,
             VisitorProfileId = null
         };
 
         _userServiceMock
             .Setup(s => s.GetAll())
-            .Returns(new List<User> { user });
+            .Returns([user]);
 
         var result = _usersController.GetAllUsers();
 

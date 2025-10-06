@@ -29,4 +29,15 @@ public class CreateTicketRequestTest
         request.Type.Should().Be("General");
     }
     #endregion
+
+    #region EventId
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void EventId_Getter_ShouldReturnAssignedValue()
+    {
+        var guid = Guid.NewGuid().ToString();
+        var request = new CreateTicketRequest {Guid.NewGuid().ToString(), EntranceType.General.ToString()};
+        request.EventId.Should().Be(guid);
+    }
+    #endregion
 }

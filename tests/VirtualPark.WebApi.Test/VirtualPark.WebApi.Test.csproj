@@ -27,7 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\Incidences\ModelsIn\" />
       <Folder Include="Controllers\Incidences\ModelsOut\" />
     </ItemGroup>
 

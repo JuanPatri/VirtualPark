@@ -14,8 +14,8 @@ public sealed class EventController(IEventService eventService) : ControllerBase
     [HttpPost("v1/events")]
     public CreateEventResponse CreateEvent(CreateEventRequest request)
     {
-        var args = request.ToArgs();
-        var id = _eventService.Create(args);
-        return new CreateEventResponse(id.ToString());
+        EventsArgs args = request.ToArgs();
+        Guid eventId = _eventService.Create(args);
+        return new CreateEventResponse(eventId.ToString());
     }
 }

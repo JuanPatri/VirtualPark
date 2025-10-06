@@ -15,7 +15,7 @@ public sealed class GetTicketResponseTest
     {
         var id = Guid.NewGuid().ToString();
         var response = new GetTicketResponse(
-            id, "General", "2025-12-01");
+            id, "General", "2025-12-01", Guid.NewGuid().ToString());
 
         response.Id.Should().Be(id);
     }
@@ -28,7 +28,7 @@ public sealed class GetTicketResponseTest
     {
         const string type = "General";
         var response = new GetTicketResponse(
-            Guid.NewGuid().ToString(), type, "2025-12-01");
+            Guid.NewGuid().ToString(), type, "2025-12-01", Guid.NewGuid().ToString());
 
         response.Type.Should().Be(type);
     }
@@ -41,7 +41,7 @@ public sealed class GetTicketResponseTest
     {
         const string date = "2025-12-01";
         var response = new GetTicketResponse(
-            Guid.NewGuid().ToString(), "Event", date);
+            Guid.NewGuid().ToString(), "Event", date, Guid.NewGuid().ToString());
 
         response.Date.Should().Be(date);
     }
@@ -54,7 +54,7 @@ public sealed class GetTicketResponseTest
     {
         var qrId = Guid.NewGuid().ToString();
         var response = new GetTicketResponse(
-            Guid.NewGuid().ToString(), "Event", "2025-12-01", Guid.NewGuid().ToString(), qrId);
+            Guid.NewGuid().ToString(), "Event", "2025-12-01", Guid.NewGuid().ToString());
 
         response.QrId.Should().Be(qrId);
     }

@@ -52,4 +52,14 @@ public class CreateAttractionRequestTest
         attraction.Description.Should().Be("Titanic");
     }
     #endregion
+    #region Events
+
+    [TestMethod]
+    public void CreateAttractionRequest_EventsProperty_GetAndSet_ShouldWorkCorrectly()
+    {
+        var guid = Guid.NewGuid().ToString();
+        var createUserRequest = new CreateAttractionRequest() { EventIds = [guid] };
+        createUserRequest.EventIds.Should().Contain([guid]);
+    }
+    #endregion
 }

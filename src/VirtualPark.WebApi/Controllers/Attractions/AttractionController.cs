@@ -8,11 +8,12 @@ using VirtualPark.WebApi.Controllers.Attractions.ModelsOut;
 namespace VirtualPark.WebApi.Controllers.Attractions;
 
 [ApiController]
+[Route("attractions")]
 public sealed class AttractionController(IAttractionService attractionService) : ControllerBase
 {
     private readonly IAttractionService _attractionService = attractionService;
 
-    [HttpPost("attractions")]
+    [HttpPost]
     public CreateAttractionResponse CreateAttraction(CreateAttractionRequest newAtraction)
     {
         AttractionArgs attractionArgs = newAtraction.ToArgs();

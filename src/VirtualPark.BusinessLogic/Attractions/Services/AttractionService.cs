@@ -33,20 +33,19 @@ public sealed class AttractionService(
         return attraction.Id;
     }
 
-    public List<Attraction> GetAll(Expression<Func<Attraction, bool>>? predicate = null)
+    public List<Attraction> GetAll()
     {
-        return _attractionRepository.GetAll(predicate);
+        return _attractionRepository.GetAll();
     }
 
-    public Attraction? Get(Expression<Func<Attraction, bool>> predicate)
+    public Attraction? Get(Guid id)
     {
-        return _attractionRepository.Get(predicate);
+        return _attractionRepository.Get(a => a.Id == id);
     }
 
     public void Update(AttractionArgs args, Guid id)
     {
-        Attraction attraction = Get(a => a.Id == id) ??
-                                throw new InvalidOperationException($"Attraction with id {id} not found.");
+        Attraction attraction = Get(id) ?? throw new InvalidOperationException($"Attraction with id {id} not found.");
         ApplyArgsToEntity(attraction, args);
 
         _attractionRepository.Update(attraction);
@@ -54,8 +53,7 @@ public sealed class AttractionService(
 
     public void Remove(Guid id)
     {
-        Attraction attraction = Get(a => a.Id == id) ??
-                                throw new InvalidOperationException($"Attraction with id {id} not found.");
+        Attraction attraction = Get(id) ?? throw new InvalidOperationException($"Attraction with id {id} not found.");
         _attractionRepository.Remove(attraction);
     }
 

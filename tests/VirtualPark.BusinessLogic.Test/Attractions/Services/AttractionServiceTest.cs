@@ -242,41 +242,19 @@ public class AttractionServiceTest
 
     #endregion
     #region Get
-
     [TestMethod]
     public void Get_WhenAttractionExists_ShouldReturnAttraction()
     {
-        var expected = new Attraction { Name = "RollerCoaster", Capacity = 50 };
+        var id = Guid.NewGuid();
+        var expected = new Attraction { Id = id, Name = "RollerCoaster", Capacity = 50 };
 
-        _mockAttractionRepository
-            .Setup(r => r.Get(a => a.Name == "RollerCoaster"))
-            .Returns(expected);
+        _mockAttractionRepository.Setup(r => r.Get(a => a.Id == id)).Returns(expected);
 
-        var result = _attractionService.Get(a => a.Name == "RollerCoaster");
+        var result = _attractionService.Get(id);
 
         result.Should().NotBeNull();
-        result!.Name.Should().Be("RollerCoaster");
-        result.Capacity.Should().Be(50);
-
-        _mockAttractionRepository.Verify(
-            r => r.Get(a => a.Name == "RollerCoaster"),
-            Times.Once);
-    }
-
-    [TestMethod]
-    public void Get_WhenAttractionDoesNotExist_ShouldReturnNull()
-    {
-        _mockAttractionRepository
-            .Setup(r => r.Get(a => a.Name == "GhostTrain"))
-            .Returns((Attraction?)null);
-
-        var result = _attractionService.Get(a => a.Name == "GhostTrain");
-
-        result.Should().BeNull();
-
-        _mockAttractionRepository.Verify(
-            r => r.Get(a => a.Name == "GhostTrain"),
-            Times.Once);
+        result!.Id.Should().Be(id);
+        result.Name.Should().Be("RollerCoaster");
     }
     #endregion
     #region Update

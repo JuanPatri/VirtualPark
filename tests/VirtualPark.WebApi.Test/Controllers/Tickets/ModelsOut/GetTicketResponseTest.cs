@@ -15,7 +15,7 @@ public sealed class GetTicketResponseTest
     {
         var id = Guid.NewGuid().ToString();
         var response = new GetTicketResponse(
-            id);
+            id, "General");
 
         response.Id.Should().Be(id);
     }

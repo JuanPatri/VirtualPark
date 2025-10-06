@@ -90,9 +90,10 @@ public class GetUserResponseTest
     }
     #endregion
 
+    #region VisitorProfileId
     [TestMethod]
     [TestCategory("Validation")]
-    public void VisitorProfile_Getter()
+    public void VisitorProfile_Getter_ReturnsAssignedValue()
     {
         var id = Guid.NewGuid().ToString();
         var guid = Guid.NewGuid().ToString();
@@ -104,4 +105,5 @@ public class GetUserResponseTest
             guid);
         response.VisitorProfileId.Should().Be(guid);
     }
+    #endregion
 }

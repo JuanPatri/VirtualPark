@@ -1,7 +1,10 @@
 using FluentAssertions;
 using Moq;
+using VirtualPark.BusinessLogic.Roles.Entity;
+using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.Users.Models;
 using VirtualPark.BusinessLogic.Users.Service;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.WebApi.Controllers.Users;
 using VirtualPark.WebApi.Controllers.Users.ModelsIn;
 using VirtualPark.WebApi.Controllers.Users.ModelsOut;
@@ -68,4 +71,52 @@ public class UserControllerTest
         _userServiceMock.VerifyAll();
     }
     #endregion
+
+    [TestMethod]
+    public void GetUserById()
+    {
+        var visitorProfile = new VisitorProfile
+        {
+            DateOfBirth = new DateOnly(2002, 07, 30),
+            Membership = Membership.Standard,
+            Score = 100
+        };
+
+        var user = new User
+        {
+            Name = "Pepe",
+            LastName = "Perez",
+            Email = "pepe@mail.com",
+            Password = "Password123!",
+            Roles = new List<Role>
+            {
+                new Role { Name = "Admin", Description = "Administrador" },
+                new Role { Name = "Visitor", Description = "Visitante" }
+            },
+            VisitorProfile = visitorProfile,
+            VisitorProfileId = visitorProfile.Id
+        };
+
+        var id = user.Id;
+
+        _userServiceMock
+            .Setup(s => s.Get(id))
+            .Returns(user);
+
+        var response = _usersController.GetUserById(id.ToString());
+
+        response.Should().NotBeNull();
+        response.Should().BeOfType<GetUserResponse>();
+        response.Id.Should().Be(id.ToString());
+        response.Name.Should().Be("Pepe");
+        response.LastName.Should().Be("Perez");
+        response.Email.Should().Be("pepe@mail.com");
+
+        response.Roles.Should().HaveCount(2);
+        response.Roles.Should().Contain(new[] { "Admin", "Visitor" });
+
+        response.VisitorProfileId.Should().Be(visitorProfile.Id.ToString());
+
+        _userServiceMock.VerifyAll();
+    }
 }

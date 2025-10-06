@@ -17,4 +17,13 @@ public class GetAttractionResponseTest
         attraction.Id.Should().Be(id.ToString());
     }
     #endregion
+    #region Name
+
+    [TestMethod]
+    public void CreateAttractionResponse_NameProperty_GetAndSet_ShouldWorkCorrectly()
+    {
+        var attraction = new CreateAttractionResponse { Name = "Titanic" };
+        attraction.Name.Should().Be("Titanic");
+    }
+    #endregion
 }

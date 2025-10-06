@@ -15,7 +15,7 @@ public sealed class GetTicketResponseTest
     {
         var id = Guid.NewGuid().ToString();
         var response = new GetTicketResponse(
-            id, "General");
+            id, "General", "2025-12-01");
 
         response.Id.Should().Be(id);
     }
@@ -28,9 +28,22 @@ public sealed class GetTicketResponseTest
     {
         const string type = "General";
         var response = new GetTicketResponse(
-            Guid.NewGuid().ToString(), type);
+            Guid.NewGuid().ToString(), type, "2025-12-01");
 
         response.Type.Should().Be(type);
+    }
+    #endregion
+
+    #region Date
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Date_Getter_ReturnsAssignedValue()
+    {
+        const string date = "2025-12-01";
+        var response = new GetTicketResponse(
+            Guid.NewGuid().ToString(), "Event", date);
+
+        response.Date.Should().Be(date);
     }
     #endregion
 }

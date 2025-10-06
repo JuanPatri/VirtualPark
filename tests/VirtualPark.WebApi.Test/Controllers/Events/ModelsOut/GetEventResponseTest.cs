@@ -76,4 +76,27 @@ public class GetEventResponseTest
         response.Cost.Should().Be("1500");
     }
     #endregion
+
+    #region Attractions
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Attractions_Getter_ReturnsAssignedValue()
+    {
+        var attractions = new List<string>
+        {
+            new(Guid.NewGuid().ToString()),
+            new(Guid.NewGuid().ToString())
+        };
+
+        var response = new GetEventResponse(
+            Guid.NewGuid().ToString(),
+            "Halloween Party",
+            "2025-12-01",
+            "200",
+            "1500",
+            attractions);
+
+        response.Attractions.Should().BeEquivalentTo(attractions);
+    }
+    #endregion
 }

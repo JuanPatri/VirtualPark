@@ -18,4 +18,14 @@ public class CreateTicketRequestTest
         request.VisitorId.Should().Be(guid);
     }
     #endregion
+
+    #region Type
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Type_Getter_ShouldReturnAssignedValue()
+    {
+        var request = new CreateTicketRequest(Guid.NewGuid().ToString());
+        request.Type.Should().Be("Event");
+    }
+    #endregion
 }

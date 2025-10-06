@@ -53,4 +53,11 @@ public sealed class UserController(IUserService userService) : ControllerBase
                 visitorProfileId: u.VisitorProfileId?.ToString() ?? null))
             .ToList();
     }
+
+    [HttpDelete("{id}")]
+    public void DeleteUser(string id)
+    {
+        var userId = ValidationServices.ValidateAndParseGuid(id);
+        _userService.Remove(userId);
+    }
 }

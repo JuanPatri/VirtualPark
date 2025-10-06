@@ -72,8 +72,9 @@ public class UserControllerTest
     }
     #endregion
 
+    #region Get
     [TestMethod]
-    public void GetUserById()
+    public void GetUserById_ValidInput_ReturnsGetUserResponse()
     {
         var visitorProfile = new VisitorProfile
         {
@@ -122,4 +123,5 @@ public class UserControllerTest
 
         _userServiceMock.VerifyAll();
     }
+    #endregion
 }

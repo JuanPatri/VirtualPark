@@ -15,7 +15,7 @@ public class CreateTicketRequestTest
     public void VisitorId_Getter_ShouldReturnAssignedValue()
     {
         var guid = Guid.NewGuid().ToString();
-        var request = new CreateTicketRequest(guid, EntranceType.Event.ToString());
+        var request = new CreateTicketRequest(guid, EntranceType.Event.ToString(), Guid.NewGuid().ToString());
         request.VisitorId.Should().Be(guid);
     }
     #endregion
@@ -25,7 +25,7 @@ public class CreateTicketRequestTest
     [TestCategory("Validation")]
     public void Type_Getter_ShouldReturnAssignedValue()
     {
-        var request = new CreateTicketRequest(Guid.NewGuid().ToString(), EntranceType.General.ToString());
+        var request = new CreateTicketRequest(Guid.NewGuid().ToString(), EntranceType.General.ToString(), Guid.NewGuid().ToString());
         request.Type.Should().Be("General");
     }
     #endregion
@@ -36,7 +36,7 @@ public class CreateTicketRequestTest
     public void EventId_Getter_ShouldReturnAssignedValue()
     {
         var guid = Guid.NewGuid().ToString();
-        var request = new CreateTicketRequest {Guid.NewGuid().ToString(), EntranceType.General.ToString()};
+        var request = new CreateTicketRequest(Guid.NewGuid().ToString(), EntranceType.General.ToString(), guid );
         request.EventId.Should().Be(guid);
     }
     #endregion

@@ -26,18 +26,16 @@ public sealed class UserController(IUserService userService) : ControllerBase
     public GetUserResponse GetUserById(string id)
     {
         var userId = ValidationServices.ValidateAndParseGuid(id);
-        var user = _userService.Get(userId)!;
 
-        var roles = user.Roles.Select(r => r.Id.ToString()).ToList();
-        var visitorProfileId = user.VisitorProfileId?.ToString() ?? null;
+        var user = _userService.Get(userId)!;
 
         return new GetUserResponse(
             id: user.Id.ToString(),
             name: user.Name,
             lastName: user.LastName,
             email: user.Email,
-            roles: roles!,
-            visitorProfileId: visitorProfileId);
+            roles: user.Roles.Select(r => r.Id.ToString()).ToList(),
+            visitorProfileId: user.VisitorProfileId?.ToString() ?? null);
     }
 
     [HttpGet]
@@ -59,5 +57,15 @@ public sealed class UserController(IUserService userService) : ControllerBase
     {
         var userId = ValidationServices.ValidateAndParseGuid(id);
         _userService.Remove(userId);
+    }
+
+    [HttpPatch("users/{id}")]
+    public void UpdateUser(CreateUserRequest request, string id)
+    {
+        var userId = ValidationServices.ValidateAndParseGuid(id);
+
+        UserArgs args = request.ToArgs();
+
+        _userService.Update(args, userId);
     }
 }

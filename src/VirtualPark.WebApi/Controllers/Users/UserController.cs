@@ -22,7 +22,7 @@ public sealed class UserController(IUserService userService) : ControllerBase
         return new CreateUserResponse(responseId.ToString());
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("users/{id}")]
     public GetUserResponse GetUserById(string id)
     {
         var userId = ValidationServices.ValidateAndParseGuid(id);
@@ -54,7 +54,7 @@ public sealed class UserController(IUserService userService) : ControllerBase
             .ToList();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("users/{id}")]
     public void DeleteUser(string id)
     {
         var userId = ValidationServices.ValidateAndParseGuid(id);

@@ -203,4 +203,48 @@ public class UserControllerTest
         _userServiceMock.VerifyAll();
     }
     #endregion
+
+    [TestMethod]
+    public void UpdateUser()
+    {
+        var id = Guid.NewGuid();
+        var role1 = Guid.NewGuid().ToString();
+        var role2 = Guid.NewGuid().ToString();
+
+        var request = new CreateUserRequest
+        {
+            Name = "Pepe",
+            LastName = "Perez",
+            Email = "pepe@mail.com",
+            Password = "Password123!",
+            RolesIds = new List<string> { role1, role2 },
+            VisitorProfile = new CreateVisitorProfileRequest
+            {
+                DateOfBirth = "2002-07-30",
+                Membership = "Standard",
+                Score = "85"
+            }
+        };
+
+        var expectedArgs = request.ToArgs();
+
+        _userServiceMock
+            .Setup(s => s.Update(It.Is<UserArgs>(a =>
+                    a.Name == expectedArgs.Name &&
+                    a.LastName == expectedArgs.LastName &&
+                    a.Email == expectedArgs.Email &&
+                    a.Password == expectedArgs.Password &&
+                    a.RolesIds.Count == expectedArgs.RolesIds.Count &&
+                    a.RolesIds.All(expectedArgs.RolesIds.Contains) &&
+                    a.VisitorProfile != null &&
+                    a.VisitorProfile!.DateOfBirth == expectedArgs.VisitorProfile!.DateOfBirth &&
+                    a.VisitorProfile.Membership == expectedArgs.VisitorProfile.Membership &&
+                    a.VisitorProfile.Score == expectedArgs.VisitorProfile.Score),
+                id))
+            .Verifiable();
+
+        _usersController.UpdateUser(request, id.ToString());
+
+        _userServiceMock.VerifyAll();
+    }
 }

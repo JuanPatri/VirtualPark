@@ -47,4 +47,18 @@ public class CreateEventRequestTest
         request.Cost.Should().Be("1500");
     }
     #endregion
+
+    #region AttractionsIds
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void AttractionsIds_Getter_ReturnsAssignedValue()
+    {
+        var guid1 = Guid.NewGuid().ToString();
+        var guid2 = Guid.NewGuid().ToString();
+
+        var request = new CreateEventRequest { AttractionsIds = [guid1, guid2] };
+
+        request.AttractionsIds.Should().Contain([guid1, guid2]);
+    }
+    #endregion
 }

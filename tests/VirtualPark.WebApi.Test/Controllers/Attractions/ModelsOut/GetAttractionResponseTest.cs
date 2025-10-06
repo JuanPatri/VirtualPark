@@ -38,10 +38,19 @@ public class GetAttractionResponseTest
     #endregion
     #region MiniumAge
     [TestMethod]
-    public void CreateAttractionRequest_MiniumAgeProperty_GetAndSet_ShouldWorkCorrectly()
+    public void CreateAttractionResponse_MiniumAgeProperty_GetAndSet_ShouldWorkCorrectly()
     {
         var attraction = new GetAttractionResponse { MiniumAge = "18" };
         attraction.MiniumAge.Should().Be("18");
+    }
+    #endregion
+    #region Capacity
+
+    [TestMethod]
+    public void CreateAttractionResponse_CapacityProperty_GetAndSet_ShouldWorkCorrectly()
+    {
+        var attraction = new GetAttractionResponse { Capacity = "50" };
+        attraction.Capacity.Should().Be("50");
     }
     #endregion
 }

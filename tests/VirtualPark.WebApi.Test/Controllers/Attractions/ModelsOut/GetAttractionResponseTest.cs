@@ -53,4 +53,13 @@ public class GetAttractionResponseTest
         attraction.Capacity.Should().Be("50");
     }
     #endregion
+    #region Description
+
+    [TestMethod]
+    public void CreateAttractionResponse_DescriptionProperty_GetAndSet_ShouldWorkCorrectly()
+    {
+        var attraction = new GetAttractionResponse { Description = "Titanic" };
+        attraction.Description.Should().Be("Titanic");
+    }
+    #endregion
 }

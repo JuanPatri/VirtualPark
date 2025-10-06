@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Attractions\ModelsIn\" />
     <Folder Include="Controllers\Attractions\ModelsOut\" />
   </ItemGroup>
 

@@ -12,7 +12,7 @@ public sealed class AttractionController(IAttractionService attractionService) :
 {
     private readonly IAttractionService _attractionService = attractionService;
 
-    [HttpPost("attraction")]
+    [HttpPost("attractions")]
     public CreateAttractionResponse CreateAttraction(CreateAttractionRequest newAtraction)
     {
         AttractionArgs attractionArgs = newAtraction.ToArgs();
@@ -22,7 +22,7 @@ public sealed class AttractionController(IAttractionService attractionService) :
         return new CreateAttractionResponse(responseId.ToString());
     }
 
-    [HttpGet("attraction/{id}")]
+    [HttpGet("attractions/{id}")]
     public GetAttractionResponse GetAttractionById(string id)
     {
         var attractionId = ValidationServices.ValidateAndParseGuid(id);
@@ -39,4 +39,5 @@ public sealed class AttractionController(IAttractionService attractionService) :
                 eventsId: attraction.Events.Select(e => e.Id.ToString()).ToList(),
                 available: attraction.Available.ToString());
     }
+    
 }

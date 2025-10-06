@@ -190,4 +190,91 @@ public class AttractionControllerTest
             _attractionService.VerifyNoOtherCalls();
         }
         #endregion
+                #region GetAll
+
+        [TestMethod]
+        public void GetAllAttractions_ShouldReturnMappedList()
+        {
+            var ev1 = new Event { Id = Guid.NewGuid() };
+            var ev2 = new Event { Id = Guid.NewGuid() };
+
+            var a1 = new Attraction
+            {
+                Id = Guid.NewGuid(),
+                Name = "RollerCoaster",
+                Type = AttractionType.RollerCoaster,
+                MiniumAge = 18,
+                Capacity = 50,
+                Description = "High-speed ride",
+                Available = true,
+                Events = new List<Event> { ev1, ev2 }
+            };
+
+            var a2 = new Attraction
+            {
+                Id = Guid.NewGuid(),
+                Name = "FerrisWheel",
+                Type = AttractionType.Simulator,
+                MiniumAge = 0,
+                Capacity = 100,
+                Description = "Family ride",
+                Available = false,
+                Events = new List<Event>()
+            };
+
+            var list = new List<Attraction> { a1, a2 };
+
+            _attractionService
+                .Setup(s => s.GetAll())
+                .Returns(list);
+
+            var result = _attractionController.GetAllAttractions();
+
+            result.Should().NotBeNull();
+            result.Should().HaveCount(2);
+
+            var first = result.First();
+            first.Id.Should().Be(a1.Id.ToString());
+            first.Name.Should().Be("RollerCoaster");
+            first.Type.Should().Be("RollerCoaster");
+            first.MiniumAge.Should().Be("18");
+            first.Capacity.Should().Be("50");
+            first.Description.Should().Be("High-speed ride");
+            first.Available.Should().Be("True");
+            first.EventIds.Should().BeEquivalentTo(new[]
+            {
+                ev1.Id.ToString(),
+                ev2.Id.ToString()
+            });
+
+            var second = result.Last();
+            second.Id.Should().Be(a2.Id.ToString());
+            second.Name.Should().Be("FerrisWheel");
+            second.Type.Should().Be("Simulator");
+            second.MiniumAge.Should().Be("0");
+            second.Capacity.Should().Be("100");
+            second.Description.Should().Be("Family ride");
+            second.Available.Should().Be("False");
+            second.EventIds.Should().NotBeNull();
+            second.EventIds!.Should().BeEmpty();
+
+            _attractionService.VerifyAll();
+        }
+
+        [TestMethod]
+        public void GetAllAttractions_ShouldReturnEmptyList_WhenNoAttractionsExist()
+        {
+            _attractionService
+                .Setup(s => s.GetAll())
+                .Returns(new List<Attraction>());
+
+            var result = _attractionController.GetAllAttractions();
+
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
+
+            _attractionService.VerifyAll();
+        }
+
+        #endregion
     }

@@ -8,5 +8,5 @@ public class GetAttractionResponse
     public string? MiniumAge { get; init; }
     public string? Capacity { get; init; }
     public string? Description { get; init; }
-    public string? EventIds { get; set; }
+    public string? EventIds { get; init; }
 }

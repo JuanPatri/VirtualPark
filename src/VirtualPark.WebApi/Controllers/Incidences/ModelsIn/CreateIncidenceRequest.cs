@@ -6,5 +6,5 @@ public class CreateIncidenceRequest
     public string? Description { get; init; }
     public string? Start { get; init; }
     public string? End { get; init; }
-    public string? AttractionId { get; set; }
+    public string? AttractionId { get; init; }
 }

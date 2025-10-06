@@ -6,7 +6,7 @@ namespace VirtualPark.WebApi.Test.Controllers.Incidences.ModelsIn;
 [TestClass]
 public class CreateIncidenceRequestTest
 {
-    #region Name
+    #region Type
     [TestMethod]
     [TestCategory("Validation")]
     public void Name_Getter_ReturnsAssignedValue()
@@ -44,6 +44,16 @@ public class CreateIncidenceRequestTest
     {
         var createIncidenceRequest = new CreateIncidenceRequest { End = "2025-10-06T18:45:00" };
         createIncidenceRequest.End.Should().Be("2025-10-06T18:45:00");
+    }
+    #endregion
+    #region Attraction
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Attraction_Getter_ReturnsAssignedValue()
+    {
+        var attractionID = Guid.NewGuid().ToString();
+        var createIncidenceRequest = new CreateIncidenceRequest { AttractionId = attractionID };
+        createIncidenceRequest.AttractionId.Should().Be(attractionID);
     }
     #endregion
 }

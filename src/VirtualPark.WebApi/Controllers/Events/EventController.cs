@@ -59,4 +59,11 @@ public sealed class EventController(IEventService eventService) : ControllerBase
             cost: ev.Cost.ToString(),
             attractions: attractions);
     }
+
+    [HttpDelete("v1/events/{id}")]
+    public void DeleteEvent(string id)
+    {
+        var eventId = ValidationServices.ValidateAndParseGuid(id);
+        _eventService.Remove(eventId);
+    }
 }

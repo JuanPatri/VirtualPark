@@ -48,6 +48,36 @@ public sealed class AuthorizationFilterAttributeTest
         mockUserService.VerifyAll();
     }
     #endregion
+    #region Has
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void OnAuthorization_WhenUserHasPermission_ShouldAllowRequest()
+    {
+        var mockUserService = new Mock<IUserService>(MockBehavior.Strict);
+        var user = new User
+        {
+            Email = "authorized@virtualpark.com"
+        };
+
+        mockUserService
+            .Setup(s => s.HasPermission(user.Id, "Attraction-Create"))
+            .Returns(true);
+
+        var filter = new AuthorizationFilterAttribute("Attraction-Create");
+
+        var context = CreateAuthorizationContext();
+        context.HttpContext.Items["UserLogged"] = user;
+
+        context.HttpContext.RequestServices = new ServiceCollection()
+            .AddSingleton(mockUserService.Object)
+            .BuildServiceProvider();
+
+        filter.OnAuthorization(context);
+
+        context.Result.Should().BeNull("because the user has permission and the request should continue");
+        mockUserService.VerifyAll();
+    }
+    #endregion
     #endregion
 
     private static AuthorizationFilterContext CreateAuthorizationContext()
@@ -90,32 +120,4 @@ public sealed class AuthorizationFilterAttributeTest
         value.Should().Contain("User service not available");
     }
     #endregion
-    [TestMethod]
-    [TestCategory("Behaviour")]
-    public void OnAuthorization_WhenUserHasPermission_ShouldAllowRequest()
-    {
-        var mockUserService = new Mock<IUserService>(MockBehavior.Strict);
-        var user = new User
-        {
-            Email = "authorized@virtualpark.com"
-        };
-
-        mockUserService
-            .Setup(s => s.HasPermission(user.Id, "Attraction-Create"))
-            .Returns(true);
-
-        var filter = new AuthorizationFilterAttribute("Attraction-Create");
-
-        var context = CreateAuthorizationContext();
-        context.HttpContext.Items["UserLogged"] = user;
-
-        context.HttpContext.RequestServices = new ServiceCollection()
-            .AddSingleton(mockUserService.Object)
-            .BuildServiceProvider();
-
-        filter.OnAuthorization(context);
-
-        context.Result.Should().BeNull("because the user has permission and the request should continue");
-        mockUserService.VerifyAll();
-    }
 }

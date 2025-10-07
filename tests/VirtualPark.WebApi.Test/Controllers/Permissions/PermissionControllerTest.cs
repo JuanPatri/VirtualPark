@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.Permissions.Models;
 using VirtualPark.BusinessLogic.Permissions.Service;
 using VirtualPark.WebApi.Controllers.Permissions;
@@ -55,4 +56,35 @@ public class PermissionControllerTest
         _permissionServiceMock.VerifyAll();
     }
     #endregion
+
+    #region GetById
+    [TestMethod]
+    public void GetPermissionById_ValidInput_ReturnsGetPermissionResponse()
+    {
+        var role1 = new BusinessLogic.Roles.Entity.Role { Name = "Admin" };
+        var role2 = new BusinessLogic.Roles.Entity.Role { Name = "Visitor" };
+        var permission = new Permission
+        {
+            Description = "Manage users",
+            Key = "USERS_MANAGE",
+            Roles = [role1, role2]
+        };
+
+        _permissionServiceMock
+            .Setup(s => s.GetById(permission.Id))
+            .Returns(permission);
+
+        var result = _permissionController.GetPermissionById(permission.Id.ToString());
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<GetPermissionResponse>();
+        result.Id.Should().Be(permission.Id.ToString());
+        result.Description.Should().Be("Manage users");
+        result.Key.Should().Be("USERS_MANAGE");
+        result.Roles.Should().HaveCount(2);
+        result.Roles.Should().Contain(role1.Id.ToString());
+        result.Roles.Should().Contain(role2.Id.ToString());
+
+        _permissionServiceMock.VerifyAll();
+    }
 }

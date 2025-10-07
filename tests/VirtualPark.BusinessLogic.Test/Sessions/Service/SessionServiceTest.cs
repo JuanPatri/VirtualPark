@@ -85,6 +85,36 @@ public class SessionServiceTest
         _userRepositoryMock.VerifyAll();
         _sessionRepositoryMock.VerifyNoOtherCalls();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void LogIn_ShouldThrow_WhenPasswordIsIncorrect()
+    {
+        var user = new User
+        {
+            Name = "Pepe",
+            LastName = "Perez",
+            Email = "pepe@mail.com",
+            Password = "Password123!"
+        };
+
+        var email = user.Email;
+        var wrongPassword = "OtherPass1!";
+        var args = new SessionArgs(email, wrongPassword);
+
+        _userRepositoryMock
+            .Setup(r => r.Get(u => u.Email == email))
+            .Returns(user);
+
+        var act = () => _sessionService.LogIn(args);
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("Invalid credentials.");
+
+        _userRepositoryMock.VerifyAll();
+        _sessionRepositoryMock.VerifyAll();
+    }
     #endregion
     #endregion
 

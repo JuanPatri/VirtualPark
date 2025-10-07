@@ -33,4 +33,14 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
             id: typeIncidence.Id.ToString(),
             type: typeIncidence.Type);
     }
+
+    [HttpGet("typeIncidences")]
+    public List<GetTypeIncidenceResponse> GetAllTypeIncidences()
+    {
+        return _service.GetAll()
+            .Select(t => new GetTypeIncidenceResponse(
+                id: t.Id.ToString(),
+                type: t.Type))
+            .ToList();
+    }
 }

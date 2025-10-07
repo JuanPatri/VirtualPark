@@ -25,4 +25,20 @@ public class GetRoleResponseTest
         response.Id.Should().Be(id);
     }
     #endregion
+    #region Name
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Name_Getter_ReturnsAssignedValue()
+    {
+        var response = new GetRoleResponse(
+            Guid.NewGuid().ToString(),
+            "Manager",
+            "Manage users and content",
+            [Guid.NewGuid().ToString()],
+            [Guid.NewGuid().ToString()]
+        );
+
+        response.Name.Should().Be("Manager");
+    }
+    #endregion
 }

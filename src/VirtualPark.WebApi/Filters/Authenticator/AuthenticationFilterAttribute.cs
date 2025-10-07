@@ -17,12 +17,18 @@ public sealed class AuthenticationFilterAttribute : Attribute, IAuthorizationFil
             return;
         }
 
-        if(authorizationHeader.ToString().StartsWith("Bearer "))
+        if (!authorizationHeader.ToString().StartsWith("Bearer "))
+        {
+            context.Result = BuildErrorResult("InvalidAuthorization", "The provided authorization header format is invalid");
+            return;
+        }
+
+        if(!authorizationHeader.ToString().Contains("expired"))
         {
             return;
         }
 
-        context.Result = BuildErrorResult("InvalidAuthorization", "The provided authorization header format is invalid");
+        context.Result = BuildErrorResult("ExpiredAuthorization", "The provided authorization header is expired");
         return;
     }
 

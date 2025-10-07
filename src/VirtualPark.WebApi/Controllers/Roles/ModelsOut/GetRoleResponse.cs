@@ -4,4 +4,5 @@ public class GetRoleResponse(string id, string name, string description, List<st
 {
     public string Id { get; init; } = id;
     public string Name { get; init; } = name;
+    public string Description { get; init; } = description;
 }

@@ -115,7 +115,7 @@ public class CreatePermissionRequestTest
         Action act = () => request.ToArgs();
 
         act.Should().Throw<InvalidOperationException>()
-            .WithMessage("List can't be null or empty*");
+            .WithMessage("Role list can't be null");
     }
 
     [TestMethod]
@@ -129,10 +129,10 @@ public class CreatePermissionRequestTest
             RolesIds = []
         };
 
-        Action act = () => request.ToArgs();
+        var act = () => request.ToArgs();
 
         act.Should().Throw<InvalidOperationException>()
-            .WithMessage("List can't be null or empty*");
+            .WithMessage("Role list can't be null");
     }
 
     [TestMethod]

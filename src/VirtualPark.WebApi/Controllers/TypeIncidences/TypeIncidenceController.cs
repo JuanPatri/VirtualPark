@@ -43,4 +43,11 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
                 type: t.Type))
             .ToList();
     }
+
+    [HttpDelete("typeIncidences/{id}")]
+    public void DeleteTypeIncidence(string id)
+    {
+        var guid = ValidationServices.ValidateAndParseGuid(id);
+        _service.Delete(guid);
+    }
 }

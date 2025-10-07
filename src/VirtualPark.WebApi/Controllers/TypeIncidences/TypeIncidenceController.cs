@@ -21,4 +21,16 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
 
         return new CreateTypeIncidenceResponse(id.ToString());
     }
+
+    [HttpGet("typeIncidences/{id}")]
+    public GetTypeIncidenceResponse GetTypeIncidenceById(string id)
+    {
+        var guid = ValidationServices.ValidateAndParseGuid(id);
+
+        var typeIncidence = _service.Get(guid)!;
+
+        return new GetTypeIncidenceResponse(
+            id: typeIncidence.Id.ToString(),
+            type: typeIncidence.Type);
+    }
 }

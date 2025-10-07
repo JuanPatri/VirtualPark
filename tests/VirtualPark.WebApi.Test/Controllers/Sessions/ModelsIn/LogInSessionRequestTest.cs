@@ -8,14 +8,13 @@ namespace VirtualPark.WebApi.Test.Controllers.Sessions.ModelsIn;
 [TestCategory("LogInSessionRequest")]
 public class LogInSessionRequestTest
 {
-    #region UserId
+    #region Email
     [TestMethod]
     [TestCategory("Validation")]
-    public void UserId_Getter_ReturnsAssignedValue()
+    public void Email_Getter_ReturnsAssignedValue()
     {
-        var id = Guid.NewGuid().ToString();
-        var createSessionRequest = new LogInSessionRequest { UserId = id };
-        createSessionRequest.UserId.Should().Be(id);
+        var createSessionRequest = new LogInSessionRequest { Email = "email@gmail.com" };
+        createSessionRequest.Email.Should().Be("email@gmail.com");
     }
     #endregion
 

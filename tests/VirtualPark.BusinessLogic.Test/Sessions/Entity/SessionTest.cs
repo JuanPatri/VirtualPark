@@ -103,4 +103,29 @@ public class SessionTest
     }
     #endregion
     #endregion
+
+    #region Password
+    #region Get
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Password_Getter_ReturnsAssignedValue()
+    {
+        var password = "Password1!";
+        var session = new Session { Password = password };
+        session.Password.Should().Be(password);
+    }
+    #endregion
+
+    #region Set
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Password_Setter_ReturnsAssignedValue()
+    {
+        var password = "Password1!";
+        var session = new Session();
+        session.Password = password;
+        session.Password.Should().Be(password);
+    }
+    #endregion
+    #endregion
 }

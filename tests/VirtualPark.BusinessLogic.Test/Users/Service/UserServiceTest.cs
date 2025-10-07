@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.Users.Models;
@@ -628,6 +629,125 @@ public class UserServiceTest
         _usersRepositoryMock.VerifyAll();
         _visitorProfileRepositoryMock.VerifyNoOtherCalls();
         _rolesRepositoryMock.VerifyNoOtherCalls();
+    }
+    #endregion
+    #endregion
+
+    #region HasPermission
+    #region Success
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void HasPermission_ShouldReturnTrue_WhenFirstRoleHasThePermission()
+    {
+        var userId = Guid.NewGuid();
+        var roleId1 = Guid.NewGuid();
+
+        var user = new User
+        {
+            Name = "Pepe",
+            LastName = "Perez",
+            Email = "pepe@mail.com",
+            Password = "Password123!",
+            Roles = [new Role { Id = roleId1 }]
+        };
+
+        _usersRepositoryMock
+            .Setup(r => r.Get(u => u.Id == userId))
+            .Returns(user);
+
+        var firstRoleRef = user.Roles.First();
+
+        var role1 = new Role
+        {
+            Id = roleId1,
+            Name = "Admin",
+            Permissions =
+            [
+                new Permission { Key = "USERS_MANAGE", Description = "Manage" }
+            ]
+        };
+
+        _rolesRepositoryMock
+            .Setup(r => r.Get(role => role.Id == firstRoleRef.Id))
+            .Returns(role1);
+
+        var result = _userService.HasPermission(userId, "USERS_MANAGE");
+
+        result.Should().BeTrue();
+
+        _usersRepositoryMock.VerifyAll();
+        _rolesRepositoryMock.VerifyAll();
+    }
+    #endregion
+
+    #region Failure
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void HasPermission_ShouldReturnFalse_WhenFirstRoleDoesNotHavePermission_EvenIfSecondHas()
+    {
+        var userId = Guid.NewGuid();
+        var roleId1 = Guid.NewGuid();
+        var roleId2 = Guid.NewGuid();
+
+        var user = new User
+        {
+            Name = "Ana",
+            LastName = "Gomez",
+            Email = "ana@mail.com",
+            Password = "Password123!",
+            Roles = [new Role { Id = roleId1 }, new Role { Id = roleId2 }]
+        };
+
+        _usersRepositoryMock
+            .Setup(r => r.Get(u => u.Id == userId))
+            .Returns(user);
+
+        var firstRoleRef = user.Roles.First();
+
+        var role1 = new Role
+        {
+            Id = roleId1,
+            Name = "Visitor",
+            Permissions = [new Permission { Key = "OTHER_PERMISSION" }]
+        };
+
+        _rolesRepositoryMock
+            .Setup(r => r.Get(role => role.Id == firstRoleRef.Id))
+            .Returns(role1);
+
+        var result = _userService.HasPermission(userId, "USERS_MANAGE");
+
+        result.Should().BeFalse();
+
+        _usersRepositoryMock.VerifyAll();
+        _rolesRepositoryMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void HasPermission_ShouldReturnFalse_WhenUserHasNoRoles()
+    {
+        var userId = Guid.NewGuid();
+
+        var user = new User
+        {
+            Name = "Sin",
+            LastName = "Roles",
+            Email = "noroles@mail.com",
+            Password = "Password123!",
+            Roles = []
+        };
+
+        _usersRepositoryMock
+            .Setup(r => r.Get(u => u.Id == userId))
+            .Returns(user);
+
+        var result = _userService.HasPermission(userId, "USERS_MANAGE");
+
+        result.Should().BeFalse();
+
+        _usersRepositoryMock.VerifyAll();
+        _rolesRepositoryMock.VerifyAll();
     }
     #endregion
     #endregion

@@ -88,4 +88,48 @@ public class PermissionControllerTest
         _permissionServiceMock.VerifyAll();
     }
     #endregion
+
+    #region GetAll
+    [TestMethod]
+    public void GetAllPermissions_ShouldReturnMappedList()
+    {
+        var role1 = new BusinessLogic.Roles.Entity.Role { Name = "Admin" };
+        var role2 = new BusinessLogic.Roles.Entity.Role { Name = "Visitor" };
+
+        var permission1 = new Permission
+        {
+            Description = "Manage Users",
+            Key = "USERS_MANAGE",
+            Roles = [role1]
+        };
+
+        var permission2 = new Permission
+        {
+            Description = "View Stats",
+            Key = "STATS_VIEW",
+            Roles = [role2]
+        };
+
+        _permissionServiceMock
+            .Setup(s => s.GetAll())
+            .Returns([permission1, permission2]);
+
+        var result = _permissionController.GetAllPermissions();
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+
+        var first = result.First();
+        first.Description.Should().Be("Manage Users");
+        first.Key.Should().Be("USERS_MANAGE");
+        first.Roles.Should().ContainSingle().Which.Should().Be(role1.Id.ToString());
+
+        var second = result.Last();
+        second.Description.Should().Be("View Stats");
+        second.Key.Should().Be("STATS_VIEW");
+        second.Roles.Should().ContainSingle().Which.Should().Be(role2.Id.ToString());
+
+        _permissionServiceMock.VerifyAll();
+    }
+    #endregion
 }

@@ -18,4 +18,14 @@ public class SessionArgsTest
         sessionArgs.UserId.Should().Be(guid);
     }
     #endregion
+
+    #region Email
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Email_Getter_ReturnsAssignedValue()
+    {
+        var sessionArgs = new SessionArgs(Guid.NewGuid().ToString(), "email@gmail.com");
+        sessionArgs.Email.Should().Be("email@gmail.com");
+    }
+    #endregion
 }

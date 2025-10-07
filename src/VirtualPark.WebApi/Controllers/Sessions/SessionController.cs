@@ -1,5 +1,23 @@
+using Microsoft.AspNetCore.Mvc;
+using VirtualPark.BusinessLogic.Sessions.Models;
+using VirtualPark.BusinessLogic.Sessions.Service;
+using VirtualPark.WebApi.Controllers.Sessions.ModelsIn;
+using VirtualPark.WebApi.Controllers.Sessions.ModelsOut;
+
 namespace VirtualPark.WebApi.Controllers.Sessions;
 
-public class SessionController
+[ApiController]
+public sealed class SessionController(ISessionService sessionService) : ControllerBase
 {
+    private readonly ISessionService _sessionService = sessionService;
+
+    [HttpPost("sessions/login")]
+    public LogInSessionResponse LogIn(LogInSessionRequest request)
+    {
+        SessionArgs args = request.ToArgs();
+
+        Guid token = _sessionService.LogIn(args);
+
+        return new LogInSessionResponse(token.ToString());
+    }
 }

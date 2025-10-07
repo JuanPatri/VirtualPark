@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Sessions.Models;
 using VirtualPark.BusinessLogic.Sessions.Service;

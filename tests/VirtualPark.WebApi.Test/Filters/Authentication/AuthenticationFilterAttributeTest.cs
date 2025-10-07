@@ -186,4 +186,39 @@ public class AuthenticationFilterAttributeTest
         result.Value!.ToString().Should().Contain("InternalError");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void OnAuthorization_WhenSessionServiceThrowsInvalidOperationException_ShouldReturnExpiredAuthorization()
+    {
+        var mockSessionService = new Mock<ISessionService>(MockBehavior.Strict);
+        var validToken = Guid.NewGuid();
+
+        mockSessionService.Setup(s => s.GetUserLogged(validToken))
+            .Throws(new InvalidOperationException("Session expired"));
+
+        var filter = new AuthenticationFilterAttribute();
+
+        var headers = new HeaderDictionary
+        {
+            { "Authorization", $"Bearer {validToken}" }
+        };
+
+        var context = CreateAuthorizationContext(headers);
+
+        context.HttpContext.RequestServices = new ServiceCollection()
+            .AddSingleton(mockSessionService.Object)
+            .BuildServiceProvider();
+
+        filter.OnAuthorization(context);
+
+        var result = context.Result as ObjectResult;
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
+
+        var value = result.Value!.ToString();
+        value.Should().Contain("ExpiredAuthorization");
+
+        mockSessionService.VerifyAll();
+    }
 }

@@ -14,6 +14,6 @@ public sealed class StrategyFactory : IStrategyFactory
 
     public IStrategy Create(string strategyKey)
     {
-        return _strategies.TryGetValue(strategyKey, out var strategy) ? strategy : throw new KeyNotFoundException($"Estrategia '{strategyKey}' no encontrada.");
+        return _strategies.TryGetValue(strategyKey, out var strategy) ? strategy : throw new KeyNotFoundException($"Strategy '{strategyKey}' not found.");
     }
 }

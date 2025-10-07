@@ -59,7 +59,7 @@ public class StrategyFactoryTests
 
         act.Should()
             .Throw<KeyNotFoundException>()
-            .WithMessage("Estrategia 'Unknown' no encontrada.");
+            .WithMessage("Strategy 'Unknown' not found.");
     }
 
     [TestMethod]

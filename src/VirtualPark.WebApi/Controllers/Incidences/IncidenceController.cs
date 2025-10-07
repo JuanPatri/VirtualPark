@@ -40,4 +40,20 @@ public sealed class IncidenceController(IIncidenceService incidenceService) : Co
 
         return incidenceResponse;
     }
+
+    [HttpGet]
+    public List<GetIncidenceResponse> GetAllIncidences()
+    {
+        var incidences = _incidenceService.GetAll();
+
+        return incidences.Select(i => new GetIncidenceResponse(
+            id: i.Id.ToString(),
+            typeId: i.Type?.Id.ToString() ?? string.Empty,
+            description: i.Description,
+            start: i.Start.ToString(),
+            end: i.End.ToString(),
+            attractionId: i.AttractionId.ToString(),
+            active: i.Active.ToString()
+        )).ToList();
+    }
 }

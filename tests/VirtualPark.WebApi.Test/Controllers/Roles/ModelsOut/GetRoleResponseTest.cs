@@ -76,4 +76,23 @@ public class GetRoleResponseTest
         response.PermissionIds.Should().Contain([p1, p2]);
     }
     #endregion
+    #region UsersIds
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void UsersIds_Getter_ReturnsAssignedValue()
+    {
+        var u1 = Guid.NewGuid().ToString();
+        var u2 = Guid.NewGuid().ToString();
+
+        var response = new GetRoleResponse(
+            Guid.NewGuid().ToString(),
+            "Support",
+            "Limited support access",
+            [Guid.NewGuid().ToString()],
+            [u1, u2]
+        );
+
+        response.UsersIds.Should().Contain([u1, u2]);
+    }
+    #endregion
 }

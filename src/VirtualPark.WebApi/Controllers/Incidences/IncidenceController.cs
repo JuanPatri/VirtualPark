@@ -12,4 +12,13 @@ public sealed class IncidenceController(IIncidenceService incidenceService) : Co
 {
     private readonly IIncidenceService _incidenceService = incidenceService;
 
+    [HttpPost]
+    public CreateIncidenceResponse CreateIncidence(CreateIncidenceRequest newIncidece)
+    {
+        IncidenceArgs incidenceArgs = newIncidece.ToArgs();
+
+        Guid responseId = _incidenceService.Create(incidenceArgs);
+
+        return new CreateIncidenceResponse(responseId.ToString());
+    }
 }

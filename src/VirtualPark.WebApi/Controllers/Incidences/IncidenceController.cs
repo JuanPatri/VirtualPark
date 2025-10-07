@@ -53,8 +53,7 @@ public sealed class IncidenceController(IIncidenceService incidenceService) : Co
             start: i.Start.ToString(),
             end: i.End.ToString(),
             attractionId: i.AttractionId.ToString(),
-            active: i.Active.ToString()
-        )).ToList();
+            active: i.Active.ToString())).ToList();
     }
 
     [HttpDelete("incidences/{id}")]
@@ -65,7 +64,7 @@ public sealed class IncidenceController(IIncidenceService incidenceService) : Co
     }
 
     [HttpPut("incidences/{id}")]
-    public void UpdateIncidence(string id,  CreateIncidenceRequest request)
+    public void UpdateIncidence(string id, CreateIncidenceRequest request)
     {
         var incidenceId = ValidationServices.ValidateAndParseGuid(id);
         var args = request.ToArgs();

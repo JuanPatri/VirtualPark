@@ -79,7 +79,7 @@ public class CreateIncidenceRequestTest
             TypeId = typeId,
             Description = "Falla técnica en atracción",
             Start = "2025-10-06 10:00:00",
-            End =  "2025-10-06 11:00:00",
+            End = "2025-10-06 11:00:00",
             AttractionId = attractionId,
             Active = "true"
         };

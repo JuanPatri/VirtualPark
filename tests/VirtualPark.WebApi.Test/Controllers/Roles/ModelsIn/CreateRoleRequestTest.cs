@@ -35,4 +35,129 @@ public class CreateRoleRequestTest
         request.Permissions.Should().Contain(new[] { "users.read", "users.write" });
     }
     #endregion
+    #region ToArgs
+        #region Success
+        [TestMethod]
+        [TestCategory("Validation")]
+        public void ToArgs_ShouldMapAllFields_WhenInputIsValid()
+        {
+            var request = new CreateRoleRequest
+            {
+                Name = "Manager",
+                Description = "Manage users and content",
+                Permissions = new List<string> { "users.read", "users.update", "content.publish" }
+            };
+
+            var args = request.ToArgs();
+
+            args.Should().NotBeNull();
+            args!.Name.Should().Be("Manager");
+            args.Description.Should().Be("Manage users and content");
+            args.Permissions.Should().Contain(new[] { "users.read", "users.update", "content.publish" });
+            args.Permissions.Should().HaveCount(3);
+        }
+        #endregion
+
+        #region Failure
+        [TestMethod]
+        [TestCategory("Validation")]
+        public void ToArgs_ShouldThrow_WhenPermissionsIsNull()
+        {
+            var request = new CreateRoleRequest
+            {
+                Name = "Reporter",
+                Description = "Read-only access",
+                Permissions = null
+            };
+
+            Action act = () => request.ToArgs();
+
+            act.Should()
+               .Throw<InvalidOperationException>()
+               .WithMessage("Permission list can't be null");
+        }
+
+        [TestMethod]
+        [TestCategory("Validation")]
+        public void ToArgs_ShouldThrow_WhenPermissionsIsEmpty()
+        {
+            var request = new CreateRoleRequest
+            {
+                Name = "Reporter",
+                Description = "Read-only access",
+                Permissions = new List<string>()
+            };
+
+            Action act = () => request.ToArgs();
+
+            act.Should()
+               .Throw<InvalidOperationException>()
+               .WithMessage("Permission list can't be null");
+        }
+
+        [TestMethod]
+        [TestCategory("Validation")]
+        public void ToArgs_ShouldThrow_WhenNameIsNull()
+        {
+            var request = new CreateRoleRequest
+            {
+                Name = null,
+                Description = "Some description",
+                Permissions = new List<string> { "users.read" }
+            };
+
+            Action act = () => request.ToArgs();
+
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [TestMethod]
+        [TestCategory("Validation")]
+        public void ToArgs_ShouldThrow_WhenNameIsEmpty()
+        {
+            var request = new CreateRoleRequest
+            {
+                Name = string.Empty,
+                Description = "Some description",
+                Permissions = new List<string> { "users.read" }
+            };
+
+            Action act = () => request.ToArgs();
+
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [TestMethod]
+        [TestCategory("Validation")]
+        public void ToArgs_ShouldThrow_WhenDescriptionIsNull()
+        {
+            var request = new CreateRoleRequest
+            {
+                Name = "Operator",
+                Description = null,
+                Permissions = new List<string> { "users.read" }
+            };
+
+            Action act = () => request.ToArgs();
+
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [TestMethod]
+        [TestCategory("Validation")]
+        public void ToArgs_ShouldThrow_WhenDescriptionIsEmpty()
+        {
+            var request = new CreateRoleRequest
+            {
+                Name = "Operator",
+                Description = string.Empty,
+                Permissions = new List<string> { "users.read" }
+            };
+
+            Action act = () => request.ToArgs();
+
+            act.Should().Throw<ArgumentException>();
+        }
+        #endregion
+        #endregion
 }

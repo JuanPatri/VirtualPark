@@ -11,45 +11,53 @@ public sealed class AuthorizationFilterAttribute(string? permission = null)
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        if(context.Result != null)
+        if (context.Result != null)
         {
             return;
         }
 
-        var userLogged = context.HttpContext.Items["UserLogged"] as User;
-        if(userLogged is null)
+        if (context.HttpContext.Items["UserLogged"] is not User userLogged)
         {
-            context.Result =
-                new ObjectResult(new { InnerCode = "Unauthorized", Message = "Not authenticated" })
-                {
-                    StatusCode = StatusCodes.Status401Unauthorized
-                };
+            context.Result = new ObjectResult(new
+            {
+                InnerCode = "Unauthorized",
+                Message = "Not authenticated"
+            })
+            {
+                StatusCode = StatusCodes.Status401Unauthorized
+            };
             return;
         }
 
         var requiredPermission =
             permission ?? $"{context.RouteData.Values["action"]}-{context.RouteData.Values["controller"]}";
 
-        IUserService? userService = context.HttpContext.RequestServices.GetService<IUserService>();
-
-        if(userService is null)
+        var userService = context.HttpContext.RequestServices.GetService<IUserService>();
+        if (userService is null)
         {
-            context.Result =
-                new ObjectResult(new { InnerCode = "InternalError", Message = "User service not available" })
-                {
-                    StatusCode = StatusCodes.Status500InternalServerError
-                };
+            context.Result = new ObjectResult(new
+            {
+                InnerCode = "InternalError",
+                Message = "User service not available"
+            })
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
             return;
         }
 
         var hasPermission = userService.HasPermission(userLogged.Id, requiredPermission);
 
-        if(!hasPermission)
+        if (!hasPermission)
         {
             context.Result = new ObjectResult(new
             {
-                InnerCode = "Forbidden", Message = $"Missing permission {requiredPermission}"
-            }) { StatusCode = StatusCodes.Status403Forbidden };
+                InnerCode = "Forbidden",
+                Message = $"Missing permission {requiredPermission}"
+            })
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
         }
     }
 }

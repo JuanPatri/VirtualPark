@@ -44,4 +44,27 @@ public sealed class ClockAppControllerTest
         _clockAppServiceMock.VerifyAll();
     }
     #endregion
+
+    #region Update
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void UpdateClock_WhenValidRequest_ShouldCallServiceUpdate()
+    {
+        var request = new UpdateClockRequest
+        {
+            DateSystem = "2025-10-06T22:00:00"
+        };
+
+        var expectedArgs = request.ToArgs();
+
+        _clockAppServiceMock
+            .Setup(s => s.Update(It.Is<ClockAppArgs>(a =>
+                a.SystemDateTime == expectedArgs.SystemDateTime)))
+            .Verifiable();
+
+        _controller.UpdateClock(request);
+
+        _clockAppServiceMock.VerifyAll();
+    }
+    #endregion
 }

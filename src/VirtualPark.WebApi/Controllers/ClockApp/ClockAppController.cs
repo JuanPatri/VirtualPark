@@ -9,10 +9,15 @@ public sealed class ClockAppController(IClockAppService clockAppService) : Contr
 {
     private readonly IClockAppService _clockAppService = clockAppService;
 
-    [HttpGet("/clock")]
+    [HttpGet("v1/clock")]
     public GetClockResponse GetClock()
     {
         var clock = _clockAppService.Get();
+        return MapToResponse(clock);
+    }
+
+    private static GetClockResponse MapToResponse(BusinessLogic.ClocksApp.Entity.ClockApp clock)
+    {
         return new GetClockResponse(
             dateSystem: clock.DateSystem.ToString("yyyy-MM-ddTHH:mm:ss"));
     }

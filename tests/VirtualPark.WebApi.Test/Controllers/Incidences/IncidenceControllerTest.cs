@@ -320,4 +320,59 @@ public class IncidenceControllerTest
             _incidenceServiceMock.VerifyNoOtherCalls();
         }
         #endregion
+        #region Put
+        [TestMethod]
+        public void UpdateIncidence_ShouldCallServiceUpdate_WhenDataIsValid()
+        {
+            var id = Guid.NewGuid();
+            var typeId = Guid.NewGuid().ToString();
+            var attractionId = Guid.NewGuid().ToString();
+
+            var request = new CreateIncidenceRequest
+            {
+                TypeId = typeId,
+                Description = "Falla técnica en atracción",
+                Start = "2025-10-06 10:00:00",
+                End = "2025-10-06 11:00:00",
+                AttractionId = attractionId,
+                Active = "true"
+            };
+
+            var expectedArgs = request.ToArgs();
+
+            _incidenceServiceMock
+                .Setup(s => s.Update(It.Is<IncidenceArgs>(a =>
+                    a.TypeIncidence == expectedArgs.TypeIncidence &&
+                    a.Description == expectedArgs.Description &&
+                    a.Start == expectedArgs.Start &&
+                    a.End == expectedArgs.End &&
+                    a.AttractionId == expectedArgs.AttractionId &&
+                    a.Active == expectedArgs.Active), id))
+                .Verifiable();
+
+            _incidencesController.UpdateIncidence(id.ToString(), request);
+
+            _incidenceServiceMock.VerifyAll();
+        }
+
+        [TestMethod]
+        public void UpdateIncidence_ShouldThrow_WhenIdIsInvalid()
+        {
+            var invalidId = "not-a-guid";
+            var request = new CreateIncidenceRequest
+            {
+                TypeId = Guid.NewGuid().ToString(),
+                Description = "Falla técnica",
+                Start = "2025-10-06 10:00:00",
+                End = "2025-10-06 11:00:00",
+                AttractionId = Guid.NewGuid().ToString(),
+                Active = "true"
+            };
+
+            Action act = () => _incidencesController.UpdateIncidence(invalidId, request);
+
+            act.Should().Throw<FormatException>();
+            _incidenceServiceMock.VerifyNoOtherCalls();
+        }
+        #endregion
 }

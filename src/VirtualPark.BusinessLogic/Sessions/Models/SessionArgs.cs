@@ -2,7 +2,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 
 namespace VirtualPark.BusinessLogic.Sessions.Models;
 
-public class SessionArgs(string userId)
+public class SessionArgs(string email)
 {
-    public Guid UserId { get; init; } = ValidationServices.ValidateAndParseGuid(userId);
+    public string Email { get; init; } = ValidationServices.ValidateEmail(email);
 }

@@ -37,8 +37,6 @@ public class SessionService(IRepository<Session> sessionRepository, IReadOnlyRep
 
     private Session MapToEntity(SessionArgs args) => new Session
     {
-        UserId = args.UserId,
-        User = GetUser(args.UserId),
     };
 
     private User GetUser(Guid userId)

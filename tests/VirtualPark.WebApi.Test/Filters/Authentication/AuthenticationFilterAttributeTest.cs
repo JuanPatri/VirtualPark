@@ -98,4 +98,26 @@ public class AuthenticationFilterAttributeTest
         value.Should().Contain("ExpiredAuthorization");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void OnAuthorization_WhenAuthorizationTokenIsValid_ShouldAssignUserToContext()
+    {
+        var filter = new AuthenticationFilterAttribute();
+
+        var headers = new HeaderDictionary
+        {
+            { "Authorization", "Bearer valid-token-123" }
+        };
+
+        var context = CreateAuthorizationContext(headers);
+
+        filter.OnAuthorization(context);
+
+        context.Result.Should().BeNull("because a valid token should not block the request");
+
+        context.HttpContext.Items.ContainsKey("UserLogged").Should().BeTrue();
+        var user = context.HttpContext.Items["UserLogged"];
+        user.Should().NotBeNull();
+    }
 }

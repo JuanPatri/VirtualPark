@@ -46,5 +46,14 @@ public class GetIncidenceResponseTest
         response.Description.Should().Be(value);
     }
     #endregion
-
+    #region Start
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Start_Getter_ReturnsAssignedValue()
+    {
+        var value = "2025-10-06T10:00:00";
+        var response = Build(start: value);
+        response.Start.Should().Be(value);
+    }
+    #endregion
 }

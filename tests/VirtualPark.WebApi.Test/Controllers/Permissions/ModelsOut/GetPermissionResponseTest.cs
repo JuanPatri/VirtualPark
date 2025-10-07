@@ -40,4 +40,16 @@ public class GetPermissionResponseTest
         response.Key.Should().Be("key");
     }
     #endregion
+
+    #region Roles
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Role_Getter_ReturnsAssignedValue()
+    {
+        var id = Guid.NewGuid().ToString();
+        var guid = Guid.NewGuid().ToString();
+        var response = new GetPermissionResponse(id, "description", "key", [guid]);
+        response.Roles.Should().Contain([guid]);
+    }
+    #endregion
 }

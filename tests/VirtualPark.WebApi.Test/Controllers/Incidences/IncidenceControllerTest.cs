@@ -294,4 +294,30 @@ public class IncidenceControllerTest
             _incidenceServiceMock.VerifyAll();
         }
         #endregion
+        #region Delete
+        [TestMethod]
+        public void DeleteIncidence_ShouldRemoveIncidence_WhenIdIsValid()
+        {
+            var id = Guid.NewGuid();
+
+            _incidenceServiceMock
+                .Setup(s => s.Remove(id))
+                .Verifiable();
+
+            _incidencesController.DeleteIncidence(id.ToString());
+
+            _incidenceServiceMock.VerifyAll();
+        }
+
+        [TestMethod]
+        public void DeleteIncidence_ShouldThrow_WhenIdIsInvalid()
+        {
+            var invalidId = "not-a-guid";
+
+            Action act = () => _incidencesController.DeleteIncidence(invalidId);
+
+            act.Should().Throw<FormatException>();
+            _incidenceServiceMock.VerifyNoOtherCalls();
+        }
+        #endregion
 }

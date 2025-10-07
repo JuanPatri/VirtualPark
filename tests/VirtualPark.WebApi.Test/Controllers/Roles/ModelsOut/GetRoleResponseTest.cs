@@ -41,4 +41,20 @@ public class GetRoleResponseTest
         response.Name.Should().Be("Manager");
     }
     #endregion
+    #region Description
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Description_Getter_ReturnsAssignedValue()
+    {
+        var response = new GetRoleResponse(
+            Guid.NewGuid().ToString(),
+            "Reporter",
+            "Read-only access",
+            [Guid.NewGuid().ToString()],
+            [Guid.NewGuid().ToString()]
+        );
+
+        response.Description.Should().Be("Read-only access");
+    }
+    #endregion
 }

@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using VirtualPark.BusinessLogic.Tickets.Entity;
+using VirtualPark.BusinessLogic.Tickets.Models;
 using VirtualPark.BusinessLogic.Tickets.Service;
 using VirtualPark.BusinessLogic.Validations.Services;
+using VirtualPark.WebApi.Controllers.Tickets.ModelsIn;
 using VirtualPark.WebApi.Controllers.Tickets.ModelsOut;
 
 namespace VirtualPark.WebApi.Controllers.Tickets;
@@ -28,5 +30,13 @@ public sealed class TicketController(ITicketService ticketService) : ControllerB
             eventId: ticket.EventId.ToString(),
             qrId: ticket.QrId.ToString(),
             visitorId: ticket.VisitorProfileId.ToString());
+    }
+
+    [HttpPost("v1/tickets")]
+    public CreateTicketResponse CreateTicket(CreateTicketRequest request)
+    {
+        TicketArgs args = request.ToArgs();
+        Guid ticketId = _ticketService.Create(args);
+        return new CreateTicketResponse(ticketId.ToString());
     }
 }

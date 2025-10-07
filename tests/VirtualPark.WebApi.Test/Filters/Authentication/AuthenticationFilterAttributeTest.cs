@@ -103,6 +103,7 @@ public class AuthenticationFilterAttributeTest
     }
     #endregion
 
+    #region ValidTokenAuthorization
     [TestMethod]
     [TestCategory("Behaviour")]
     public void OnAuthorization_WhenAuthorizationTokenIsValid_ShouldAssignUserToContext()
@@ -132,8 +133,9 @@ public class AuthenticationFilterAttributeTest
         context.HttpContext.Items.ContainsKey("UserLogged").Should().BeTrue();
         var storedUser = context.HttpContext.Items["UserLogged"] as User;
         storedUser.Should().NotBeNull();
-        storedUser!.Email.Should().Be("user@test.com");
+        storedUser.Email.Should().Be("user@test.com");
 
         mockSessionService.VerifyAll();
     }
+    #endregion
 }

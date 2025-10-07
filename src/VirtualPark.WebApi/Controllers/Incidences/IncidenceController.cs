@@ -4,11 +4,13 @@ using VirtualPark.BusinessLogic.Incidences.Service;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Incidences.ModelsIn;
 using VirtualPark.WebApi.Controllers.Incidences.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.Incidences;
 
 [ApiController]
 [Route("api/incidences")]
+[AuthenticationFilter]
 public sealed class IncidenceController(IIncidenceService incidenceService) : ControllerBase
 {
     private readonly IIncidenceService _incidenceService = incidenceService;

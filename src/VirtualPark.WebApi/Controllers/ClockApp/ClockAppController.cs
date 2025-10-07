@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.WebApi.Controllers.ClockApp.ModelsIn;
 using VirtualPark.WebApi.Controllers.ClockApp.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.ClockApp;
 
 [ApiController]
+[AuthenticationFilter]
 public sealed class ClockAppController(IClockAppService clockAppService) : ControllerBase
 {
     private readonly IClockAppService _clockAppService = clockAppService;

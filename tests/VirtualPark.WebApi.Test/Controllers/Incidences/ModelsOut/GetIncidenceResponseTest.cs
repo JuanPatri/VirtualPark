@@ -36,4 +36,15 @@ public class GetIncidenceResponseTest
         response.TypeId.Should().Be(value);
     }
     #endregion
+    #region Description
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Description_Getter_ReturnsAssignedValue()
+    {
+        var value = "Falla técnica en atracción";
+        var response = Build(description: value);
+        response.Description.Should().Be(value);
+    }
+    #endregion
+
 }

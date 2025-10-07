@@ -47,7 +47,7 @@ public class LogInSessionRequestTest
     [TestCategory("Validation")]
     public void ToArgs_ShouldThrow_WhenEmailNull()
     {
-        var request = new LogInSessionRequest { Email = " ", Password = "Password!1" };
+        var request = new LogInSessionRequest { Email = null, Password = "Password!1" };
 
         var act = request.ToArgs;
 

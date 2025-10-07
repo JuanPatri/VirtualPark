@@ -10,7 +10,7 @@ public class LogInSessionRequest
 
     public SessionArgs ToArgs()
     {
-        /*var sessionArgs = new SessionArgs(ValidationServices.ValidateNullOrEmpty(Email));*/
+        var sessionArgs = new SessionArgs(ValidationServices.ValidateNullOrEmpty(Email), ValidationServices.ValidateNullOrEmpty(Password));
 
         return null;
     }

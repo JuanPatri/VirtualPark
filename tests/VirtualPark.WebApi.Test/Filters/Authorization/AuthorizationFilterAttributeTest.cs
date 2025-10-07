@@ -58,4 +58,30 @@ public sealed class AuthorizationFilterAttributeTest
 
         return new AuthorizationFilterContext(actionContext, new List<IFilterMetadata>());
     }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void OnAuthorization_WhenUserServiceIsNull_ShouldReturnInternalError()
+    {
+        var filter = new AuthorizationFilterAttribute("Attraction-Create");
+
+        var user = new User
+        {
+            Email = "test@virtualpark.com"
+        };
+
+        var context = CreateAuthorizationContext();
+        context.HttpContext.Items["UserLogged"] = user;
+
+        context.HttpContext.RequestServices = new ServiceCollection().BuildServiceProvider();
+
+        filter.OnAuthorization(context);
+
+        var result = context.Result as ObjectResult;
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+
+        var value = result.Value!.ToString();
+        value.Should().Contain("User service not available");
+    }
 }

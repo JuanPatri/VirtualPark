@@ -268,5 +268,18 @@ public static class ValidationServices
         }
 
         return result;
+    public static List<string> ValidateList(List<string>? list)
+    {
+        if(list == null || list.Count == 0)
+        {
+            throw new InvalidOperationException("Role list can't be null");
+        }
+
+        foreach(var r in list)
+        {
+            ValidateNullOrEmpty(r);
+        }
+
+        return list;
     }
 }

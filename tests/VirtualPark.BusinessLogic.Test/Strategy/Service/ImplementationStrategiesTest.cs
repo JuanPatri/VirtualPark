@@ -104,5 +104,35 @@ public sealed class ImplementationStrategiesTest
         strategy.CalculatePoints(visit).Should().Be(expected);
     }
     #endregion
-    
+
+    #region EventPointsStrategy
+    [TestMethod]
+    public void EventPoints_ShouldBeZero_WhenNoEvent()
+    {
+        var strategy = new EventPointsStrategy();
+        var visit = new VisitRegistration
+        {
+            Visitor = new VisitorProfile { Score = 100 },
+            Ticket = new Ticket { Event = null },
+            Attractions = new List<Attraction>()
+        };
+        strategy.CalculatePoints(visit).Should().Be(0);
+    }
+
+    [DataTestMethod]
+    [DataRow(0, 0)]
+    [DataRow(10, 30)]
+    [DataRow(25, 75)]
+    public void EventPoints_ShouldBeTriple_WhenEventPresent(int score, int expected)
+    {
+        var strategy = new EventPointsStrategy();
+        var visit = new VisitRegistration
+        {
+            Visitor = new VisitorProfile { Score = score },
+            Ticket = new Ticket { Event = new Event() },
+            Attractions = new List<Attraction>()
+        };
+        strategy.CalculatePoints(visit).Should().Be(expected);
+    }
+    #endregion
 }

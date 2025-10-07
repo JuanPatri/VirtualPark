@@ -195,4 +195,36 @@ public class RoleControllerTest
         _roleServiceMock.VerifyAll();
     }
     #endregion
+    
+    #region Update
+    [TestMethod]
+    public void UpdateRole_ValidInput_ShouldCallServiceUpdate()
+    {
+        var id = Guid.NewGuid();
+        var p1 = Guid.NewGuid().ToString();
+        var p2 = Guid.NewGuid().ToString();
+
+        var request = new CreateRoleRequest
+        {
+            Name = "ContentManager",
+            Description = "Manages content lifecycle",
+            PermissionsIds = [p1, p2]
+        };
+
+        var expectedArgs = request.ToArgs();
+
+        _roleServiceMock
+            .Setup(s => s.Update(It.Is<RoleArgs>(a =>
+                    a.Name == expectedArgs.Name &&
+                    a.Description == expectedArgs.Description &&
+                    a.PermissionIds.Count == expectedArgs.PermissionIds.Count &&
+                    a.PermissionIds.All(expectedArgs.PermissionIds.Contains)),
+                id))
+            .Verifiable();
+
+        _roleController.UpdateRole(request, id.ToString());
+
+        _roleServiceMock.VerifyAll();
+    }
+#endregion
 }

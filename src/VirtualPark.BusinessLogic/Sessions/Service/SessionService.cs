@@ -5,7 +5,7 @@ using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Sessions.Service;
 
-public class SessionService(IRepository<Session> sessionRepository, IReadOnlyRepository<User> userRepository)
+public class SessionService(IRepository<Session> sessionRepository, IReadOnlyRepository<User> userRepository) : ISessionService
 {
     private readonly IRepository<Session> _sessionRepository = sessionRepository;
     private readonly IReadOnlyRepository<User> _userRepository = userRepository;

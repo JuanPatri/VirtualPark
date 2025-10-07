@@ -16,7 +16,7 @@ public class SessionService(IRepository<Session> sessionRepository, IReadOnlyRep
 
         _sessionRepository.Add(session);
 
-        return session.Id;
+        return session.Token;
     }
 
     public User GetUserLogged(Guid token)

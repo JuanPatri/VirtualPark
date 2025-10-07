@@ -722,6 +722,33 @@ public class UserServiceTest
         _usersRepositoryMock.VerifyAll();
         _rolesRepositoryMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void HasPermission_ShouldReturnFalse_WhenUserHasNoRoles()
+    {
+        var userId = Guid.NewGuid();
+
+        var user = new User
+        {
+            Name = "Sin",
+            LastName = "Roles",
+            Email = "noroles@mail.com",
+            Password = "Password123!",
+            Roles = new List<Role>()
+        };
+
+        _usersRepositoryMock
+            .Setup(r => r.Get(u => u.Id == userId))
+            .Returns(user);
+
+        var result = _userService.HasPermission(userId, "USERS_MANAGE");
+
+        result.Should().BeFalse();
+
+        _usersRepositoryMock.VerifyAll();
+        _rolesRepositoryMock.VerifyAll();
+    }
     #endregion
     #endregion
 }

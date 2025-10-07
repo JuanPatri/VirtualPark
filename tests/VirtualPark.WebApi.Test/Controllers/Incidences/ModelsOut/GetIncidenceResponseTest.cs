@@ -1,3 +1,4 @@
+using FluentAssertions;
 using VirtualPark.WebApi.Controllers.Incidences.ModelsOut;
 
 namespace VirtualPark.WebApi.Test.Controllers.Incidences.ModelsOut;

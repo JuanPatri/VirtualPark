@@ -1,3 +1,6 @@
+using FluentAssertions;
+using VirtualPark.WebApi.Controllers.Ranking.ModelsOut;
+
 namespace VirtualPark.WebApi.Test.Controllers.Ranking.ModelsOut;
 
 [TestClass]
@@ -11,10 +14,7 @@ public sealed class GetRankingResponseTest
         string? period = null)
     {
         return new GetRankingResponse(
-            id: id ?? Guid.NewGuid().ToString(),
-            date: date ?? "2025-10-06",
-            users: users ?? [Guid.NewGuid().ToString(), Guid.NewGuid().ToString()],
-            period: period ?? "Daily");
+            id: id ?? Guid.NewGuid().ToString());
     }
 
     #region Id

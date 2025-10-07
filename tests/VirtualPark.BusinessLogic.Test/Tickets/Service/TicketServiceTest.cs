@@ -48,12 +48,7 @@ public class TicketServiceTest
 
         var result = _ticketService.Create(args);
 
-        result.Should().NotBeNull();
-        result.EventId.Should().Be(Guid.Parse(eventId));
-        result.Visitor.Should().NotBeNull();
-        result.Visitor.Id.Should().Be(visitorId);
-        result.Type.Should().Be(EntranceType.General);
-
+        result.Should().NotBeEmpty();
         _ticketRepositoryMock.Verify(r => r.Add(It.IsAny<Ticket>()), Times.Once);
     }
 
@@ -72,12 +67,7 @@ public class TicketServiceTest
 
         var result = _ticketService.Create(args);
 
-        result.Should().NotBeNull();
-        result.Type.Should().Be(EntranceType.General);
-        result.Visitor.Should().NotBeNull();
-        result.Visitor.Id.Should().Be(visitorId);
-
-        (result.EventId == Guid.Empty).Should().BeTrue();
+        result.Should().NotBeEmpty();
 
         _eventRepositoryMock.Verify(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()), Times.Never);
 

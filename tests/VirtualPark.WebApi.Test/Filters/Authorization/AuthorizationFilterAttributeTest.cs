@@ -1,3 +1,15 @@
+using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using VirtualPark.BusinessLogic.Users.Entity;
+using VirtualPark.BusinessLogic.Users.Service;
+using VirtualPark.WebApi.Filters.Authorization;
+
 namespace VirtualPark.WebApi.Test.Filters.Authorization;
 
 [TestClass]
@@ -8,26 +20,21 @@ public sealed class AuthorizationFilterAttributeTest
     [TestCategory("Behaviour")]
     public void OnAuthorization_WhenUserHasNotPermission_ShouldReturnForbidden()
     {
+        var mockUserService = new Mock<IUserService>(MockBehavior.Strict);
+        var user = new User { Email = "test@virtualpark.com", Roles = [] };
+
+        mockUserService
+            .Setup(s => s.HasPermission(user.Id, "Attraction-Create"))
+            .Returns(false);
+
         var filter = new AuthorizationFilterAttribute("Attraction-Create");
 
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            Email = "test@virtualpark.com",
-            Roles = new List<Role>
-            {
-                new() { 
-                    Name = "Visitor", 
-                    Permissions = new List<Permission>
-                    {
-                        new() { Name = "Ranking-Get" }
-                    }
-                }
-            }
-        };
-
-        var context = CreateAuthorizationContext();
+        AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Items["UserLogged"] = user;
+
+        context.HttpContext.RequestServices = new ServiceCollection()
+            .AddSingleton(mockUserService.Object)
+            .BuildServiceProvider();
 
         filter.OnAuthorization(context);
 
@@ -35,6 +42,8 @@ public sealed class AuthorizationFilterAttributeTest
         result.Should().NotBeNull();
         result!.StatusCode.Should().Be(StatusCodes.Status403Forbidden);
         result.Value!.ToString().Should().Contain("Missing permission Attraction-Create");
+
+        mockUserService.VerifyAll();
     }
 
     private static AuthorizationFilterContext CreateAuthorizationContext()
@@ -43,8 +52,8 @@ public sealed class AuthorizationFilterAttributeTest
         var actionContext = new ActionContext
         {
             HttpContext = httpContext,
-            RouteData = new Microsoft.AspNetCore.Routing.RouteData(),
-            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
+            RouteData = new RouteData(),
+            ActionDescriptor = new ControllerActionDescriptor()
         };
 
         return new AuthorizationFilterContext(actionContext, new List<IFilterMetadata>());

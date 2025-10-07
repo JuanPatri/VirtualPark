@@ -31,4 +31,11 @@ public sealed class SessionController(ISessionService sessionService) : Controll
 
         return new GetUserLoggedSessionResponse(user.Id.ToString());
     }
+
+    [HttpDelete("sessions/logout/{token}")]
+    public void LogOut(string token)
+    {
+        var sessionToken = ValidationServices.ValidateAndParseGuid(token);
+        _sessionService.LogOut(sessionToken);
+    }
 }

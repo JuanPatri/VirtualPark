@@ -5,4 +5,5 @@ namespace VirtualPark.WebApi.Controllers.Roles.ModelsIn;
 
 public class CreateRoleRequest
 {
+    public string? Name { get; init; }
 }

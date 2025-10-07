@@ -18,4 +18,15 @@ public class GetPermissionResponseTest
         response.Id.Should().Be(id);
     }
     #endregion
+
+    #region Description
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Description_Getter_ReturnsAssignedValue()
+    {
+        var id = Guid.NewGuid().ToString();
+        var response = new GetPermissionResponse(id, "description");
+        response.Description.Should().Be("description");
+    }
+    #endregion
 }

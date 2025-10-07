@@ -48,7 +48,7 @@ public class CreateTypeIncidenceRequestTest
             Type = null
         };
 
-        var act = () => request.ToArgs();
+        var act = request.ToArgs;
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Value cannot be null or empty.");
@@ -63,7 +63,7 @@ public class CreateTypeIncidenceRequestTest
             Type = string.Empty
         };
 
-        var act = () => request.ToArgs();
+        var act = request.ToArgs;
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Value cannot be null or empty.");

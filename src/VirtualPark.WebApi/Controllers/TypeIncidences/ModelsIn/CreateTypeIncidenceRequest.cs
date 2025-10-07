@@ -10,7 +10,6 @@ public class CreateTypeIncidenceRequest
     public TypeIncidenceArgs ToArgs()
     {
         return new TypeIncidenceArgs(
-            ValidationServices.ValidateNullOrEmpty(Type)
-        );
+            ValidationServices.ValidateNullOrEmpty(Type));
     }
 }

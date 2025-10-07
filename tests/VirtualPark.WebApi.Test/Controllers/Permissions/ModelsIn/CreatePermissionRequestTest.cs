@@ -8,11 +8,13 @@ namespace VirtualPark.WebApi.Test.Controllers.Permissions.ModelsIn;
 [TestCategory("CreatePermissionRequest")]
 public class CreatePermissionRequestTest
 {
+    #region Description
     [TestMethod]
     [TestCategory("Validation")]
     public void Description_Getter_ReturnsAssignedValue()
     {
-        var createPermissionRequest = new CreatePermissionRequest { Description = "Pepe" };
-        createPermissionRequest.Description.Should().Be("Pepe");
+        var createPermissionRequest = new CreatePermissionRequest { Description = "description" };
+        createPermissionRequest.Description.Should().Be("description");
     }
+    #endregion
 }

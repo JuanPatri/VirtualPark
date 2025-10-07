@@ -22,7 +22,7 @@ public class AuthenticationFilterAttributeTest
 
         var result = context.Result as ObjectResult;
         result.Should().NotBeNull();
-        result!.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
+        result.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
 
         var value = result.Value!.ToString();
         value.Should().Contain("Unauthenticated");
@@ -67,13 +67,14 @@ public class AuthenticationFilterAttributeTest
 
         var result = context.Result as ObjectResult;
         result.Should().NotBeNull();
-        result!.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
+        result.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
 
         var value = result.Value!.ToString();
         value.Should().Contain("InvalidAuthorization");
     }
     #endregion
 
+    #region ExpiredToken
     [TestMethod]
     [TestCategory("Behaviour")]
     public void OnAuthorization_WhenAuthorizationTokenIsExpired_ShouldReturnExpiredAuthorization()
@@ -91,9 +92,10 @@ public class AuthenticationFilterAttributeTest
 
         var result = context.Result as ObjectResult;
         result.Should().NotBeNull();
-        result!.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
+        result.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
 
         var value = result.Value!.ToString();
         value.Should().Contain("ExpiredAuthorization");
     }
+    #endregion
 }

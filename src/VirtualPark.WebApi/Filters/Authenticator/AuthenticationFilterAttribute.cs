@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
 namespace VirtualPark.WebApi.Filters.Authenticator;
@@ -23,13 +24,18 @@ public sealed class AuthenticationFilterAttribute : Attribute, IAuthorizationFil
             return;
         }
 
-        if(!authorizationHeader.ToString().Contains("expired"))
+        if(!IsAuthorizationExpired(authorizationHeader.ToString() ?? string.Empty))
         {
             return;
         }
 
         context.Result = BuildErrorResult("ExpiredAuthorization", "The provided authorization header is expired");
         return;
+    }
+
+    private static bool IsAuthorizationExpired(string authorization)
+    {
+        return authorization.Contains("expired", StringComparison.OrdinalIgnoreCase);
     }
 
     private static ObjectResult BuildErrorResult(string innerCode, string message) =>

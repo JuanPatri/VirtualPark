@@ -67,4 +67,14 @@ public class GetIncidenceResponseTest
         response.End.Should().Be(value);
     }
     #endregion
+    #region AttractionId
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void AttractionId_Getter_ReturnsAssignedValue()
+    {
+        var value = Guid.NewGuid().ToString();
+        var response = Build(attractionId: value);
+        response.AttractionId.Should().Be(value);
+    }
+    #endregion
 }

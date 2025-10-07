@@ -99,7 +99,7 @@ public class IncidenceControllerTest
             _incidenceServiceMock.VerifyAll();
         }
     #endregion
-     #region Get
+    #region Get
         [TestMethod]
         public void GetIncidence_ValidInput_ReturnsGetIncidenceResponse()
         {
@@ -182,6 +182,116 @@ public class IncidenceControllerTest
 
             act.Should().Throw<FormatException>();
             _incidenceServiceMock.VerifyNoOtherCalls();
+        }
+        #endregion
+        #region GetAll
+         [TestMethod]
+        public void GetAllIncidences_ShouldReturnMappedList()
+        {
+            var type1 = new TypeIncidence() { Id = Guid.NewGuid(), Type = "Técnica" };
+            var type2 = new TypeIncidence { Id = Guid.NewGuid(), Type = "General" };
+
+            var inc1 = new Incidence
+            {
+                Id = Guid.NewGuid(),
+                Type = type1,
+                Description = "Falla en motor",
+                Start = new DateTime(2025, 10, 6, 10, 0, 0),
+                End = new DateTime(2025, 10, 6, 11, 0, 0),
+                AttractionId = Guid.NewGuid(),
+                Active = true
+            };
+
+            var inc2 = new Incidence
+            {
+                Id = Guid.NewGuid(),
+                Type = type2,
+                Description = "Corte de energía",
+                Start = new DateTime(2025, 10, 7, 12, 0, 0),
+                End = new DateTime(2025, 10, 7, 13, 0, 0),
+                AttractionId = Guid.NewGuid(),
+                Active = false
+            };
+
+            var incidences = new List<Incidence> { inc1, inc2 };
+
+            _incidenceServiceMock
+                .Setup(s => s.GetAll())
+                .Returns(incidences);
+
+            var result = _incidencesController.GetAllIncidences();
+
+            result.Should().NotBeNull();
+            result.Should().HaveCount(2);
+
+            var first = result.First();
+            first.Id.Should().Be(inc1.Id.ToString());
+            first.TypeId.Should().Be(inc1.Type.Id.ToString());
+            first.Description.Should().Be("Falla en motor");
+            first.Start.Should().Be(inc1.Start.ToString());
+            first.End.Should().Be(inc1.End.ToString());
+            first.AttractionId.Should().Be(inc1.AttractionId.ToString());
+            first.Active.Should().Be(true.ToString());
+
+            var second = result.Last();
+            second.Id.Should().Be(inc2.Id.ToString());
+            second.TypeId.Should().Be(inc2.Type.Id.ToString());
+            second.Description.Should().Be("Corte de energía");
+            second.Start.Should().Be(inc2.Start.ToString());
+            second.End.Should().Be(inc2.End.ToString());
+            second.AttractionId.Should().Be(inc2.AttractionId.ToString());
+            second.Active.Should().Be(false.ToString());
+
+            _incidenceServiceMock.VerifyAll();
+        }
+
+        [TestMethod]
+        public void GetAllIncidences_ShouldReturnEmptyList_WhenNoIncidencesExist()
+        {
+            _incidenceServiceMock
+                .Setup(s => s.GetAll())
+                .Returns([]);
+
+            var result = _incidencesController.GetAllIncidences();
+
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
+
+            _incidenceServiceMock.VerifyAll();
+        }
+
+        [TestMethod]
+        public void GetAllIncidences_ShouldMapIncidence_WhenTypeIsNull()
+        {
+            var incidence = new Incidence
+            {
+                Id = Guid.NewGuid(),
+                Type = null!,
+                Description = "Incidencia sin tipo",
+                Start = new DateTime(2025, 10, 8, 8, 0, 0),
+                End = new DateTime(2025, 10, 8, 9, 0, 0),
+                AttractionId = Guid.NewGuid(),
+                Active = true
+            };
+
+            _incidenceServiceMock
+                .Setup(s => s.GetAll())
+                .Returns([incidence]);
+
+            var result = _incidencesController.GetAllIncidences();
+
+            result.Should().NotBeNull();
+            result.Should().HaveCount(1);
+
+            var first = result.First();
+            first.Id.Should().Be(incidence.Id.ToString());
+            first.Description.Should().Be("Incidencia sin tipo");
+            first.Start.Should().Be(incidence.Start.ToString());
+            first.End.Should().Be(incidence.End.ToString());
+            first.AttractionId.Should().Be(incidence.AttractionId.ToString());
+            first.Active.Should().Be(true.ToString());
+
+            _incidenceServiceMock.VerifyAll();
         }
         #endregion
 }

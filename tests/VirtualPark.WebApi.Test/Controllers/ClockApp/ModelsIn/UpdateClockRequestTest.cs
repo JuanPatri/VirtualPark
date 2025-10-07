@@ -1,3 +1,6 @@
+using FluentAssertions;
+using VirtualPark.WebApi.Controllers.ClockApp.ModelsIn;
+
 namespace VirtualPark.WebApi.Test.Controllers.ClockApp.ModelsIn;
 
 [TestClass]
@@ -13,6 +16,5 @@ public sealed class UpdateClockRequestTest
         var request = new UpdateClockRequest { DateSystem = "2025-10-06T21:45:00" };
         request.DateSystem.Should().Be("2025-10-06T21:45:00");
     }
-
     #endregion
 }

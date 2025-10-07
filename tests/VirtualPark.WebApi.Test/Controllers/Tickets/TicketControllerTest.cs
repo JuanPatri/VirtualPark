@@ -184,4 +184,21 @@ public sealed class TicketControllerTest
     }
     #endregion
 
+    #region Delete
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void DeleteTicket_ShouldRemoveTicket_WhenIdIsValid()
+    {
+        var id = Guid.NewGuid();
+
+        _ticketServiceMock
+            .Setup(s => s.Remove(id))
+            .Verifiable();
+
+        _controller.DeleteTicket(id.ToString());
+
+        _ticketServiceMock.VerifyAll();
+    }
+    #endregion
+
 }

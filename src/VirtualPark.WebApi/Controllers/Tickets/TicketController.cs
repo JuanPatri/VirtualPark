@@ -5,10 +5,12 @@ using VirtualPark.BusinessLogic.Tickets.Service;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Tickets.ModelsIn;
 using VirtualPark.WebApi.Controllers.Tickets.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.Tickets;
 
 [ApiController]
+[AuthenticationFilter]
 public sealed class TicketController(ITicketService ticketService) : ControllerBase
 {
     private readonly ITicketService _ticketService = ticketService;

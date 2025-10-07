@@ -4,11 +4,13 @@ using VirtualPark.BusinessLogic.Roles.Service;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Roles.ModelsIn;
 using VirtualPark.WebApi.Controllers.Roles.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.Roles;
 
 [ApiController]
 [Route("roles")]
+[AuthenticationFilter]
 public sealed class RoleController(IRoleService roleService) : ControllerBase
 {
     private readonly IRoleService _roleService = roleService;

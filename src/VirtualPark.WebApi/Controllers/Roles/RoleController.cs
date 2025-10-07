@@ -52,4 +52,21 @@ public sealed class RoleController(IRoleService roleService) : ControllerBase
             ))
             .ToList();
     }
+
+    [HttpDelete("roles/{id}")]
+    public void DeleteRole(string id)
+    {
+        var roleId = ValidationServices.ValidateAndParseGuid(id);
+        _roleService.Remove(roleId);
+    }
+
+    [HttpPut("roles/{id}")]
+    public void UpdateRole(CreateRoleRequest request, string id)
+    {
+        var roleId = ValidationServices.ValidateAndParseGuid(id);
+
+        RoleArgs args = request.ToArgs();
+
+        _roleService.Update(args, roleId);
+    }
 }

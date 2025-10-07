@@ -100,6 +100,7 @@ public class TypeIncidenceControllerTest
     }
     #endregion
 
+    #region Delete
     [TestMethod]
     public void DeleteTypeIncidence_ShouldCallServiceDelete_WhenIdIsValid()
     {
@@ -112,4 +113,5 @@ public class TypeIncidenceControllerTest
 
         _serviceMock.VerifyAll();
     }
+    #endregion
 }

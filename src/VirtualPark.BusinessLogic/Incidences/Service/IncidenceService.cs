@@ -7,7 +7,7 @@ using VirtualPark.Repository;
 namespace VirtualPark.BusinessLogic.Incidences.Service;
 
 public sealed class IncidenceService(IRepository<Incidence> incidenceRepository, IReadOnlyRepository<TypeIncidence> incidenceReadOnlyTypeRepository,
-    IReadOnlyRepository<Attraction> attractionReadOnlyRepository)
+    IReadOnlyRepository<Attraction> attractionReadOnlyRepository) : IIncidenceService
 {
     private readonly IRepository<Incidence> _incidenceRepository = incidenceRepository;
     private readonly IReadOnlyRepository<TypeIncidence> _typeIncidenceRepository = incidenceReadOnlyTypeRepository;
@@ -38,7 +38,7 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
         return incidence;
     }
 
-    public void Update(Guid id, IncidenceArgs incidenceArgs)
+    public void Update(IncidenceArgs incidenceArgs, Guid id)
     {
         Incidence incidence = Get(id);
         ApplyArgsToEntity(incidence, incidenceArgs);

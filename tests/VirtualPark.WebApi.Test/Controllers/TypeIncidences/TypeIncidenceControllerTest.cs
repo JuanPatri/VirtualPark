@@ -115,6 +115,7 @@ public class TypeIncidenceControllerTest
     }
     #endregion
 
+    #region Update
     [TestMethod]
     public void UpdateTypeIncidence_ShouldCallServiceUpdate_WhenInputIsValid()
     {
@@ -131,4 +132,5 @@ public class TypeIncidenceControllerTest
 
         _serviceMock.VerifyAll();
     }
+    #endregion
 }

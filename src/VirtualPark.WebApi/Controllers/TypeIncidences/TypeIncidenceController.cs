@@ -55,6 +55,7 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
     public void UpdateTypeIncidence(string id, CreateTypeIncidenceRequest request)
     {
         var guid = ValidationServices.ValidateAndParseGuid(id);
+
         var args = request.ToArgs();
 
         _service.Update(guid, args);

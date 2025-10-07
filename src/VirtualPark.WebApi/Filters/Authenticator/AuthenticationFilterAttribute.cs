@@ -11,16 +11,18 @@ public sealed class AuthenticationFilterAttribute : Attribute, IAuthorizationFil
     {
         var authorizationHeader = context.HttpContext.Request.Headers[HeaderNames.Authorization];
 
-        if (string.IsNullOrEmpty(authorizationHeader))
+        if(!string.IsNullOrEmpty(authorizationHeader))
         {
-            context.Result = new ObjectResult(new
-            {
-                InnerCode = "Unauthenticated",
-                Message = "You are not authenticated"
-            })
-            {
-                StatusCode = StatusCodes.Status401Unauthorized
-            };
+            return;
         }
+
+        context.Result = BuildErrorResult("Unauthenticated", "You are not authenticated");
+        return;
     }
+
+    private static ObjectResult BuildErrorResult(string innerCode, string message) =>
+        new(new { InnerCode = innerCode, Message = message })
+        {
+            StatusCode = StatusCodes.Status401Unauthorized
+        };
 }

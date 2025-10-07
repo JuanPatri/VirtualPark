@@ -132,4 +132,19 @@ public class PermissionControllerTest
         _permissionServiceMock.VerifyAll();
     }
     #endregion
+
+    #region Delete
+    [TestMethod]
+    public void DeletePermission_ShouldRemove_WhenIdIsValid()
+    {
+        var id = Guid.NewGuid();
+
+        _permissionServiceMock
+            .Setup(s => s.Remove(id));
+
+        _permissionController.DeletePermission(id.ToString());
+
+        _permissionServiceMock.VerifyAll();
+    }
+    #endregion
 }

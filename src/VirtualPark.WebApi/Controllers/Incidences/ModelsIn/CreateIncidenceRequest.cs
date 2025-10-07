@@ -1,3 +1,6 @@
+using VirtualPark.BusinessLogic.Incidences.Models;
+using VirtualPark.BusinessLogic.Validations.Services;
+
 namespace VirtualPark.WebApi.Controllers.Incidences.ModelsIn;
 
 public class CreateIncidenceRequest

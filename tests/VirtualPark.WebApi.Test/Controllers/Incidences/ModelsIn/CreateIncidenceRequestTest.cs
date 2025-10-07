@@ -66,4 +66,32 @@ public class CreateIncidenceRequestTest
         createIncidenceRequest.Active.Should().Be("true");
     }
     #endregion
+    #region ToArgs
+    [TestMethod]
+    [TestCategory("Mapping")]
+    public void ToArgs_ShouldReturnValidIncidenceArgs_WhenAllFieldsAreValid()
+    {
+        var typeId = Guid.NewGuid().ToString();
+        var attractionId = Guid.NewGuid().ToString();
+
+        var request = new CreateIncidenceRequest
+        {
+            TypeId = typeId,
+            Description = "Falla técnica en atracción",
+            Start = "2025-10-06 10:00:00",
+            End =  "2025-10-06 11:00:00",
+            AttractionId = attractionId,
+            Active = "true"
+        };
+
+        var result = request.ToArgs();
+
+        result.TypeIncidence.Should().Be(Guid.Parse(typeId));
+        result.Description.Should().Be(request.Description);
+        result.Start.Should().Be(new DateTime(2025, 10, 6, 10, 0, 0));
+        result.End.Should().Be(new DateTime(2025, 10, 6, 11, 0, 0));
+        result.AttractionId.Should().Be(Guid.Parse(attractionId));
+        result.Active.Should().BeTrue();
+    }
+    #endregion
 }

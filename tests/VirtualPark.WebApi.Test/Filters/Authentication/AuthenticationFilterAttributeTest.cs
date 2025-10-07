@@ -73,4 +73,27 @@ public class AuthenticationFilterAttributeTest
         value.Should().Contain("InvalidAuthorization");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void OnAuthorization_WhenAuthorizationTokenIsExpired_ShouldReturnExpiredAuthorization()
+    {
+        var filter = new AuthenticationFilterAttribute();
+
+        var headers = new HeaderDictionary
+        {
+            { "Authorization", "Bearer expired-token-123" }
+        };
+
+        var context = CreateAuthorizationContext(headers);
+
+        filter.OnAuthorization(context);
+
+        var result = context.Result as ObjectResult;
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
+
+        var value = result.Value!.ToString();
+        value.Should().Contain("ExpiredAuthorization");
+    }
 }

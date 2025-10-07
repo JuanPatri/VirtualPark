@@ -6,4 +6,11 @@ namespace VirtualPark.WebApi.TypeIncidences.ModelsIn;
 public class CreateTypeIncidenceRequest
 {
     public string? Type { get; init; }
+
+    public TypeIncidenceArgs ToArgs()
+    {
+        return new TypeIncidenceArgs(
+            ValidationServices.ValidateNullOrEmpty(Type)
+        );
+    }
 }

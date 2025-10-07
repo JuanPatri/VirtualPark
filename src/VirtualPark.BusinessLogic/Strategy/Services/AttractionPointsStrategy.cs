@@ -29,5 +29,4 @@ public class AttractionPointsStrategy : IStrategy
 
         return totalPoints;
     }
-
 }

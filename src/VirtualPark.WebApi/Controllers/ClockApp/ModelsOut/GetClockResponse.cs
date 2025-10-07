@@ -1,6 +1,6 @@
 namespace VirtualPark.WebApi.Controllers.ClockApp.ModelsOut;
 
-public class GetClockResponse
+public class GetClockResponse(string dateSystem)
 {
-    
+    public string DateSystem { get; set; } = dateSystem;
 }

@@ -54,4 +54,14 @@ public sealed class GetRankingResponseTest
         response.Users.Should().BeEquivalentTo([u1, u2]);
     }
     #endregion
+
+    #region Period
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetRankingResponse_PeriodProperty_ShouldMatchCtorValue()
+    {
+        var response = Build(period: "Weekly");
+        response.Period.Should().Be("Weekly");
+    }
+    #endregion
 }

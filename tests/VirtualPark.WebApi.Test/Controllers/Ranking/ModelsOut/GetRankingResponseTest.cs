@@ -16,7 +16,8 @@ public sealed class GetRankingResponseTest
         return new GetRankingResponse(
             id: id ?? Guid.NewGuid().ToString(),
             date: date ?? "2025-10-06",
-        users: users ?? [Guid.NewGuid().ToString(), Guid.NewGuid().ToString()]);
+        users: users ?? [Guid.NewGuid().ToString(), Guid.NewGuid().ToString()],
+            period: period ?? "Daily");
     }
 
     #region Id

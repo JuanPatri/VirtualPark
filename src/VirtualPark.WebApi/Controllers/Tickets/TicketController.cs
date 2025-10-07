@@ -11,16 +11,20 @@ public sealed class TicketController(ITicketService ticketService) : ControllerB
 {
     private readonly ITicketService _ticketService = ticketService;
 
-    [HttpGet("/tickets/{id}")]
+    [HttpGet("v1/tickets/{id}")]
     public GetTicketResponse GetTicketById(string id)
     {
-        Guid ticketId = ValidationServices.ValidateAndParseGuid(id);
-        Ticket ticket = _ticketService.Get(ticketId)!;
+        var ticketId = ValidationServices.ValidateAndParseGuid(id);
+        var ticket = _ticketService.Get(ticketId)!;
+        return MapToResponse(ticket);
+    }
 
+    private static GetTicketResponse MapToResponse(Ticket ticket)
+    {
         return new GetTicketResponse(
-            ticket.Id.ToString(),
-            ticket.Type.ToString(),
-            ticket.Date.ToString("yyyy-MM-dd"),
+            id: ticket.Id.ToString(),
+            type: ticket.Type.ToString(),
+            date: ticket.Date.ToString("yyyy-MM-dd"),
             eventId: ticket.EventId.ToString(),
             qrId: ticket.QrId.ToString(),
             visitorId: ticket.VisitorProfileId.ToString());

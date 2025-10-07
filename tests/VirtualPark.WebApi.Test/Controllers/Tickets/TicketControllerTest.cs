@@ -57,5 +57,39 @@ public sealed class TicketControllerTest
         _ticketServiceMock.VerifyAll();
     }
 
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetTicketById_WhenEventIdIsNull_ShouldReturnResponseWithNullEventId()
+    {
+        var visitorId = Guid.NewGuid();
+        var ticket = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            Date = new DateTime(2025, 12, 15),
+            Type = EntranceType.General,
+            EventId = null,
+            VisitorProfileId = visitorId,
+            QrId = Guid.NewGuid()
+        };
+
+        _ticketServiceMock
+            .Setup(s => s.Get(ticket.Id))
+            .Returns(ticket);
+
+        var result = _controller.GetTicketById(ticket.Id.ToString());
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<GetTicketResponse>();
+
+        result.Id.Should().Be(ticket.Id.ToString());
+        result.Type.Should().Be(ticket.Type.ToString());
+        result.Date.Should().Be(ticket.Date.ToString("yyyy-MM-dd"));
+        result.QrId.Should().Be(ticket.QrId.ToString());
+        result.VisitorId.Should().Be(visitorId.ToString());
+
+        result.EventId.Should().Be(string.Empty);
+
+        _ticketServiceMock.VerifyAll();
+    }
     #endregion
 }

@@ -70,6 +70,7 @@ public class TypeIncidenceControllerTest
     }
     #endregion
 
+    #region GetAll
     [TestMethod]
     public void GetAllTypeIncidences_ShouldReturnMappedList()
     {
@@ -97,4 +98,5 @@ public class TypeIncidenceControllerTest
 
         _serviceMock.VerifyAll();
     }
+    #endregion
 }

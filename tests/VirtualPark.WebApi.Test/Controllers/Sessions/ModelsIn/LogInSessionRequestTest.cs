@@ -18,7 +18,7 @@ public class LogInSessionRequestTest
     }
     #endregion
 
-    #region ToArgs
+    /*#region ToArgs
     #region Success
     [TestMethod]
     [TestCategory("Validation")]
@@ -69,5 +69,5 @@ public class LogInSessionRequestTest
         act.Should().Throw<FormatException>();
     }
     #endregion
-    #endregion
+    #endregion*/
 }

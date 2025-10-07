@@ -1,7 +1,9 @@
 using FluentAssertions;
 using Moq;
+using VirtualPark.BusinessLogic.ClocksApp.Models;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.WebApi.Controllers.ClockApp;
+using VirtualPark.WebApi.Controllers.ClockApp.ModelsIn;
 using VirtualPark.WebApi.Controllers.ClockApp.ModelsOut;
 
 namespace VirtualPark.WebApi.Test.Controllers.ClockApp;

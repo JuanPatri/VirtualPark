@@ -48,4 +48,11 @@ public sealed class TicketController(ITicketService ticketService) : ControllerB
             .Select(MapToResponse)
             .ToList();
     }
+
+    [HttpDelete("/tickets/{id}")]
+    public void DeleteTicket(string id)
+    {
+        var ticketId = ValidationServices.ValidateAndParseGuid(id);
+        _ticketService.Remove(ticketId);
+    }
 }

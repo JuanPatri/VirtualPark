@@ -4,11 +4,13 @@ using VirtualPark.BusinessLogic.Attractions.Services;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Attractions.ModelsIn;
 using VirtualPark.WebApi.Controllers.Attractions.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.Attractions;
 
 [ApiController]
 [Route("attractions")]
+[AuthenticationFilter]
 public sealed class AttractionController(IAttractionService attractionService) : ControllerBase
 {
     private readonly IAttractionService _attractionService = attractionService;

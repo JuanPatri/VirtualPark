@@ -4,10 +4,12 @@ using VirtualPark.BusinessLogic.Permissions.Service;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Permissions.ModelsIn;
 using VirtualPark.WebApi.Controllers.Permissions.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.Permissions;
 
 [ApiController]
+[AuthenticationFilter]
 public sealed class PermissionController(IPermissionService permissionService) : ControllerBase
 {
     private readonly IPermissionService _permissionService = permissionService;

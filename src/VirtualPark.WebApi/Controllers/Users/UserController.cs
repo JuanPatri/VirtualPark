@@ -4,10 +4,12 @@ using VirtualPark.BusinessLogic.Users.Service;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Users.ModelsIn;
 using VirtualPark.WebApi.Controllers.Users.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.Users;
 
 [ApiController]
+[AuthenticationFilter]
 public sealed class UserController(IUserService userService) : ControllerBase
 {
     private readonly IUserService _userService = userService;

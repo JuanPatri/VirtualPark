@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.BusinessLogic.VisitorsProfile.Service;
 using VirtualPark.WebApi.Controllers.VisitorsProfile.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.VisitorsProfile;
 
 [ApiController]
+[AuthenticationFilter]
 public sealed class VisitorProfileController(IVisitorProfileService visitorProfileServiceService) : ControllerBase
 {
     private readonly IVisitorProfileService _visitorProfileServiceService = visitorProfileServiceService;

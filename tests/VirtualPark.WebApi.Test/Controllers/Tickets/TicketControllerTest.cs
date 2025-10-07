@@ -130,5 +130,4 @@ public sealed class TicketControllerTest
         _ticketServiceMock.VerifyAll();
     }
     #endregion
-
 }

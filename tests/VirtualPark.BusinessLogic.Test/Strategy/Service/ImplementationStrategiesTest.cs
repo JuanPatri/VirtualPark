@@ -73,5 +73,36 @@ public sealed class ImplementationStrategiesTest
     }
     #endregion
 
+    #region ComboPointsStrategy
+    [TestMethod]
+    public void ComboPoints_ShouldBeZero_WhenNoAttractions()
+    {
+        var strategy = new ComboPointsStrategy();
+        var visit = new VisitRegistration { Attractions = new List<Attraction>() };
+        strategy.CalculatePoints(visit).Should().Be(0);
+    }
+
+    [DataTestMethod]
+    [DataRow(1, 2)]
+    [DataRow(5, 10)]
+    [DataRow(10, 20)]
+    public void ComboPoints_BaseRule(int count, int expected)
+    {
+        var strategy = new ComboPointsStrategy();
+        var visit = new VisitRegistration { Attractions = new List<Attraction>(new Attraction[count]) };
+        strategy.CalculatePoints(visit).Should().Be(expected);
+    }
+
+    [DataTestMethod]
+    [DataRow(11, 32)]
+    [DataRow(15, 40)]
+    [DataRow(25, 60)]
+    public void ComboPoints_BonusRule(int count, int expected)
+    {
+        var strategy = new ComboPointsStrategy();
+        var visit = new VisitRegistration { Attractions = new List<Attraction>(new Attraction[count]) };
+        strategy.CalculatePoints(visit).Should().Be(expected);
+    }
+    #endregion
     
 }

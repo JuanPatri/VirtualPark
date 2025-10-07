@@ -69,4 +69,32 @@ public class TypeIncidenceControllerTest
         _serviceMock.VerifyAll();
     }
     #endregion
+
+    [TestMethod]
+    public void GetAllTypeIncidences_ShouldReturnMappedList()
+    {
+        var t1 = new TypeIncidence { Type = "Mechanical" };
+        var t2 = new TypeIncidence { Type = "Electrical" };
+        var list = new List<TypeIncidence> { t1, t2 };
+
+        _serviceMock
+            .Setup(s => s.GetAll())
+            .Returns(list);
+
+        var result = _controller.GetAllTypeIncidences();
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+
+        var first = result.First();
+        first.Should().BeOfType<GetTypeIncidenceResponse>();
+        first.Id.Should().Be(t1.Id.ToString());
+        first.Type.Should().Be("Mechanical");
+
+        var second = result.Last();
+        second.Id.Should().Be(t2.Id.ToString());
+        second.Type.Should().Be("Electrical");
+
+        _serviceMock.VerifyAll();
+    }
 }

@@ -163,7 +163,8 @@ public class AuthenticationFilterAttributeTest
 
     #endregion
 
-    #region NullSessionService
+    #region SessionService
+    #region Null
     [TestMethod]
     [TestCategory("Behaviour")]
     public void OnAuthorization_WhenSessionServiceIsNull_ShouldReturnInternalError()
@@ -187,6 +188,7 @@ public class AuthenticationFilterAttributeTest
     }
     #endregion
 
+    #region InvalidOperationException
     [TestMethod]
     [TestCategory("Behaviour")]
     public void OnAuthorization_WhenSessionServiceThrowsInvalidOperationException_ShouldReturnExpiredAuthorization()
@@ -214,11 +216,13 @@ public class AuthenticationFilterAttributeTest
 
         var result = context.Result as ObjectResult;
         result.Should().NotBeNull();
-        result!.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
+        result.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
 
         var value = result.Value!.ToString();
         value.Should().Contain("ExpiredAuthorization");
 
         mockSessionService.VerifyAll();
     }
+    #endregion
+    #endregion
 }

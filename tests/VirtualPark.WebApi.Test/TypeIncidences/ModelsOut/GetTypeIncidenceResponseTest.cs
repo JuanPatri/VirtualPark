@@ -16,8 +16,23 @@ public class GetTypeIncidenceResponseTest
     {
         var id = Guid.NewGuid().ToString();
         var response = new GetTypeIncidenceResponse(
-            id);
+            id,
+            "type");
         response.Id.Should().Be(id);
     }
     #endregion
+
+    #region Type
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Type_Getter_ReturnsAssignedValue()
+    {
+        var id = Guid.NewGuid().ToString();
+        var response = new GetTypeIncidenceResponse(
+            id,
+            "type");
+        response.Type.Should().Be("type");
+    }
+    #endregion
+
 }

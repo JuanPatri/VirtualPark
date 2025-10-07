@@ -18,6 +18,7 @@ public class CreatePermissionRequestTest
     }
     #endregion
 
+    #region Key
     [TestMethod]
     [TestCategory("Validation")]
     public void Key_Getter_ReturnsAssignedValue()
@@ -25,4 +26,5 @@ public class CreatePermissionRequestTest
         var createPermissionRequest = new CreatePermissionRequest { Key = "key" };
         createPermissionRequest.Key.Should().Be("key");
     }
+    #endregion
 }

@@ -1,9 +1,9 @@
-namespace VirtualPark.BusinessLogic.Strategy.Services;
+using System.Collections.ObjectModel;
 
-public class StrategyFactory : IStrategyFactory
+namespace VirtualPark.BusinessLogic.Strategy.Services;
+public sealed class StrategyFactory : IStrategyFactory
 {
-    public IStrategy Create(string strategyKey)
-    {
-        return null;
-    }
+    private readonly IReadOnlyDictionary<string, IStrategy> _map;
+
+    public StrategyFactory(IEnumerable<IStrategy> strategies)
 }

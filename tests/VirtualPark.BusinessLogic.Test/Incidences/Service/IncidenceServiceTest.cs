@@ -360,7 +360,7 @@ public sealed class IncidenceTest
         _mockIncidenceRepository
             .Setup(r => r.Update(It.Is<Incidence>(x => x.Id == id)));
 
-        _incidenceService.Update(id, _incidenceArgs);
+        _incidenceService.Update(_incidenceArgs, id);
 
         _mockIncidenceRepository.VerifyAll();
         _mockTypeIncidenceRepository.VerifyAll();
@@ -376,7 +376,7 @@ public sealed class IncidenceTest
             .Setup(r => r.Get(i => i.Id == id))
             .Returns((Incidence?)null);
 
-        var act = () => _incidenceService.Update(id, _incidenceArgs);
+        var act = () => _incidenceService.Update(_incidenceArgs, id);
 
         act.Should().Throw<InvalidOperationException>()
             .WithMessage("Incidence don't exist");

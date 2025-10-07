@@ -62,4 +62,12 @@ public sealed class AttractionController(IAttractionService attractionService) :
         var attractionId = ValidationServices.ValidateAndParseGuid(id);
         _attractionService.Remove(attractionId);
     }
+
+    [HttpPut("attractions/{id}")]
+    public void UpdateAttraction(string id, CreateAttractionRequest newAttraction)
+    {
+        var idAttraction = ValidationServices.ValidateAndParseGuid(id);
+        AttractionArgs attractionArgs = newAttraction.ToArgs();
+        _attractionService.Update(attractionArgs, idAttraction);
+    }
 }

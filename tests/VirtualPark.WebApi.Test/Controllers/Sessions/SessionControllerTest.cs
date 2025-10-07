@@ -72,4 +72,19 @@ public class SessionControllerTest
         _sessionServiceMock.VerifyAll();
     }
     #endregion
+
+    #region LogOut
+    [TestMethod]
+    public void LogOut_ValidToken_ShouldCallServiceLogOut()
+    {
+        var token = Guid.NewGuid();
+
+        _sessionServiceMock
+            .Setup(s => s.LogOut(token));
+
+        _sessionController.LogOut(token.ToString());
+
+        _sessionServiceMock.VerifyAll();
+    }
+    #endregion
 }

@@ -130,4 +130,58 @@ public sealed class TicketControllerTest
         _ticketServiceMock.VerifyAll();
     }
     #endregion
+
+    #region GetAll
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetAllTickets_ShouldReturnMappedList()
+    {
+        var visitor1 = Guid.NewGuid();
+        var visitor2 = Guid.NewGuid();
+
+        var ticket1 = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            Date = new DateTime(2025, 12, 15),
+            Type = EntranceType.General,
+            EventId = null,
+            VisitorProfileId = visitor1,
+            QrId = Guid.NewGuid()
+        };
+
+        var ticket2 = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            Date = new DateTime(2025, 12, 16),
+            Type = EntranceType.Event,
+            EventId = Guid.NewGuid(),
+            VisitorProfileId = visitor2,
+            QrId = Guid.NewGuid()
+        };
+
+        var tickets = new List<Ticket> { ticket1, ticket2 };
+
+        _ticketServiceMock
+            .Setup(s => s.GetAll())
+            .Returns(tickets);
+
+        var result = _controller.GetAllTickets();
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+
+        var first = result.First();
+        first.Type.Should().Be(ticket1.Type.ToString());
+        first.Date.Should().Be(ticket1.Date.ToString("yyyy-MM-dd"));
+        first.VisitorId.Should().Be(visitor1.ToString());
+
+        var second = result.Last();
+        second.Type.Should().Be(ticket2.Type.ToString());
+        second.EventId.Should().Be(ticket2.EventId.ToString());
+        second.VisitorId.Should().Be(visitor2.ToString());
+
+        _ticketServiceMock.VerifyAll();
+    }
+    #endregion
+
 }

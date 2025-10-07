@@ -147,4 +147,36 @@ public class PermissionControllerTest
         _permissionServiceMock.VerifyAll();
     }
     #endregion
+
+    #region Update
+    [TestMethod]
+    public void UpdatePermission_ValidInput_ShouldCallServiceUpdate()
+    {
+        var id = Guid.NewGuid();
+        var role1 = Guid.NewGuid().ToString();
+        var role2 = Guid.NewGuid().ToString();
+
+        var request = new CreatePermissionRequest
+        {
+            Description = "Manage users",
+            Key = "USERS_MANAGE",
+            RolesIds = [role1, role2]
+        };
+
+        var expectedArgs = request.ToArgs();
+
+        _permissionServiceMock
+            .Setup(s => s.Update(
+                id,
+                It.Is<PermissionArgs>(a =>
+                    a.Description == expectedArgs.Description &&
+                    a.Key == expectedArgs.Key &&
+                    a.Roles.Count == expectedArgs.Roles.Count &&
+                    a.Roles.All(expectedArgs.Roles.Contains))));
+
+        _permissionController.UpdatePermission(request, id.ToString());
+
+        _permissionServiceMock.VerifyAll();
+    }
+    #endregion
 }

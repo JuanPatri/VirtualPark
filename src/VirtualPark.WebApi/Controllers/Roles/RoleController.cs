@@ -22,4 +22,20 @@ public sealed class RoleController(IRoleService roleService) : ControllerBase
 
         return new CreateRoleResponse(responseId.ToString());
     }
+
+    [HttpGet("roles/{id}")]
+    public GetRoleResponse GetRoleById(string id)
+    {
+        var roleId = ValidationServices.ValidateAndParseGuid(id);
+
+        var role = _roleService.Get(roleId)!;
+
+        return new GetRoleResponse(
+            id: role.Id.ToString(),
+            name: role.Name,
+            description: role.Description,
+            permissionIds: role.Permissions.Select(p => p.Id.ToString()).ToList(),
+            usersIds: role.Users.Select(u => u.Id.ToString()).ToList()
+        );
+    }
 }

@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using VirtualPark.BusinessLogic.TypeIncidences.Entity;
 using VirtualPark.BusinessLogic.TypeIncidences.Models;
 using VirtualPark.BusinessLogic.TypeIncidences.Service;
 using VirtualPark.WebApi.TypeIncidences;
@@ -46,4 +47,24 @@ public class TypeIncidenceControllerTest
         _serviceMock.VerifyAll();
     }
     #endregion
+
+    [TestMethod]
+    public void GetTypeIncidenceById_ValidInput_ReturnsResponse()
+    {
+        var entity = new TypeIncidence { Type = "type" };
+        var id = entity.Id;
+
+        _serviceMock
+            .Setup(s => s.Get(id))
+            .Returns(entity);
+
+        var response = _controller.GetTypeIncidenceById(id.ToString());
+
+        response.Should().NotBeNull();
+        response.Should().BeOfType<GetTypeIncidenceResponse>();
+        response.Id.Should().Be(id.ToString());
+        response.Type.Should().Be("type");
+
+        _serviceMock.VerifyAll();
+    }
 }

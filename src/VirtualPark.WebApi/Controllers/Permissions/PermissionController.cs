@@ -48,4 +48,11 @@ public sealed class PermissionController(IPermissionService permissionService) :
                 roles: p.Roles.Select(r => r.Id.ToString()).ToList()))
             .ToList();
     }
+
+    [HttpDelete("permissions/{id}")]
+    public void DeletePermission(string id)
+    {
+        var permissionId = ValidationServices.ValidateAndParseGuid(id);
+        _permissionService.Remove(permissionId);
+    }
 }

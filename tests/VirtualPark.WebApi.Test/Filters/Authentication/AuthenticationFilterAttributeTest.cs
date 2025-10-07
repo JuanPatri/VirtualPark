@@ -53,7 +53,7 @@ public class AuthenticationFilterAttributeTest
             ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
         };
 
-        return new AuthorizationFilterContext(actionContext, new List<IFilterMetadata>());
+        return new AuthorizationFilterContext(actionContext, []);
     }
 
     #region InvalidHeaderValue

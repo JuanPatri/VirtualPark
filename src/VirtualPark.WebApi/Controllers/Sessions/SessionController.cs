@@ -4,7 +4,6 @@ using VirtualPark.BusinessLogic.Sessions.Service;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Sessions.ModelsIn;
 using VirtualPark.WebApi.Controllers.Sessions.ModelsOut;
-using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.Sessions;
 

@@ -1,10 +1,10 @@
+using FluentAssertions;
 using VirtualPark.WebApi.Controllers.Incidences.ModelsOut;
 
 namespace VirtualPark.WebApi.Test.Controllers.Incidences.ModelsOut;
 [TestClass]
 public class CreateIncidenceResponseTest
 {
- 
     #region Id
 
     [TestMethod]

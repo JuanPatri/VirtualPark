@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using VirtualPark.BusinessLogic.Rankings.Service;
 using VirtualPark.WebApi.Controllers.Ranking.ModelsIn;
 using VirtualPark.WebApi.Controllers.Ranking.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.Ranking;
 
 [ApiController]
+[AuthenticationFilter]
 public sealed class RankingController(IRankingService rankingService) : ControllerBase
 {
     private readonly IRankingService _rankingService = rankingService;

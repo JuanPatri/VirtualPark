@@ -3,10 +3,12 @@ using VirtualPark.BusinessLogic.TypeIncidences.Service;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.TypeIncidences.ModelsIn;
 using VirtualPark.WebApi.Controllers.TypeIncidences.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.TypeIncidences;
 
 [ApiController]
+[AuthenticationFilter]
 public sealed class TypeIncidenceController(ITypeIncidenceService service) : ControllerBase
 {
     private readonly ITypeIncidenceService _service = service;

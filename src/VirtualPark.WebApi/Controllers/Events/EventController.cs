@@ -5,10 +5,12 @@ using VirtualPark.BusinessLogic.Events.Services;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Events.ModelsIn;
 using VirtualPark.WebApi.Controllers.Events.ModelsOut;
+using VirtualPark.WebApi.Filters.Authenticator;
 
 namespace VirtualPark.WebApi.Controllers.Events;
 
 [ApiController]
+[AuthenticationFilter]
 public sealed class EventController(IEventService eventService) : ControllerBase
 {
     private readonly IEventService _eventService = eventService;

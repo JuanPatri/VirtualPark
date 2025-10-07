@@ -8,7 +8,6 @@ namespace VirtualPark.WebApi.Test.Controllers.ClockApp.ModelsOut;
 public sealed class GetClockResponseTest
 {
     private static GetClockResponse Build(
-        string? id = null,
         string? dateSystem = null)
     {
         return new GetClockResponse(

@@ -4,4 +4,5 @@ public class CreatePermissionRequest
 {
     public string? Description { get; init; }
     public string? Key { get; init; }
+    public List<string>? RolesIds { get; init; }
 }

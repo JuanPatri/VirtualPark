@@ -2,18 +2,18 @@ using FluentAssertions;
 using VirtualPark.WebApi.Controllers.Incidences.ModelsOut;
 
 namespace VirtualPark.WebApi.Test.Controllers.Incidences.ModelsOut;
+
 [TestClass]
 public class GetIncidenceResponseTest
 {
-
     private static GetIncidenceResponse Build(
         string id = "ID-1",
-        string? typeId = "TYPE-1",
-        string? description = "DESC",
-        string? start = "2025-10-06T10:00:00",
-        string? end = "2025-10-06T11:00:00",
-        string? attractionId = "ATTR-1",
-        string? active = "true")
+        string typeId = "TYPE-1",
+        string description = "DESC",
+        string start = "2025-10-06T10:00:00",
+        string end = "2025-10-06T11:00:00",
+        string attractionId = "ATTR-1",
+        string active = "true")
         => new(id, typeId, description, start, end, attractionId, active);
 
     #region Id
@@ -22,10 +22,11 @@ public class GetIncidenceResponseTest
     public void Id_Getter_ReturnsAssignedValue()
     {
         var id = Guid.NewGuid().ToString();
-        var response = new GetIncidenceResponse(id);
+        var response = Build(id: id);
         response.Id.Should().Be(id);
     }
     #endregion
+
     #region TypeId
     [TestMethod]
     [TestCategory("Validation")]
@@ -36,6 +37,7 @@ public class GetIncidenceResponseTest
         response.TypeId.Should().Be(value);
     }
     #endregion
+
     #region Description
     [TestMethod]
     [TestCategory("Validation")]
@@ -46,6 +48,7 @@ public class GetIncidenceResponseTest
         response.Description.Should().Be(value);
     }
     #endregion
+
     #region Start
     [TestMethod]
     [TestCategory("Validation")]
@@ -67,6 +70,7 @@ public class GetIncidenceResponseTest
         response.End.Should().Be(value);
     }
     #endregion
+
     #region AttractionId
     [TestMethod]
     [TestCategory("Validation")]
@@ -77,6 +81,7 @@ public class GetIncidenceResponseTest
         response.AttractionId.Should().Be(value);
     }
     #endregion
+
     #region Active
     [TestMethod]
     [TestCategory("Validation")]

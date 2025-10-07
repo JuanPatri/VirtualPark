@@ -9,7 +9,7 @@ public class CreateRoleRequest
     public string? Description { get; init; }
     public List<string>? PermissionsIds { get; init; }
 
-    public RoleArgs? ToArgs()
+    public RoleArgs ToArgs()
     {
         return new RoleArgs(ValidationServices.ValidateNullOrEmpty(Name),
             ValidationServices.ValidateNullOrEmpty(Description),

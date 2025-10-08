@@ -14,7 +14,6 @@ public sealed class ClockAppController(IClockAppService clockAppService) : Contr
     private readonly IClockAppService _clockAppService = clockAppService;
 
     [HttpGet("v1/clock")]
-    [AuthorizationFilter]
     public GetClockResponse GetClock()
     {
         var clock = _clockAppService.Get();

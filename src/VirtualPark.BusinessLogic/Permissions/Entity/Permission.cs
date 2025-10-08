@@ -9,7 +9,7 @@ public sealed class Permission
         Id = Guid.NewGuid();
     }
 
-    public Guid Id { get; }
+    public Guid Id { get; init; }
     public string Description { get; set; } = null!;
     public string Key { get; set; } = null!;
     public List<Role> Roles { get; set; } = [];

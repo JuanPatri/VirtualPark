@@ -11,6 +11,7 @@ using VirtualPark.BusinessLogic.TypeIncidences.Entity;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
+using VirtualPark.DataAccess.Seed;
 
 namespace VirtualPark.DataAccess;
 
@@ -34,5 +35,7 @@ public class SqlContext(DbContextOptions<SqlContext> options) : DbContext(option
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SqlContext).Assembly);
+
+        SeedData.Seed(modelBuilder);
     }
 }

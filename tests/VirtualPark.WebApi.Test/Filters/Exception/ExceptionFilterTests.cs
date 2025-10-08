@@ -73,22 +73,21 @@ public class ExceptionFilterTests
     }
     #endregion
 
+    #region FormatError
     [TestMethod]
-    public void OnException_WhenArgumentOutOfRangeException_ShouldReturnBadRequest_OutOfRange()
+    public void OnException_WhenFormatException_ShouldReturnBadRequest_FormatError()
     {
-        _context.Exception = new ArgumentOutOfRangeException("age", "Age must be between 1 and 99.");
+        _context.Exception = new FormatException("The value 'abc' is not a valid GUID.");
 
         _attribute.OnException(_context);
 
-        var response = _context.Result;
-        response.Should().NotBeNull();
-
-        var concrete = response as ObjectResult;
-        concrete.Should().NotBeNull();
-        concrete!.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        GetInnerCode(concrete.Value!).Should().Be("OutOfRange");
-        GetMessage(concrete.Value!).Should().Contain("Age must be between 1 and 99.");
+        var result = _context.Result as ObjectResult;
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+        GetInnerCode(result.Value!).Should().Be("FormatError");
+        GetMessage(result.Value!).Should().Contain("not a valid GUID");
     }
+    #endregion
 
     private string GetInnerCode(object value)
     {

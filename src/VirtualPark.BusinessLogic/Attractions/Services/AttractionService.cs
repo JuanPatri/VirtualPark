@@ -66,7 +66,7 @@ public sealed class AttractionService(
         var visitsInRange = FilterVisitsInRange(visits, from, to);
 
         var result = new List<string>();
-        foreach (var attraction in attractions)
+        foreach(var attraction in attractions)
         {
             var count = CountVisitsForAttraction(visitsInRange, attraction.Id);
             result.Add($"{attraction.Name}\t{count}");
@@ -77,7 +77,7 @@ public sealed class AttractionService(
 
     private static void ValidateDateRange(DateTime from, DateTime to)
     {
-        if (from > to)
+        if(from > to)
         {
             throw new ArgumentException("From date must be less than or equal to To date.");
         }
@@ -86,11 +86,11 @@ public sealed class AttractionService(
     private static List<VisitRegistration> FilterVisitsInRange(List<VisitRegistration> visits, DateTime from, DateTime to)
     {
         var filtered = new List<VisitRegistration>();
-        foreach (var v in visits)
+        foreach(var v in visits)
         {
-            if (v != null && v.Attractions != null && v.Attractions.Count > 0)
+            if(v != null && v.Attractions != null && v.Attractions.Count > 0)
             {
-                if (v.Date >= from && v.Date <= to)
+                if(v.Date >= from && v.Date <= to)
                 {
                     filtered.Add(v);
                 }
@@ -103,19 +103,19 @@ public sealed class AttractionService(
     private static int CountVisitsForAttraction(List<VisitRegistration> visitsInRange, Guid attractionId)
     {
         var count = 0;
-        foreach (var v in visitsInRange)
+        foreach(var v in visitsInRange)
         {
             var includes = false;
-            foreach (var a in v.Attractions)
+            foreach(var a in v.Attractions)
             {
-                if (a != null && a.Id == attractionId)
+                if(a != null && a.Id == attractionId)
                 {
                     includes = true;
                     break;
                 }
             }
 
-            if (includes)
+            if(includes)
             {
                 count++;
             }

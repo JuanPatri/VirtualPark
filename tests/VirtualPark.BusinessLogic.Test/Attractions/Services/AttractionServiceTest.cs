@@ -933,11 +933,11 @@ public class AttractionServiceTest
 
         _mockAttractionRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<Attraction> { a1, a2 });
+            .Returns([a1, a2]);
 
         _mockVisitorRegistrationRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<VisitRegistration>());
+            .Returns([]);
 
         var result = _attractionService.AttractionsReport(from, to);
 
@@ -960,22 +960,22 @@ public class AttractionServiceTest
 
         _mockAttractionRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<Attraction> { a1, a2 });
+            .Returns([a1, a2]);
 
         var visitInside = new VisitRegistration
         {
             Date = new DateTime(2025, 10, 15),
-            Attractions = new List<Attraction> { a1 }
+            Attractions = [a1]
         };
         var visitOutside = new VisitRegistration
         {
             Date = new DateTime(2025, 10, 25),
-            Attractions = new List<Attraction> { a1, a2 }
+            Attractions = [a1, a2]
         };
 
         _mockVisitorRegistrationRepository
             .Setup(r => r.GetAll(null))
-            .Returns(new List<VisitRegistration> { visitInside, visitOutside });
+            .Returns([visitInside, visitOutside]);
 
         var result = _attractionService.AttractionsReport(from, to);
 

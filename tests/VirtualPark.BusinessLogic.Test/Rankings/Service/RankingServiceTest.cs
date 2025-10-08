@@ -20,7 +20,7 @@ public sealed class RankingServiceTest
     private RankingService _rankingService = null!;
     private Mock<IReadOnlyRepository<VisitRegistration>> _mockVisitRegistrationsReadOnlyRepository = null!;
 
-[TestInitialize]
+    [TestInitialize]
     public void Initialize()
     {
         _mockRankingRepository = new Mock<IRepository<Ranking>>(MockBehavior.Strict);
@@ -312,7 +312,7 @@ public sealed class RankingServiceTest
         {
             new() { VisitorId = u1.Id, Date = date, DailyScore = 10 },
             new() { VisitorId = u1.Id, Date = date, DailyScore = 20 },
-            new() { VisitorId = u2.Id, Date = date, DailyScore = 5  },
+            new() { VisitorId = u2.Id, Date = date, DailyScore = 5 },
             new() { VisitorId = u2.Id, Date = date, DailyScore = 15 },
             new() { VisitorId = u3.Id, Date = date, DailyScore = 10 },
         };
@@ -342,8 +342,7 @@ public sealed class RankingServiceTest
                 rk.Entries.Count == 3 &&
                 rk.Entries[0].Id == u1.Id &&
                 rk.Entries[1].Id == u2.Id &&
-                rk.Entries[2].Id == u3.Id
-            )));
+                rk.Entries[2].Id == u3.Id)));
 
         var result = _rankingService.Get(args);
 
@@ -369,7 +368,7 @@ public sealed class RankingServiceTest
             Id = Guid.NewGuid(),
             Date = date,
             Period = Period.Daily,
-            Entries = new List<User>()
+            Entries = []
         };
 
         var visits = new List<VisitRegistration>
@@ -399,8 +398,7 @@ public sealed class RankingServiceTest
                 rk.Id == existing.Id &&
                 rk.Entries.Count == 2 &&
                 rk.Entries[0].Id == u2.Id &&
-                rk.Entries[1].Id == u1.Id
-            )));
+                rk.Entries[1].Id == u1.Id)));
 
         var result = _rankingService.Get(args);
 

@@ -30,7 +30,7 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
             r.Date.Date == args.Date.Date &&
             r.Period == args.Period);
 
-        if (ranking is null)
+        if(ranking is null)
         {
             ranking = MapToEntity(args);
             ranking.Entries = topUsers;

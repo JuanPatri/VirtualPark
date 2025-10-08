@@ -7,8 +7,7 @@ public class EventPointsStrategy : IStrategy
     public string Key { get; } = "Event";
     public int CalculatePoints(VisitRegistration visitRegistration)
     {
-        var points = 0;
-
+        int points;
         if(visitRegistration.DailyScore == 0)
         {
             points = 20;

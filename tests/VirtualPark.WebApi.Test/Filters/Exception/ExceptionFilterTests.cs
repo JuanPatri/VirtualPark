@@ -52,6 +52,23 @@ public class ExceptionFilterTests
         }
     }
 
+    [TestMethod]
+    public void OnException_WhenArgumentException_ShouldReturnBadRequest_IsNullOrWhiteSpace()
+    {
+        _context.Exception = new ArgumentException("Value cannot be null, empty or whitespace.", "name");
+
+        _attribute.OnException(_context);
+
+        var response = _context.Result;
+
+        response.Should().NotBeNull();
+        var concreteResponse = response as ObjectResult;
+        concreteResponse.Should().NotBeNull();
+        concreteResponse!.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+        GetInnerCode(concreteResponse.Value!).Should().Be("IsNullOrWhiteSpace");
+        GetMessage(concreteResponse.Value!).Should().Contain("Value cannot be null, empty or whitespace.");
+    }
+
     private string GetInnerCode(object value)
     {
         return value.GetType().GetProperty("InnerCode").GetValue(value).ToString();

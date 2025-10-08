@@ -14,5 +14,5 @@ public sealed class VisitRegistration
     public Ticket Ticket { get; set; } = null!;
     public Guid TicketId { get; set; }
     public bool IsActive { get; set; }
-    public int DailyScore { get; set; }
+    public int DailyScore { get; set; } = 0;
 }

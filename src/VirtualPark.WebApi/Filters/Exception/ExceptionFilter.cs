@@ -62,6 +62,17 @@ public class ExceptionFilter : IExceptionFilter
             {
                 StatusCode = (int)HttpStatusCode.NotFound
             }
+        },
+        {
+            typeof(UnauthorizedAccessException),
+            ex => new ObjectResult(new
+            {
+                InnerCode = "Unauthorized",
+                Message = ex.Message
+            })
+            {
+                StatusCode = (int)HttpStatusCode.Unauthorized
+            }
         }
     };
 

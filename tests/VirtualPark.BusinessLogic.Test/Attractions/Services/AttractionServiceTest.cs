@@ -767,7 +767,7 @@ public class AttractionServiceTest
                     v.VisitorId == visitorId &&
                     v.IsActive == true &&
                     v.Date == _now.Date &&
-                    v.TicketId == ticket.Id || v.TicketId == Guid.Empty // Ticket.Id puede ser Guid.Empty si no se setea en flujo "General"
+                    v.TicketId == ticket.Id || v.TicketId == Guid.Empty
             )));
 
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
@@ -984,6 +984,90 @@ public class AttractionServiceTest
 
         _mockAttractionRepository.VerifyAll();
         _mockVisitorRegistrationRepository.VerifyAll();
+    }
+    #endregion
+
+    #region ValidateEventEntry
+    [TestMethod]
+    public void ValidateEventEntry_WhenAttractionNotInEvent_ShouldReturnFalse()
+    {
+        var attraction = new Attraction { Id = Guid.NewGuid(), Available = true, Capacity = 50, CurrentVisitors = 0 };
+
+        var ev = new Event
+        {
+            Id = Guid.NewGuid(),
+            Name = "Show",
+            Date = _now,
+            Capacity = 100,
+            Cost = 0,
+            Attractions = new List<Attraction>()
+        };
+
+        var ticket = new Ticket
+        {
+            Date = _now,
+            Type = EntranceType.Event,
+            Event = ev,
+            EventId = ev.Id,
+            Visitor = new VisitorProfile { Id = Guid.NewGuid() },
+            VisitorProfileId = Guid.NewGuid()
+        };
+
+        _mockEventRepository
+            .Setup(r => r.Get(e => e.Id == ticket.EventId))
+            .Returns(ev);
+
+        var ok = _attractionService.ValidateEventEntry(ticket, attraction);
+
+        ok.Should().BeFalse();
+
+        _mockEventRepository.VerifyAll();
+    }
+
+    [TestMethod]
+    public void ValidateEventEntry_WhenAttractionInEvent_WithinWindow_AndCapacityAvailable_ShouldReturnTrue()
+    {
+        var attraction = new Attraction { Id = Guid.NewGuid(), Available = true, Capacity = 50, CurrentVisitors = 0 };
+
+        var ev = new Event
+        {
+            Id = Guid.NewGuid(),
+            Name = "Show",
+            Date = _now,
+            Capacity = 10,
+            Cost = 0,
+            Attractions = new List<Attraction> { attraction }
+        };
+
+        var ticket = new Ticket
+        {
+            Date = _now,
+            Type = EntranceType.Event,
+            Event = ev,
+            EventId = ev.Id,
+            Visitor = new VisitorProfile { Id = Guid.NewGuid() },
+            VisitorProfileId = Guid.NewGuid()
+        };
+
+        _mockEventRepository
+            .Setup(r => r.Get(e => e.Id == ticket.EventId))
+            .Returns(ev);
+
+        _mockTicketRepository
+            .Setup(r => r.GetAll(t => t.EventId == ticket.EventId))
+            .Returns(new List<Ticket>());
+
+        _mockAttractionRepository
+            .Setup(r => r.Update(attraction));
+
+        var ok = _attractionService.ValidateEventEntry(ticket, attraction);
+
+        ok.Should().BeTrue();
+
+        _mockEventRepository.VerifyAll();
+        _mockTicketRepository.VerifyAll();
+        _mockAttractionRepository.VerifyAll();
+        _mockClock.VerifyAll();
     }
     #endregion
 }

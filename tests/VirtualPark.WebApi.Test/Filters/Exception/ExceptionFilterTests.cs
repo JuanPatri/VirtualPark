@@ -14,7 +14,7 @@ namespace VirtualPark.WebApi.Test.Filters.Exception;
 public class ExceptionFilterTests
 {
     private ExceptionContext? _context;
-    private ExceptionFilter _attribute;
+    private readonly ExceptionFilter _attribute;
 
     public ExceptionFilterTests()
     {
@@ -29,7 +29,7 @@ public class ExceptionFilterTests
                 new Mock<HttpContext>().Object,
                 new RouteData(),
                 new ActionDescriptor()),
-            new List<IFilterMetadata>());
+            []);
     }
 
     #region OnException

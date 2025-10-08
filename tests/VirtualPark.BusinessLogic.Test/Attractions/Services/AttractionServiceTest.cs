@@ -724,6 +724,228 @@ public class AttractionServiceTest
         _mockVisitorRegistrationRepository.Verify(r => r.Add(It.IsAny<VisitRegistration>()), Times.Never);
     }
 
+    [TestMethod]
+    public void ValidateEntryByQr_Event_AttractionInEvent_WithinWindow_AndCapacityAvailable_ShouldReturnTrue()
+    {
+        var attractionId = Guid.NewGuid();
+        var qrId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        var attraction = new Attraction { Id = attractionId, Capacity = 5, CurrentVisitors = 2, MiniumAge = 0, Available = true };
+
+        var ev = new Event
+        {
+            Id = Guid.NewGuid(),
+            Name = "Show",
+            Date = _now,
+            Capacity = 10,
+            Cost = 0,
+            Attractions = new List<Attraction> { attraction }
+        };
+
+        var visitor = new VisitorProfile { Id = visitorId, DateOfBirth = new DateOnly(2000, 1, 1) };
+
+        var ticket = new Ticket
+        {
+            QrId = qrId,
+            Date = _now,
+            Type = EntranceType.Event,
+            Event = ev,
+            EventId = ev.Id,
+            Visitor = visitor,
+            VisitorProfileId = visitorId
+        };
+
+        var existingVisit = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Visitor = visitor,
+            Date = _now.Date,
+            IsActive = false,
+            Attractions = new List<Attraction>()
+        };
+
+        _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
+        _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
+        _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
+        _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
+        _mockEventRepository.Setup(r => r.Get(e => e.Id == ticket.EventId)).Returns(ev);
+        _mockTicketRepository.Setup(r => r.GetAll(t => t.EventId == ticket.EventId)).Returns(new List<Ticket>());
+        _mockAttractionRepository.Setup(r => r.Update(attraction));
+
+        var ok = _attractionService.ValidateEntryByQr(attractionId, qrId);
+
+        ok.Should().BeTrue();
+
+        _mockTicketRepository.VerifyAll();
+        _mockAttractionRepository.VerifyAll();
+        _mockVisitorRegistrationRepository.VerifyAll();
+        _mockEventRepository.VerifyAll();
+        _mockClock.VerifyAll();
+    }
+
+    [TestMethod]
+    public void ValidateEntryByQr_Event_WhenCapacityExceeded_ShouldReturnFalse()
+    {
+        var attractionId = Guid.NewGuid();
+        var qrId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        var attraction = new Attraction { Id = attractionId, Capacity = 5, CurrentVisitors = 2, MiniumAge = 0, Available = true };
+
+        var ev = new Event
+        {
+            Id = Guid.NewGuid(),
+            Name = "Show",
+            Date = _now,
+            Capacity = 1,
+            Cost = 0,
+            Attractions = new List<Attraction> { attraction }
+        };
+
+        var visitor = new VisitorProfile { Id = visitorId, DateOfBirth = new DateOnly(2000, 1, 1) };
+
+        var ticket = new Ticket
+        {
+            QrId = qrId,
+            Date = _now,
+            Type = EntranceType.Event,
+            Event = ev,
+            EventId = ev.Id,
+            Visitor = visitor,
+            VisitorProfileId = visitorId
+        };
+
+        var existingVisit = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Visitor = visitor,
+            Date = _now.Date,
+            IsActive = false,
+            Attractions = new List<Attraction>()
+        };
+
+        _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
+        _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
+        _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
+        _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
+        _mockEventRepository.Setup(r => r.Get(e => e.Id == ticket.EventId)).Returns(ev);
+        _mockTicketRepository.Setup(r => r.GetAll(t => t.EventId == ticket.EventId)).Returns(new List<Ticket> { ticket });
+
+        var ok = _attractionService.ValidateEntryByQr(attractionId, qrId);
+
+        ok.Should().BeFalse();
+
+        _mockTicketRepository.VerifyAll();
+        _mockAttractionRepository.VerifyAll();
+        _mockVisitorRegistrationRepository.VerifyAll();
+        _mockEventRepository.VerifyAll();
+        _mockClock.VerifyAll();
+    }
+
+    [TestMethod]
+    public void ValidateEntryByQr_Event_WhenAttractionNotInEvent_ShouldReturnFalse()
+    {
+        var attractionId = Guid.NewGuid();
+        var qrId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        var attraction = new Attraction { Id = attractionId, Capacity = 5, CurrentVisitors = 0, MiniumAge = 0, Available = true };
+
+        var ev = new Event
+        {
+            Id = Guid.NewGuid(),
+            Name = "Show",
+            Date = _now,
+            Capacity = 10,
+            Cost = 0,
+            Attractions = new List<Attraction>()
+        };
+
+        var visitor = new VisitorProfile { Id = visitorId, DateOfBirth = new DateOnly(2000, 1, 1) };
+
+        var ticket = new Ticket
+        {
+            QrId = qrId,
+            Date = _now,
+            Type = EntranceType.Event,
+            Event = ev,
+            EventId = ev.Id,
+            Visitor = visitor,
+            VisitorProfileId = visitorId
+        };
+
+        var existingVisit = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Visitor = visitor,
+            Date = _now.Date,
+            IsActive = false,
+            Attractions = new List<Attraction>()
+        };
+
+        _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
+        _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
+        _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
+        _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
+        _mockEventRepository.Setup(r => r.Get(e => e.Id == ticket.EventId)).Returns(ev);
+
+        var ok = _attractionService.ValidateEntryByQr(attractionId, qrId);
+
+        ok.Should().BeFalse();
+
+        _mockTicketRepository.VerifyAll();
+        _mockAttractionRepository.VerifyAll();
+        _mockVisitorRegistrationRepository.VerifyAll();
+        _mockEventRepository.VerifyAll();
+        _mockClock.VerifyAll();
+    }
+
+    [TestMethod]
+    public void ValidateEntryByQr_General_WhenExistingInactiveVisit_ShouldActivateAndRegister_ReturnTrue()
+    {
+        var attractionId = Guid.NewGuid();
+        var qrId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        var attraction = new Attraction { Id = attractionId, Capacity = 5, CurrentVisitors = 2, MiniumAge = 0, Available = true };
+
+        var visitor = new VisitorProfile { Id = visitorId, DateOfBirth = new DateOnly(2002, 2, 15) };
+
+        var ticket = new Ticket
+        {
+            QrId = qrId,
+            Date = _now,
+            Type = EntranceType.General,
+            Visitor = visitor,
+            VisitorProfileId = visitorId
+        };
+
+        var existingVisit = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Visitor = visitor,
+            Date = _now.Date,
+            IsActive = false,
+            Attractions = new List<Attraction>()
+        };
+
+        _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
+        _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
+        _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
+        _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
+        _mockAttractionRepository.Setup(r => r.Update(attraction));
+
+        var ok = _attractionService.ValidateEntryByQr(attractionId, qrId);
+
+        ok.Should().BeTrue();
+        attraction.CurrentVisitors.Should().Be(3);
+
+        _mockVisitorRegistrationRepository.VerifyAll();
+        _mockTicketRepository.VerifyAll();
+        _mockAttractionRepository.VerifyAll();
+        _mockClock.VerifyAll();
+    }
     #endregion
 
     #region Success

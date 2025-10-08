@@ -5,6 +5,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Roles.ModelsIn;
 using VirtualPark.WebApi.Controllers.Roles.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.Roles;
 
@@ -16,6 +17,7 @@ public sealed class RoleController(IRoleService roleService) : ControllerBase
     private readonly IRoleService _roleService = roleService;
 
     [HttpPost]
+    [AuthorizationFilter]
     public CreateRoleResponse CreateRole(CreateRoleRequest newRole)
     {
         RoleArgs roleArgs = newRole.ToArgs();
@@ -26,6 +28,7 @@ public sealed class RoleController(IRoleService roleService) : ControllerBase
     }
 
     [HttpGet("roles/{id}")]
+    [AuthorizationFilter]
     public GetRoleResponse GetRoleById(string id)
     {
         var roleId = ValidationServices.ValidateAndParseGuid(id);
@@ -41,6 +44,7 @@ public sealed class RoleController(IRoleService roleService) : ControllerBase
     }
 
     [HttpGet]
+    [AuthorizationFilter]
     public List<GetRoleResponse> GetAllRoles()
     {
         return _roleService.GetAll()
@@ -54,6 +58,7 @@ public sealed class RoleController(IRoleService roleService) : ControllerBase
     }
 
     [HttpDelete("roles/{id}")]
+    [AuthorizationFilter]
     public void DeleteRole(string id)
     {
         var roleId = ValidationServices.ValidateAndParseGuid(id);
@@ -61,6 +66,7 @@ public sealed class RoleController(IRoleService roleService) : ControllerBase
     }
 
     [HttpPut("roles/{id}")]
+    [AuthorizationFilter]
     public void UpdateRole(CreateRoleRequest request, string id)
     {
         var roleId = ValidationServices.ValidateAndParseGuid(id);

@@ -5,6 +5,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Permissions.ModelsIn;
 using VirtualPark.WebApi.Controllers.Permissions.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.Permissions;
 
@@ -15,6 +16,7 @@ public sealed class PermissionController(IPermissionService permissionService) :
     private readonly IPermissionService _permissionService = permissionService;
 
     [HttpPost("permissions")]
+    [AuthorizationFilter]
     public CreatePermissionResponse CreatePermission(CreatePermissionRequest request)
     {
         PermissionArgs args = request.ToArgs();
@@ -25,6 +27,7 @@ public sealed class PermissionController(IPermissionService permissionService) :
     }
 
     [HttpGet("permissions/{id}")]
+    [AuthorizationFilter]
     public GetPermissionResponse GetPermissionById(string id)
     {
         var permissionId = ValidationServices.ValidateAndParseGuid(id);
@@ -39,6 +42,7 @@ public sealed class PermissionController(IPermissionService permissionService) :
     }
 
     [HttpGet("permissions")]
+    [AuthorizationFilter]
     public List<GetPermissionResponse> GetAllPermissions()
     {
         return _permissionService.GetAll()
@@ -51,6 +55,7 @@ public sealed class PermissionController(IPermissionService permissionService) :
     }
 
     [HttpDelete("permissions/{id}")]
+    [AuthorizationFilter]
     public void DeletePermission(string id)
     {
         var permissionId = ValidationServices.ValidateAndParseGuid(id);
@@ -58,6 +63,7 @@ public sealed class PermissionController(IPermissionService permissionService) :
     }
 
     [HttpPut("permissions/{id}")]
+    [AuthorizationFilter]
     public void UpdatePermission(CreatePermissionRequest request, string id)
     {
         var permissionId = ValidationServices.ValidateAndParseGuid(id);

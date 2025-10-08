@@ -5,6 +5,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Users.ModelsIn;
 using VirtualPark.WebApi.Controllers.Users.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.Users;
 
@@ -25,6 +26,7 @@ public sealed class UserController(IUserService userService) : ControllerBase
     }
 
     [HttpGet("users/{id}")]
+    [AuthorizationFilter]
     public GetUserResponse GetUserById(string id)
     {
         var userId = ValidationServices.ValidateAndParseGuid(id);
@@ -41,6 +43,7 @@ public sealed class UserController(IUserService userService) : ControllerBase
     }
 
     [HttpGet("users")]
+    [AuthorizationFilter]
     public List<GetUserResponse> GetAllUsers()
     {
         return _userService.GetAll()
@@ -55,6 +58,7 @@ public sealed class UserController(IUserService userService) : ControllerBase
     }
 
     [HttpDelete("users/{id}")]
+    [AuthorizationFilter]
     public void DeleteUser(string id)
     {
         var userId = ValidationServices.ValidateAndParseGuid(id);
@@ -62,6 +66,7 @@ public sealed class UserController(IUserService userService) : ControllerBase
     }
 
     [HttpPut("users/{id}")]
+    [AuthorizationFilter]
     public void UpdateUser(CreateUserRequest request, string id)
     {
         var userId = ValidationServices.ValidateAndParseGuid(id);

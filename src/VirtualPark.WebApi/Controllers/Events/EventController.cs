@@ -6,6 +6,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Events.ModelsIn;
 using VirtualPark.WebApi.Controllers.Events.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.Events;
 
@@ -16,6 +17,7 @@ public sealed class EventController(IEventService eventService) : ControllerBase
     private readonly IEventService _eventService = eventService;
 
     [HttpPost("v1/events")]
+    [AuthorizationFilter]
     public CreateEventResponse CreateEvent(CreateEventRequest request)
     {
         EventsArgs args = request.ToArgs();
@@ -24,6 +26,7 @@ public sealed class EventController(IEventService eventService) : ControllerBase
     }
 
     [HttpGet("v1/events/{id}")]
+    [AuthorizationFilter]
     public GetEventResponse GetEventById(string id)
     {
         var eventId = ValidationServices.ValidateAndParseGuid(id);
@@ -39,6 +42,7 @@ public sealed class EventController(IEventService eventService) : ControllerBase
     }
 
     [HttpGet("v1/events")]
+    [AuthorizationFilter]
     public List<GetEventResponse> GetAllEvents()
     {
         return _eventService
@@ -63,6 +67,7 @@ public sealed class EventController(IEventService eventService) : ControllerBase
     }
 
     [HttpDelete("v1/events/{id}")]
+    [AuthorizationFilter]
     public void DeleteEvent(string id)
     {
         var eventId = ValidationServices.ValidateAndParseGuid(id);
@@ -70,6 +75,7 @@ public sealed class EventController(IEventService eventService) : ControllerBase
     }
 
     [HttpPut("v1/events/{id}")]
+    [AuthorizationFilter]
     public void UpdateEvent(CreateEventRequest request, string id)
     {
         var eventId = ValidationServices.ValidateAndParseGuid(id);

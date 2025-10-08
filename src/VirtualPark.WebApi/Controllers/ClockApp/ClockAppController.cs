@@ -3,6 +3,7 @@ using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.WebApi.Controllers.ClockApp.ModelsIn;
 using VirtualPark.WebApi.Controllers.ClockApp.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.ClockApp;
 
@@ -26,6 +27,7 @@ public sealed class ClockAppController(IClockAppService clockAppService) : Contr
     }
 
     [HttpPut("/clock")]
+    [AuthorizationFilter]
     public void UpdateClock(UpdateClockRequest request)
     {
         var args = request.ToArgs();

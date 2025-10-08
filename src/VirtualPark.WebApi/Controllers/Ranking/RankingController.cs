@@ -3,6 +3,7 @@ using VirtualPark.BusinessLogic.Rankings.Service;
 using VirtualPark.WebApi.Controllers.Ranking.ModelsIn;
 using VirtualPark.WebApi.Controllers.Ranking.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.Ranking;
 
@@ -13,6 +14,7 @@ public sealed class RankingController(IRankingService rankingService) : Controll
     private readonly IRankingService _rankingService = rankingService;
 
     [HttpGet("/ranking")]
+    [AuthorizationFilter]
     public GetRankingResponse GetRanking([FromQuery] GetRankingRequest request)
     {
         var args = request.ToArgs();
@@ -21,6 +23,7 @@ public sealed class RankingController(IRankingService rankingService) : Controll
     }
 
     [HttpGet("/rankings")]
+    [AuthorizationFilter]
     public List<GetRankingResponse> GetAllRankings()
     {
         var rankings = _rankingService.GetAll();

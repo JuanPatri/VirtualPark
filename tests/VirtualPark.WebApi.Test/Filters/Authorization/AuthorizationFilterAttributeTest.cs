@@ -90,7 +90,7 @@ public sealed class AuthorizationFilterAttributeTest
             ActionDescriptor = new ControllerActionDescriptor()
         };
 
-        return new AuthorizationFilterContext(actionContext, new List<IFilterMetadata>());
+        return new AuthorizationFilterContext(actionContext, []);
     }
 
     #region ServiceNull

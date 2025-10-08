@@ -89,6 +89,22 @@ public class ExceptionFilterTests
     }
     #endregion
 
+    #region OutOfRange
+    [TestMethod]
+    public void OnException_WhenArgumentOutOfRangeException_ShouldReturnBadRequest_OutOfRange()
+    {
+        _context.Exception = new ArgumentOutOfRangeException("age", "Age must be between 1 and 99.");
+
+        _attribute.OnException(_context);
+
+        var result = _context.Result as ObjectResult;
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+        GetInnerCode(result.Value!).Should().Be("OutOfRange");
+        GetMessage(result.Value!).Should().Contain("Age must be between 1 and 99.");
+    }
+    #endregion
+
     private string GetInnerCode(object value)
     {
         return value.GetType().GetProperty("InnerCode").GetValue(value).ToString();

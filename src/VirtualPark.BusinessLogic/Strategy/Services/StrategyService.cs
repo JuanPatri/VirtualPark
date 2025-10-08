@@ -4,12 +4,22 @@ using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Strategy.Services;
 
-public sealed class ActiveStrategyService(IRepository<ActiveStrategy> activeStrategyRepository) : IStrategyService
+public sealed class ActiveStrategyService(IRepository<ActiveStrategy> activeStrategyRepository, IStrategyFactory strategyFactory) : IStrategyService
 {
     private readonly IRepository<ActiveStrategy> _activeStrategyRepository = activeStrategyRepository;
+    private readonly IStrategyFactory _strategyFactory = strategyFactory;
 
     public Guid Create(ActiveStrategyArgs args)
     {
+        try
+        {
+            _strategyFactory.Create(args.StrategyKey);
+        }
+        catch (KeyNotFoundException)
+        {
+            throw new ArgumentException($"The strategy '{args.StrategyKey}' is not valid.");
+        }
+
         var existing = _activeStrategyRepository.Get(a => a.Date == args.Date);
         if (existing is null)
         {

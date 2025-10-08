@@ -14,14 +14,15 @@ public class ActiveStrategyServiceTest
 {
     private Mock<IRepository<ActiveStrategy>> _repoMock = null!;
     private ActiveStrategyService _service = null!;
+    private Mock<IStrategyFactory> _factoryMock = null!;
 
     [TestInitialize]
     public void Initialize()
     {
         _repoMock = new Mock<IRepository<ActiveStrategy>>(MockBehavior.Strict);
-        _service = new ActiveStrategyService(_repoMock.Object);
+        _factoryMock = new Mock<IStrategyFactory>(MockBehavior.Strict);
+        _service = new ActiveStrategyService(_repoMock.Object, _factoryMock.Object);
     }
-
     #region Create
     #region Success
 
@@ -29,6 +30,10 @@ public class ActiveStrategyServiceTest
     public void Create_ShouldAdd_WhenDateDoesNotHaveActiveStrategy()
     {
         var args = new ActiveStrategyArgs("Combo", "2029-10-07");
+
+        _factoryMock
+            .Setup(f => f.Create(args.StrategyKey))
+            .Returns(Mock.Of<IStrategy>());
 
         _repoMock
             .Setup(r => r.Get(a => a.Date == args.Date))
@@ -50,6 +55,7 @@ public class ActiveStrategyServiceTest
         captured.Date.Should().Be(new DateOnly(2029, 10, 07));
 
         _repoMock.VerifyAll();
+        _factoryMock.VerifyAll();
     }
 
     [TestMethod]
@@ -57,6 +63,10 @@ public class ActiveStrategyServiceTest
     {
         var args = new ActiveStrategyArgs("Event", "2029-10-07");
         var existing = new ActiveStrategy { StrategyKey = "Attraction", Date = args.Date };
+
+        _factoryMock
+            .Setup(f => f.Create(args.StrategyKey))
+            .Returns(Mock.Of<IStrategy>());
 
         _repoMock
             .Setup(r => r.Get(a => a.Date == args.Date))
@@ -73,6 +83,30 @@ public class ActiveStrategyServiceTest
         result.Should().Be(existing.Id);
 
         _repoMock.VerifyAll();
+        _factoryMock.VerifyAll();
+    }
+
+    #endregion
+
+    #region Failure
+
+    [TestMethod]
+    public void Create_ShouldThrow_WhenStrategyKeyIsInvalid()
+    {
+        var args = new ActiveStrategyArgs("InvalidStrategy", "2029-10-07");
+
+        _factoryMock
+            .Setup(f => f.Create(args.StrategyKey))
+            .Throws(new KeyNotFoundException($"Estrategia desconocida '{args.StrategyKey}'."));
+
+        var act = () => _service.Create(args);
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage($"The strategy '{args.StrategyKey}' is not valid.");
+
+        _factoryMock.VerifyAll();
+        _repoMock.VerifyNoOtherCalls();
     }
 
     #endregion
@@ -98,6 +132,7 @@ public class ActiveStrategyServiceTest
         result.Date.Should().Be(date);
 
         _repoMock.VerifyAll();
+        _factoryMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -114,6 +149,7 @@ public class ActiveStrategyServiceTest
         result.Should().BeNull();
 
         _repoMock.VerifyAll();
+        _factoryMock.VerifyNoOtherCalls();
     }
 
     #endregion
@@ -145,6 +181,7 @@ public class ActiveStrategyServiceTest
         result[1].Date.Should().Be(new DateOnly(2025, 10, 09));
 
         _repoMock.VerifyAll();
+        _factoryMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -160,6 +197,7 @@ public class ActiveStrategyServiceTest
         result.Should().BeEmpty();
 
         _repoMock.VerifyAll();
+        _factoryMock.VerifyNoOtherCalls();
     }
 
     #endregion
@@ -188,6 +226,7 @@ public class ActiveStrategyServiceTest
         _service.Update(args, date);
 
         _repoMock.VerifyAll();
+        _factoryMock.VerifyNoOtherCalls();
     }
 
     #endregion
@@ -211,6 +250,7 @@ public class ActiveStrategyServiceTest
             .WithMessage($"ActiveStrategy with date {date} not found.");
 
         _repoMock.VerifyAll();
+        _factoryMock.VerifyNoOtherCalls();
     }
 
     #endregion
@@ -235,6 +275,7 @@ public class ActiveStrategyServiceTest
         _service.Remove(date);
 
         _repoMock.VerifyAll();
+        _factoryMock.VerifyNoOtherCalls();
     }
 
     #endregion
@@ -257,6 +298,7 @@ public class ActiveStrategyServiceTest
             .WithMessage($"ActiveStrategy with date {date} not found.");
 
         _repoMock.VerifyAll();
+        _factoryMock.VerifyNoOtherCalls();
     }
 
     #endregion

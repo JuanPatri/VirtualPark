@@ -6,6 +6,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Tickets.ModelsIn;
 using VirtualPark.WebApi.Controllers.Tickets.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.Tickets;
 
@@ -16,6 +17,7 @@ public sealed class TicketController(ITicketService ticketService) : ControllerB
     private readonly ITicketService _ticketService = ticketService;
 
     [HttpGet("/tickets/{id}")]
+    [AuthorizationFilter]
     public GetTicketResponse GetTicketById(string id)
     {
         var ticketId = ValidationServices.ValidateAndParseGuid(id);
@@ -35,6 +37,7 @@ public sealed class TicketController(ITicketService ticketService) : ControllerB
     }
 
     [HttpPost("/tickets")]
+    [AuthorizationFilter]
     public CreateTicketResponse CreateTicket(CreateTicketRequest request)
     {
         TicketArgs args = request.ToArgs();
@@ -43,6 +46,7 @@ public sealed class TicketController(ITicketService ticketService) : ControllerB
     }
 
     [HttpGet("/tickets")]
+    [AuthorizationFilter]
     public List<GetTicketResponse> GetAllTickets()
     {
         return _ticketService
@@ -52,6 +56,7 @@ public sealed class TicketController(ITicketService ticketService) : ControllerB
     }
 
     [HttpDelete("/tickets/{id}")]
+    [AuthorizationFilter]
     public void DeleteTicket(string id)
     {
         var ticketId = ValidationServices.ValidateAndParseGuid(id);

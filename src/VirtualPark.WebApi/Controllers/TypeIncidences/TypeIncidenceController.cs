@@ -4,6 +4,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.TypeIncidences.ModelsIn;
 using VirtualPark.WebApi.Controllers.TypeIncidences.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.TypeIncidences;
 
@@ -14,6 +15,7 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
     private readonly ITypeIncidenceService _service = service;
 
     [HttpPost("typeIncidences")]
+    [AuthorizationFilter]
     public CreateTypeIncidenceResponse CreateTypeIncidence(CreateTypeIncidenceRequest request)
     {
         var args = request.ToArgs();
@@ -24,6 +26,7 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
     }
 
     [HttpGet("typeIncidences/{id}")]
+    [AuthorizationFilter]
     public GetTypeIncidenceResponse GetTypeIncidenceById(string id)
     {
         var guid = ValidationServices.ValidateAndParseGuid(id);
@@ -36,6 +39,7 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
     }
 
     [HttpGet("typeIncidences")]
+    [AuthorizationFilter]
     public List<GetTypeIncidenceResponse> GetAllTypeIncidences()
     {
         return _service.GetAll()
@@ -46,6 +50,7 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
     }
 
     [HttpDelete("typeIncidences/{id}")]
+    [AuthorizationFilter]
     public void DeleteTypeIncidence(string id)
     {
         var guid = ValidationServices.ValidateAndParseGuid(id);
@@ -53,6 +58,7 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
     }
 
     [HttpPut("typeIncidences/{id}")]
+    [AuthorizationFilter]
     public void UpdateTypeIncidence(string id, CreateTypeIncidenceRequest request)
     {
         var guid = ValidationServices.ValidateAndParseGuid(id);

@@ -3,6 +3,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.BusinessLogic.VisitorsProfile.Service;
 using VirtualPark.WebApi.Controllers.VisitorsProfile.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.VisitorsProfile;
 
@@ -13,6 +14,7 @@ public sealed class VisitorProfileController(IVisitorProfileService visitorProfi
     private readonly IVisitorProfileService _visitorProfileServiceService = visitorProfileServiceService;
 
     [HttpGet("visitorProfiles/{id}")]
+    [AuthorizationFilter]
     public GetVisitorProfileResponse GetVisitorProfileById(string id)
     {
         var visitorId = ValidationServices.ValidateAndParseGuid(id);
@@ -28,6 +30,7 @@ public sealed class VisitorProfileController(IVisitorProfileService visitorProfi
     }
 
     [HttpGet("visitorProfiles")]
+    [AuthorizationFilter]
     public List<GetVisitorProfileResponse> GetAllVisitorProfiles()
     {
         return _visitorProfileServiceService

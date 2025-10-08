@@ -11,12 +11,12 @@ public sealed class AuthorizationFilterAttribute(string? permission = null)
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        if (context.Result != null)
+        if(context.Result != null)
         {
             return;
         }
 
-        if (context.HttpContext.Items["UserLogged"] is not User userLogged)
+        if(context.HttpContext.Items["UserLogged"] is not User userLogged)
         {
             context.Result = new ObjectResult(new
             {
@@ -33,7 +33,7 @@ public sealed class AuthorizationFilterAttribute(string? permission = null)
             permission ?? $"{context.RouteData.Values["action"]}-{context.RouteData.Values["controller"]}";
 
         var userService = context.HttpContext.RequestServices.GetService<IUserService>();
-        if (userService is null)
+        if(userService is null)
         {
             context.Result = new ObjectResult(new
             {
@@ -48,7 +48,7 @@ public sealed class AuthorizationFilterAttribute(string? permission = null)
 
         var hasPermission = userService.HasPermission(userLogged.Id, requiredPermission);
 
-        if (!hasPermission)
+        if(!hasPermission)
         {
             context.Result = new ObjectResult(new
             {

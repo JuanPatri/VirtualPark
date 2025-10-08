@@ -5,6 +5,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Attractions.ModelsIn;
 using VirtualPark.WebApi.Controllers.Attractions.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.Attractions;
 
@@ -16,6 +17,7 @@ public sealed class AttractionController(IAttractionService attractionService) :
     private readonly IAttractionService _attractionService = attractionService;
 
     [HttpPost]
+    [AuthorizationFilter]
     public CreateAttractionResponse CreateAttraction(CreateAttractionRequest newAtraction)
     {
         AttractionArgs attractionArgs = newAtraction.ToArgs();
@@ -26,6 +28,7 @@ public sealed class AttractionController(IAttractionService attractionService) :
     }
 
     [HttpGet("attractions/{id}")]
+    [AuthorizationFilter]
     public GetAttractionResponse GetAttractionById(string id)
     {
         var attractionId = ValidationServices.ValidateAndParseGuid(id);
@@ -44,6 +47,7 @@ public sealed class AttractionController(IAttractionService attractionService) :
     }
 
     [HttpGet]
+    [AuthorizationFilter]
     public List<GetAttractionResponse> GetAllAttractions()
     {
         return _attractionService.GetAll().Select(a => new GetAttractionResponse(
@@ -59,6 +63,7 @@ public sealed class AttractionController(IAttractionService attractionService) :
     }
 
     [HttpDelete("attractions/{id}")]
+    [AuthorizationFilter]
     public void DeleteAttraction(string id)
     {
         var attractionId = ValidationServices.ValidateAndParseGuid(id);
@@ -66,6 +71,7 @@ public sealed class AttractionController(IAttractionService attractionService) :
     }
 
     [HttpPut("attractions/{id}")]
+    [AuthorizationFilter]
     public void UpdateAttraction(string id, CreateAttractionRequest newAttraction)
     {
         var idAttraction = ValidationServices.ValidateAndParseGuid(id);

@@ -5,6 +5,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.WebApi.Controllers.Incidences.ModelsIn;
 using VirtualPark.WebApi.Controllers.Incidences.ModelsOut;
 using VirtualPark.WebApi.Filters.Authenticator;
+using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.Incidences;
 
@@ -26,6 +27,7 @@ public sealed class IncidenceController(IIncidenceService incidenceService) : Co
     }
 
     [HttpGet("incidences/{id}")]
+    [AuthorizationFilter]
     public GetIncidenceResponse GetIncidence(string id)
     {
         var incidenceId = ValidationServices.ValidateAndParseGuid(id);
@@ -44,6 +46,7 @@ public sealed class IncidenceController(IIncidenceService incidenceService) : Co
     }
 
     [HttpGet]
+    [AuthorizationFilter]
     public List<GetIncidenceResponse> GetAllIncidences()
     {
         var incidences = _incidenceService.GetAll();
@@ -59,6 +62,7 @@ public sealed class IncidenceController(IIncidenceService incidenceService) : Co
     }
 
     [HttpDelete("incidences/{id}")]
+    [AuthorizationFilter]
     public void DeleteIncidence(string id)
     {
         var incidenceId = ValidationServices.ValidateAndParseGuid(id);
@@ -66,6 +70,7 @@ public sealed class IncidenceController(IIncidenceService incidenceService) : Co
     }
 
     [HttpPut("incidences/{id}")]
+    [AuthorizationFilter]
     public void UpdateIncidence(string id, CreateIncidenceRequest request)
     {
         var incidenceId = ValidationServices.ValidateAndParseGuid(id);

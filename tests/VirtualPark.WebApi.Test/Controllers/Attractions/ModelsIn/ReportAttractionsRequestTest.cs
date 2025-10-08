@@ -1,3 +1,6 @@
+using FluentAssertions;
+using VirtualPark.WebApi.Controllers.Attractions.ModelsIn;
+
 namespace VirtualPark.WebApi.Test.Controllers.Attractions.ModelsIn;
 
 [TestClass]
@@ -9,7 +12,7 @@ public class ReportAttractionsRequestTest
     [TestMethod]
     public void ReportAttractionRequest_NameProperty_GetAndSet_ShouldWorkCorrectly()
     {
-        var attraction = new ReportAttractionRequest { From = "2025-04-23" };
+        var attraction = new ReportAttractionsRequest { From = "2025-04-23" };
         attraction.From.Should().Be("2025-04-23");
     }
     #endregion

@@ -105,6 +105,22 @@ public class ExceptionFilterTests
     }
     #endregion
 
+    #region NotFound
+    [TestMethod]
+    public void OnException_WhenKeyNotFoundException_ShouldReturnNotFound()
+    {
+        _context.Exception = new KeyNotFoundException("User doesn't exist");
+
+        _attribute.OnException(_context);
+
+        var result = _context.Result as ObjectResult;
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        GetInnerCode(result.Value!).Should().Be("NotFound");
+        GetMessage(result.Value!).Should().Contain("User doesn't exist");
+    }
+    #endregion
+
     private string GetInnerCode(object value)
     {
         return value.GetType().GetProperty("InnerCode").GetValue(value).ToString();

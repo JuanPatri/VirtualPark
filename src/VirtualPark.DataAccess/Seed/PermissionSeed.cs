@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using VirtualPark.BusinessLogic.Permissions.Entity;
 
 namespace VirtualPark.DataAccess.Seed;
 
+[ExcludeFromCodeCoverage]
 public static class PermissionSeed
 {
     public static void Seed(ModelBuilder modelBuilder)

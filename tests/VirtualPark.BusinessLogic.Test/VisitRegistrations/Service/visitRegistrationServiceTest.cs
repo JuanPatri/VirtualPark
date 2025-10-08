@@ -20,6 +20,7 @@ public class VisitRegistrationServiceTest
     private Mock<IReadOnlyRepository<Attraction>> _attractionRepoMock = null!;
     private Mock<IRepository<VisitRegistration>> _repositoryMock = null!;
     private Mock<IReadOnlyRepository<Ticket>> _ticketRepoMock = null!;
+    private Mock<IClockAppService> _clockMock = null!;
     private VisitRegistrationService _service = null!;
 
     [TestInitialize]
@@ -29,7 +30,8 @@ public class VisitRegistrationServiceTest
         _attractionRepoMock = new Mock<IReadOnlyRepository<Attraction>>(MockBehavior.Strict);
         _repositoryMock = new Mock<IRepository<VisitRegistration>>(MockBehavior.Strict);
         _ticketRepoMock = new Mock<IReadOnlyRepository<Ticket>>(MockBehavior.Strict);
-        _service = new VisitRegistrationService(_repositoryMock.Object, _visitorRepoMock.Object, _attractionRepoMock.Object, _ticketRepoMock.Object);
+        _clockMock = new Mock<IClockAppService>(MockBehavior.Strict);
+        _service = new VisitRegistrationService(_repositoryMock.Object, _visitorRepoMock.Object, _attractionRepoMock.Object, _ticketRepoMock.Object, _clockMock.Object);
     }
 
     #region Create
@@ -39,6 +41,7 @@ public class VisitRegistrationServiceTest
     public void Create_ShouldCreateVisitRegistration_WhenVisitorAndAttractionsExist()
     {
         var fixedNow = new DateTime(2025, 10, 08, 14, 30, 00, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(fixedNow);
 
         var visitor = new VisitorProfile();
         var visitorId = visitor.Id;
@@ -98,6 +101,7 @@ public class VisitRegistrationServiceTest
         _attractionRepoMock.VerifyAll();
         _ticketRepoMock.VerifyAll();
         _repositoryMock.VerifyAll();
+        _clockMock.VerifyAll();
     }
     #endregion
 

@@ -10,5 +10,6 @@ namespace VirtualPark.WebApi.Controllers.Strategy;
 [Route("strategies")]
 public class StrategyController(IStrategyService strategyService) : ControllerBase
 {
+    private readonly IStrategyService _strategyService = strategyService;
 
 }

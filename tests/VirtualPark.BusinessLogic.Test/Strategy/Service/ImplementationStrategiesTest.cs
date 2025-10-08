@@ -114,7 +114,7 @@ public sealed class ImplementationStrategiesTest
             Ticket = new Ticket { Event = null },
             Attractions = []
         };
-        strategy.CalculatePoints(visit).Should().Be(0);
+        strategy.CalculatePoints(visit).Should().Be(20);
     }
 
     [DataTestMethod]

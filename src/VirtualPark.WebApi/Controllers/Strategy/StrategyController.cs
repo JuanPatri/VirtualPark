@@ -7,9 +7,11 @@ using VirtualPark.WebApi.Controllers.Strategy.ModelsOut;
 
 namespace VirtualPark.WebApi.Controllers.Strategy;
 
+[ApiController]
 [Route("strategies")]
 public class StrategyController(IStrategyService strategyService) : ControllerBase
 {
     private readonly IStrategyService _strategyService = strategyService;
 
+   
 }

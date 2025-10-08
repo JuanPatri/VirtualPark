@@ -28,7 +28,7 @@ public class ActiveStrategyServiceTest
     [TestMethod]
     public void Create_ShouldAdd_WhenDateDoesNotHaveActiveStrategy()
     {
-        var args = new ActiveStrategyArgs("Combo", "2025-10-07");
+        var args = new ActiveStrategyArgs("Combo", "2029-10-07");
 
         _repoMock
             .Setup(r => r.Get(a => a.Date == args.Date))
@@ -47,7 +47,7 @@ public class ActiveStrategyServiceTest
         captured.Should().NotBeNull();
         captured!.Id.Should().Be(result);
         captured.StrategyKey.Should().Be("Combo");
-        captured.Date.Should().Be(new DateOnly(2025, 10, 07));
+        captured.Date.Should().Be(new DateOnly(2029, 10, 07));
 
         _repoMock.VerifyAll();
     }
@@ -55,7 +55,7 @@ public class ActiveStrategyServiceTest
     [TestMethod]
     public void Create_ShouldUpdate_WhenDateAlreadyHasActiveStrategy()
     {
-        var args = new ActiveStrategyArgs("Event", "2025-10-07");
+        var args = new ActiveStrategyArgs("Event", "2029-10-07");
         var existing = new ActiveStrategy { StrategyKey = "Attraction", Date = args.Date };
 
         _repoMock

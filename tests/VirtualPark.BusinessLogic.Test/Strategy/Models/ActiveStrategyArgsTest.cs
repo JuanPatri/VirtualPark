@@ -11,10 +11,10 @@ public class ActiveStrategyArgsTests
     [TestMethod]
     public void Constructor_ShouldAssignValues_WhenParametersAreValid()
     {
-        var args = new ActiveStrategyArgs("Combo", "2025-10-07");
+        var args = new ActiveStrategyArgs("Combo", "2029-10-07");
 
         args.StrategyKey.Should().Be("Combo");
-        args.Date.Should().Be(DateOnly.Parse("2025-10-07"));
+        args.Date.Should().Be(DateOnly.Parse("2029-10-07"));
     }
 
     #endregion

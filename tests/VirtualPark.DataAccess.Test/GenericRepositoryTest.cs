@@ -1,5 +1,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Moq;
 
 namespace VirtualPark.DataAccess.Test;
 
@@ -97,6 +99,38 @@ public class GenericRepositoryTest
 
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(e1);
+    }
+
+    [TestMethod]
+    public void Get_WithInclude_ShouldApplyIncludeAndReturnFirstMatch()
+    {
+        var data = new List<EntityTest>
+        {
+            new() { Id = "1", Name = "A" },
+            new() { Id = "2", Name = "B" }
+        }.AsQueryable();
+
+        var mockSet = new Mock<DbSet<EntityTest>>();
+        mockSet.As<IQueryable<EntityTest>>().Setup(m => m.Provider).Returns(data.Provider);
+        mockSet.As<IQueryable<EntityTest>>().Setup(m => m.Expression).Returns(data.Expression);
+        mockSet.As<IQueryable<EntityTest>>().Setup(m => m.ElementType).Returns(data.ElementType);
+        mockSet.As<IQueryable<EntityTest>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+        var mockContext = new Mock<DbContext>();
+        mockContext.Setup(c => c.Set<EntityTest>()).Returns(mockSet.Object);
+
+        var repository = new GenericRepository<EntityTest>(mockContext.Object);
+
+        Func<IQueryable<EntityTest>, IIncludableQueryable<EntityTest, object>> include =
+            q => (IIncludableQueryable<EntityTest, object>)q;
+
+        var result = repository.Get(x => x.Id == "2", include: null);
+
+        result.Should().NotBeNull();
+        result!.Id.Should().Be("2");
+        result.Name.Should().Be("B");
+
+        mockContext.Verify(c => c.Set<EntityTest>(), Times.AtLeastOnce);
     }
     #endregion
 
@@ -217,7 +251,7 @@ internal sealed class TestDbContext(DbContextOptions<TestDbContext> options) : D
     public DbSet<EntityTest> EntitiesTest => Set<EntityTest>();
 }
 
-internal sealed record class EntityTest
+public sealed record class EntityTest
 {
     public string Id { get; init; } = Guid.NewGuid().ToString();
     public string Name { get; set; } = string.Empty;

@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.Roles.Entity;
@@ -232,7 +234,9 @@ public class UserServiceTest
         };
 
         _usersRepositoryMock
-            .Setup(r => r.Get(u => u.Id == id))
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>?>()))
             .Returns(dbUser);
 
         _visitorProfileRepositoryMock
@@ -401,7 +405,9 @@ public class UserServiceTest
         var id = dbUser.Id;
 
         _usersRepositoryMock
-            .Setup(r => r.Get(u => u.Id == id))
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>?>()))
             .Returns(dbUser);
 
         _usersRepositoryMock
@@ -430,7 +436,9 @@ public class UserServiceTest
         var id = dbUser.Id;
 
         _usersRepositoryMock
-            .Setup(r => r.Get(u => u.Id == id))
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>?>()))
             .Returns(dbUser);
 
         _visitorProfileServiceMock
@@ -456,7 +464,9 @@ public class UserServiceTest
         var id = Guid.NewGuid();
 
         _usersRepositoryMock
-            .Setup(r => r.Get(u => u.Id == id))
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>?>()))
             .Returns((User?)null);
 
         Action act = () => _userService.Remove(id);
@@ -526,7 +536,8 @@ public class UserServiceTest
                 u.VisitorProfileId == vpId &&
                 u.VisitorProfile!.Id == vpId &&
                 u.VisitorProfile.DateOfBirth == existingVp.DateOfBirth &&
-                u.VisitorProfile.Membership == existingVp.Membership)));
+                u.VisitorProfile.Membership == existingVp.Membership)))
+            .Verifiable();
 
         _userService.Update(args, userId);
 
@@ -584,14 +595,14 @@ public class UserServiceTest
                     a.Score == newVpArgs.Score),
                 vpId));
 
-        _usersRepositoryMock
-            .Setup(r => r.Update(It.Is<User>(u =>
-                u.Id == userId &&
-                u.Name == args.Name &&
-                u.LastName == args.LastName &&
-                u.Password == args.Password &&
-                u.Email == "user@mail.com" &&
-                u.VisitorProfileId == vpId)));
+        _visitorProfileServiceMock
+            .Setup(s => s.Update(
+                It.Is<VisitorProfileArgs>(a =>
+                    a.DateOfBirth == newVpArgs.DateOfBirth &&
+                    a.Membership == newVpArgs.Membership &&
+                    a.Score == newVpArgs.Score),
+                vpId))
+            .Verifiable();
 
         _userService.Update(args, userId);
 
@@ -617,7 +628,9 @@ public class UserServiceTest
         var userId = Guid.NewGuid();
 
         _usersRepositoryMock
-            .Setup(r => r.Get(u => u.Id == userId))
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>?>()))
             .Returns((User?)null);
 
         Action act = () => _userService.Update(args, userId);
@@ -667,9 +680,11 @@ public class UserServiceTest
             ]
         };
 
-        _rolesRepositoryMock
-            .Setup(r => r.Get(role => role.Id == firstRoleRef.Id))
-            .Returns(role1);
+        _usersRepositoryMock
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>?>()))
+            .Returns(user);
 
         var result = _userService.HasPermission(userId, "USERS_MANAGE");
 
@@ -739,7 +754,9 @@ public class UserServiceTest
         };
 
         _usersRepositoryMock
-            .Setup(r => r.Get(u => u.Id == userId))
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>?>()))
             .Returns(user);
 
         var result = _userService.HasPermission(userId, "USERS_MANAGE");

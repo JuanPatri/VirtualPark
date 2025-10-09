@@ -38,7 +38,7 @@ public class GenericRepositoryTest
         _context.Set<EntityTest>().AddRange(e1, e2);
         _context.SaveChanges();
 
-        var result = _genericRepository.GetAll();
+        var result = _genericRepository.GetAll(null);
 
         result.Should().NotBeNull();
         result.Should().HaveCount(2);

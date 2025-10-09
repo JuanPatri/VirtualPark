@@ -1,4 +1,5 @@
 using VirtualPark.ApiServiceFactory;
+using VirtualPark.BusinessLogic.Tickets.Service;
 using VirtualPark.WebApi.Filters.Exception;
 
 var builder = WebApplication.CreateBuilder(args);

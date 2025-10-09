@@ -23,7 +23,7 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
 
     public List<Role> GetAll()
     {
-        return _roleRepository.GetAll();
+        return _roleRepository.GetAll(null);
     }
 
     public Role Get(Guid id)

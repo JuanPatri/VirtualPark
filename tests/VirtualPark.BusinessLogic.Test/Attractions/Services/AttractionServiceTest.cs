@@ -132,8 +132,8 @@ public class AttractionServiceTest
         var name = "RollerCoaster";
 
         _mockAttractionRepository
-            .Setup(r => r.Exist(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
-            .Returns(true);
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns(false);
 
         Action act = () => _attractionService.ValidateAttractionName(name);
 
@@ -152,7 +152,7 @@ public class AttractionServiceTest
         var name = _attractionArgs.Name;
 
         _mockAttractionRepository
-            .Setup(r => r.Exist(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Attraction, bool>>>()))
             .Returns(false);
 
         _mockAttractionRepository

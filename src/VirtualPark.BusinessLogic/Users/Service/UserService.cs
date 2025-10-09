@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.Users.Models;
@@ -31,17 +33,19 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
 
     public User? Get(Guid id)
     {
-        var user = _userRepository.Get(u => u.Id == id);
+        var user = _userRepository.Get(
+            u => u.Id == id,
+            include: q => q.Include(u => u.Roles));
 
         if(user == null)
         {
-            throw new InvalidOperationException("User don't exist");
+            throw new InvalidOperationException("User doesn't exist");
         }
 
         if(user.VisitorProfileId != null)
         {
             user.VisitorProfile =
-                _visitorProfileRepository.Get(visitorProfile => visitorProfile.Id == user.VisitorProfileId);
+                _visitorProfileRepository.Get(vp => vp.Id == user.VisitorProfileId);
         }
 
         return user;
@@ -62,11 +66,19 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
 
     public void Remove(Guid id)
     {
-        var user = _userRepository.Get(u => u.Id == id);
+        var user = _userRepository.Get(
+            u => u.Id == id,
+            include: q => q.Include(u => u.Roles));
 
         if(user == null)
         {
-            throw new InvalidOperationException("User don't exist");
+            throw new InvalidOperationException("User doesn't exist");
+        }
+
+        if(user.Roles != null && user.Roles.Any())
+        {
+            user.Roles.Clear();
+            _userRepository.Update(user);
         }
 
         if(user.VisitorProfileId != null)
@@ -86,7 +98,7 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
         _userRepository.Update(user!);
     }
 
-    public bool HasPermission(Guid id, string permissionKey)
+    /*public bool HasPermission(Guid id, string permissionKey)
     {
         var user = _userRepository.Get(u => u.Id == id);
 
@@ -97,6 +109,25 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
         }
 
         return false;
+    }*/
+
+    public bool HasPermission(Guid id, string permissionKey)
+    {
+        var user = _userRepository.Get(
+            u => u.Id == id,
+            include: q => q
+                .Include(u => u.Roles)
+                .ThenInclude(r => r.Permissions)
+        );
+
+        if (user?.Roles == null || user.Roles.Count == 0)
+        {
+            return false;
+        }
+
+        return user.Roles.Any(r =>
+            r.Permissions != null &&
+            r.Permissions.Any(p => p.Key == permissionKey));
     }
 
     private void ApplyChange(User user, UserArgs args)

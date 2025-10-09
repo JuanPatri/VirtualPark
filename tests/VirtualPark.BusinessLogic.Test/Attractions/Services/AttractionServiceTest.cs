@@ -740,7 +740,7 @@ public class AttractionServiceTest
             Date = _now,
             Capacity = 10,
             Cost = 0,
-            Attractions = new List<Attraction> { attraction }
+            Attractions = [attraction]
         };
 
         var visitor = new VisitorProfile { Id = visitorId, DateOfBirth = new DateOnly(2000, 1, 1) };
@@ -762,7 +762,7 @@ public class AttractionServiceTest
             Visitor = visitor,
             Date = _now.Date,
             IsActive = false,
-            Attractions = new List<Attraction>()
+            Attractions = []
         };
 
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
@@ -770,7 +770,7 @@ public class AttractionServiceTest
         _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
         _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
         _mockEventRepository.Setup(r => r.Get(e => e.Id == ticket.EventId)).Returns(ev);
-        _mockTicketRepository.Setup(r => r.GetAll(t => t.EventId == ticket.EventId)).Returns(new List<Ticket>());
+        _mockTicketRepository.Setup(r => r.GetAll(t => t.EventId == ticket.EventId)).Returns([]);
         _mockAttractionRepository.Setup(r => r.Update(attraction));
 
         var ok = _attractionService.ValidateEntryByQr(attractionId, qrId);
@@ -800,7 +800,7 @@ public class AttractionServiceTest
             Date = _now,
             Capacity = 1,
             Cost = 0,
-            Attractions = new List<Attraction> { attraction }
+            Attractions = [attraction]
         };
 
         var visitor = new VisitorProfile { Id = visitorId, DateOfBirth = new DateOnly(2000, 1, 1) };
@@ -822,7 +822,7 @@ public class AttractionServiceTest
             Visitor = visitor,
             Date = _now.Date,
             IsActive = false,
-            Attractions = new List<Attraction>()
+            Attractions = []
         };
 
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
@@ -830,7 +830,7 @@ public class AttractionServiceTest
         _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
         _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
         _mockEventRepository.Setup(r => r.Get(e => e.Id == ticket.EventId)).Returns(ev);
-        _mockTicketRepository.Setup(r => r.GetAll(t => t.EventId == ticket.EventId)).Returns(new List<Ticket> { ticket });
+        _mockTicketRepository.Setup(r => r.GetAll(t => t.EventId == ticket.EventId)).Returns([ticket]);
 
         var ok = _attractionService.ValidateEntryByQr(attractionId, qrId);
 
@@ -859,7 +859,7 @@ public class AttractionServiceTest
             Date = _now,
             Capacity = 10,
             Cost = 0,
-            Attractions = new List<Attraction>()
+            Attractions = []
         };
 
         var visitor = new VisitorProfile { Id = visitorId, DateOfBirth = new DateOnly(2000, 1, 1) };
@@ -881,7 +881,7 @@ public class AttractionServiceTest
             Visitor = visitor,
             Date = _now.Date,
             IsActive = false,
-            Attractions = new List<Attraction>()
+            Attractions = []
         };
 
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
@@ -927,7 +927,7 @@ public class AttractionServiceTest
             Visitor = visitor,
             Date = _now.Date,
             IsActive = false,
-            Attractions = new List<Attraction>()
+            Attractions = []
         };
 
         _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
@@ -986,11 +986,10 @@ public class AttractionServiceTest
 
         _mockVisitorRegistrationRepository
             .Setup(r => r.Add(It.Is<VisitRegistration>(v =>
-                    v.VisitorId == visitorId &&
+                    (v.VisitorId == visitorId &&
                     v.IsActive == true &&
                     v.Date == _now.Date &&
-                    v.TicketId == ticket.Id || v.TicketId == Guid.Empty
-            )));
+                    v.TicketId == ticket.Id) || v.TicketId == Guid.Empty)));
 
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
         _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
@@ -1222,7 +1221,7 @@ public class AttractionServiceTest
             Date = _now,
             Capacity = 100,
             Cost = 0,
-            Attractions = new List<Attraction>()
+            Attractions = []
         };
 
         var ticket = new Ticket
@@ -1258,7 +1257,7 @@ public class AttractionServiceTest
             Date = _now,
             Capacity = 10,
             Cost = 0,
-            Attractions = new List<Attraction> { attraction }
+            Attractions = [attraction]
         };
 
         var ticket = new Ticket
@@ -1277,7 +1276,7 @@ public class AttractionServiceTest
 
         _mockTicketRepository
             .Setup(r => r.GetAll(t => t.EventId == ticket.EventId))
-            .Returns(new List<Ticket>());
+            .Returns([]);
 
         _mockAttractionRepository
             .Setup(r => r.Update(attraction));

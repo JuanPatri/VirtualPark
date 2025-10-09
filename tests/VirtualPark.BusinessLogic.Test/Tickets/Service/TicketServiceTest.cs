@@ -363,7 +363,7 @@ public class TicketServiceTest
         _clockMock.Setup(c => c.Now()).Returns(today);
         _ticketRepositoryMock.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
         _eventRepositoryMock.Setup(r => r.Get(e => e.Id == ticket.EventId)).Returns(ev);
-        _ticketRepositoryMock.Setup(r => r.GetAll(t => t.EventId == ticket.EventId)).Returns(new List<Ticket> { ticket });
+        _ticketRepositoryMock.Setup(r => r.GetAll(t => t.EventId == ticket.EventId)).Returns([ticket]);
 
         var result = _ticketService.IsTicketValidForEntry(qrId);
 

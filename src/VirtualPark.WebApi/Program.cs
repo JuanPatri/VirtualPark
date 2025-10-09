@@ -14,7 +14,7 @@ ServiceFactory.RegisterServices(builder.Services);
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+using(var scope = app.Services.CreateScope())
 {
     var clockService = scope.ServiceProvider.GetRequiredService<IClockAppService>();
     ValidationServices.ClockService = clockService;

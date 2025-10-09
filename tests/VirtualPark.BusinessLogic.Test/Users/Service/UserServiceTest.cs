@@ -486,66 +486,69 @@ public class UserServiceTest
 
     #region Update
     #region Success
-    [TestMethod]
-    [TestCategory("Validation")]
-    public void Update_ShouldUpdateBasicFields_WhenArgsWithoutVisitorProfile()
+[TestMethod]
+[TestCategory("Validation")]
+public void Update_ShouldUpdateBasicFields_WhenArgsWithoutVisitorProfile()
+{
+    var existingVp = new VisitorProfile
     {
-        var existingVp = new VisitorProfile
-        {
-            DateOfBirth = new DateOnly(1990, 1, 1),
-            Membership = Membership.Standard
-        };
+        DateOfBirth = new DateOnly(1990, 1, 1),
+        Membership = Membership.Standard
+    };
 
-        var vpId = existingVp.Id;
+    var vpId = existingVp.Id;
 
-        var existingUser = new User
-        {
-            Name = "OldName",
-            LastName = "OldLast",
-            Email = "user@mail.com",
-            Password = "OldPass1!",
-            VisitorProfileId = vpId
-        };
+    var existingUser = new User
+    {
+        Name = "OldName",
+        LastName = "OldLast",
+        Email = "user@mail.com",
+        Password = "OldPass1!",
+        VisitorProfileId = vpId
+    };
 
-        var userId = existingUser.Id;
+    var userId = existingUser.Id;
 
-        var args = new UserArgs(
-            name: "NewName",
-            lastName: "NewLast",
-            email: "user@mail.com",
-            password: "NewPass1!",
-            roles: [])
-        {
-            VisitorProfile = null
-        };
+    var args = new UserArgs(
+        name: "NewName",
+        lastName: "NewLast",
+        email: "user@mail.com",
+        password: "NewPass1!",
+        roles: [])
+    {
+        VisitorProfile = null
+    };
 
-        _usersRepositoryMock
-            .Setup(r => r.Get(u => u.Id == userId))
-            .Returns(existingUser);
+    _usersRepositoryMock
+        .Setup(r => r.Get(
+            It.IsAny<Expression<Func<User, bool>>>(),
+            It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
+        .Returns(existingUser);
 
-        _visitorProfileRepositoryMock
-            .Setup(r => r.Get(vp => vp.Id == existingUser.VisitorProfileId))
-            .Returns(existingVp);
+    _visitorProfileRepositoryMock
+        .Setup(r => r.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>()))
+        .Returns(existingVp);
 
-        _usersRepositoryMock
-            .Setup(r => r.Update(It.Is<User>(u =>
-                u.Id == userId &&
-                u.Name == args.Name &&
-                u.LastName == args.LastName &&
-                u.Password == args.Password &&
-                u.Email == "user@mail.com" &&
-                u.VisitorProfileId == vpId &&
-                u.VisitorProfile!.Id == vpId &&
-                u.VisitorProfile.DateOfBirth == existingVp.DateOfBirth &&
-                u.VisitorProfile.Membership == existingVp.Membership)))
-            .Verifiable();
+    _usersRepositoryMock
+        .Setup(r => r.Update(It.Is<User>(u =>
+            u.Id == userId &&
+            u.Name == args.Name &&
+            u.LastName == args.LastName &&
+            u.Password == args.Password &&
+            u.Email == "user@mail.com" &&
+            u.VisitorProfileId == vpId &&
+            u.VisitorProfile != null &&
+            u.VisitorProfile.Id == vpId &&
+            u.VisitorProfile.DateOfBirth == existingVp.DateOfBirth &&
+            u.VisitorProfile.Membership == existingVp.Membership
+        )))
+        .Verifiable();
 
-        _userService.Update(args, userId);
+    _userService.Update(args, userId);
 
-        _usersRepositoryMock.VerifyAll();
-        _visitorProfileRepositoryMock.VerifyAll();
-        _rolesRepositoryMock.VerifyAll();
-    }
+    _usersRepositoryMock.VerifyAll();
+    _visitorProfileRepositoryMock.VerifyAll();
+}
 
     [TestMethod]
     [TestCategory("Validation")]

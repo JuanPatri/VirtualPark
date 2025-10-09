@@ -33,10 +33,9 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
             i => i.Id == id,
             include: q => q
                 .Include(i => i.Type)
-                .Include(i => i.Attraction)
-        );
+                .Include(i => i.Attraction));
 
-        if (incidence == null)
+        if(incidence == null)
         {
             throw new InvalidOperationException("Incidence don't exist");
         }

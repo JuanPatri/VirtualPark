@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using VirtualPark.BusinessLogic.Permissions.Entity;
 using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.Users.Models;
@@ -117,10 +116,9 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
             u => u.Id == id,
             include: q => q
                 .Include(u => u.Roles)
-                .ThenInclude(r => r.Permissions)
-        );
+                .ThenInclude(r => r.Permissions));
 
-        if (user?.Roles == null || user.Roles.Count == 0)
+        if(user?.Roles == null || user.Roles.Count == 0)
         {
             return false;
         }

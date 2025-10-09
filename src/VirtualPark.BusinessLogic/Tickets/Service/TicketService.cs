@@ -58,7 +58,7 @@ public class TicketService(
             EventId = null
         };
 
-        if (args.EventId.HasValue)
+        if(args.EventId.HasValue)
         {
             var eventEntity = _eventRepository.Get(e => e.Id == args.EventId.Value)
                               ?? throw new InvalidOperationException($"Event with id {args.EventId} not found.");

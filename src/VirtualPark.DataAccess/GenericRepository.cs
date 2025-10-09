@@ -40,7 +40,7 @@ public sealed class GenericRepository<T>(DbContext context) : IRepository<T>
     {
         IQueryable<T> query = _context.Set<T>();
 
-        if (include != null)
+        if(include != null)
         {
             query = include(query);
         }

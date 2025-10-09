@@ -35,7 +35,7 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
                 .Include(r => r.Permissions)
                 .Include(r => r.Users));
 
-        if (role == null)
+        if(role == null)
         {
             throw new InvalidOperationException("Role don't exist");
         }
@@ -68,7 +68,7 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
 
     private void ValidateRoleName(string name)
     {
-        if (_roleRepository.Exist(r => r.Name.ToLower() == name.ToLower()))
+        if(_roleRepository.Exist(r => r.Name.ToLower() == name.ToLower()))
         {
             throw new Exception("Role name already exists.");
         }

@@ -18,7 +18,7 @@ public sealed class EventController(IEventService eventService) : ControllerBase
 
     [HttpPost("/events")]
     [AuthorizationFilter]
-    public CreateEventResponse CreateEvent([FromBody]CreateEventRequest request)
+    public CreateEventResponse CreateEvent([FromBody] CreateEventRequest request)
     {
         EventsArgs args = request.ToArgs();
         Guid eventId = _eventService.Create(args);

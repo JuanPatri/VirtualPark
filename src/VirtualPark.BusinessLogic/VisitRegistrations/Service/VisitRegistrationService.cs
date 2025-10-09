@@ -177,4 +177,54 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
         return attractions;
     }
+
+    private void CloseVisit(Guid visitId)
+    {
+        var visit = Get(visitId);
+
+        if(visit == null)
+        {
+            throw new InvalidOperationException($"Visit with id {visitId} not found");
+        }
+
+        if(visit.DailyScore > 0)
+        {
+            throw new InvalidOperationException($"Points for this visit have already been calculated");
+        }
+
+        var dateOnly = DateOnly.FromDateTime(visit.Date);
+        var activeStrategyArgs = _strategyService.Get(dateOnly);
+
+        if(activeStrategyArgs == null)
+        {
+            throw new InvalidOperationException($"No active strategy found for date {dateOnly}");
+        }
+
+        var strategy = _strategyFactory.Create(activeStrategyArgs.StrategyKey);
+        var points = strategy.CalculatePoints(visit);
+
+        visit.DailyScore = points;
+
+        visit.Visitor.Score += points;
+
+        _visitRegistrationRepository.Update(visit);
+        _visitorProfileWriteRepository.Update(visit.Visitor);
+    }
+
+    public void CloseVisitByVisitor(Guid visitorProfileId)
+    {
+        var today = DateOnly.FromDateTime(_clockAppService.Now());
+
+        var activeVisit = _visitRegistrationRepository.Get(v =>
+            v.VisitorId == visitorProfileId &&
+            DateOnly.FromDateTime(v.Date) == today &&
+            v.DailyScore == 0);
+
+        if(activeVisit == null)
+        {
+            throw new InvalidOperationException($"No active visit found for visitor {visitorProfileId} today");
+        }
+
+        CloseVisit(activeVisit.Id);
+    }
 }

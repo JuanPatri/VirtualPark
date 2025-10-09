@@ -656,37 +656,28 @@ public class UserServiceTest
     public void HasPermission_ShouldReturnTrue_WhenFirstRoleHasThePermission()
     {
         var userId = Guid.NewGuid();
-        var roleId1 = Guid.NewGuid();
+
+        var role1 = new Role
+        {
+            Id = Guid.NewGuid(),
+            Name = "Admin",
+            Permissions = [ new Permission { Key = "USERS_MANAGE", Description = "Manage" } ]
+        };
 
         var user = new User
         {
+            Id = userId,
             Name = "Pepe",
             LastName = "Perez",
             Email = "pepe@mail.com",
             Password = "Password123!",
-            Roles = [new Role { Id = roleId1 }]
-        };
-
-        _usersRepositoryMock
-            .Setup(r => r.Get(u => u.Id == userId))
-            .Returns(user);
-
-        var firstRoleRef = user.Roles.First();
-
-        var role1 = new Role
-        {
-            Id = roleId1,
-            Name = "Admin",
-            Permissions =
-            [
-                new Permission { Key = "USERS_MANAGE", Description = "Manage" }
-            ]
+            Roles = [ role1 ]
         };
 
         _usersRepositoryMock
             .Setup(r => r.Get(
                 It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>?>()))
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
             .Returns(user);
 
         var result = _userService.HasPermission(userId, "USERS_MANAGE");
@@ -694,8 +685,8 @@ public class UserServiceTest
         result.Should().BeTrue();
 
         _usersRepositoryMock.VerifyAll();
-        _rolesRepositoryMock.VerifyAll();
     }
+
     #endregion
 
     #region Failure

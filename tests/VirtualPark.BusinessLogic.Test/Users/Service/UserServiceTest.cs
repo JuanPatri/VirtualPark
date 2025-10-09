@@ -469,20 +469,18 @@ public class UserServiceTest
         _usersRepositoryMock
             .Setup(r => r.Get(
                 It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>?>()))
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
             .Returns((User?)null);
 
         Action act = () => _userService.Remove(id);
 
         act.Should()
             .Throw<InvalidOperationException>()
-            .WithMessage("User don't exist");
+            .WithMessage("User doesn't exist");
 
         _usersRepositoryMock.VerifyAll();
-        _usersRepositoryMock.VerifyAll();
-        _rolesRepositoryMock.VerifyAll();
-        _visitorProfileRepositoryMock.VerifyAll();
     }
+
     #endregion
     #endregion
 

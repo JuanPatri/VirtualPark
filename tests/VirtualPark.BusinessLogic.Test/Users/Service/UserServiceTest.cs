@@ -701,44 +701,45 @@ public class UserServiceTest
     #region Failure
     [TestMethod]
     [TestCategory("Validation")]
-    public void HasPermission_ShouldReturnFalse_WhenFirstRoleDoesNotHavePermission_EvenIfSecondHas()
+    public void HasPermission_ShouldReturnTrue_WhenAnyRoleHasThePermission()
     {
         var userId = Guid.NewGuid();
-        var roleId1 = Guid.NewGuid();
-        var roleId2 = Guid.NewGuid();
+
+        var role1 = new Role
+        {
+            Id = Guid.NewGuid(),
+            Name = "Visitor",
+            Permissions = [ new Permission { Key = "OTHER_PERMISSION" } ]
+        };
+
+        var role2 = new Role
+        {
+            Id = Guid.NewGuid(),
+            Name = "Admin",
+            Permissions = [ new Permission { Key = "USERS_MANAGE" } ]
+        };
 
         var user = new User
         {
+            Id = userId,
             Name = "Ana",
             LastName = "Gomez",
             Email = "ana@mail.com",
             Password = "Password123!",
-            Roles = [new Role { Id = roleId1 }, new Role { Id = roleId2 }]
+            Roles = [ role1, role2 ]
         };
 
         _usersRepositoryMock
-            .Setup(r => r.Get(u => u.Id == userId))
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
             .Returns(user);
-
-        var firstRoleRef = user.Roles.First();
-
-        var role1 = new Role
-        {
-            Id = roleId1,
-            Name = "Visitor",
-            Permissions = [new Permission { Key = "OTHER_PERMISSION" }]
-        };
-
-        _rolesRepositoryMock
-            .Setup(r => r.Get(role => role.Id == firstRoleRef.Id))
-            .Returns(role1);
 
         var result = _userService.HasPermission(userId, "USERS_MANAGE");
 
-        result.Should().BeFalse();
+        result.Should().BeTrue();
 
         _usersRepositoryMock.VerifyAll();
-        _rolesRepositoryMock.VerifyAll();
     }
 
     [TestMethod]

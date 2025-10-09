@@ -267,14 +267,17 @@ public class UserServiceTest
         var anyId = Guid.NewGuid();
 
         _usersRepositoryMock
-            .Setup(r => r.Get(u => u.Id == anyId))
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()
+            ))
             .Returns((User?)null);
 
         Action act = () => _userService.Get(anyId);
 
         act.Should()
             .Throw<InvalidOperationException>()
-            .WithMessage("User don't exist");
+            .WithMessage("User doesn't exist");
 
         _usersRepositoryMock.VerifyAll();
         _visitorProfileRepositoryMock.VerifyNoOtherCalls();

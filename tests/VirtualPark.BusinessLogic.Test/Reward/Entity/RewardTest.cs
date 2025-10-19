@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
 namespace VirtualPark.BusinessLogic.Test.Reward.Entity;
 
@@ -74,9 +75,9 @@ public sealed class RewardTest
         var description = "Access to all attractions";
         var cost = 500;
         var quantity = 10;
-        var level = MembershipLevel.VIP;
+        var level = Membership.VIP;
 
-        var reward = new Reward { Name = name, Description = description, Cost = cost, QuantityAvailable = quantity, MembershipLever = level };
+        var reward = new Reward { Name = name, Description = description, Cost = cost, QuantityAvailable = quantity, RequiredMembershipLevel = level };
 
         reward.RequiredMembershipLevel.Should().Be(level);
     }

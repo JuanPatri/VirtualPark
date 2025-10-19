@@ -54,10 +54,10 @@ public sealed class RewardTest
     [TestCategory("Success")]
     public void Constructor_WhenQuantityAvailableIsValid_ShouldSetQuantityAvailable()
     {
-        var name = "VIP Ticket";
-        var description = "Access to all attractions";
-        var cost = 500;
-        var quantity = 10;
+        const string name = "VIP Ticket";
+        const string description = "Access to all attractions";
+        const int cost = 500;
+        const int quantity = 10;
 
         var reward = new Reward { Name = name, Description = description, Cost = cost, QuantityAvailable = quantity};
 

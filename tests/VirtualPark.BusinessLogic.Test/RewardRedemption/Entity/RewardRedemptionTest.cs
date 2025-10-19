@@ -65,6 +65,7 @@ public sealed class RewardRedemptionTest
     }
     #endregion
 
+    #region Id
     [TestMethod]
     [TestCategory("Success")]
     public void Constructor_WhenCalled_ShouldGenerateUniqueId()
@@ -78,4 +79,5 @@ public sealed class RewardRedemptionTest
 
         redemption.Id.Should().NotBeEmpty();
     }
+    #endregion
 }

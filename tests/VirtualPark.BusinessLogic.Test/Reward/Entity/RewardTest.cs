@@ -45,7 +45,7 @@ public sealed class RewardTest
         const string description = "Access to all attractions";
         const int cost = 500;
 
-        var reward = new Reward { Name = name, Description = description, Cost = cost};
+        var reward = new Reward { Name = name, Description = description, Cost = cost };
 
         reward.Cost.Should().Be(cost);
     }
@@ -61,7 +61,7 @@ public sealed class RewardTest
         const int cost = 500;
         const int quantity = 10;
 
-        var reward = new Reward { Name = name, Description = description, Cost = cost, QuantityAvailable = quantity};
+        var reward = new Reward { Name = name, Description = description, Cost = cost, QuantityAvailable = quantity };
 
         reward.QuantityAvailable.Should().Be(quantity);
     }

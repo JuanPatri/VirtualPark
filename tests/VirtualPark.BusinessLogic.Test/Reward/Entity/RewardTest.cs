@@ -50,6 +50,7 @@ public sealed class RewardTest
     }
     #endregion
 
+    #region  QuantityAvailable
     [TestMethod]
     [TestCategory("Success")]
     public void Constructor_WhenQuantityAvailableIsValid_ShouldSetQuantityAvailable()
@@ -62,5 +63,21 @@ public sealed class RewardTest
         var reward = new Reward { Name = name, Description = description, Cost = cost, QuantityAvailable = quantity};
 
         reward.QuantityAvailable.Should().Be(quantity);
+    }
+    #endregion
+
+    [TestMethod]
+    [TestCategory("Success")]
+    public void Constructor_WhenRequiredMembershipLevelIsValid_ShouldSetRequiredMembershipLevel()
+    {
+        var name = "VIP Ticket";
+        var description = "Access to all attractions";
+        var cost = 500;
+        var quantity = 10;
+        var level = MembershipLevel.VIP;
+
+        var reward = new Reward { Name = name, Description = description, Cost = cost, QuantityAvailable = quantity, MembershipLever = level };
+
+        reward.RequiredMembershipLevel.Should().Be(level);
     }
 }

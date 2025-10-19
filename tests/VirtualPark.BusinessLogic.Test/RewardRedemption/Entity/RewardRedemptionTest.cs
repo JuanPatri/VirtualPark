@@ -20,6 +20,7 @@ public sealed class RewardRedemptionTest
     }
     #endregion
 
+    #region  VisitorId
     [TestMethod]
     [TestCategory("Success")]
     public void Constructor_WhenVisitorIdIsValid_ShouldSetVisitorId()
@@ -31,4 +32,5 @@ public sealed class RewardRedemptionTest
 
         redemption.VisitorId.Should().Be(visitorId);
     }
+    #endregion
 }

@@ -1,4 +1,8 @@
+using FluentAssertions;
+
 namespace VirtualPark.BusinessLogic.Test.Reward.Entity;
+
+using VirtualPark.BusinessLogic.Rewards.Entity;
 
 [TestClass]
 [TestCategory("Entity")]
@@ -10,7 +14,7 @@ public sealed class RewardTest
     {
         const string name = "Entrada VIP";
 
-        var reward = new Reward(name);
+        var reward = new Reward { Name = name };
 
         reward.Name.Should().Be(name);
     }

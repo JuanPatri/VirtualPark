@@ -20,6 +20,8 @@ public sealed class RewardTest
         reward.Name.Should().Be(name);
     }
     #endregion
+
+    #region Description
     [TestMethod]
     [TestCategory("Success")]
     public void Constructor_WhenDescriptionIsValid_ShouldSetDescription()
@@ -31,4 +33,5 @@ public sealed class RewardTest
 
         reward.Description.Should().Be(description);
     }
+    #endregion
 }

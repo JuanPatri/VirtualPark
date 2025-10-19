@@ -13,7 +13,7 @@ public sealed class RewardTest
     [TestCategory("Success")]
     public void Constructor_WhenNameIsValid_ShouldSetName()
     {
-        const string name = "Entrada VIP";
+        const string name = "VIP entrance";
 
         var reward = new Reward { Name = name };
 
@@ -24,12 +24,11 @@ public sealed class RewardTest
     [TestCategory("Success")]
     public void Constructor_WhenDescriptionIsValid_ShouldSetDescription()
     {
-        const string name = "Entrada VIP";
-        const string description = "Acceso exclusivo a todas las atracciones sin filas";
+        const string name = "VIP entrance";
+        const string description = "Exlusive access";
 
         var reward = new Reward { Name = name, Description = description };
 
         reward.Description.Should().Be(description);
     }
 }
-

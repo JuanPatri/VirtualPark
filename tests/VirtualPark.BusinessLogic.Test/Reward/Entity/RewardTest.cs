@@ -7,11 +7,11 @@ using VirtualPark.BusinessLogic.Rewards.Entity;
 
 [TestClass]
 [TestCategory("Entity")]
-#region Name
 public sealed class RewardTest
 {
     [TestMethod]
     [TestCategory("Success")]
+    #region Name
     public void Constructor_WhenNameIsValid_ShouldSetName()
     {
         const string name = "VIP entrance";

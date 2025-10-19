@@ -19,4 +19,16 @@ public sealed class RewardRedemptionTest
         redemption.RewardId.Should().Be(rewardId);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Success")]
+    public void Constructor_WhenVisitorIdIsValid_ShouldSetVisitorId()
+    {
+        var rewardId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        var redemption = new RewardRedemption { RewardId = rewardId, VisitorId = visitorId };
+
+        redemption.VisitorId.Should().Be(visitorId);
+    }
 }

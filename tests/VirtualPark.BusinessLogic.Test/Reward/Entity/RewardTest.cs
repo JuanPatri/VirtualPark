@@ -44,9 +44,23 @@ public sealed class RewardTest
         const string description = "Access to all attractions";
         const int cost = 500;
 
-        var reward = new Reward { Name = name, Description = description };
+        var reward = new Reward { Name = name, Description = description, Cost = cost};
 
         reward.Cost.Should().Be(cost);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Success")]
+    public void Constructor_WhenQuantityAvailableIsValid_ShouldSetQuantityAvailable()
+    {
+        var name = "VIP Ticket";
+        var description = "Access to all attractions";
+        var cost = 500;
+        var quantity = 10;
+
+        var reward = new Reward { Name = name, Description = description, Cost = cost, QuantityAvailable = quantity};
+
+        reward.QuantityAvailable.Should().Be(quantity);
+    }
 }

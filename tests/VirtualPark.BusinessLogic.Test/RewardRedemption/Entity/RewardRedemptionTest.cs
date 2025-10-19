@@ -7,6 +7,7 @@ using VirtualPark.BusinessLogic.RewardRedemption.Entity;
 [TestCategory("Entity")]
 public sealed class RewardRedemptionTest
 {
+    #region RewardId
     [TestMethod]
     [TestCategory("Success")]
     public void Constructor_WhenRewardIdIsValid_ShouldSetRewardId()
@@ -17,4 +18,5 @@ public sealed class RewardRedemptionTest
 
         redemption.RewardId.Should().Be(rewardId);
     }
+    #endregion
 }

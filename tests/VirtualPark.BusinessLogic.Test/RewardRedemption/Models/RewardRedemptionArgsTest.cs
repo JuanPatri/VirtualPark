@@ -94,6 +94,7 @@ public sealed class RewardRedemptionArgsTest
     #endregion
     #endregion
 
+    #region PointsSpend
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenPointsSpentIsValid_ShouldSetPointsSpent()
@@ -101,4 +102,5 @@ public sealed class RewardRedemptionArgsTest
         var args = new RewardRedemptionArgs(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), "2025-10-19", "200");
         args.PointsSpent.Should().Be(200);
     }
+    #endregion
 }

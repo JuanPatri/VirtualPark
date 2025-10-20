@@ -44,6 +44,11 @@ public sealed class RewardController(IRewardService rewardService) : ControllerB
     [AuthorizationFilter]
     public List<GetRewardResponse> GetAllRewards()
     {
+        return MapToGetRewardResponses();
+    }
+
+    private List<GetRewardResponse> MapToGetRewardResponses()
+    {
         return _rewardService
             .GetAll()
             .Select(r => new GetRewardResponse(

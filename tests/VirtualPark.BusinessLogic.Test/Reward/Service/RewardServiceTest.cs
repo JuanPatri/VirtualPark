@@ -1,10 +1,27 @@
+using FluentAssertions;
+using Moq;
+using VirtualPark.BusinessLogic.Rewards.Models;
+using VirtualPark.BusinessLogic.Rewards.Service;
+using VirtualPark.Repository;
+
 namespace VirtualPark.BusinessLogic.Test.Reward.Service;
+using VirtualPark.BusinessLogic.Rewards.Entity;
 
 [TestClass]
 [TestCategory("Service")]
 [TestCategory("RewardService")]
 public sealed class RewardServiceTest
 {
+    private Mock<IRepository<Reward>> _rewardRepositoryMock = null!;
+    private RewardService _rewardService = null!;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _rewardRepositoryMock = new Mock<IRepository<Reward>>(MockBehavior.Strict);
+        _rewardService = new RewardService(_rewardRepositoryMock.Object);
+    }
+
     [TestMethod]
     [TestCategory("Validation")]
     public void Create_WhenArgsAreValid_ShouldReturnRewardId()
@@ -17,7 +34,7 @@ public sealed class RewardServiceTest
                 rw.Description == args.Description &&
                 rw.Cost == args.Cost &&
                 rw.QuantityAvailable == args.QuantityAvailable &&
-                rw.RequiredMembershipLevel.ToString() == args.RequiredMembershipLevel)));
+                rw.RequiredMembershipLevel == args.RequiredMembershipLevel)));
 
         Guid result = _rewardService.Create(args);
 

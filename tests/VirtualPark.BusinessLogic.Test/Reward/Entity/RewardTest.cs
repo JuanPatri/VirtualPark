@@ -83,4 +83,13 @@ public sealed class RewardTest
         reward.RequiredMembershipLevel.Should().Be(level);
     }
     #endregion
+
+    #region Id
+    public void Constructor_WhenCreateReward_ShouldSetGuid()
+    {
+        var reward = new Reward();
+
+        reward.Name.Should().NotBe(Guid.Empty.ToString());
+    }
+    #endregion
 }

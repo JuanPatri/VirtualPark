@@ -67,6 +67,7 @@ public sealed class RewardRedemptionArgsTest
     #endregion
     #endregion
 
+    #region Date
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenDateIsValid_ShouldSetDate()
@@ -74,4 +75,5 @@ public sealed class RewardRedemptionArgsTest
         var args = new RewardRedemptionArgs(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), "2025-12-19");
         args.Date.Should().Be(new DateOnly(2025, 12, 19));
     }
+    #endregion
 }

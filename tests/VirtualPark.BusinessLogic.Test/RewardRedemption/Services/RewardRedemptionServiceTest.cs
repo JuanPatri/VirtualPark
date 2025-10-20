@@ -1,3 +1,11 @@
+using System.Linq.Expressions;
+using FluentAssertions;
+using Moq;
+using VirtualPark.BusinessLogic.RewardRedemptions.Models;
+using VirtualPark.BusinessLogic.RewardRedemptions.Service;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
+using VirtualPark.Repository;
+
 namespace VirtualPark.BusinessLogic.Test.RewardRedemption.Services;
 
 [TestClass]
@@ -5,6 +13,24 @@ namespace VirtualPark.BusinessLogic.Test.RewardRedemption.Services;
 [TestCategory("RewardRedemptionService")]
 public sealed class RewardRedemptionServiceTest
 {
+    private Mock<IRepository<Rewards.Entity.Reward>> _rewardRepositoryMock = null!;
+    private Mock<IRepository<RewardRedemptions.Entity.RewardRedemption>> _redemptionRepositoryMock = null!;
+    private Mock<IRepository<VisitorProfile>> _visitorRepositoryMock = null!;
+    private RewardRedemptionService _redemptionService = null!;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _rewardRepositoryMock = new Mock<IRepository<Rewards.Entity.Reward>>(MockBehavior.Strict);
+        _redemptionRepositoryMock = new Mock<IRepository<RewardRedemptions.Entity.RewardRedemption>>(MockBehavior.Strict);
+        _visitorRepositoryMock = new Mock<IRepository<VisitorProfile>>(MockBehavior.Strict);
+
+        _redemptionService = new RewardRedemptionService(
+            _rewardRepositoryMock.Object,
+            _redemptionRepositoryMock.Object,
+            _visitorRepositoryMock.Object);
+    }
+
     [TestMethod]
     [TestCategory("Validation")]
     public void RedeemReward_WhenValid_ShouldCreateRedemption()
@@ -12,7 +38,7 @@ public sealed class RewardRedemptionServiceTest
         var rewardId = Guid.NewGuid();
         var visitorId = Guid.NewGuid();
 
-        var reward = new Reward
+        var reward = new Rewards.Entity.Reward
         {
             Id = rewardId,
             Name = "VIP Ticket",
@@ -32,25 +58,25 @@ public sealed class RewardRedemptionServiceTest
         var args = new RewardRedemptionArgs(
             rewardId.ToString(),
             visitorId.ToString(),
-            "2025-10-19",
+            "2025-12-19",
             reward.Cost.ToString());
 
         _rewardRepositoryMock
-            .Setup(r => r.Get(rw => rw.Id == rewardId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Rewards.Entity.Reward, bool>>>()))
             .Returns(reward);
 
         _visitorRepositoryMock
-            .Setup(v => v.Get(vs => vs.Id == visitorId))
+            .Setup(v => v.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>()))
             .Returns(visitor);
 
         _redemptionRepositoryMock
-            .Setup(r => r.Add(It.Is<RewardRedemption>(rr =>
+            .Setup(r => r.Add(It.Is<RewardRedemptions.Entity.RewardRedemption>(rr =>
                 rr.RewardId == rewardId &&
                 rr.VisitorId == visitorId &&
                 rr.PointsSpent == reward.Cost)));
 
         _rewardRepositoryMock
-            .Setup(r => r.Update(It.Is<Reward>(rw =>
+            .Setup(r => r.Update(It.Is<Rewards.Entity.Reward>(rw =>
                 rw.Id == rewardId &&
                 rw.QuantityAvailable == 4)));
 

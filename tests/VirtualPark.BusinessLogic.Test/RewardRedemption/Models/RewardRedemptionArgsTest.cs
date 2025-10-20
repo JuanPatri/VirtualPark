@@ -19,4 +19,18 @@ public sealed class RewardRedemptionArgsTest
         args.RewardId.Should().Be(rewardId);
     }
     #endregion
+
+    [DataTestMethod]
+    [DataRow("")]
+    [DataRow("   ")]
+    [DataRow("invalid-guid")]
+    [TestCategory("Validation")]
+    public void Constructor_WhenRewardIdIsInvalid_ShouldThrowException(string invalidRewardId)
+    {
+        Action act = () =>
+        {
+            var rewardRedemptionArgs = new RewardRedemptionArgs(invalidRewardId);
+        };
+        act.Should().Throw<Exception>();
+    }
 }

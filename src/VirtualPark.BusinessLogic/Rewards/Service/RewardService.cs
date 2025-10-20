@@ -25,11 +25,6 @@ public sealed class RewardService(IRepository<Reward> rewardRepository) : IRewar
         return reward;
     }
 
-    public Reward? Get(RewardArgs args)
-    {
-        throw new NotImplementedException();
-    }
-
     public List<Reward> GetAll()
     {
         List<Reward>? rewards = _rewardRepository.GetAll();

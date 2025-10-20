@@ -7,7 +7,6 @@ public interface IRewardService
 {
     public Guid Create(RewardArgs args);
     public Reward? Get(Guid id);
-    Reward? Get(RewardArgs args);
     public List<Reward> GetAll();
     public void Remove(Guid id);
     public void Update(RewardArgs args, Guid incidenceId);

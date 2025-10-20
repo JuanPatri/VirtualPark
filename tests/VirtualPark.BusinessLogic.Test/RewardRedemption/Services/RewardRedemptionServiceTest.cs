@@ -257,5 +257,20 @@ public sealed class RewardRedemptionServiceTest
         _redemptionRepositoryMock.VerifyAll();
     }
     #endregion
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAll_WhenNoRedemptionsExist_ShouldThrowInvalidOperationException()
+    {
+        _redemptionRepositoryMock
+            .Setup(r => r.GetAll(null))
+            .Returns((List<RewardRedemptions.Entity.RewardRedemption>?)null);
+
+        Action act = () => _redemptionService.GetAll();
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("There are no reward redemptions registered.");
+
+        _redemptionRepositoryMock.VerifyAll();
+    }
     #endregion
 }

@@ -2,6 +2,7 @@ using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Rewards.Models;
 using VirtualPark.BusinessLogic.Rewards.Service;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Test.Reward.Service;
@@ -22,6 +23,7 @@ public sealed class RewardServiceTest
         _rewardService = new RewardService(_rewardRepositoryMock.Object);
     }
 
+    #region Create
     [TestMethod]
     [TestCategory("Validation")]
     public void Create_WhenArgsAreValid_ShouldReturnRewardId()
@@ -39,6 +41,39 @@ public sealed class RewardServiceTest
         Guid result = _rewardService.Create(args);
 
         result.Should().NotBeEmpty();
+
+        _rewardRepositoryMock.VerifyAll();
+    }
+    #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Get_WhenRewardExists_ShouldReturnReward()
+    {
+        var id = Guid.NewGuid();
+        var reward = new Reward
+        {
+            Id = id,
+            Name = "VIP Ticket",
+            Description = "Access to all rides",
+            Cost = 200,
+            QuantityAvailable = 5,
+            RequiredMembershipLevel = Membership.Standard
+        };
+
+        _rewardRepositoryMock
+            .Setup(r => r.Get(rw => rw.Id == id))
+            .Returns(reward);
+
+        var result = _rewardService.Get(id);
+
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(id);
+        result.Name.Should().Be("VIP Ticket");
+        result.Description.Should().Be("Access to all rides");
+        result.Cost.Should().Be(200);
+        result.QuantityAvailable.Should().Be(5);
+        result.RequiredMembershipLevel.Should().Be(Membership.Standard);
 
         _rewardRepositoryMock.VerifyAll();
     }

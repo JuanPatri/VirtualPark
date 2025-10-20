@@ -61,6 +61,7 @@ public sealed class RewardControllerTest
 
     #endregion
 
+    #region GetRewardById
     [TestMethod]
     public void GetRewardById_ValidInput_ReturnsGetRewardResponse()
     {
@@ -92,4 +93,53 @@ public sealed class RewardControllerTest
 
         _rewardServiceMock.VerifyAll();
     }
+    #endregion
+
+    #region GetAll
+    [TestMethod]
+    public void GetAllRewards_ShouldReturnMappedList()
+    {
+        var reward1 = new Reward
+        {
+            Name = "VIP Ticket",
+            Description = "Entrada VIP",
+            Cost = 1500,
+            QuantityAvailable = 25,
+            RequiredMembershipLevel = Membership.Premium
+        };
+
+        var reward2 = new Reward
+        {
+            Name = "Souvenir Pack",
+            Description = "Bolsa de regalos",
+            Cost = 500,
+            QuantityAvailable = 100,
+            RequiredMembershipLevel = Membership.Standard
+        };
+
+        var rewards = new List<Reward> { reward1, reward2 };
+
+        _rewardServiceMock
+            .Setup(s => s.GetAll())
+            .Returns(rewards);
+
+        var result = _rewardController.GetAllRewards();
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+
+        var first = result.First();
+        first.Name.Should().Be("VIP Ticket");
+        first.PointsRequired.Should().Be("1500");
+        first.Membership.Should().Be("Premium");
+
+        var second = result.Last();
+        second.Name.Should().Be("Souvenir Pack");
+        second.QuantityAvailable.Should().Be("100");
+        second.Membership.Should().Be("Standard");
+
+        _rewardServiceMock.VerifyAll();
+    }
+    #endregion
+
 }

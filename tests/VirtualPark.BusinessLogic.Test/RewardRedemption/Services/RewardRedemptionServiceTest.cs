@@ -31,6 +31,8 @@ public sealed class RewardRedemptionServiceTest
             _visitorRepositoryMock.Object);
     }
 
+    #region ReedemReward
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void RedeemReward_WhenValid_ShouldCreateRedemption()
@@ -93,4 +95,52 @@ public sealed class RewardRedemptionServiceTest
         _visitorRepositoryMock.VerifyAll();
         _redemptionRepositoryMock.VerifyAll();
     }
+    #endregion
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void RedeemReward_WhenVisitorHasNotEnoughPoints_ShouldThrowInvalidOperationException()
+    {
+        var rewardId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        var reward = new Rewards.Entity.Reward
+        {
+            Id = rewardId,
+            Name = "VIP Ticket",
+            Description = "Access to all rides",
+            Cost = 500,
+            QuantityAvailable = 5,
+            RequiredMembershipLevel = Membership.Standard
+        };
+
+        var visitor = new VisitorProfile
+        {
+            Id = visitorId,
+            Score = 200,
+            Membership = Membership.Standard
+        };
+
+        var args = new RewardRedemptionArgs(
+            rewardId.ToString(),
+            visitorId.ToString(),
+            "2025-12-19",
+            reward.Cost.ToString());
+
+        _rewardRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Rewards.Entity.Reward, bool>>>()))
+            .Returns(reward);
+
+        _visitorRepositoryMock
+            .Setup(v => v.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>()))
+            .Returns(visitor);
+
+        Action act = () => _redemptionService.RedeemReward(args);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Visitor does not have enough points to redeem this reward.");
+
+        _rewardRepositoryMock.VerifyAll();
+        _visitorRepositoryMock.VerifyAll();
+    }
+    #endregion
 }

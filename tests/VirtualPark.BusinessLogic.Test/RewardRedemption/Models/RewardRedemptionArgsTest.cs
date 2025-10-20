@@ -32,12 +32,12 @@ public sealed class RewardRedemptionArgsTest
     {
         Action act = () =>
         {
-            var rewardRedemptionArgs = new RewardRedemptionArgs(invalidRewardId);
+            var rewardRedemptionArgs = new RewardRedemptionArgs(invalidRewardId, Guid.NewGuid().ToString());
         };
         act.Should().Throw<Exception>();
     }
     #endregion
-    
+
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenVisitorIdIsValid_ShouldSetVisitorId()

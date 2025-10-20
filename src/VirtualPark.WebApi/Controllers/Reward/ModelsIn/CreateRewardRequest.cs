@@ -6,4 +6,5 @@ public sealed class CreateRewardRequest
     public string? Description { get; set; }
 
     public string? PointsRequired { get; set; }
+    public string? QuantityAvailable { get; set; }
 }

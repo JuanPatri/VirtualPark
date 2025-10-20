@@ -29,6 +29,17 @@ public sealed class RewardRedemptionService(
         reward.QuantityAvailable--;
         visitor.Score -= args.PointsSpent;
 
+        RewardRedemption redemption = MapToEntity(args);
+
+        _redemptionRepository.Add(redemption);
+        _rewardRepository.Update(reward);
+        _visitorRepository.Update(visitor);
+
+        return redemption.Id;
+    }
+
+    private static RewardRedemption MapToEntity(RewardRedemptionArgs args)
+    {
         var redemption = new RewardRedemption
         {
             RewardId = args.RewardId,
@@ -36,12 +47,7 @@ public sealed class RewardRedemptionService(
             Date = args.Date,
             PointsSpent = args.PointsSpent
         };
-
-        _redemptionRepository.Add(redemption);
-        _rewardRepository.Update(reward);
-        _visitorRepository.Update(visitor);
-
-        return redemption.Id;
+        return redemption;
     }
 
     public RewardRedemption Get(Guid id)

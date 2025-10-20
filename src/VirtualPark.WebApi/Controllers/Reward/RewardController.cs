@@ -60,4 +60,12 @@ public sealed class RewardController(IRewardService rewardService) : ControllerB
                 membership: r.RequiredMembershipLevel.ToString()))
             .ToList();
     }
+
+    [HttpDelete("/rewards/{id}")]
+    [AuthorizationFilter]
+    public void DeleteReward(string id)
+    {
+        var rewardId = ValidationServices.ValidateAndParseGuid(id);
+        _rewardService.Remove(rewardId);
+    }
 }

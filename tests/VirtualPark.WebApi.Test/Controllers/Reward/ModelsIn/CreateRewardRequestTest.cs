@@ -58,6 +58,7 @@ public class CreateRewardRequestTest
     }
     #endregion
 
+    #region ToArgs
     [TestMethod]
     [TestCategory("Validation")]
     public void ToArgs_ShouldMapAllFields_WhenAllAreValid()
@@ -80,4 +81,5 @@ public class CreateRewardRequestTest
         args.QuantityAvailable.Should().Be(20);
         args.RequiredMembershipLevel.ToString().Should().Be("VIP");
     }
+    #endregion
 }

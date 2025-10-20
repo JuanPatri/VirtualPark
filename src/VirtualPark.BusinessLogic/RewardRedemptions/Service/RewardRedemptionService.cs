@@ -47,6 +47,12 @@ public sealed class RewardRedemptionService(
     public RewardRedemption Get(Guid id)
     {
         var redemption = _redemptionRepository.Get(r => r.Id == id);
+
+        if (redemption == null)
+        {
+            throw new InvalidOperationException($"Reward redemption with id {id} not found.");
+        }
+
         return redemption;
     }
 

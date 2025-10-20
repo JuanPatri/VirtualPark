@@ -217,4 +217,40 @@ public sealed class RewardRedemptionServiceTest
     }
     #endregion
     #endregion
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAll_WhenRedemptionsExist_ShouldReturnList()
+    {
+        var visitorId = Guid.NewGuid();
+        var rewardId = Guid.NewGuid();
+
+        var redemptions = new List<RewardRedemptions.Entity.RewardRedemption>
+        {
+            new()
+            {
+                RewardId = rewardId,
+                VisitorId = visitorId,
+                Date = new DateOnly(2025, 12, 20),
+                PointsSpent = 200
+            },
+            new()
+            {
+                RewardId = Guid.NewGuid(),
+                VisitorId = visitorId,
+                Date = new DateOnly(2025, 12, 21),
+                PointsSpent = 300
+            }
+        };
+
+        _redemptionRepositoryMock
+            .Setup(r => r.GetAll(null))
+            .Returns(redemptions);
+
+        var result = _redemptionService.GetAll();
+
+        result.Should().HaveCount(2);
+        result[0].VisitorId.Should().Be(visitorId);
+
+        _redemptionRepositoryMock.VerifyAll();
+    }
 }

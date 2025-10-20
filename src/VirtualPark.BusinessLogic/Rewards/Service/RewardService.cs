@@ -17,7 +17,7 @@ public sealed class RewardService(IRepository<Reward> rewardRepository) : IRewar
         return reward.Id;
     }
 
-    public Reward Get(Guid id)
+    public Reward? Get(Guid id)
     {
         Reward reward = _rewardRepository.Get(rw => rw.Id == id)
                         ?? throw new InvalidOperationException($"Reward with id {id} not found.");

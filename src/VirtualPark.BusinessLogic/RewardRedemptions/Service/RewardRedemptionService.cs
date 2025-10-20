@@ -9,7 +9,7 @@ namespace VirtualPark.BusinessLogic.RewardRedemptions.Service;
 public sealed class RewardRedemptionService(
     IRepository<Reward> rewardRepository,
     IRepository<RewardRedemption> redemptionRepository,
-    IRepository<VisitorProfile> visitorRepository)
+    IRepository<VisitorProfile> visitorRepository) : IRewardRedemptionService
 {
     private readonly IRepository<Reward> _rewardRepository = rewardRepository;
     private readonly IRepository<RewardRedemption> _redemptionRepository = redemptionRepository;
@@ -42,6 +42,26 @@ public sealed class RewardRedemptionService(
         _visitorRepository.Update(visitor);
 
         return redemption.Id;
+    }
+
+    public RewardRedemption Get(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<RewardRedemption> GetAll()
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<RewardRedemption> GetByVisitor(Guid visitorId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Remove(Guid id)
+    {
+        throw new NotImplementedException();
     }
 
     private static void ValidateAvailability(Reward reward)

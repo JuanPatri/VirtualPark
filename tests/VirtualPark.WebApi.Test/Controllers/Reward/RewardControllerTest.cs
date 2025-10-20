@@ -157,4 +157,36 @@ public sealed class RewardControllerTest
         _rewardServiceMock.VerifyAll();
     }
     #endregion
+
+    [TestMethod]
+    public void UpdateReward_ValidInput_ShouldCallServiceUpdate()
+    {
+        var id = Guid.NewGuid();
+
+        var request = new CreateRewardRequest
+        {
+            Name = "Updated Reward",
+            Description = "Nueva descripción",
+            Cost = "1800",
+            QuantityAvailable = "50",
+            Membership = "Premium"
+        };
+
+        var expectedArgs = request.ToArgs();
+
+        _rewardServiceMock
+            .Setup(s => s.Update(
+                It.Is<RewardArgs>(a =>
+                    a.Name == expectedArgs.Name &&
+                    a.Description == expectedArgs.Description &&
+                    a.Cost == expectedArgs.Cost &&
+                    a.QuantityAvailable == expectedArgs.QuantityAvailable &&
+                    a.RequiredMembershipLevel == expectedArgs.RequiredMembershipLevel),
+                id))
+            .Verifiable();
+
+        _rewardController.UpdateReward(request, id.ToString());
+
+        _rewardServiceMock.VerifyAll();
+    }
 }

@@ -15,7 +15,7 @@ public sealed class RewardArgsTest
     {
         const string name = "VIP Ticket";
 
-        var args = new RewardArgs(name);
+        var args = new RewardArgs(name, "Exclusive access");
 
         args.Name.Should().Be(name);
     }
@@ -31,7 +31,7 @@ public sealed class RewardArgsTest
     {
         Action act = () =>
         {
-            var rewardArgs = new RewardArgs(invalidName!);
+            var rewardArgs = new RewardArgs(invalidName!, "Exclusive access");
         };
 
         act.Should().Throw<ArgumentException>().WithMessage("Value cannot be null or empty.");

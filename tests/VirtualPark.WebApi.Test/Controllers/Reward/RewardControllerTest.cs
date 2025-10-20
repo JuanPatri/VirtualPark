@@ -142,6 +142,7 @@ public sealed class RewardControllerTest
     }
     #endregion
 
+    #region Delete
     [TestMethod]
     public void DeleteReward_ShouldRemoveReward_WhenIdIsValid()
     {
@@ -155,4 +156,5 @@ public sealed class RewardControllerTest
 
         _rewardServiceMock.VerifyAll();
     }
+    #endregion
 }

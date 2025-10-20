@@ -1,3 +1,6 @@
+using FluentAssertions;
+using VirtualPark.WebApi.Controllers.Reward.ModelsIn;
+
 namespace VirtualPark.WebApi.Test.Controllers.Reward.ModelsIn;
 
 [TestClass]
@@ -5,7 +8,6 @@ namespace VirtualPark.WebApi.Test.Controllers.Reward.ModelsIn;
 [TestCategory("CreateRewardRequest")]
 public class CreateRewardRequestTest
 {
-    #region Name
     [TestMethod]
     [TestCategory("Validation")]
     public void Name_Getter_ReturnsAssignedValue()
@@ -13,5 +15,4 @@ public class CreateRewardRequestTest
         var request = new CreateRewardRequest { Name = "VIP Ticket" };
         request.Name.Should().Be("VIP Ticket");
     }
-    #endregion
 }

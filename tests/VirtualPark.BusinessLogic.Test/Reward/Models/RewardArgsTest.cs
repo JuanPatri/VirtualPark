@@ -40,6 +40,7 @@ public sealed class RewardArgsTest
     #endregion
 
     #region Description
+    #region Success
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenDescriptionIsValid_ShouldSetDescription()
@@ -49,6 +50,7 @@ public sealed class RewardArgsTest
     }
     #endregion
 
+    #region Failure
     [DataTestMethod]
     [DataRow(null)]
     [DataRow("")]
@@ -62,4 +64,6 @@ public sealed class RewardArgsTest
         };
         act.Should().Throw<ArgumentException>().WithMessage("Value cannot be null or empty.");
     }
+    #endregion
+    #endregion
 }

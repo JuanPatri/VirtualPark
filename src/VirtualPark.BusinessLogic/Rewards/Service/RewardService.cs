@@ -50,9 +50,16 @@ public sealed class RewardService(IRepository<Reward> rewardRepository) : IRewar
         _rewardRepository.Remove(reward);
     }
 
-    public void Update(RewardArgs args, Guid incidenceId)
+    public void Update(RewardArgs args, Guid id)
     {
-        throw new NotImplementedException();
+        var reward = _rewardRepository.Get(rw => rw.Id == id);
+        reward.Name = args.Name;
+        reward.Description = args.Description;
+        reward.Cost = args.Cost;
+        reward.QuantityAvailable = args.QuantityAvailable;
+        reward.RequiredMembershipLevel = args.RequiredMembershipLevel;
+
+        _rewardRepository.Update(reward);
     }
 
     private static Reward MapToEntity(RewardArgs args)

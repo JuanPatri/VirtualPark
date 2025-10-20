@@ -44,7 +44,8 @@ public sealed class RewardService(IRepository<Reward> rewardRepository) : IRewar
 
     public void Remove(Guid id)
     {
-        throw new NotImplementedException();
+        var reward = _rewardRepository.Get(rw => rw.Id == id);
+        _rewardRepository.Remove(reward!);
     }
 
     public void Update(RewardArgs args, Guid incidenceId)

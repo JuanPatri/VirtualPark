@@ -76,4 +76,17 @@ public sealed class RewardRedemptionArgsTest
         args.Date.Should().Be(new DateOnly(2025, 12, 19));
     }
     #endregion
+
+    [DataTestMethod]
+    [DataRow("not-a-date")]
+    [DataRow("2025/10/19")]
+    [TestCategory("Validation")]
+    public void Constructor_WhenDateIsInvalid_ShouldThrowArgumentException(string invalidDate)
+    {
+        Action act = () =>
+        {
+            var rewardRedemptionArgs = new RewardRedemptionArgs(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), invalidDate);
+        };
+        act.Should().Throw<ArgumentException>();
+    }
 }

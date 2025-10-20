@@ -37,4 +37,15 @@ public sealed class RewardRedemptionArgsTest
         act.Should().Throw<Exception>();
     }
     #endregion
+    
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Constructor_WhenVisitorIdIsValid_ShouldSetVisitorId()
+    {
+        var rewardId = Guid.NewGuid().ToString();
+        var visitorId = Guid.NewGuid().ToString();
+        var args = new RewardRedemptionArgs(rewardId, visitorId);
+
+        args.VisitorId.Should().Be(Guid.Parse(visitorId));
+    }
 }

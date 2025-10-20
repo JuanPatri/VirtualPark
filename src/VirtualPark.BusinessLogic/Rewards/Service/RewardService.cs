@@ -17,9 +17,15 @@ public sealed class RewardService(IRepository<Reward> rewardRepository) : IRewar
         return reward.Id;
     }
 
-    public Reward? Get(Guid id)
+    public Reward Get(Guid id)
     {
-        throw new NotImplementedException();
+        var reward = _rewardRepository.Get(rw => rw.Id == id);
+        if (reward == null)
+        {
+            throw new InvalidOperationException($"Reward with id {id} not found.");
+        }
+
+        return reward;
     }
 
     public Reward? Get(RewardArgs args)

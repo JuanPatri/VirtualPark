@@ -37,4 +37,12 @@ public class CreateRewardRequestTest
         request.PointsRequired.Should().Be("1500");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void QuantityAvailable_Getter_ReturnsAssignedValue()
+    {
+        var request = new CreateRewardRequest { QuantityAvailable = "25" };
+        request.QuantityAvailable.Should().Be("25");
+    }
 }

@@ -48,6 +48,7 @@ public class CreateRewardRequestTest
     }
     #endregion
 
+    #region Membership
     [TestMethod]
     [TestCategory("Validation")]
     public void Membership_Getter_ReturnsAssignedValue()
@@ -55,4 +56,5 @@ public class CreateRewardRequestTest
         var request = new CreateRewardRequest { Membership = "VIP" };
         request.Membership.Should().Be("VIP");
     }
+    #endregion
 }

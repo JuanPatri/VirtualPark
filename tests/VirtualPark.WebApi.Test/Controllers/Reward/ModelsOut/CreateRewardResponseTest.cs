@@ -1,3 +1,6 @@
+using FluentAssertions;
+using VirtualPark.WebApi.Controllers.Reward.ModelsOut;
+
 namespace VirtualPark.WebApi.Test.Controllers.Reward.ModelsOut;
 
 [TestClass]

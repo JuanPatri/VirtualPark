@@ -51,7 +51,12 @@ public sealed class RewardRedemptionService(
 
     public List<RewardRedemption> GetAll()
     {
-        List<RewardRedemption>? redemptions = _redemptionRepository.GetAll();
+        var redemptions = _redemptionRepository.GetAll(null);
+        if (redemptions == null || redemptions.Count == 0)
+        {
+            throw new InvalidOperationException("There are no reward redemptions registered.");
+        }
+
         return redemptions;
     }
 

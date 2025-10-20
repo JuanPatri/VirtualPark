@@ -1,7 +1,8 @@
 namespace VirtualPark.WebApi.Controllers.Reward.ModelsOut;
 
-public class GetRewardResponse(string id, string name)
+public class GetRewardResponse(string id, string name, string description)
 {
     public string Id { get; } = id;
-    public object Name { get; } = name;
+    public string Name { get; } = name;
+    public string Description { get; } = description;
 }

@@ -103,4 +103,18 @@ public sealed class RewardRedemptionArgsTest
         args.PointsSpent.Should().Be(200);
     }
     #endregion
+
+    [DataTestMethod]
+    [DataRow("")]
+    [DataRow("abc")]
+    [DataRow(" ")]
+    [TestCategory("Validation")]
+    public void Constructor_WhenPointsSpentIsInvalid_ShouldThrowException(string invalidPoints)
+    {
+        Action act = () =>
+        {
+            var rewardRedemptionArgs = new RewardRedemptionArgs(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), "2025-10-19", invalidPoints);
+        };
+        act.Should().Throw<Exception>();
+    }
 }

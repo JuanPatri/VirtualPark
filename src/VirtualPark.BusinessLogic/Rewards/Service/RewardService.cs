@@ -45,7 +45,12 @@ public sealed class RewardService(IRepository<Reward> rewardRepository) : IRewar
     public void Remove(Guid id)
     {
         var reward = _rewardRepository.Get(rw => rw.Id == id);
-        _rewardRepository.Remove(reward!);
+        if (reward == null)
+        {
+            throw new InvalidOperationException($"Reward with id {id} not found.");
+        }
+
+        _rewardRepository.Remove(reward);
     }
 
     public void Update(RewardArgs args, Guid incidenceId)

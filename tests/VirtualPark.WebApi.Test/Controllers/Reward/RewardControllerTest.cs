@@ -21,6 +21,7 @@ public sealed class RewardControllerTest
         _rewardController = new RewardController(_rewardServiceMock.Object);
     }
 
+    #region Create
     [TestMethod]
     public void CreateReward_ValidInput_ReturnsCreatedRewardResponse()
     {
@@ -54,4 +55,5 @@ public sealed class RewardControllerTest
 
         _rewardServiceMock.VerifyAll();
     }
+    #endregion
 }

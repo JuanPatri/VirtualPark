@@ -53,6 +53,11 @@ public sealed class RewardService(IRepository<Reward> rewardRepository) : IRewar
     public void Update(RewardArgs args, Guid id)
     {
         var reward = _rewardRepository.Get(rw => rw.Id == id);
+        if (reward == null)
+        {
+            throw new InvalidOperationException($"Reward with id {id} not found.");
+        }
+
         reward.Name = args.Name;
         reward.Description = args.Description;
         reward.Cost = args.Cost;

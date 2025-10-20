@@ -64,6 +64,12 @@ public sealed class RewardRedemptionService(
     public List<RewardRedemption> GetByVisitor(Guid visitorId)
     {
         var redemptions = _redemptionRepository.GetAll(r => r.VisitorId == visitorId);
+
+        if (redemptions == null || redemptions.Count == 0)
+        {
+            throw new InvalidOperationException($"Visitor with id {visitorId} has no redemptions.");
+        }
+
         return redemptions;
     }
 

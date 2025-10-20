@@ -51,7 +51,8 @@ public sealed class RewardRedemptionService(
 
     public List<RewardRedemption> GetAll()
     {
-        throw new NotImplementedException();
+        List<RewardRedemption>? redemptions = _redemptionRepository.GetAll();
+        return redemptions;
     }
 
     public List<RewardRedemption> GetByVisitor(Guid visitorId)

@@ -33,8 +33,8 @@ public class CreateRewardRequestTest
     [TestCategory("Validation")]
     public void PointsRequired_Getter_ReturnsAssignedValue()
     {
-        var request = new CreateRewardRequest { PointsRequired = "1500" };
-        request.PointsRequired.Should().Be("1500");
+        var request = new CreateRewardRequest { Cost = "1500" };
+        request.Cost.Should().Be("1500");
     }
     #endregion
 
@@ -57,7 +57,7 @@ public class CreateRewardRequestTest
         request.Membership.Should().Be("VIP");
     }
     #endregion
-    
+
     [TestMethod]
     [TestCategory("Validation")]
     public void ToArgs_ShouldMapAllFields_WhenAllAreValid()
@@ -66,7 +66,7 @@ public class CreateRewardRequestTest
         {
             Name = "VIP Ticket",
             Description = "VIP entry with priority access",
-            PointsRequired = "1500",
+            Cost = "1500",
             QuantityAvailable = "20",
             Membership = "VIP"
         };
@@ -76,8 +76,8 @@ public class CreateRewardRequestTest
         args.Should().NotBeNull();
         args.Name.Should().Be("VIP Ticket");
         args.Description.Should().Be("VIP entry with priority access");
-        args.PointsRequired.Should().Be(1500);
+        args.Cost.Should().Be(1500);
         args.QuantityAvailable.Should().Be(20);
-        args.Membership.ToString().Should().Be("VIP");
+        args.RequiredMembershipLevel.ToString().Should().Be("VIP");
     }
 }

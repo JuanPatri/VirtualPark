@@ -20,6 +20,11 @@ public sealed class RewardRedemptionService(
         var reward = _rewardRepository.Get(rw => rw.Id == args.RewardId);
         var visitor = _visitorRepository.Get(v => v.Id == args.VisitorId);
 
+        if (visitor!.Score < reward!.Cost)
+        {
+            throw new InvalidOperationException("Visitor does not have enough points to redeem this reward.");
+        }
+
         reward!.QuantityAvailable--;
         visitor!.Score -= args.PointsSpent;
 

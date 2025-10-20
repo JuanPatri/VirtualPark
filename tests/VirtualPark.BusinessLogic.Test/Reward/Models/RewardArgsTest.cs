@@ -48,4 +48,18 @@ public sealed class RewardArgsTest
         args.Description.Should().Be("Exclusive access");
     }
     #endregion
+
+    [DataTestMethod]
+    [DataRow(null)]
+    [DataRow("")]
+    [DataRow("   ")]
+    [TestCategory("Validation")]
+    public void Constructor_WhenDescriptionIsNullOrEmpty_ShouldThrowArgumentException(string? invalidDescription)
+    {
+        Action act = () =>
+        {
+            var rewardArgs = new RewardArgs("VIP Ticket", invalidDescription!);
+        };
+        act.Should().Throw<ArgumentException>().WithMessage("Value cannot be null or empty.");
+    }
 }

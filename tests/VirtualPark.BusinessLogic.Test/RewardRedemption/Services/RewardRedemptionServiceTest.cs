@@ -345,7 +345,6 @@ public sealed class RewardRedemptionServiceTest
     [TestCategory("Validation")]
     public void Get_WhenRedemptionExists_ShouldReturnRedemption()
     {
-        var id = Guid.NewGuid();
         var visitorId = Guid.NewGuid();
         var rewardId = Guid.NewGuid();
 
@@ -361,10 +360,10 @@ public sealed class RewardRedemptionServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<RewardRedemption, bool>>>()))
             .Returns(redemption);
 
-        RewardRedemption result = _redemptionService.Get(id);
+        RewardRedemption result = _redemptionService.Get(redemption.Id);
 
         result.Should().NotBeNull();
-        result.Id.Should().Be(id);
+        result.Id.Should().Be(redemption.Id);
         result.VisitorId.Should().Be(visitorId);
         result.RewardId.Should().Be(rewardId);
         result.PointsSpent.Should().Be(200);

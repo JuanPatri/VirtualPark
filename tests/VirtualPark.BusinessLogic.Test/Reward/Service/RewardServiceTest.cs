@@ -80,5 +80,22 @@ public sealed class RewardServiceTest
         _rewardRepositoryMock.VerifyAll();
     }
     #endregion
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Get_WhenRewardDoesNotExist_ShouldThrowInvalidOperationException()
+    {
+        var id = Guid.NewGuid();
+
+        _rewardRepositoryMock
+            .Setup(r => r.Get(rw => rw.Id == id))
+            .Returns((Reward?)null);
+
+        Action act = () => _rewardService.Get(id);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage($"Reward with id {id} not found.");
+
+        _rewardRepositoryMock.VerifyAll();
+    }
     #endregion
 }

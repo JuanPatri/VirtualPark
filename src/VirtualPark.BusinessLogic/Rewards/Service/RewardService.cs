@@ -32,7 +32,8 @@ public sealed class RewardService(IRepository<Reward> rewardRepository) : IRewar
 
     public List<Reward> GetAll()
     {
-        throw new NotImplementedException();
+        var rewards = _rewardRepository.GetAll(null);
+        return rewards;
     }
 
     public void Remove(Guid id)

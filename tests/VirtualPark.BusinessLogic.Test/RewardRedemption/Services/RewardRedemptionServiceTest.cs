@@ -372,5 +372,24 @@ public sealed class RewardRedemptionServiceTest
         _redemptionRepositoryMock.VerifyAll();
     }
     #endregion
+    #region Failure
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Get_WhenRedemptionDoesNotExist_ShouldThrowInvalidOperationException()
+    {
+        var id = Guid.NewGuid();
+
+        _redemptionRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<RewardRedemption, bool>>>()))
+            .Returns((RewardRedemption?)null);
+
+        Action act = () => _redemptionService.Get(id);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage($"Reward redemption with id {id} not found.");
+
+        _redemptionRepositoryMock.VerifyAll();
+    }
+    #endregion
     #endregion
 }

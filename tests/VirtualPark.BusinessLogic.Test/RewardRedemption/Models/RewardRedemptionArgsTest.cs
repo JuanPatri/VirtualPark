@@ -49,8 +49,8 @@ public sealed class RewardRedemptionArgsTest
 
         args.VisitorId.Should().Be(Guid.Parse(visitorId));
     }
-    #endregion
 
+    #region Failure
     [DataTestMethod]
     [DataRow("")]
     [DataRow("   ")]
@@ -64,4 +64,6 @@ public sealed class RewardRedemptionArgsTest
         };
         act.Should().Throw<Exception>();
     }
+    #endregion
+    #endregion
 }

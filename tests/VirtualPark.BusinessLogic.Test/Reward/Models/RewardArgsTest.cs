@@ -95,6 +95,7 @@ public sealed class RewardArgsTest
     }
     #endregion
 
+    #region QuantityAvailable
     [TestMethod]
     [TestCategory("Validation")]
     public void Constructor_WhenQuantityAvailableIsValid_ShouldSetQuantityAvailable()
@@ -102,4 +103,5 @@ public sealed class RewardArgsTest
         var args = new RewardArgs("VIP Ticket", "desc", "100", "5");
         args.QuantityAvailable.Should().Be(5);
     }
+    #endregion
 }

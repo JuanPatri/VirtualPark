@@ -308,5 +308,22 @@ public sealed class RewardRedemptionServiceTest
         _redemptionRepositoryMock.VerifyAll();
     }
     #endregion
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetByVisitor_WhenNoRedemptionsExist_ShouldThrowInvalidOperationException()
+    {
+        var visitorId = Guid.NewGuid();
+
+        _redemptionRepositoryMock
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<RewardRedemptions.Entity.RewardRedemption, bool>>>()))
+            .Returns(new List<RewardRedemptions.Entity.RewardRedemption>());
+
+        Action act = () => _redemptionService.GetByVisitor(visitorId);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage($"Visitor with id {visitorId} has no redemptions.");
+
+        _redemptionRepositoryMock.VerifyAll();
+    }
     #endregion
 }

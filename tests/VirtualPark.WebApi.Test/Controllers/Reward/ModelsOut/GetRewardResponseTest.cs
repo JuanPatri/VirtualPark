@@ -63,4 +63,12 @@ public sealed class GetRewardResponseTest
         response.QuantityAvailable.Should().Be("20");
     }
     #endregion
+
+    [TestCategory("Validation")]
+    public void Membership_Getter_ReturnsAssignedValue()
+    {
+        var response = new GetRewardResponse("1", "VIP Ticket", "Entrada VIP", 1500, 20, "Premium");
+
+        response.Membership.Should().Be("Premium");
+    }
 }

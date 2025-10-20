@@ -100,4 +100,44 @@ public sealed class RewardServiceTest
     }
     #endregion
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAll_WhenRewardsExist_ShouldReturnListOfRewards()
+    {
+        var rewardsFromRepo = new List<Reward>
+        {
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "VIP Ticket",
+                Description = "Access to all rides",
+                Cost = 200,
+                QuantityAvailable = 5,
+                RequiredMembershipLevel = Membership.Standard
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Premium Pass",
+                Description = "Fast pass for attractions",
+                Cost = 400,
+                QuantityAvailable = 3,
+                RequiredMembershipLevel = Membership.Premium
+            }
+        };
+
+        _rewardRepositoryMock
+            .Setup(r => r.GetAll(null))
+            .Returns(rewardsFromRepo);
+
+        var result = _rewardService.GetAll();
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+        result[0].Name.Should().Be("VIP Ticket");
+        result[1].RequiredMembershipLevel.Should().Be(Membership.Premium);
+
+        _rewardRepositoryMock.VerifyAll();
+    }
 }

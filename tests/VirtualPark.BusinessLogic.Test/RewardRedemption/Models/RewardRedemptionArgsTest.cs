@@ -1,3 +1,6 @@
+using FluentAssertions;
+using VirtualPark.BusinessLogic.RewardRedemptions.Models;
+
 namespace VirtualPark.BusinessLogic.Test.RewardRedemption.Models;
 
 [TestClass]
@@ -8,9 +11,10 @@ public sealed class RewardRedemptionArgsTest
     [TestCategory("Validation")]
     public void Constructor_WhenRewardIdIsValid_ShouldSetRewardId()
     {
-        var rewardId = Guid.NewGuid().ToString();
-        var args = new RewardRedemptionArgs(rewardId);
+        var rewardId = Guid.NewGuid();
+        var rewardIdString = rewardId.ToString();
+        var args = new RewardRedemptionArgs(rewardIdString);
 
-        args.RewardId.Should().Be(Guid.Parse(rewardId));
+        args.RewardId.Should().Be(rewardId);
     }
 }

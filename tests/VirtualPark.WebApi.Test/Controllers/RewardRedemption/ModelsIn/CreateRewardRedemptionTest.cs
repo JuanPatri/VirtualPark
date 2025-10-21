@@ -39,4 +39,12 @@ public class CreateRewardRedemptionRequestTest
         request.Date.Should().Be("2025-12-21");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void PointsSpent_Getter_ReturnsAssignedValue()
+    {
+        var request = new CreateRewardRedemptionRequest { PointsSpent = "1500" };
+        request.PointsSpent.Should().Be("1500");
+    }
 }

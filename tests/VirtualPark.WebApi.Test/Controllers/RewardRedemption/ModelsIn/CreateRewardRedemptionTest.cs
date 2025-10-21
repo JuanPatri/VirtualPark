@@ -1,3 +1,6 @@
+using FluentAssertions;
+using VirtualPark.WebApi.Controllers.RewardRedemption.ModelsIn;
+
 namespace VirtualPark.WebApi.Test.Controllers.RewardRedemption.ModelsIn;
 
 [TestClass]

@@ -40,6 +40,7 @@ public class CreateRewardRedemptionRequestTest
     }
     #endregion
 
+    #region Points spend
     [TestMethod]
     [TestCategory("Validation")]
     public void PointsSpent_Getter_ReturnsAssignedValue()
@@ -47,4 +48,5 @@ public class CreateRewardRedemptionRequestTest
         var request = new CreateRewardRedemptionRequest { PointsSpent = "1500" };
         request.PointsSpent.Should().Be("1500");
     }
+    #endregion
 }

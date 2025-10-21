@@ -18,4 +18,13 @@ public class CreateRewardRedemptionRequestTest
         request.RewardId.Should().Be(id);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void VisitorId_Getter_ReturnsAssignedValue()
+    {
+        var id = Guid.NewGuid().ToString();
+        var request = new CreateRewardRedemptionRequest { VisitorId = id };
+        request.VisitorId.Should().Be(id);
+    }
 }

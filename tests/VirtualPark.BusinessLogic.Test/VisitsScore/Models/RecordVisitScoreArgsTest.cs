@@ -20,5 +20,19 @@ public class RecordVisitScoreArgsTest
         args.VisitorProfileId.Should().Be(id);
     }
     #endregion
+
+    #region Set
+    [TestMethod]
+    [TestCategory("Setter")]
+    public void VisitorProfileId_Setter_ShouldStoreAssignedInstance()
+    {
+        var id = Guid.NewGuid();
+        var args = new RecordVisitScoreArgs();
+
+        args.VisitorProfileId = id;
+
+        args.VisitorProfileId.Should().Be(id);
+    }
+    #endregion
     #endregion
 }

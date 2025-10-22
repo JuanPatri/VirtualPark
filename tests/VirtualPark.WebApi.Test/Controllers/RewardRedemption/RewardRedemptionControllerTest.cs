@@ -88,4 +88,45 @@ public class RewardRedemptionControllerTest
         _rewardRedemptionServiceMock.VerifyAll();
     }
     #endregion
+
+    [TestMethod]
+    public void GetAllRewardRedemptions_ShouldReturnMappedList()
+    {
+        var redemption1 = new VirtualPark.BusinessLogic.RewardRedemptions.Entity.RewardRedemption
+        {
+            RewardId = Guid.NewGuid(),
+            VisitorId = Guid.NewGuid(),
+            Date = new DateOnly(2025, 12, 21),
+            PointsSpent = 1000
+        };
+
+        var redemption2 = new VirtualPark.BusinessLogic.RewardRedemptions.Entity.RewardRedemption
+        {
+            RewardId = Guid.NewGuid(),
+            VisitorId = Guid.NewGuid(),
+            Date = new DateOnly(2025, 12, 22),
+            PointsSpent = 500
+        };
+
+        var list = new List<VirtualPark.BusinessLogic.RewardRedemptions.Entity.RewardRedemption> { redemption1, redemption2 };
+
+        _rewardRedemptionServiceMock
+            .Setup(s => s.GetAll())
+            .Returns(list);
+
+        var result = _rewardRedemptionController.GetAllRewardRedemptions();
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+
+        var first = result.First();
+        first.PointsSpent.Should().Be("1000");
+        first.Date.Should().Be("2025-10-21");
+
+        var second = result.Last();
+        second.PointsSpent.Should().Be("500");
+        second.Date.Should().Be("2025-10-22");
+
+        _rewardRedemptionServiceMock.VerifyAll();
+    }
 }

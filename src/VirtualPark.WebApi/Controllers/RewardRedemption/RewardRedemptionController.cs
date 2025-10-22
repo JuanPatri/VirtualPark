@@ -53,4 +53,20 @@ public sealed class RewardRedemptionController(IRewardRedemptionService rewardRe
                 pointsSpend: r.PointsSpent.ToString()))
             .ToList();
     }
+
+    [HttpGet("/rewards/redemptions/visitor/{visitorId}")]
+    [AuthorizationFilter]
+    public List<GetRewardRedemptionResponse> GetRewardRedemptionsByVisitor(string visitorId)
+    {
+        var parsedId = ValidationServices.ValidateAndParseGuid(visitorId);
+        return _rewardRedemptionService
+            .GetByVisitor(parsedId)
+            .Select(r => new GetRewardRedemptionResponse(
+                id: r.Id.ToString(),
+                rewardId: r.RewardId.ToString(),
+                visitorId: r.VisitorId.ToString(),
+                date: r.Date.ToString("yyyy-MM-dd"),
+                pointsSpend: r.PointsSpent.ToString()))
+            .ToList();
+    }
 }

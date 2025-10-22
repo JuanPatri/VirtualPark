@@ -202,5 +202,15 @@ public sealed class VisitRegistrationTest
 
         visit.DayStrategyName.Should().Be("Attraction");
     }
+
+    [TestMethod]
+    [TestCategory("Setter")]
+    public void DayStrategyName_Setter_ShouldStoreAssignedInstance()
+    {
+        var visit = new VisitRegistration();
+        visit.DayStrategyName = "Attraction";
+
+        visit.DayStrategyName.Should().Be("Attraction");
+    }
     #endregion
 }

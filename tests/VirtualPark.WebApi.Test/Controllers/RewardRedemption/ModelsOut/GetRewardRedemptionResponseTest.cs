@@ -21,4 +21,17 @@ public sealed class GetRewardRedemptionResponseTest
         response.Id.Should().Be(id);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void RewardId_Getter_ReturnsAssignedValue()
+    {
+        var rewardId = Guid.NewGuid().ToString();
+
+        var response = new GetRewardRedemptionResponse(
+            Guid.NewGuid().ToString(),
+            rewardId);
+
+        response.RewardId.Should().Be(rewardId);
+    }
 }

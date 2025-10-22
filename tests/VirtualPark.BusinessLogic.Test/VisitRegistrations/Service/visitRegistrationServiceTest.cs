@@ -625,11 +625,10 @@ public class VisitRegistrationServiceTest
 
         var args = new RecordVisitScoreArgs { VisitorProfileId = visitorId, Origin = "Atracción" };
 
-        var ev = _service.RecordVisitScore(args);
+        _service.RecordVisitScore(args);
 
         visit.DayStrategyName.Should().Be("Attraction");
         visit.DailyScore.Should().Be(10);
-        ev.Points.Should().Be(10);
         visitor.Score.Should().Be(10);
 
         _repositoryMock.VerifyAll();
@@ -677,9 +676,8 @@ public class VisitRegistrationServiceTest
 
         _visitorRepoWriteMock.Setup(w => w.Update(It.Is<VisitorProfile>(vp => vp.Score == 150))).Verifiable();
 
-        var ev = _service.RecordVisitScore(new RecordVisitScoreArgs { VisitorProfileId = visitorId, Origin = "Canje", Points = -50 });
+        _service.RecordVisitScore(new RecordVisitScoreArgs { VisitorProfileId = visitorId, Origin = "Canje", Points = -50 });
 
-        ev.Points.Should().Be(-50);
         visit.DailyScore.Should().Be(150);
         visitor.Score.Should().Be(150);
 

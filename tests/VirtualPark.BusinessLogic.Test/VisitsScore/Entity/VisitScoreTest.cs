@@ -70,4 +70,17 @@ public class VisitScoreTest
     }
     #endregion
     #endregion
+
+    #region Points
+    #region Get
+    [TestMethod]
+    [TestCategory("Getter")]
+    public void Points_Getter_ShouldReturnAssignedInstance()
+    {
+        var score = new VisitScore { Points = 50 };
+
+        score.Points.Should().Be(50);
+    }
+    #endregion
+    #endregion
 }

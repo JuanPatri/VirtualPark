@@ -49,4 +49,25 @@ public class CreateRewardRedemptionRequestTest
         request.PointsSpent.Should().Be("1500");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void ToArgs_ShouldMapAllFields_WhenAllAreValid()
+    {
+        var rewardId = Guid.NewGuid().ToString();
+        var visitorId = Guid.NewGuid().ToString();
+
+        var request = new CreateRewardRedemptionRequest
+        {
+            RewardId = rewardId, VisitorId = visitorId, Date = "2025-12-21", PointsSpent = "1200"
+        };
+
+        var args = request.ToArgs();
+
+        args.Should().NotBeNull();
+        args.RewardId.Should().Be(visitorId);
+        args.VisitorId.Should().Be(rewardId);
+        args.Date.Should().Be("2025-12-21");
+        args.PointsSpent.Should().Be("1200");
+    }
 }

@@ -8,6 +8,7 @@ namespace VirtualPark.WebApi.Test.Controllers.RewardRedemption.ModelsOut;
 [TestCategory("CreateRewardRedemptionResponse")]
 public class CreateRewardRedemptionResponseTest
 {
+    #region Id
     [TestMethod]
     [TestCategory("Validation")]
     public void Id_Getter_ReturnsAssignedValue()
@@ -18,4 +19,5 @@ public class CreateRewardRedemptionResponseTest
 
         response.Id.Should().Be(id);
     }
+    #endregion
 }

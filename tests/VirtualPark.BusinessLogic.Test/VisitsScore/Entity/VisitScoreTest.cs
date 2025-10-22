@@ -29,5 +29,17 @@ public class VisitScoreTest
         score.Origin.Should().Be("Atracción");
     }
     #endregion
+
+    #region Set
+    [TestMethod]
+    [TestCategory("Setter")]
+    public void Origin_Setter_ShouldStoreAssignedInstance()
+    {
+        var score = new VisitScore();
+        score.Origin = "Canje";
+
+        score.Origin.Should().Be("Canje");
+    }
+    #endregion
     #endregion
 }

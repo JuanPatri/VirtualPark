@@ -17,4 +17,17 @@ public class VisitScoreTest
         score.Id.Should().NotBe(Guid.Empty);
     }
     #endregion
+
+    #region Origin
+    #region Get
+    [TestMethod]
+    [TestCategory("Getter")]
+    public void Origin_Getter_ShouldReturnAssignedInstance()
+    {
+        var score = new VisitScore { Origin = "Atracción" };
+
+        score.Origin.Should().Be("Atracción");
+    }
+    #endregion
+    #endregion
 }

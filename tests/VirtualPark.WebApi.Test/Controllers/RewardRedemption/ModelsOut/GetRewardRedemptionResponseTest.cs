@@ -75,6 +75,7 @@ public sealed class GetRewardRedemptionResponseTest
     }
     #endregion
 
+    #region PointsSpend
     [TestMethod]
     [TestCategory("Validation")]
     public void PointsSpent_Getter_ReturnsAssignedValue()
@@ -88,4 +89,5 @@ public sealed class GetRewardRedemptionResponseTest
 
         response.PointsSpent.Should().Be("1200");
     }
+    #endregion
 }

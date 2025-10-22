@@ -132,6 +132,7 @@ public class RewardRedemptionControllerTest
     }
     #endregion
 
+    #region GetByVisitor
     [TestMethod]
     public void GetRewardRedemptionsByVisitor_ShouldReturnFilteredList()
     {
@@ -158,4 +159,5 @@ public class RewardRedemptionControllerTest
 
         _rewardRedemptionServiceMock.VerifyAll();
     }
+    #endregion
 }

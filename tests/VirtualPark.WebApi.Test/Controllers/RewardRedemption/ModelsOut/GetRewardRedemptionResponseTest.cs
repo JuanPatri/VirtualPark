@@ -70,4 +70,18 @@ public sealed class GetRewardRedemptionResponseTest
         response.Date.Should().Be("2025-12-21");
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void PointsSpent_Getter_ReturnsAssignedValue()
+    {
+        var response = new GetRewardRedemptionResponse(
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            "2025-10-21",
+            1200);
+
+        response.PointsSpent.Should().Be(1200);
+    }
 }

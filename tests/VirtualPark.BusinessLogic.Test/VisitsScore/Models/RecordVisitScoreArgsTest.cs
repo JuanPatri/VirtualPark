@@ -71,5 +71,14 @@ public class RecordVisitScoreArgsTest
 
         args.Points.Should().BeNull();
     }
+
+    [TestMethod]
+    [TestCategory("Setter")]
+    public void Points_Setter_ShouldAllowPositiveZeroAndNegative()
+    {
+        new RecordVisitScoreArgs { Points = 40 }.Points.Should().Be(40);
+        new RecordVisitScoreArgs { Points = 0 }.Points.Should().Be(0);
+        new RecordVisitScoreArgs { Points = -25 }.Points.Should().Be(-25);
+    }
     #endregion
 }

@@ -1,84 +1,43 @@
+using System;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtualPark.BusinessLogic.VisitsScore.Models;
 
 namespace VirtualPark.BusinessLogic.Test.VisitsScore.Models;
 
 [TestClass]
-[TestCategory("Model")]
+[TestCategory("Args")]
 [TestCategory("RecordVisitScoreArgs")]
-public class RecordVisitScoreArgsTest
+public sealed class RecordVisitScoreArgsTest
 {
-    #region VisitorProfileId
-    #region Get
     [TestMethod]
-    [TestCategory("Getter")]
-    public void VisitorProfileId_Getter_ShouldReturnAssignedInstance()
+    [TestCategory("Constructor")]
+    public void Constructor_ShouldParseVisitRegistrationId_TrimOrigin_AndAllowNullPoints()
     {
-        var id = Guid.NewGuid();
-        var args = new RecordVisitScoreArgs { VisitorProfileId = id };
+        var vrId = Guid.NewGuid();
 
-        args.VisitorProfileId.Should().Be(id);
-    }
-    #endregion
+        var args = new RecordVisitScoreArgs(
+            visitRegistrationId: vrId.ToString(),
+            origin: "  Atracción  ",
+            points: null);
 
-    #region Set
-    [TestMethod]
-    [TestCategory("Setter")]
-    public void VisitorProfileId_Setter_ShouldStoreAssignedInstance()
-    {
-        var id = Guid.NewGuid();
-        var args = new RecordVisitScoreArgs();
-
-        args.VisitorProfileId = id;
-
-        args.VisitorProfileId.Should().Be(id);
-    }
-    #endregion
-    #endregion
-
-    #region Origin
-    #region Get
-    [TestMethod]
-    [TestCategory("Getter")]
-    public void Origin_Getter_ShouldReturnAssignedInstance()
-    {
-        var args = new RecordVisitScoreArgs { Origin = "Atracción" };
-
+        args.VisitRegistrationId.Should().Be(vrId);
         args.Origin.Should().Be("Atracción");
-    }
-    #endregion
-
-    #region Set
-    [TestMethod]
-    [TestCategory("Setter")]
-    public void Origin_Setter_ShouldStoreAssignedInstance()
-    {
-        var args = new RecordVisitScoreArgs();
-
-        args.Origin = "Canje";
-
-        args.Origin.Should().Be("Canje");
-    }
-    #endregion
-    #endregion
-
-    #region Points
-    [TestMethod]
-    [TestCategory("Default")]
-    public void Points_Default_ShouldBeNull()
-    {
-        var args = new RecordVisitScoreArgs();
-
         args.Points.Should().BeNull();
     }
 
     [TestMethod]
-    [TestCategory("Setter")]
-    public void Points_Setter_ShouldAllowPositiveZeroAndNegative()
+    [TestCategory("Behaviour")]
+    public void Constructor_ShouldParsePoints_WhenProvided()
     {
-        new RecordVisitScoreArgs { Points = 40 }.Points.Should().Be(40);
-        new RecordVisitScoreArgs { Points = 0 }.Points.Should().Be(0);
-        new RecordVisitScoreArgs { Points = -25 }.Points.Should().Be(-25);
+        var vr = Guid.NewGuid().ToString();
+
+        var a1 = new RecordVisitScoreArgs(vr, "Canje", "-30");
+        var a2 = new RecordVisitScoreArgs(vr, "Atracción", "0");
+        var a3 = new RecordVisitScoreArgs(vr, "Atracción", null);
+
+        a1.Points.Should().Be(-30);
+        a2.Points.Should().Be(0);
+        a3.Points.Should().BeNull();
     }
-    #endregion
 }

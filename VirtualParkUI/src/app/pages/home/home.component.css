@@ -1,18 +1,17 @@
 .home-container {
+    max-width: 500px;
     text-align: center;
-    margin-top: 100px;
+    background-color: #E6CFA9;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    padding: 40px 30px;
 }
 
-button {
-    margin: 10px;
-    background-color: #00A651;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
+h1 {
+    font-size: 3rem;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
-button:hover {
-    background-color: #008c45;
-}
+

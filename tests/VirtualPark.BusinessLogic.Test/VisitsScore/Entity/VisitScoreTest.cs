@@ -101,4 +101,25 @@ public class VisitScoreTest
     }
     #endregion
     #endregion
+
+    #region DayStrategyName
+    [TestMethod]
+    [TestCategory("Getter")]
+    public void DayStrategyName_Getter_ShouldReturnAssignedInstance()
+    {
+        var visit = new VisitScore { DayStrategyName = "Attraction" };
+
+        visit.DayStrategyName.Should().Be("Attraction");
+    }
+
+    [TestMethod]
+    [TestCategory("Setter")]
+    public void DayStrategyName_Setter_ShouldStoreAssignedInstance()
+    {
+        var visit = new VisitScore();
+        visit.DayStrategyName = "Attraction";
+
+        visit.DayStrategyName.Should().Be("Attraction");
+    }
+    #endregion
 }

@@ -13,18 +13,18 @@ namespace VirtualPark.BusinessLogic.VisitRegistrations.Service;
 
 public class VisitRegistrationService(IRepository<VisitRegistration> visitRegistrationRepository,
     IReadOnlyRepository<VisitorProfile> visitorProfileRepository, IReadOnlyRepository<Attraction> attractionRepository,
-    IReadOnlyRepository<Ticket> ticketRepository, IClockAppService clockAppService
-    /*IRepository<VisitorProfile> visitorProfileWriteRepository, IStrategyService strategyService,
-    IStrategyFactory strategyFactory*/) : IVisitRegistrationService
+    IReadOnlyRepository<Ticket> ticketRepository, IClockAppService clockAppService,
+    IRepository<VisitorProfile> visitorProfileWriteRepository, IStrategyService strategyService,
+    IStrategyFactory strategyFactory) : IVisitRegistrationService
 {
     private readonly IRepository<VisitRegistration> _visitRegistrationRepository = visitRegistrationRepository;
     private readonly IReadOnlyRepository<VisitorProfile> _visitorProfileRepository = visitorProfileRepository;
     private readonly IReadOnlyRepository<Attraction> _attractionRepository = attractionRepository;
     private readonly IReadOnlyRepository<Ticket> _ticketRepository = ticketRepository;
     private readonly IClockAppService _clockAppService = clockAppService;
-    /*private readonly IRepository<VisitorProfile> _visitorProfileWriteRepository = visitorProfileWriteRepository;
+    private readonly IRepository<VisitorProfile> _visitorProfileWriteRepository = visitorProfileWriteRepository;
     private readonly IStrategyService _strategyService = strategyService;
-    private readonly IStrategyFactory _strategyFactory = strategyFactory;*/
+    private readonly IStrategyFactory _strategyFactory = strategyFactory;
 
     public VisitRegistration Create(VisitRegistrationArgs args)
     {
@@ -179,112 +179,4 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
         return attractions;
     }
-
-    /*public void RecordVisitScore(RecordVisitScoreArgs args)
-    {
-        ArgumentNullException.ThrowIfNull(args);
-        if (string.IsNullOrWhiteSpace(args.Origin))
-        {
-            throw new InvalidOperationException("Origin es requerido.");
-        }
-
-        var now = _clockAppService.Now();
-        var today = DateOnly.FromDateTime(now);
-
-        var visit = GetTodayVisit(args.VisitorProfileId, today);
-
-        var strategyKey = DayStrategy(visit, today);
-
-        var scoreEvent = AppendScoreEvent(visit, args.Origin, now);
-
-        var previousTotal = visit.DailyScore;
-        var newTotal = ComputeNewTotal(visit, strategyKey, args);
-
-        var delta = newTotal - previousTotal;
-
-        ApplyDelta(visit, scoreEvent, delta, newTotal);
-
-        _visitRegistrationRepository.Update(visit);
-    }
-
-    private VisitRegistration GetTodayVisit(Guid visitorProfileId, DateOnly today)
-    {
-        var visit = _visitRegistrationRepository.Get(v =>
-            v.VisitorId == visitorProfileId &&
-            DateOnly.FromDateTime(v.Date) == today);
-
-        if (visit is null)
-        {
-            throw new InvalidOperationException($"No VisitRegistration found for visitor {visitorProfileId} on {today}.");
-        }
-
-        return visit;
-    }
-
-    private string DayStrategy(VisitRegistration visit, DateOnly today)
-    {
-        if (!string.IsNullOrEmpty(visit.DayStrategyName))
-        {
-            return visit.DayStrategyName!;
-        }
-
-        var active = _strategyService.Get(today)
-                     ?? throw new InvalidOperationException($"No active strategy for {today}.");
-
-        visit.DayStrategyName = active.StrategyKey;
-        return visit.DayStrategyName!;
-    }
-
-    private VisitScore AppendScoreEvent(VisitRegistration visit, string origin, DateTime occurredAt)
-    {
-        var ev = new VisitScore
-        {
-            Origin = origin,
-            OccurredAt = occurredAt,
-            Points = 0
-        };
-        visit.ScoreEvents.Add(ev);
-        return ev;
-    }
-
-    private int ComputeNewTotal(VisitRegistration visit, string strategyKey, RecordVisitScoreArgs args)
-    {
-        var isRedemption = string.Equals(args.Origin, "Canje", StringComparison.OrdinalIgnoreCase);
-
-        if (isRedemption)
-        {
-            if (args.Points is null)
-            {
-                throw new InvalidOperationException("Points es requerido para origen 'Canje'.");
-            }
-
-            return checked(visit.DailyScore + args.Points.Value);
-        }
-
-        if (args.Points is not null)
-        {
-                throw new InvalidOperationException("Points solo se permite para 'Canje'; para otros orígenes deje null.");
-        }
-
-        var strategy = _strategyFactory.Create(strategyKey);
-        return strategy.CalculatePoints(visit);
-    }
-
-    private void ApplyDelta(VisitRegistration visit, VisitScore scoreEvent, int delta, int newTotal)
-    {
-        scoreEvent.Points = delta;
-
-        if (delta == 0)
-        {
-            return;
-        }
-
-        visit.Visitor ??= _visitorProfileRepository.Get(v => v.Id == visit.VisitorId)
-                              ?? throw new InvalidOperationException("Visitor not found.");
-
-        visit.DailyScore = newTotal;
-        visit.Visitor.Score += delta;
-
-        _visitorProfileWriteRepository.Update(visit.Visitor);
-    }*/
 }

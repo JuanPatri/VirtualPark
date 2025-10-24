@@ -1,6 +1,4 @@
-using System;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtualPark.BusinessLogic.VisitsScore.Models;
 
 namespace VirtualPark.BusinessLogic.Test.VisitsScore.Models;

@@ -183,7 +183,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     public void RecordVisitScore(RecordVisitScoreArgs args)
     {
         ArgumentNullException.ThrowIfNull(args);
-        if (string.IsNullOrWhiteSpace(args.Origin))
+        if(string.IsNullOrWhiteSpace(args.Origin))
         {
             throw new InvalidOperationException("Origin es requerido.");
         }
@@ -230,7 +230,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     private string GetStrategyKeyForVisit(VisitRegistration visit, DateOnly today)
     {
         var keyFromHistory = visit.ScoreEvents.FirstOrDefault()?.DayStrategyName;
-        if (!string.IsNullOrWhiteSpace(keyFromHistory))
+        if(!string.IsNullOrWhiteSpace(keyFromHistory))
         {
             return keyFromHistory!;
         }
@@ -245,9 +245,9 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     {
         var isRedemption = string.Equals(args.Origin, "Canje", StringComparison.OrdinalIgnoreCase);
 
-        if (isRedemption)
+        if(isRedemption)
         {
-            if (args.Points is null)
+            if(args.Points is null)
             {
                 throw new InvalidOperationException("Points es requerido para origen 'Canje'.");
             }
@@ -255,7 +255,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
             return checked(visit.DailyScore + args.Points.Value);
         }
 
-        if (args.Points is not null)
+        if(args.Points is not null)
         {
             throw new InvalidOperationException("Points solo se permite para 'Canje'; para otros orígenes deje null.");
         }
@@ -268,7 +268,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     {
         scoreEvent.Points = delta;
 
-        if (delta == 0)
+        if(delta == 0)
         {
             return;
         }

@@ -1,6 +1,5 @@
 using FluentAssertions;
 using Moq;
-using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.BusinessLogic.Strategy.Models;
@@ -582,8 +581,8 @@ public class VisitRegistrationServiceTest
             VisitorId = visitor.Id,
             Visitor = visitor,
             Ticket = ticket,
-            Attractions = new List<Attraction>(),
-            ScoreEvents = new List<VisitScore>()
+            Attractions = [],
+            ScoreEvents = []
         };
         var visitId = visit.Id;
 
@@ -649,11 +648,11 @@ public class VisitRegistrationServiceTest
             VisitorId = visitor.Id,
             Visitor = visitor,
             Ticket = new Ticket(),
-            Attractions = new List<Attraction>(),
-            ScoreEvents = new List<VisitScore>
-            {
+            Attractions = [],
+            ScoreEvents =
+            [
                 new VisitScore { Origin = "Seed", OccurredAt = now, Points = 0, DayStrategyName = "Attraction" }
-            }
+            ]
         };
         var visitId = visit.Id;
 
@@ -704,9 +703,9 @@ public class VisitRegistrationServiceTest
             VisitorId = visitor.Id,
             Visitor = visitor,
             Ticket = new Ticket(),
-            Attractions = new List<Attraction>(),
-            ScoreEvents = new List<VisitScore>
-            {
+            Attractions = [],
+            ScoreEvents =
+            [
                 new VisitScore
                 {
                     Origin = "Seed",
@@ -715,7 +714,8 @@ public class VisitRegistrationServiceTest
                     DayStrategyName = "Attraction",
                     VisitRegistrationId = Guid.Empty
                 }
-            }
+
+            ]
         };
         visit.ScoreEvents[0].VisitRegistrationId = visit.Id;
         visit.ScoreEvents[0].VisitRegistration = visit;
@@ -750,11 +750,11 @@ public class VisitRegistrationServiceTest
             VisitorId = visitor.Id,
             Visitor = visitor,
             Ticket = new Ticket(),
-            Attractions = new List<Attraction>(),
-            ScoreEvents = new List<VisitScore>
-            {
+            Attractions = [],
+            ScoreEvents =
+            [
                 new VisitScore { Origin = "Seed", OccurredAt = now.AddMinutes(-2), Points = 0, DayStrategyName = "Attraction" }
-            }
+            ]
         };
         visit.ScoreEvents[0].VisitRegistration = visit;
         visit.ScoreEvents[0].VisitRegistrationId = visit.Id;
@@ -801,8 +801,8 @@ public class VisitRegistrationServiceTest
             VisitorId = visitor.Id,
             Visitor = visitor,
             Ticket = new Ticket(),
-            Attractions = new List<Attraction>(),
-            ScoreEvents = new List<VisitScore>()
+            Attractions = [],
+            ScoreEvents = []
         };
         var visitId = visit.Id;
 

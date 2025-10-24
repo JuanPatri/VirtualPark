@@ -18,4 +18,14 @@ public class VisitScoreRequestTest
         req.VisitRegistrationId.Should().Be(id);
     }
     #endregion
+
+    #region Origin
+    [TestMethod]
+    [TestCategory("Getter")]
+    public void Origin_Getter_ReturnsAssignedValue()
+    {
+        var req = new VisitScoreRequest { Origin = "Atracción" };
+        req.Origin.Should().Be("Atracción");
+    }
+    #endregion
 }

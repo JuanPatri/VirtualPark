@@ -687,6 +687,166 @@ public class VisitRegistrationServiceTest
         _visitorRepoWriteMock.VerifyAll();
         _clockMock.VerifyAll();
     }
-    #endregion
 
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void RecordVisitScore_ShouldThrow_WhenRedemptionWithoutPoints()
+    {
+        var now = new DateTime(2025, 10, 08, 11, 00, 00, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var visitor = new VisitorProfile { Score = 100 };
+
+        var visit = new VisitRegistration
+        {
+            Date = now,
+            DailyScore = 100,
+            VisitorId = visitor.Id,
+            Visitor = visitor,
+            Ticket = new Ticket(),
+            Attractions = new List<Attraction>(),
+            ScoreEvents = new List<VisitScore>
+            {
+                new VisitScore
+                {
+                    Origin = "Seed",
+                    OccurredAt = now.AddMinutes(-1),
+                    Points = 0,
+                    DayStrategyName = "Attraction",
+                    VisitRegistrationId = Guid.Empty
+                }
+            }
+        };
+        visit.ScoreEvents[0].VisitRegistrationId = visit.Id;
+        visit.ScoreEvents[0].VisitRegistration = visit;
+
+        var visitId = visit.Id;
+
+        _repositoryMock.Setup(r => r.Get(v => v.Id == visitId)).Returns(visit);
+
+        var args = new RecordVisitScoreArgs(visitId.ToString(), "Canje", null);
+
+        Action act = () => _service.RecordVisitScore(args);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Points es requerido para origen 'Canje'.");
+
+        _repositoryMock.VerifyAll();
+        _clockMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void RecordVisitScore_RedemptionWithZeroDelta_ShouldRecordEvent_AndNotUpdateVisitor()
+    {
+        var now = new DateTime(2025, 10, 08, 19, 00, 00, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var visitor = new VisitorProfile { Score = 75 };
+        var visit = new VisitRegistration
+        {
+            Date = now,
+            DailyScore = 75,
+            VisitorId = visitor.Id,
+            Visitor = visitor,
+            Ticket = new Ticket(),
+            Attractions = new List<Attraction>(),
+            ScoreEvents = new List<VisitScore>
+            {
+                new VisitScore { Origin = "Seed", OccurredAt = now.AddMinutes(-2), Points = 0, DayStrategyName = "Attraction" }
+            }
+        };
+        visit.ScoreEvents[0].VisitRegistration = visit;
+        visit.ScoreEvents[0].VisitRegistrationId = visit.Id;
+
+        var visitId = visit.Id;
+
+        _repositoryMock.Setup(r => r.Get(v => v.Id == visitId)).Returns(visit);
+
+        _repositoryMock
+            .Setup(r => r.Update(It.Is<VisitRegistration>(v =>
+                v.DailyScore == 75 &&
+                v.ScoreEvents.Count == 2 &&
+                v.ScoreEvents[1].Origin == "Canje" &&
+                v.ScoreEvents[1].Points == 0 &&
+                v.ScoreEvents[1].VisitRegistrationId == visitId)))
+            .Verifiable();
+
+        _visitorRepoWriteMock.VerifyNoOtherCalls();
+
+        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "Canje", "0"));
+
+        visit.DailyScore.Should().Be(75);
+        visitor.Score.Should().Be(75);
+        visit.ScoreEvents.Should().HaveCount(2);
+        visit.ScoreEvents[1].Points.Should().Be(0);
+
+        _repositoryMock.VerifyAll();
+        _clockMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void RecordVisitScore_FirstEvent_ShouldStoreTrimmedOrigin()
+    {
+        var now = new DateTime(2025, 10, 08, 10, 00, 00, DateTimeKind.Utc);
+        var today = new DateOnly(2025, 10, 08);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var visitor = new VisitorProfile { Score = 0 };
+        var visit = new VisitRegistration
+        {
+            Date = now,
+            DailyScore = 0,
+            VisitorId = visitor.Id,
+            Visitor = visitor,
+            Ticket = new Ticket(),
+            Attractions = new List<Attraction>(),
+            ScoreEvents = new List<VisitScore>()
+        };
+        var visitId = visit.Id;
+
+        _repositoryMock.Setup(r => r.Get(v => v.Id == visitId)).Returns(visit);
+
+        _strategyServiceMock
+            .Setup(s => s.Get(today))
+            .Returns(new ActiveStrategyArgs("Attraction", today.ToString("yyyy-MM-dd")));
+
+        _strategyFactoryMock
+            .Setup(f => f.Create("Attraction"))
+            .Returns(_strategyMock.Object);
+
+        _strategyMock
+            .Setup(s => s.CalculatePoints(It.Is<VisitRegistration>(v => ReferenceEquals(v, visit))))
+            .Returns((VisitRegistration v) => v.ScoreEvents.Count * 10);
+
+        _visitorRepoWriteMock
+            .Setup(w => w.Update(It.Is<VisitorProfile>(vp => vp.Score == 10)))
+            .Verifiable();
+
+        _repositoryMock
+            .Setup(r => r.Update(It.Is<VisitRegistration>(v =>
+                v.DailyScore == 10 &&
+                v.ScoreEvents.Count == 1 &&
+                v.ScoreEvents[0].Origin == "Atracción" &&
+                v.ScoreEvents[0].Points == 10 &&
+                v.ScoreEvents[0].DayStrategyName == "Attraction" &&
+                v.ScoreEvents[0].VisitRegistrationId == visitId)))
+            .Verifiable();
+
+        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "  Atracción  ", null));
+
+        visit.DailyScore.Should().Be(10);
+        visitor.Score.Should().Be(10);
+        visit.ScoreEvents.Should().HaveCount(1);
+        visit.ScoreEvents[0].Origin.Should().Be("Atracción");
+
+        _repositoryMock.VerifyAll();
+        _visitorRepoWriteMock.VerifyAll();
+        _strategyServiceMock.VerifyAll();
+        _strategyFactoryMock.VerifyAll();
+        _strategyMock.VerifyAll();
+        _clockMock.VerifyAll();
+    }
+    #endregion
 }

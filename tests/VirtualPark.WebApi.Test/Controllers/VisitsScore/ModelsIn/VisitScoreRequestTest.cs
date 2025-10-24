@@ -28,4 +28,14 @@ public class VisitScoreRequestTest
         req.Origin.Should().Be("Atracción");
     }
     #endregion
+
+    #region Points
+    [TestMethod]
+    [TestCategory("Getter")]
+    public void Points_Getter_ReturnsAssignedValue()
+    {
+        var req = new VisitScoreRequest { Points = "-30" };
+        req.Points.Should().Be("-30");
+    }
+    #endregion
 }

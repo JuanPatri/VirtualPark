@@ -13,6 +13,7 @@ using VirtualPark.BusinessLogic.TypeIncidences.Entity;
 using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
+using VirtualPark.BusinessLogic.VisitsScore.Entity;
 using VirtualPark.DataAccess.Seed;
 
 namespace VirtualPark.DataAccess;
@@ -31,6 +32,7 @@ public class SqlContext(DbContextOptions<SqlContext> options) : DbContext(option
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<VisitRegistration> VisitRegistrations { get; set; }
     public DbSet<Session> Sessions { get; set; }
+    public DbSet<VisitScore> VisitScores { get; set; }
     public DbSet<Reward> Rewards { get; set; }
     public DbSet<RewardRedemption> RewardRedemptions { get; set; }
 

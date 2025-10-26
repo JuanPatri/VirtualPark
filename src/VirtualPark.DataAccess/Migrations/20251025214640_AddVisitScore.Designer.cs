@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualPark.DataAccess;
 
@@ -11,9 +12,11 @@ using VirtualPark.DataAccess;
 namespace VirtualPark.DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    partial class SqlContextModelSnapshot : ModelSnapshot
+    [Migration("20251025214640_AddVisitScore")]
+    partial class AddVisitScore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -492,62 +495,6 @@ namespace VirtualPark.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Rankings", (string)null);
-                });
-
-            modelBuilder.Entity("VirtualPark.BusinessLogic.RewardRedemptions.Entity.RewardRedemption", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("date");
-
-                    b.Property<int>("PointsSpent")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("RewardId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("VisitorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RewardId");
-
-                    b.HasIndex("VisitorId");
-
-                    b.ToTable("RewardRedemptions", (string)null);
-                });
-
-            modelBuilder.Entity("VirtualPark.BusinessLogic.Rewards.Entity.Reward", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Cost")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("QuantityAvailable")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RequiredMembershipLevel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Rewards", (string)null);
                 });
 
             modelBuilder.Entity("VirtualPark.BusinessLogic.RolePermissions.Entity.RolePermission", b =>
@@ -1257,21 +1204,6 @@ namespace VirtualPark.DataAccess.Migrations
                     b.Navigation("Attraction");
 
                     b.Navigation("Type");
-                });
-
-            modelBuilder.Entity("VirtualPark.BusinessLogic.RewardRedemptions.Entity.RewardRedemption", b =>
-                {
-                    b.HasOne("VirtualPark.BusinessLogic.Rewards.Entity.Reward", null)
-                        .WithMany()
-                        .HasForeignKey("RewardId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("VirtualPark.BusinessLogic.VisitorsProfile.Entity.VisitorProfile", null)
-                        .WithMany()
-                        .HasForeignKey("VisitorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("VirtualPark.BusinessLogic.RolePermissions.Entity.RolePermission", b =>

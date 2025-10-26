@@ -2,6 +2,8 @@ using FluentAssertions;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
+using VirtualPark.BusinessLogic.VisitsScore.Entity;
+
 namespace VirtualPark.BusinessLogic.Test.VisitRegistrations.Entity;
 
 [TestClass]
@@ -167,5 +169,27 @@ public sealed class VisitRegistrationTest
         visit.DailyScore.Should().Be(300);
     }
 
+    #endregion
+
+    #region ScoreEvent
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void ScoreEvents_WhenAddingVisitScore_ShouldStoreItem()
+    {
+        var visit = new VisitRegistration();
+        var evt = new VisitScore
+        {
+            Origin = "Atracción",
+            OccurredAt = DateTime.UtcNow,
+            Points = 50
+        };
+
+        visit.ScoreEvents.Add(evt);
+
+        visit.ScoreEvents.Should().HaveCount(1);
+        visit.ScoreEvents[0].Should().BeSameAs(evt);
+        visit.ScoreEvents[0].Origin.Should().Be("Atracción");
+        visit.ScoreEvents[0].Points.Should().Be(50);
+    }
     #endregion
 }

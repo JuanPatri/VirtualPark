@@ -5,6 +5,8 @@ using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Models;
+using VirtualPark.BusinessLogic.VisitsScore.Entity;
+using VirtualPark.BusinessLogic.VisitsScore.Models;
 using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.VisitRegistrations.Service;
@@ -178,53 +180,105 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         return attractions;
     }
 
-    private void CloseVisit(Guid visitId)
+    public void RecordVisitScore(RecordVisitScoreArgs args)
     {
-        var visit = Get(visitId);
-
-        if(visit == null)
+        ArgumentNullException.ThrowIfNull(args);
+        if(string.IsNullOrWhiteSpace(args.Origin))
         {
-            throw new InvalidOperationException($"Visit with id {visitId} not found");
+            throw new InvalidOperationException("Origin es requerido.");
         }
 
-        if(visit.DailyScore > 0)
+        var now = _clockAppService.Now();
+        var today = DateOnly.FromDateTime(now);
+
+        var visit = GetVisitById(args.VisitRegistrationId);
+
+        var strategyKey = GetStrategyKeyForVisit(visit, today);
+
+        var scoreEvent = new VisitScore
         {
-            throw new InvalidOperationException($"Points for this visit have already been calculated");
-        }
+            Origin = args.Origin.Trim(),
+            OccurredAt = now,
+            Points = 0,
+            DayStrategyName = strategyKey,
+            VisitRegistrationId = visit.Id,
+            VisitRegistration = visit
+        };
+        visit.ScoreEvents.Add(scoreEvent);
 
-        var dateOnly = DateOnly.FromDateTime(visit.Date);
-        var activeStrategyArgs = _strategyService.Get(dateOnly);
+        var previousTotal = visit.DailyScore;
+        var newTotal = ComputeNewTotal(visit, strategyKey, args);
 
-        if(activeStrategyArgs == null)
-        {
-            throw new InvalidOperationException($"No active strategy found for date {dateOnly}");
-        }
-
-        var strategy = _strategyFactory.Create(activeStrategyArgs.StrategyKey);
-        var points = strategy.CalculatePoints(visit);
-
-        visit.DailyScore = points;
-
-        visit.Visitor.Score += points;
+        var delta = newTotal - previousTotal;
+        ApplyDelta(visit, scoreEvent, delta, newTotal);
 
         _visitRegistrationRepository.Update(visit);
-        _visitorProfileWriteRepository.Update(visit.Visitor);
     }
 
-    public void CloseVisitByVisitor(Guid visitorProfileId)
+    private VisitRegistration GetVisitById(Guid visitRegistrationId)
     {
-        var today = DateOnly.FromDateTime(_clockAppService.Now());
+        var visit = _visitRegistrationRepository.Get(v => v.Id == visitRegistrationId)
+                   ?? throw new InvalidOperationException($"VisitRegistration {visitRegistrationId} not found.");
 
-        var activeVisit = _visitRegistrationRepository.Get(v =>
-            v.VisitorId == visitorProfileId &&
-            DateOnly.FromDateTime(v.Date) == today &&
-            v.DailyScore == 0);
+        visit.Visitor ??= SearchVisitorProfile(visit.VisitorId);
+        visit.Attractions = RefreshAttractions(visit.Attractions);
+        visit.Ticket ??= SearchTicket(visit.TicketId);
 
-        if(activeVisit == null)
+        return visit;
+    }
+
+    private string GetStrategyKeyForVisit(VisitRegistration visit, DateOnly today)
+    {
+        var keyFromHistory = visit.ScoreEvents.FirstOrDefault()?.DayStrategyName;
+        if(!string.IsNullOrWhiteSpace(keyFromHistory))
         {
-            throw new InvalidOperationException($"No active visit found for visitor {visitorProfileId} today");
+            return keyFromHistory!;
         }
 
-        CloseVisit(activeVisit.Id);
+        var active = _strategyService.Get(today)
+                     ?? throw new InvalidOperationException($"No active strategy for {today}.");
+
+        return active.StrategyKey;
+    }
+
+    private int ComputeNewTotal(VisitRegistration visit, string strategyKey, RecordVisitScoreArgs args)
+    {
+        var isRedemption = string.Equals(args.Origin, "Canje", StringComparison.OrdinalIgnoreCase);
+
+        if(isRedemption)
+        {
+            if(args.Points is null)
+            {
+                throw new InvalidOperationException("Points es requerido para origen 'Canje'.");
+            }
+
+            return checked(visit.DailyScore + args.Points.Value);
+        }
+
+        if(args.Points is not null)
+        {
+            throw new InvalidOperationException("Points solo se permite para 'Canje'; para otros orígenes deje null.");
+        }
+
+        var strategy = _strategyFactory.Create(strategyKey);
+        return strategy.CalculatePoints(visit);
+    }
+
+    private void ApplyDelta(VisitRegistration visit, VisitScore scoreEvent, int delta, int newTotal)
+    {
+        scoreEvent.Points = delta;
+
+        if(delta == 0)
+        {
+            return;
+        }
+
+        visit.Visitor ??= _visitorProfileRepository.Get(v => v.Id == visit.VisitorId)
+                          ?? throw new InvalidOperationException("Visitor not found.");
+
+        visit.DailyScore = newTotal;
+        visit.Visitor.Score += delta;
+
+        _visitorProfileWriteRepository.Update(visit.Visitor);
     }
 }

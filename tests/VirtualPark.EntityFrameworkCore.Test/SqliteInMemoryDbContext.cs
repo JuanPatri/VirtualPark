@@ -1,7 +1,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace VirtualPark.DataAccess.Test;
+namespace VirtualPark.EntityFrameworkCore.Test;
 
 public class SqliteInMemoryDbContext
 {

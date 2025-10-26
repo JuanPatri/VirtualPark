@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 
-namespace VirtualPark.DataAccess.Test;
+namespace VirtualPark.EntityFrameworkCore.Test;
 
 [TestClass]
 [TestCategory("GenericRepository")]

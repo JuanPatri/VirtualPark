@@ -19,6 +19,7 @@ using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.BusinessLogic.VisitorsProfile.Service;
 using VirtualPark.BusinessLogic.VisitRegistrations.Service;
 using VirtualPark.DataAccess;
+using VirtualPark.EntityFrameworkCore;
 using VirtualPark.Repository;
 
 namespace VirtualPark.ApiServiceFactory;

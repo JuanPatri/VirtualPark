@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualPark.DataAccess;
 
@@ -11,9 +12,11 @@ using VirtualPark.DataAccess;
 namespace VirtualPark.DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    partial class SqlContextModelSnapshot : ModelSnapshot
+    [Migration("20251022011648_AddRewardsAndRewardRedemptions")]
+    partial class AddRewardsAndRewardRedemptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1176,40 +1179,6 @@ namespace VirtualPark.DataAccess.Migrations
                     b.ToTable("VisitRegistrationsAttractions", (string)null);
                 });
 
-            modelBuilder.Entity("VirtualPark.BusinessLogic.VisitsScore.Entity.VisitScore", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("DayStrategyName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("OccurredAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Origin")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("VisitRegistrationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OccurredAt");
-
-                    b.HasIndex("Origin");
-
-                    b.HasIndex("VisitRegistrationId");
-
-                    b.ToTable("VisitScores", (string)null);
-                });
-
             modelBuilder.Entity("RankingUsers", b =>
                 {
                     b.HasOne("VirtualPark.BusinessLogic.Rankings.Entity.Ranking", null)
@@ -1375,22 +1344,6 @@ namespace VirtualPark.DataAccess.Migrations
                         .HasForeignKey("VisitRegistrationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("VirtualPark.BusinessLogic.VisitsScore.Entity.VisitScore", b =>
-                {
-                    b.HasOne("VirtualPark.BusinessLogic.VisitRegistrations.Entity.VisitRegistration", "VisitRegistration")
-                        .WithMany("ScoreEvents")
-                        .HasForeignKey("VisitRegistrationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("VisitRegistration");
-                });
-
-            modelBuilder.Entity("VirtualPark.BusinessLogic.VisitRegistrations.Entity.VisitRegistration", b =>
-                {
-                    b.Navigation("ScoreEvents");
                 });
 #pragma warning restore 612, 618
         }

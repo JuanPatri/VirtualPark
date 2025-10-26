@@ -1,7 +1,9 @@
+using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 using VirtualPark.BusinessLogic.VisitsScore.Entity;
 using VirtualPark.BusinessLogic.VisitsScore.Service;
+using VirtualPark.WebApi.Controllers.VisitsScore;
 
 namespace VirtualPark.WebApi.Test.Controllers.VisitsScore;
 
@@ -49,7 +51,7 @@ public class VisitScoreControllerTest
             .Setup(s => s.GetScoresByVisitorId(visitorId))
             .Returns(new List<VisitScore> { s1, s2 });
 
-        var result = _controller.GetByVisitor(visitorId.ToString());
+        var result = _controller.GetHistoryById(visitorId.ToString());
 
         result.Should().NotBeNull();
         result.Should().HaveCount(2);

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 export type DropdownItem = {
     label: string;
@@ -11,6 +12,8 @@ export type DropdownItem = {
     selector: 'app-dropdown-menu',
     templateUrl: './dropdown-menu.component.html',
     styleUrls: ['./dropdown-menu.component.css'],
+    imports: [CommonModule],
+
 })
 export class DropdownMenuComponent {
     @Input() label = '';

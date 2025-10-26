@@ -49,7 +49,7 @@ public class VisitScoreControllerTest
 
         _serviceMock
             .Setup(s => s.GetScoresByVisitorId(visitorId))
-            .Returns(new List<VisitScore> { s1, s2 });
+            .Returns([s1, s2]);
 
         var result = _controller.GetHistoryById(visitorId.ToString());
 

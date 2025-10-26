@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VirtualPark.BusinessLogic.VisitsScore.Entity;
+using VirtualPark.BusinessLogic.VisitsScore.Service;
 using VirtualPark.EntityFrameworkCore;
 
 namespace VirtualPark.DataAccess;

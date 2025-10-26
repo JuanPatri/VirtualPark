@@ -2,7 +2,6 @@ using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.VisitsScore.Entity;
 using VirtualPark.BusinessLogic.VisitsScore.Service;
-using VirtualPark.DataAccess;
 
 namespace VirtualPark.BusinessLogic.Test.VisitsScore.Service;
 

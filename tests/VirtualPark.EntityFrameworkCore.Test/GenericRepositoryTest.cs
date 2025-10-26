@@ -4,7 +4,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using VirtualPark.DataAccess;
 
 namespace VirtualPark.EntityFrameworkCore.Test;
 

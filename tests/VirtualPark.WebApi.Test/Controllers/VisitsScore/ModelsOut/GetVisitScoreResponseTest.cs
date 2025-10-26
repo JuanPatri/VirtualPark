@@ -21,7 +21,8 @@ public class GetVisitScoreResponseTest
             "Attraction",
             "2025-10-08T12:00:00.0000000Z",
             42,
-            "Attraction");
+            "Attraction",
+            regId);
 
         resp.Id.Should().Be(id);
     }
@@ -40,7 +41,8 @@ public class GetVisitScoreResponseTest
             "Attraction",
             "2025-10-08T12:00:00.0000000Z",
             42,
-            "Attraction");
+            "Attraction",
+            regId);
 
         resp.Origin.Should().Be("Attraction");
     }
@@ -60,7 +62,8 @@ public class GetVisitScoreResponseTest
             "Attraction",
             occurred,
             42,
-            "Attraction");
+            "Attraction",
+            regId);
 
         resp.OccurredAt.Should().Be(occurred);
     }
@@ -79,7 +82,8 @@ public class GetVisitScoreResponseTest
             "Attraction",
              "2025-10-08T12:00:00.0000000Z",
             42,
-            "Attraction");
+            "Attraction",
+            regId);
 
         resp.Points.Should().Be(42);
     }
@@ -98,7 +102,8 @@ public class GetVisitScoreResponseTest
             "Attraction",
             "2025-10-08T12:00:00.0000000Z",
             15,
-            "Attraction");
+            "Attraction",
+            regId);
 
         resp.DayStrategyName.Should().Be("Attraction");
     }
@@ -115,9 +120,30 @@ public class GetVisitScoreResponseTest
             "Canje",
             "2025-10-08T12:00:00.0000000Z",
             -5,
-            null);
+            null,
+            regId);
 
         resp.DayStrategyName.Should().BeNull();
+    }
+    #endregion
+
+    #region VisitRegistrationId
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void VisitRegistrationId_Getter_ReturnsAssignedValue()
+    {
+        var id = Guid.NewGuid().ToString();
+        var regId = Guid.NewGuid().ToString();
+
+        var resp = new GetVisitScoreResponse(
+            id,
+            "Attraction",
+            "2025-10-08T12:00:00.0000000Z",
+            15,
+            "Attraction",
+            regId);
+
+        resp.VisitRegistrationId.Should().Be(regId);
     }
     #endregion
 }

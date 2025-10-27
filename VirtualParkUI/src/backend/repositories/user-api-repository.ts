@@ -8,4 +8,6 @@ export class UserApiRepository extends GenericApiRepository {
     constructor(http: HttpClient) {
         super('users', http);
     }
+    
+    
 }

@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AttractionModel, AttractionRepository } from '../../repositories/attraction-api-repository';
-import { CreateAttractionRequest, CreateAttractionResponse, GetAttractionResponse } from './models/attraction.model';
+import { AttractionModel } from './models/AttractionModel';
+import { CreateAttractionRequest } from './models/CreateAttractionRequest';
+import { AttractionRepository } from '../../repositories/attraction-api-repository';
+import { GetAttractionResponse } from './models/GetAttractionRequest';
 
 @Injectable({ providedIn: 'root' })
 export class AttractionService {
-  constructor(private repo: AttractionRepository) { }
-  getAll(): Observable<AttractionModel[]> { return this.repo.getAllAttractions(); }
+  constructor(private readonly _repo: AttractionRepository) {}
 
-  create(payload: CreateAttractionRequest): Observable<CreateAttractionResponse> {
-    return this.repo.createAttraction(payload);
+  getAll(): Observable<AttractionModel[]> {
+    return this._repo.getAll();
   }
 
   getById(id: string): Observable<GetAttractionResponse> {
-    return this.repo.getAttractionById(id);
+    return this._repo.getById(id);
+  }
+
+  create(attraction: CreateAttractionRequest): Observable<void> {
+    return this._repo.create(attraction);
   }
 }

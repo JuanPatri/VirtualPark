@@ -18,8 +18,8 @@ export class AttractionRegisterPageComponent {
 
   onSubmit(payload: CreateAttractionRequest) {
     this.attractionService.create(payload).subscribe({
-      next: (res) => {
-        alert(`Attraction created (id: ${res.id})`);
+      next: () => {
+        alert(`Attraction created`);
       },
       error: (e) => alert('Error creating: ' + e.message)
     });

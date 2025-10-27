@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateEventRequest, EventModel } from '../../../app/event/models/event.model';
+import { EventModel } from './models/EventModel';
+import { CreateEventResponse } from './models/CreateEventRespone';
+import { CreateEventRequest } from './models/CreateEventRequest';
 import { EventRepository } from '../../repositories/event-api-repository'
 
 @Injectable({
@@ -14,26 +16,18 @@ export class EventService {
   }
 
   getById(id: string): Observable<EventModel> {
-    return this._eventRepository.getById();
+    return this._eventRepository.getById(id);
   }
 
-  create(req: CreateEventRequest): Observable<void> {
-    return this.http.post<void>(this.apiUrl, req);
+  create(event: CreateEventResponse): Observable<void> {
+    return this._eventRepository.create(event);
   }
 
-  update(id: string, req: CreateEventRequest): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, req);
+  update(id: string, event: CreateEventRequest): Observable<void> {
+    return this._eventRepository.updateById(id, event)
   }
 
   remove(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
-
-  addAttraction(eventId: string, attractionId: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${eventId}/attractions/${attractionId}`, {});
-  }
-
-  removeAttraction(eventId: string, attractionId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${eventId}/attractions/${attractionId}`);
+    return this._eventRepository.deleteById(id);
   }
 }

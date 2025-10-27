@@ -2,13 +2,6 @@ import { AttractionModel } from '../../../backend/repositories/attraction-api-re
 
 
 
-export interface CreateEventRequest {
-  name: string;
-  date: string;
-  capacity: number;
-  cost: number;
-  attractionIds: string[];
-}
 
 export interface CreateEventResponse {
   id: string;

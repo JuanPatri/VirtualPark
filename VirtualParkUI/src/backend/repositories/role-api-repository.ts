@@ -12,5 +12,23 @@ export class RoleApiRepository extends GenericRepository{
         super('roles', http);
     }
     
+    public getAllRoles(): Observable<RoleModel[]>{
+        return this.getAll<RoleModel[]>();
+    }
     
+    public getRoleById(id: string): Observable<RoleModel>{
+        return  this.getById<RoleModel>(id);
+    }
+    
+    public createRole(body: CreateRoleRequest): Observable<CreateRoleResponse>{
+        return this.create<CreateRoleResponse>(body);
+    }
+    
+    public updateRole(id: string, body: CreateRoleRequest): Observable<void>{
+        return this.updateById<void>(id, body);
+    }
+    
+    public deleteRole(id: string): Observable<void>{
+        return this.deleteById<void>(id);
+    }
 }

@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
+import { CreateUserRequest } from '../../../backend/services/user/models/CreateUserRequest'
+import { CreateVisitorProfileRequest } from '../../../backend/services/user/models/CreateVisitorProfileRequest'
 
 type RegisterPayload = {
     Name: string;
@@ -23,6 +25,8 @@ type RegisterPayload = {
 
 export class RegisterUserFormComponent implements OnInit { 
     form!: FormGroup;  
+    
+    @Output() formSubmit = new EventEmitter<CreateUserRequest>();
 
     constructor(private fb: FormBuilder) {}
 
@@ -52,13 +56,19 @@ export class RegisterUserFormComponent implements OnInit {
         }
 
         const v = this.form.value;
-        const payload: RegisterPayload = {
-            Name: v.name!.trim(),
-            LastName: v.lastName!.trim(),
-            Email: v.email!.trim().toLowerCase(),
-            Password: v.password!,
-            DateOfBirth: v.dateOfBirth!
+        
+        const visitorProfile: CreateVisitorProfileRequest = {
+            dateOfBirth: v.dateOfBirth
+        }
+        const user: CreateUserRequest = {
+            name: v.name!.trim(),
+            lastName: v.lastName!.trim(),
+            email: v.email!.trim().toLowerCase(),
+            password: v.password!,
+            visitorProfile: visitorProfile
         };
+        
+        this.formSubmit.emit(user);
 
     }
 }

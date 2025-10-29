@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
-import { CreateAttractionFormComponent } from '../../business-components/create-attraction-form/create-attraction-form.component';
+import { CreateAttractionFormComponent } from '../../business-components/attraction/create-attraction-form/create-attraction-form.component';
 import { AttractionService } from '../../../backend/services/attraction/attraction.service';
 import { CreateAttractionRequest } from '../../../backend/services/attraction/models/CreateAttractionRequest';
 

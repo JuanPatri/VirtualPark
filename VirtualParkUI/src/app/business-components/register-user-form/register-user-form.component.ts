@@ -49,7 +49,7 @@ export class RegisterUserFormComponent implements OnInit {
         return ctl.touched && ctl.invalid;
     }
 
-    submit() {
+    emitForm() {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;

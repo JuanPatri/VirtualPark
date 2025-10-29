@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import GenericApiRepository from './generic-api-repository';
 import { LoginRequest } from '../services/session/models/LoginRequest' 
+import { LoginResponse } from '../services/session/models/LoginResponse';
 
 @Injectable({
     providedIn: 'root'

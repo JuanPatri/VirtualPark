@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
-import { CreateAttractionFormComponent } from '../../business-components/create-attraction-form/create-attraction-form.component';
+import { CreateAttractionFormComponent } from '../../business-components/attraction/create-attraction-form/create-attraction-form.component';
 
 @Component({
   selector: 'app-attraction-edit-page',

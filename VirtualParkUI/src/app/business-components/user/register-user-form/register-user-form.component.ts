@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { CreateUserRequest } from '../../../../backend/services/user/models/CreateUserRequest';
 import { CreateVisitorProfileRequest } from '../../../../backend/services/user/models/CreateVisitorProfileRequest';
 
+
 @Component({
     selector: 'app-register-user-form',
     standalone: true,

@@ -4,14 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { CreateUserRequest } from '../../../backend/services/user/models/CreateUserRequest'
 import { CreateVisitorProfileRequest } from '../../../backend/services/user/models/CreateVisitorProfileRequest'
 
-type RegisterPayload = {
-    Name: string;
-    LastName: string;
-    Email: string;
-    Password: string;
-    DateOfBirth: string;
-};
-
 @Component({
     selector: 'app-register-user-form',
     standalone: true,
@@ -23,9 +15,9 @@ type RegisterPayload = {
     styleUrls: ['./register-user-form.component.css']
 })
 
-export class RegisterUserFormComponent implements OnInit { 
-    form!: FormGroup;  
-    
+export class RegisterUserFormComponent implements OnInit {
+    form!: FormGroup;
+
     @Output() formSubmit = new EventEmitter<CreateUserRequest>();
 
     constructor(private fb: FormBuilder) {}
@@ -39,7 +31,7 @@ export class RegisterUserFormComponent implements OnInit {
             dateOfBirth: ['', Validators.required],
         });
     }
-    
+
     c(name: string): AbstractControl {
         return this.form.get(name)!;
     }
@@ -56,18 +48,21 @@ export class RegisterUserFormComponent implements OnInit {
         }
 
         const v = this.form.value;
-        
+
         const visitorProfile: CreateVisitorProfileRequest = {
-            dateOfBirth: v.dateOfBirth
+            dateOfBirth: v.dateOfBirth,
+            membership: 'Standard',
+            score: '0'
         }
         const user: CreateUserRequest = {
             name: v.name!.trim(),
             lastName: v.lastName!.trim(),
             email: v.email!.trim().toLowerCase(),
             password: v.password!,
+            rolesIds: ['CCCC1111-1111-1111-1111-111111111111'],
             visitorProfile: visitorProfile
         };
-        
+
         this.formSubmit.emit(user);
 
     }

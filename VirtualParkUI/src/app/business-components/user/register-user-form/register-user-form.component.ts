@@ -1,8 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
-import { CreateUserRequest } from '../../../backend/services/user/models/CreateUserRequest'
-import { CreateVisitorProfileRequest } from '../../../backend/services/user/models/CreateVisitorProfileRequest'
+import { CreateUserRequest } from '../../../../backend/services/user/models/CreateUserRequest';
+import { CreateVisitorProfileRequest } from '../../../../backend/services/user/models/CreateVisitorProfileRequest';
 
 @Component({
     selector: 'app-register-user-form',

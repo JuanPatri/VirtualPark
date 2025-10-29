@@ -13,7 +13,7 @@ export class SessionApiRepository extends GenericApiRepository {
     }
 
     login(credentials: LoginRequest): Observable<LoginResponse> {
-        return this.create<LoginResponse>(credentials, false).pipe(
+        return this.create<LoginResponse>(credentials, false, 'login').pipe(
             tap(res => {
                 if (res?.token) localStorage.setItem('token', res.token);
             })
@@ -21,12 +21,12 @@ export class SessionApiRepository extends GenericApiRepository {
     }
 
     logout(token: string): Observable<void> {
-        return this.deleteById<void>(token).pipe(
+        return this.deleteById<void>(token, true,'logout').pipe(
             finalize(() => localStorage.removeItem('token'))
         );
     }
 
     getSessionByToken(token: string): Observable<GetSessionResponse> {
-        return this.getById<GetSessionResponse>(token);
+        return this.getById<GetSessionResponse>(token, true, 'getUser');
     }
 }

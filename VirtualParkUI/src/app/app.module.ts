@@ -10,14 +10,12 @@ import { UserLoginFormComponent } from './business-components/user-login-form/us
 
 @NgModule({
     declarations: [
-        AppComponent,
-        UserLoginFormComponent,
+        AppComponent
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         HomeComponent,
-        DropdownMenuComponent,
         HttpClientModule
     ],
     providers: [],

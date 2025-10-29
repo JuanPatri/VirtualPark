@@ -1,54 +1,52 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { SessionService } from '../../../backend/services/session/session.service';
+import { LoginRequest } from '../../../backend/services/session/models/LoginRequest';
+import { UserLoginFormComponent } from '../../business-components/user-login-form/user-login-form.component';
+import { ButtonsComponent } from '../../components/buttons/buttons.component';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+    selector: 'app-user-login-page',
+    standalone: true,
+    imports: [CommonModule, UserLoginFormComponent, ButtonsComponent],
+    templateUrl: './user-login-page.component.html',
+    styleUrls: ['./user-login-page.component.css'],
 })
-export class LoginComponent {
-    form: FormGroup;
+export class UserLoginPageComponent {
+    @ViewChild(UserLoginFormComponent) loginForm!: UserLoginFormComponent;
+
     isLoading = false;
     errorMessage = '';
 
     constructor(
-        private readonly fb: FormBuilder,
         private readonly sessionService: SessionService,
         private readonly router: Router
-    ) {
-        this.form = this.fb.group({
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(8)]],
-        });
-    }
+    ) {}
 
-    invalid(field: string): boolean {
-        const control = this.form.get(field);
-        return !!(control && control.invalid && (control.dirty || control.touched));
-    }
-
-    onSubmit(): void {
-        if (this.form.invalid) {
-            this.form.markAllAsTouched();
-            return;
-        }
-
+    onSubmit(credentials: LoginRequest) {
         this.isLoading = true;
         this.errorMessage = '';
-
-        const credentials = this.form.value;
 
         this.sessionService.login(credentials).subscribe({
             next: () => {
                 this.isLoading = false;
-                this.router.navigate(['/']);
+                this.router.navigate(['/home']);
             },
             error: (err) => {
                 this.isLoading = false;
-                this.errorMessage = err.message || 'Invalid email or password';
+                this.errorMessage = err.message || 'Invalid email or password.';
             },
         });
+    }
+
+    handleLogin() {
+        if (this.loginForm) {
+            this.loginForm.emitForm();
+        }
+    }
+
+    handleRegister() {
+        this.router.navigate(['/user/register']);
     }
 }

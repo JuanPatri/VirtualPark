@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { EventService } from '../../../backend/services/event/event.service';
-import { EventModel } from '../../../backend/services/event/models/EventModel';
-import { ButtonsComponent } from '../../components/buttons/buttons.component';
+import { EventService } from '../../../../backend/services/event/event.service';
+import { EventModel } from '../../../../backend/services/event/models/EventModel';
+import { ButtonsComponent } from '../../../components/buttons/buttons.component';
 
 @Component({
   selector: 'app-event-page',

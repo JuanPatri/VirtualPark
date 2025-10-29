@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { EventService } from '../../../backend/services/event/event.service';
-import { EventModel } from '../../../backend/services/event/models/EventModel';
-import { ButtonsComponent } from '../../components/buttons/buttons.component';
-import { CreateEventRequest } from '../../../backend/services/event/models/CreateEventRequest';
-import { AttractionModel } from '../../../backend/services/attraction/models/AttractionModel';
-import { AttractionService } from '../../../backend/services/attraction/attraction.service';
+import { EventService } from '../../../../backend/services/event/event.service';
+import { EventModel } from '../../../../backend/services/event/models/EventModel';
+import { CreateEventRequest } from '../../../../backend/services/event/models/CreateEventRequest';
+import { AttractionModel } from '../../../../backend/services/attraction/models/AttractionModel';
+import { AttractionService } from '../../../../backend/services/attraction/attraction.service';
 
 
 @Component({

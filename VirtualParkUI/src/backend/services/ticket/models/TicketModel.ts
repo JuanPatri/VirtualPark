@@ -3,6 +3,6 @@ export interface TicketModel {
   type: string;
   Date: string;
   QrId: string;
-  EventId: string;
+  eventId?: string | null;
   VisitorId: string;
 }

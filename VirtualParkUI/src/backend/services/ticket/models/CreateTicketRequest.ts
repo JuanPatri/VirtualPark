@@ -1,5 +1,5 @@
 export interface CreateTicketRequest {
-  eventId: string;
+  eventId?: string | null;
   visitorId: string;
   Type: string;
   Date: string;

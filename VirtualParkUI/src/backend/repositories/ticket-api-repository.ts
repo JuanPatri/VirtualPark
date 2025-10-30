@@ -13,18 +13,18 @@ export class TicketRepository extends GenericApiRepository {
   }
 
   getAllTickets(): Observable<TicketModel[]> {
-    return this.getAll<TicketModel[]>();
+    return super.getAll<TicketModel[]>();
   }
 
   getTicketById(id: string): Observable<TicketModel> {
-      return this.getById<TicketModel>(id);
-  }
-
-  deleteTicket(id: string): Observable<void> {
-    return this.deleteById<void>(id);
+    return super.getById<TicketModel>(id);
   }
 
   createTicket(body: CreateTicketRequest): Observable<CreateTicketResponse> {
-    return this.create<CreateTicketResponse>(body);
+    return super.create<CreateTicketResponse>(body);
+  }
+
+  deleteTicket(id: string): Observable<void> {
+    return super.deleteById<void>(id);
   }
 }

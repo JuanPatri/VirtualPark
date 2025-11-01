@@ -14,10 +14,12 @@ public class GetUserLoggedSessionResponseTest
     {
         var id = Guid.NewGuid().ToString();
         var visitorId = Guid.NewGuid().ToString();
+        List<string> roleNames = ["Administrator"];
 
-        var response = new GetUserLoggedSessionResponse(id, visitorId);
+        var response = new GetUserLoggedSessionResponse(id, visitorId, roleNames);
 
         response.Id.Should().Be(id);
         response.VisitorId.Should().Be(visitorId);
+        response.Roles.Should().BeEquivalentTo(roleNames);
     }
 }

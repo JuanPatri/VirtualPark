@@ -1,6 +1,5 @@
 using FluentAssertions;
 using Moq;
-using VirtualPark.BusinessLogic.Roles.Entity;
 using VirtualPark.BusinessLogic.Sessions.Models;
 using VirtualPark.BusinessLogic.Sessions.Service;
 using VirtualPark.BusinessLogic.Users.Entity;

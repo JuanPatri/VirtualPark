@@ -71,22 +71,15 @@ export default abstract class GenericApiRepository {
         );
     }
 
-    protected handleError(error: HttpErrorResponse) {
-        let message = 'An unexpected error occurred.';
-
+    private handleError(error: HttpErrorResponse) {
         if (error.error instanceof ErrorEvent) {
-            console.error('Client error:', error.error.message);
-            message = error.error.message;
+            console.error('An error occurred:', error.error.message);
         } else {
-            console.error('Server error', error.status, error.error);
-            if (typeof error.error === 'string') {
-                message = error.error;
-            } else if (error.error?.message) {
-                message = error.error.message;
-            }
+            console.error(
+                `Backend returned code ${error.status}, ` +
+                `body was: ${error.error}`);
         }
-
-        return throwError(() => new Error(message));
+        return throwError('Something bad happened; please try again later.');
     }
 
 }

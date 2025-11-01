@@ -50,24 +50,24 @@ export default abstract class GenericApiRepository {
 
     public create<T>(body: any, includeAuth = true, additionalPath = ''): Observable<T> {
         return this.http.post<T>(this.buildUrl(additionalPath), body, this.requestOptions(includeAuth)).pipe(
-            catchError(this.handleError)
+            retry(2),catchError(this.handleError)
         );
     }
 
     public updateById<T>(id: string, body: any, includeAuth = true, additionalPath = ''): Observable<T> {
         return this.http.put<T>(this.buildUrl(id, additionalPath), body, this.requestOptions(includeAuth)).pipe(
-            catchError(this.handleError)
+            retry(2), catchError(this.handleError)
         );
     }
 
     public deleteById<T>(id: string, includeAuth = true, additionalPath = ''): Observable<T> {
         return this.http.delete<T>(this.buildUrl(id, additionalPath), this.requestOptions(includeAuth)).pipe(
-            catchError(this.handleError)
+            retry(2), catchError(this.handleError)
         );
     }
     public patchById<T>(id: string, body: any, includeAuth = true, additionalPath = ''): Observable<T> {
         return this.http.patch<T>(this.buildUrl(id, additionalPath), body, this.requestOptions(includeAuth)).pipe(
-            catchError(this.handleError)
+            retry(2), catchError(this.handleError)
         );
     }
 

@@ -2,9 +2,12 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Observable, map } from 'rxjs';
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
 import { TicketService } from '../../../backend/services/ticket/ticket.service';
+import { EventService } from '../../../backend/services/event/event.service';
 
+type EventOption = { id: string; label: string };
 @Component({
   selector: 'app-ticket-register-page',
   standalone: true,
@@ -14,7 +17,17 @@ import { TicketService } from '../../../backend/services/ticket/ticket.service';
 })
 export class TicketRegisterPageComponent {
   private fb = inject(FormBuilder);
-  private service = inject(TicketService);
+  private ticketService = inject(TicketService);
+  private eventService = inject(EventService);
+
+  events$: Observable<EventOption[]> = this.eventService.getAll().pipe(
+    map(events =>
+      events.map(e => ({
+        id: e.id,
+        label: `${e.name} (${e.date})`
+      }))
+    )
+  );
 
   form = this.fb.group({
     visitorId: ['', [Validators.required, Validators.maxLength(64)]],
@@ -27,7 +40,6 @@ export class TicketRegisterPageComponent {
 
   submit() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-
     const v = this.form.value as { visitorId: string; type: string; date: string; eventId?: string };
 
     const date = /^\d{4}-\d{2}-\d{2}$/.test(v.date)
@@ -38,12 +50,15 @@ export class TicketRegisterPageComponent {
       visitorId: v.visitorId.trim(),
       Type: v.type,
       Date: date,
-      eventId: (v.eventId?.trim() || null)
+      eventId: v.eventId && v.eventId.trim().length ? v.eventId.trim() : null
     };
 
-    this.service.create(payload).subscribe({
+    this.ticketService.create(payload).subscribe({
       next: (res) => alert(`Ticket creado (id: ${res.id})`),
       error: (e) => alert('Error creando ticket: ' + (e?.message ?? e))
     });
   }
+
+trackById = (_: number, e: { id: string }) => e.id;
+
 }

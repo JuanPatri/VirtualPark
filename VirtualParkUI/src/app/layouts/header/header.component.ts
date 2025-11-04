@@ -43,6 +43,14 @@ export class HeaderComponent {
         { label: 'Create', path: '/rewards/create', roles: ['Administrator'] }
     ];
 
+  incidenceMenu = [
+    { label: 'Incidence', path: '/incidences', roles: ['Operator', 'Administrator'] },
+  ];
+
+  typeIncidenceMenu = [
+      { label: 'Types', path: '/typeincidences', roles: ['Operator', 'Administrator'] }
+  ]
+
     canView(roles: string[]): boolean {
         return this.authRole.hasAnyRole(roles);
     }

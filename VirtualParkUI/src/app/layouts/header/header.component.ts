@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Router, RouterModule} from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { DropdownItem, DropdownMenuComponent } from '../../components/dropdown-menu/dropdown-menu.component';
 import { SessionService } from '../../../backend/services/session/session.service';
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
 import { AuthRoleService } from '../../auth-role/auth-role.service';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 type RoleGuardedMenuItem = DropdownItem & { roles: string[] };
 
@@ -15,12 +17,24 @@ type RoleGuardedMenuItem = DropdownItem & { roles: string[] };
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
+    private readonly hiddenRoutes = new Set<string>(['', '/', '/user/login', '/user/register']);
+    private subscription: Subscription | null = null;
+    isVisible = true;
+    
     constructor(
         private sessionService: SessionService,
         private router: Router,
         private authRole: AuthRoleService
-    ) {}
+    ) {
+        this.isVisible = !this.shouldHide(this.router.url);
+
+        this.subscription = this.router.events
+            .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+            .subscribe(event => {
+                this.isVisible = !this.shouldHide(event.urlAfterRedirects);
+            });
+    }
     
     attractionsMenu: RoleGuardedMenuItem[] = [
         { label: 'List', path: '/attraction', roles: ['Administrator', 'Operator', 'Visitor'] },
@@ -43,8 +57,16 @@ export class HeaderComponent {
         { label: 'Create', path: '/rewards/create', roles: ['Administrator'] }
     ];
 
+    clockMenu: RoleGuardedMenuItem[] = [
+        { label: 'Clock', path: '/cloack', roles: ['Administrator'] }
+    ];
+
     canView(roles: string[]): boolean {
         return this.authRole.hasAnyRole(roles);
+    }
+
+    ngOnDestroy(): void {
+        this.subscription?.unsubscribe();
     }
 
     getVisibleMenu(menu: RoleGuardedMenuItem[]): DropdownItem[] {
@@ -61,6 +83,12 @@ export class HeaderComponent {
         }
         
         this.router.navigate(['/user/login']);
+    }
+
+    private shouldHide(url: string): boolean {
+        if (!url) return true;
+        const cleaned = url.split('?')[0].split('#')[0];
+        return this.hiddenRoutes.has(cleaned);
     }
 
 }

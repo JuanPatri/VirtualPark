@@ -1,4 +1,4 @@
-<header class="header">
+<header class="header" *ngIf="isVisible">
     <div class="brand">
         <a class="brand__link">
             <img 
@@ -39,6 +39,14 @@
                 label="Rewards" 
                 [items]="rewardMenuItems"
                 *ngIf="rewardMenuItems.length"
+            ></app-dropdown-menu>
+        </ng-container>
+
+        <ng-container *ngIf="getVisibleMenu(clockMenu) as clockMenuItems">
+            <app-dropdown-menu 
+                label="Clock" 
+                [items]="clockMenuItems"
+                *ngIf="clockMenuItems.length"
             ></app-dropdown-menu>
         </ng-container>
     </nav>

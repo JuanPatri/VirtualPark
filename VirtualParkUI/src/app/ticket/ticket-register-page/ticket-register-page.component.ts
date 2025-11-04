@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
 import { TicketService } from '../../../backend/services/ticket/ticket.service';
@@ -19,6 +19,7 @@ export class TicketRegisterPageComponent {
   private fb = inject(FormBuilder);
   private ticketService = inject(TicketService);
   private eventService = inject(EventService);
+  private router = inject(Router);
 
   events$: Observable<EventOption[]> = this.eventService.getAll().pipe(
     map(events =>
@@ -30,35 +31,44 @@ export class TicketRegisterPageComponent {
   );
 
   form = this.fb.group({
-    visitorId: ['', [Validators.required, Validators.maxLength(64)]],
-    type: ['', [Validators.required]],
     date: ['', [Validators.required]],
     eventId: ['']
   });
 
   get f() { return this.form.controls; }
 
+  trackById = (_: number, e: { id: string }) => e.id;
+
   submit() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    const v = this.form.value as { visitorId: string; type: string; date: string; eventId?: string };
+
+    const visitorId = localStorage.getItem('visitorId')!;
+
+    if (!visitorId) { console.warn('visitorId no encontrado en localStorage'); return; }
+
+    const v = this.form.value as { date: string; eventId?: string };
 
     const date = /^\d{4}-\d{2}-\d{2}$/.test(v.date)
       ? v.date
       : new Date(v.date).toISOString().slice(0, 10);
 
+    const isEvent = !!(v.eventId && v.eventId.trim().length);
+    const Type = isEvent ? 'Event' : 'General';
+
     const payload = {
-      visitorId: v.visitorId.trim(),
-      Type: v.type,
+      visitorId,
+      Type,
       Date: date,
       eventId: v.eventId && v.eventId.trim().length ? v.eventId.trim() : null
     };
 
     this.ticketService.create(payload).subscribe({
-      next: (res) => alert(`Ticket creado (id: ${res.id})`),
+      next: (res) => {
+        alert(`Ticket creado`);
+        this.router.navigate(['/ticket']);
+      },
       error: (e) => alert('Error creando ticket: ' + (e?.message ?? e))
     });
   }
-
-trackById = (_: number, e: { id: string }) => e.id;
 
 }

@@ -6,22 +6,6 @@
 
         <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
             <div class="grid">
-                <div class="field">
-                    <label for="visitorId">Visitor ID</label>
-                    <input id="visitorId" type="text" formControlName="visitorId" required />
-                    <small class="error" *ngIf="f.visitorId.touched && f.visitorId.invalid">Visitor ID es
-                        requerido.</small>
-                </div>
-
-                <div class="field">
-                    <label for="type">Type</label>
-                    <select id="type" formControlName="type" required>
-                        <option value="" disabled>Select a type</option>
-                        <option value="General">General</option>
-                        <option value="Event">Event</option>
-                    </select>
-                    <small class="error" *ngIf="f.type.touched && f.type.invalid">Type es requerido.</small>
-                </div>
 
                 <div class="field">
                     <label for="date">Date</label>
@@ -33,7 +17,7 @@
                     <label for="eventId">Event (opcional)</label>
                     <select id="eventId" formControlName="eventId">
                         <option value="">— Sin evento —</option>
-                        <option *ngFor="let e of (events$ | async); trackBy: trackById" [value]="e.id">
+                        <option *ngFor="let e of (events$ | async) ?? []; trackBy: trackById" [value]="e.id">
                             {{ e.label }}
                         </option>
                     </select>

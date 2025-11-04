@@ -1,3 +1,8 @@
+:root {
+    --color-accent: #f6f9ff;
+    --color-primary: #274690;
+}
+
 .register-page {
     min-height: 100vh;
     display: flex;
@@ -9,6 +14,11 @@
 .register-container {
     width: 100%;
     max-width: 860px;
+    background: var(--color-accent);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+    padding: 1.5rem;
 }
 
 .form-header {
@@ -22,6 +32,8 @@
     letter-spacing: 0.06em;
     font-size: 2rem;
     margin: 0.25rem 0 0.5rem;
+    color: var(--color-primary);
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .form {

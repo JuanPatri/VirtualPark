@@ -50,7 +50,7 @@ export class TypeIncidenceListComponent implements OnInit {
     if (confirm('Are you sure you want to delete this type?')) {
       this.service.delete(id).subscribe({
         next: () => {
-          this.messageService.show('Type deleted.', 'success');
+          this.messageService.show('Type deleted successfully.', 'success');
           this.load();
         },
         error: () => this.messageService.show('Error deleting type.', 'error')

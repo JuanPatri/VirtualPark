@@ -1,3 +1,3 @@
 export interface CreateTypeIncidenceRequest {
-  type: string;
+  Type: string;
 }

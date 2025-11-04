@@ -16,7 +16,7 @@ import { MessageService } from '../../components/messages/service/message.servic
   styleUrls: ['./type-incidence-form-page.component.css']
 })
 export class TypeIncidenceFormComponent {
-  form: CreateTypeIncidenceRequest = { type: '' };
+  form: CreateTypeIncidenceRequest = { Type: '' };
 
   constructor(
     private readonly service: TypeIncidenceService,
@@ -25,7 +25,7 @@ export class TypeIncidenceFormComponent {
   ) {}
 
   save() {
-    if (!this.form.type.trim()) {
+    if (!this.form.Type.trim()) {
       this.messageService.show('Type name is required.', 'error');
       return;
     }

@@ -34,6 +34,23 @@
             ></app-dropdown-menu>
         </ng-container>
         
+        <app-dropdown-menu 
+            label="Rewards" 
+            [items]="rewardMenu"
+            *ngIf= "canView(['Administrator'])"
+        ></app-dropdown-menu>
+
+        <app-dropdown-menu 
+            label="Incidences" 
+            [items]="incidenceMenu"
+            *ngIf= "canView(['Operator', 'Administrator'])"
+        ></app-dropdown-menu>
+
+        <app-dropdown-menu 
+            label="Type Incidences" 
+            [items]="typeIncidenceMenu"
+            *ngIf= "canView(['Operator', 'Administrator'])"
+        ></app-dropdown-menu>
         <ng-container *ngIf="getVisibleMenu(rewardMenu) as rewardMenuItems">
             <app-dropdown-menu 
                 label="Rewards" 

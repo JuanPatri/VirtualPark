@@ -1,0 +1,22 @@
+<div class="incidence-container">
+  <h1>Incidences</h1>
+
+  <app-message></app-message>
+
+  <div class="actions">
+    <app-buttons text="New Incidence" color="primary" (clicked)="goToCreate()"></app-buttons>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading incidences...</div>
+
+  <app-generic-table
+    *ngIf="!loading && incidences.length > 0"
+    [columns]="columns"
+    [data]="incidences"
+    emptyMessage="No incidences found.">
+  </app-generic-table>
+
+  <div *ngIf="!loading && incidences.length === 0" class="empty">
+    No incidences found.
+  </div>
+</div>

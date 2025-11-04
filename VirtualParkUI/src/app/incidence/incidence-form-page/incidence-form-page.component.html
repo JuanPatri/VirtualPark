@@ -5,13 +5,12 @@
 
   <form (ngSubmit)="save()" #incidenceForm="ngForm">
     <div class="form-field">
-      <label>Type ID</label>
-      <input
-        type="text"
-        [(ngModel)]="form.typeId"
-        name="typeId"
-        placeholder="TypeIncidence ID"
-        required />
+      <label>Type of Incidence</label>
+      <select [(ngModel)]="form.typeId" name="typeId" required>
+        <option *ngFor="let t of typeList" [value]="t.id">{{ t.type }}</option>
+      </select>
+
+      <a routerLink="/typeincidences/new" class="create-link">+ Create new type</a>
     </div>
 
     <div class="form-field">

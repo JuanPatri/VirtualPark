@@ -8,6 +8,8 @@ import { ButtonsComponent } from '../../components/buttons/buttons.component';
 import { MessageComponent } from '../../components/messages/message.component';
 import { MessageService } from '../../components/messages/service/message.service';
 import { AuthRoleService } from '../../auth-role/auth-role.service';
+import { TypeIncidenceService } from '../../../backend/services/type-incidence/type-incidence.service';
+import { TypeIncidenceModel } from '../../../backend/services/type-incidence/models/TypeIncidenceModel';
 
 @Component({
   selector: 'app-incidence-form',
@@ -25,6 +27,8 @@ export class IncidenceFormComponent implements OnInit {
     attractionId: '',
     active: 'true'
   };
+ 
+  typeList: TypeIncidenceModel[] = [];
 
   isOperator = false;
 
@@ -32,11 +36,20 @@ export class IncidenceFormComponent implements OnInit {
     private readonly incidenceService: IncidenceService,
     private readonly messageService: MessageService,
     private readonly authRoleService: AuthRoleService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly typeService: TypeIncidenceService, 
   ) {}
 
   ngOnInit() {
     this.isOperator = this.authRoleService.hasAnyRole(['Operator']);
+    this.loadTypes();
+  }
+
+    loadTypes() {
+    this.typeService.getAll().subscribe({
+      next: (res) => this.typeList = res,
+      error: () => this.messageService.show('Error loading types.', 'error')
+    });
   }
 
   save() {

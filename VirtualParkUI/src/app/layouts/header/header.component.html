@@ -27,7 +27,13 @@
         <app-dropdown-menu 
             label="Incidences" 
             [items]="incidenceMenu"
-            *ngIf= "canView(['Operator'])"
+            *ngIf= "canView(['Operator', 'Administrator'])"
+        ></app-dropdown-menu>
+
+        <app-dropdown-menu 
+            label="Type Incidences" 
+            [items]="typeIncidenceMenu"
+            *ngIf= "canView(['Operator', 'Administrator'])"
         ></app-dropdown-menu>
     </nav>
 

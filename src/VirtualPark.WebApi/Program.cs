@@ -32,7 +32,7 @@ builder.Services.AddCors(options =>
             else
             {
                 policy.WithOrigins(
-                        "https://tu-dominio-produccion.com")
+                        "https://prod.com")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();

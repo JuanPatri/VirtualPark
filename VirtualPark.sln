@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualPark.EntityFramework
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualPark.Reflection", "src\VirtualPark.Reflection\VirtualPark.Reflection.csproj", "{9899AC87-5643-47CD-B953-A95AF239D44E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualPark.Reflection.Test", "tests\VirtualPark.Reflection.Test\VirtualPark.Reflection.Test.csproj", "{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,18 @@ Global
 		{9899AC87-5643-47CD-B953-A95AF239D44E}.Release|x64.Build.0 = Release|Any CPU
 		{9899AC87-5643-47CD-B953-A95AF239D44E}.Release|x86.ActiveCfg = Release|Any CPU
 		{9899AC87-5643-47CD-B953-A95AF239D44E}.Release|x86.Build.0 = Release|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Debug|x64.Build.0 = Debug|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Debug|x86.Build.0 = Debug|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Release|x64.ActiveCfg = Release|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Release|x64.Build.0 = Release|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Release|x86.ActiveCfg = Release|Any CPU
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -187,5 +201,6 @@ Global
 		{B392B5DA-C6C3-48BD-93CB-4E68F5658885} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{FD8A7936-619A-4080-9479-50E5FC51E75B} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{9899AC87-5643-47CD-B953-A95AF239D44E} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{0D21D803-73CA-4DE7-9A25-6493A6F9B8FA} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal

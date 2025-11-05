@@ -173,20 +173,46 @@ public sealed class ImplementationStrategiesTest
     }
 
     [TestMethod]
-    public void AttractionPoints_MixedTypes()
+    public void AttractionPoints_ShouldBe110_WhenMixedTypes()
     {
-        var strategy = new AttractionPointsStrategy();
+        var visitorId = Guid.NewGuid();
+        var token = Guid.NewGuid();
+
+        var visitorProfile = new VisitorProfile { Id = visitorId };
+
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            VisitorProfileId = visitorId
+        };
+
         var visit = new VisitRegistration
         {
+            Visitor = visitorProfile,
+            IsActive = true,
             Attractions =
             [
-                new() { Type = AttractionType.RollerCoaster },
-                new() { Type = AttractionType.Show },
-                new() { Type = AttractionType.Simulator },
-                new() { Type = (AttractionType)999 }
+                new Attraction { Type = AttractionType.RollerCoaster },
+                new Attraction { Type = AttractionType.Show },
+                new Attraction { Type = AttractionType.Simulator },
+                new Attraction { Type = (AttractionType)999 }
             ]
         };
-        strategy.CalculatePoints(visit.DailyScore).Should().Be(50 + 30 + 20 + 10);
+
+        _sessionServiceMock
+            .Setup(s => s.GetUserLogged(token))
+            .Returns(user);
+
+        _visitRegistrationRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns(visit);
+
+        var result = _attractionPointsStrategy.CalculatePoints(token);
+
+        result.Should().Be(110);
+
+        _sessionServiceMock.VerifyAll();
+        _visitRegistrationRepositoryMock.VerifyAll();
     }
     #endregion
 

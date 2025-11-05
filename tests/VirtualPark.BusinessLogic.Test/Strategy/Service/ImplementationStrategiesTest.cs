@@ -6,6 +6,7 @@ using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Sessions.Service;
 using VirtualPark.BusinessLogic.Strategy.Services;
 using VirtualPark.BusinessLogic.Tickets.Entity;
+using VirtualPark.BusinessLogic.Users.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 using VirtualPark.Repository;
@@ -35,9 +36,31 @@ public sealed class ImplementationStrategiesTest
     [TestMethod]
     public void AttractionPoints_ShouldBeZero_WhenNoAttractions()
     {
-        var strategy = new AttractionPointsStrategy();
-        var visit = new VisitRegistration { Attractions = [] };
-        strategy.CalculatePoints(visit.DailyScore).Should().Be(0);
+        Guid userId = Guid.NewGuid();
+        Guid visitorId = Guid.NewGuid();
+
+        var visitorProfile = new VisitorProfile
+        {
+            Id = visitorId
+        };
+
+        var visit = new VisitRegistration
+        {
+            Attractions = [],
+            Visitor = visitorProfile,
+        };
+
+        var user = new User
+        {
+            Id = userId,
+            VisitorProfile = visitorProfile
+        };
+         Guid token = Guid.NewGuid();
+
+         _sessionServiceMock.Setup(r => r.GetUserLogged(token).Returns(user));
+
+         _visitRegistrationRepositoryMock.Setup(r => r.Get( v => v.VisitorId == visitorId))
+        _attractionPointsStrategyMock.CalculatePoints(visit.DailyScore).Should().Be(0);
     }
 
     [TestMethod]

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualPark.DataAccess;
 
@@ -11,9 +12,11 @@ using VirtualPark.DataAccess;
 namespace VirtualPark.DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    partial class SqlContextModelSnapshot : ModelSnapshot
+    [Migration("20251105190450_AddUpdateIncidencePermissionToOperator")]
+    partial class AddUpdateIncidencePermissionToOperator
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -529,12 +532,6 @@ namespace VirtualPark.DataAccess.Migrations
                             Id = new Guid("56565656-1111-1111-1111-111111111114"),
                             Description = "Allows retrieving redemptions of a specific visitor",
                             Key = "GetRewardRedemptionsByVisitor-RewardRedemption"
-                        },
-                        new
-                        {
-                            Id = new Guid("88888888-1111-1111-1111-111111111114"),
-                            Description = "Allows update clockApp",
-                            Key = "UpdateClock-ClockApp"
                         });
                 });
 
@@ -889,11 +886,6 @@ namespace VirtualPark.DataAccess.Migrations
                         {
                             RoleId = new Guid("aaaa1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("55555555-1111-1111-1111-111111111115")
-                        },
-                        new
-                        {
-                            RoleId = new Guid("aaaa1111-1111-1111-1111-111111111111"),
-                            PermissionId = new Guid("88888888-1111-1111-1111-111111111114")
                         },
                         new
                         {

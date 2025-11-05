@@ -727,7 +727,7 @@ public class VisitRegistrationServiceTest
 
         var args = new RecordVisitScoreArgs(visitId.ToString(), "Canje", null);
 
-        Action act = () => _service.RecordVisitScore(args);
+        Action act = () => _service.RecordVisitScore(args, Guid.NewGuid());
 
         act.Should().Throw<InvalidOperationException>()
             .WithMessage("Points es requerido para origen 'Canje'.");

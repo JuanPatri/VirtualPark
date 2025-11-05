@@ -3,5 +3,5 @@ namespace VirtualPark.ReflectionAbstractions;
 public interface IStrategy
 {
     string Key { get; }
-    int CalculatePoints();
+    int CalculatePoints(Guid token);
 }

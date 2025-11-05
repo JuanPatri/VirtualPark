@@ -1,14 +1,20 @@
 using VirtualPark.BusinessLogic.Attractions;
-using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
+using VirtualPark.BusinessLogic.Attractions.Entity;
+using VirtualPark.BusinessLogic.Sessions.Entity;
+using VirtualPark.BusinessLogic.Sessions.Service;
+using VirtualPark.ReflectionAbstractions;
+using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Strategy.Services;
 
-public class AttractionPointsStrategy : IStrategy
+public class AttractionPointsStrategy(ISessionService sessionService) : IStrategy
 {
+    private readonly ISessionService _sessionService = sessionService;
     public string Key { get; } = "Attraction";
 
-    public int CalculatePoints(VisitRegistration visit)
+    public int CalculatePoints()
     {
+        var visitorProfile = _sessionService.GetUserLogged();
         if(visit.Attractions.Count == 0)
         {
             return 0;

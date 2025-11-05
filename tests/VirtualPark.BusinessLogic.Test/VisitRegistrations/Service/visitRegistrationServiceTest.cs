@@ -775,7 +775,7 @@ public class VisitRegistrationServiceTest
 
         _visitorRepoWriteMock.VerifyNoOtherCalls();
 
-        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "Canje", "0"));
+        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "Canje", "0"), Guid.NewGuid());
 
         visit.DailyScore.Should().Be(75);
         visitor.Score.Should().Be(75);

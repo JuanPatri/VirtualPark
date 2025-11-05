@@ -674,7 +674,7 @@ public class VisitRegistrationServiceTest
                 v.ScoreEvents[1].VisitRegistrationId == visitId)))
             .Verifiable();
 
-        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "Canje", "-50"));
+        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "Canje", "-50"), Guid.NewGuid());
 
         visit.DailyScore.Should().Be(150);
         visitor.Score.Should().Be(150);

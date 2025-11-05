@@ -1,16 +1,14 @@
+using System.Reflection;
+
 namespace VirtualPark.Reflection;
 
-public sealed class LoadAssembly<ITInterface>(string path) : ILoadAssembly<ITInterface>
-    where ITInterface : class
+public sealed class LoadAssembly<TInterface>(string path) : ILoadAssembly<TInterface>
+    where TInterface : class
 {
-    private readonly DirectoryInfo directory = new(path);
-    private List<Type> implementations = [];
-    public List<string> GetImplementations()
-    {
-        throw new NotImplementedException();
-    }
-
-    public ITInterface GetImplementation(string assemblyName, params object[] args)
+    private readonly DirectoryInfo _directory = new(path);
+    private List<Type> _implementations = [];
+    
+    public TInterface GetImplementation(string assemblyName, params object[] args)
     {
         throw new NotImplementedException();
     }

@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+
 namespace VirtualPark.Reflection.Test;
 
 [TestClass]
@@ -7,12 +8,6 @@ namespace VirtualPark.Reflection.Test;
 [TestCategory("LoadAssembly")]
 public sealed class LoadAssemblyTest
 {
-    #region GetImplementations
+private string _baseDir = null!;
 
-    #region Failure
-    [TestMethod]
-    public void 
-
-    #endregion
-    #endregion
 }

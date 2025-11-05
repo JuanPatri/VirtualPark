@@ -1,5 +1,5 @@
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
-using VirtualPark.Reflection;
+using VirtualPark.ReflectionAbstractions;
 
 namespace VirtualPark.BusinessLogic.Strategy.Services;
 

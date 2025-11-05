@@ -23,7 +23,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\VirtualPark.Reflection\VirtualPark.Reflection.csproj" />
+        <ProjectReference Include="..\VirtualPark.ReflectionAbstractions\VirtualPark.ReflectionAbstractions.csproj" />
+        <ProjectReference Include="..\..\src\VirtualPark.Reflection\VirtualPark.Reflection.csproj" />
     </ItemGroup>
 
 </Project>

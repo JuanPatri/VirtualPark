@@ -1,7 +1,7 @@
 using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Strategy.Services;
-using VirtualPark.Reflection;
+using VirtualPark.ReflectionAbstractions;
 
 namespace VirtualPark.BusinessLogic.Test.Strategy.Service;
 

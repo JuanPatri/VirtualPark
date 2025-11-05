@@ -12,7 +12,7 @@ using VirtualPark.BusinessLogic.VisitRegistrations.Models;
 using VirtualPark.BusinessLogic.VisitRegistrations.Service;
 using VirtualPark.BusinessLogic.VisitsScore.Entity;
 using VirtualPark.BusinessLogic.VisitsScore.Models;
-using VirtualPark.Reflection;
+using VirtualPark.ReflectionAbstractions;
 using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Test.VisitRegistrations.Service;

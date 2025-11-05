@@ -1,6 +1,6 @@
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 
-namespace VirtualPark.Reflection;
+namespace VirtualPark.ReflectionAbstractions;
 
 public interface IStrategy
 {

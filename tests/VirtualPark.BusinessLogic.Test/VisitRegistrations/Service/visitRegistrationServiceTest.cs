@@ -818,7 +818,7 @@ public class VisitRegistrationServiceTest
             .Returns(_strategyMock.Object);
 
         _strategyMock
-            .Setup(s => s.CalculatePoints(It.Is<VisitRegistration>(v => ReferenceEquals(v, visit))))
+            .Setup(s => s.CalculatePoints(Guid.NewGuid()))
             .Returns((VisitRegistration v) => v.ScoreEvents.Count * 10);
 
         _visitorRepoWriteMock
@@ -835,7 +835,7 @@ public class VisitRegistrationServiceTest
                 v.ScoreEvents[0].VisitRegistrationId == visitId)))
             .Verifiable();
 
-        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "  Atracción  ", null));
+        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "  Atracción  ", null), Guid.NewGuid());
 
         visit.DailyScore.Should().Be(10);
         visitor.Score.Should().Be(10);

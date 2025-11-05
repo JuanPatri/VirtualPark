@@ -556,7 +556,7 @@ public class VisitRegistrationServiceTest
             .Returns((VisitRegistration?)null);
 
         Action act = () => _service.RecordVisitScore(
-            new RecordVisitScoreArgs(visitId.ToString(), "Atracción", null));
+            new RecordVisitScoreArgs(visitId.ToString(), "Atracción", null), Guid.NewGuid());
 
         act.Should().Throw<InvalidOperationException>()
             .WithMessage($"VisitRegistration {visitId} not found.");

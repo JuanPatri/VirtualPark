@@ -1,6 +1,5 @@
 using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
-using VirtualPark.ReflectionAbstractions;
 
 namespace VirtualPark.BusinessLogic.Strategy.Services;
 
@@ -8,7 +7,7 @@ public class AttractionPointsStrategy : IStrategy
 {
     public string Key { get; } = "Attraction";
 
-    public int CalculatePoints(int visit)
+    public int CalculatePoints(VisitRegistration visit)
     {
         if(visit.Attractions.Count == 0)
         {

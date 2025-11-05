@@ -459,7 +459,7 @@ public sealed class ImplementationStrategiesTest
             IsActive = true,
             DailyScore = 1,
             Ticket = new Ticket { Event = new Event() },
-            Attractions = []
+            Attractions = [new Attraction { Type = AttractionType.RollerCoaster }]
         };
 
         _sessionServiceMock

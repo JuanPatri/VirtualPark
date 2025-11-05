@@ -14,7 +14,7 @@ import { TypeIncidenceModel } from '../../../backend/services/type-incidence/mod
 @Component({
   selector: 'app-incidence-list-page',
   standalone: true,
-  imports: [CommonModule, TableComponent, ButtonsComponent, MessageComponent],
+  imports: [CommonModule, ButtonsComponent, MessageComponent],
   templateUrl: './incidence-list-page.component.html',
   styleUrls: ['./incidence-list-page.component.css']
 })
@@ -61,7 +61,7 @@ export class IncidencePageListComponent implements OnInit {
     next: res => {
       this.incidences = res.map(i => ({
         ...i,
-        typeId: this.typeMap[i.typeId] || '—'
+          typeName: this.typeMap[i.typeId] || '—' 
       }));
       this.loading = false;
     },
@@ -93,22 +93,30 @@ export class IncidencePageListComponent implements OnInit {
   }
 
   toggleActive(incidence: any) {
-  const updatedStatus = incidence.active === 'True' ? 'False' : 'True';
+    const updatedStatus = incidence.active === 'True' ? 'False' : 'True';
 
-  const updated = {
-    ...incidence,
-    active: updatedStatus
-  };
+    const formatDate = (dateStr: string) => {
+      const date = new Date(dateStr);
+      return date.toISOString().split('.')[0];
+    };
 
-  this.incidenceService.update(incidence.id, updated).subscribe({
-    next: () => {
-      this.messageService.show(
-        `Incidence ${updatedStatus === 'True' ? 'activated' : 'deactivated'} successfully.`,
-        'success'
-      );
-      this.loadIncidences();
-    },
-    error: () => this.messageService.show('Error updating incidence.', 'error')
-  });
-}
+    const updated = {
+      ...incidence,
+      start: formatDate(incidence.start),
+      end: formatDate(incidence.end),
+      active: updatedStatus
+    };
+
+    this.incidenceService.update(incidence.id, updated).subscribe({
+      next: () => {
+        this.messageService.show(
+          `Incidence ${updatedStatus === 'True' ? 'activated' : 'deactivated'} successfully.`,
+          'success'
+        );
+        this.loadIncidences();
+      },
+      error: () =>
+        this.messageService.show('Error updating incidence.', 'error')
+    });
+  }
 }

@@ -70,7 +70,17 @@ export class IncidenceFormComponent implements OnInit {
       return;
     }
 
-    this.incidenceService.create(this.form).subscribe({
+    const formatDate = (date: string) => {
+      return date.length === 16 ? `${date}:00` : date;
+    };
+
+    const formattedForm = {
+      ...this.form,
+      start: formatDate(this.form.start),
+      end: formatDate(this.form.end)
+    };
+
+    this.incidenceService.create(formattedForm).subscribe({
       next: () => {
         this.messageService.show('Incidence created successfully.', 'success');
         this.router.navigate(['/incidences']);
@@ -78,6 +88,7 @@ export class IncidenceFormComponent implements OnInit {
       error: () => this.messageService.show('Error creating incidence.', 'error')
     });
   }
+
 
   cancel() {
     this.router.navigate(['/incidences']);

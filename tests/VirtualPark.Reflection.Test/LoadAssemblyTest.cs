@@ -1,4 +1,6 @@
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using VirtualPark.ReflectionAbstractions;
 
 namespace VirtualPark.Reflection.Test;
 
@@ -6,7 +8,4 @@ namespace VirtualPark.Reflection.Test;
 [TestCategory("Reflection")]
 [TestCategory("LoadAssembly")]
 public sealed class LoadAssemblyTest
-{
-private string _baseDir = null!;
-
-}
+{}

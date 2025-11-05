@@ -1,5 +1,3 @@
-using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
-
 namespace VirtualPark.ReflectionAbstractions;
 
 public interface IStrategy

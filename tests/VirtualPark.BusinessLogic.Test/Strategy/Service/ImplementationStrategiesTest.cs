@@ -18,7 +18,7 @@ public sealed class ImplementationStrategiesTest
     {
         var strategy = new AttractionPointsStrategy();
         var visit = new VisitRegistration { Attractions = [] };
-        strategy.CalculatePoints(visit).Should().Be(0);
+        strategy.CalculatePoints(visit.DailyScore).Should().Be(0);
     }
 
     [TestMethod]
@@ -26,7 +26,7 @@ public sealed class ImplementationStrategiesTest
     {
         var strategy = new AttractionPointsStrategy();
         var visit = new VisitRegistration { Attractions = [new() { Type = AttractionType.RollerCoaster }] };
-        strategy.CalculatePoints(visit).Should().Be(50);
+        strategy.CalculatePoints(visit.DailyScore).Should().Be(50);
     }
 
     [TestMethod]
@@ -34,7 +34,7 @@ public sealed class ImplementationStrategiesTest
     {
         var strategy = new AttractionPointsStrategy();
         var visit = new VisitRegistration { Attractions = [new() { Type = AttractionType.Show }] };
-        strategy.CalculatePoints(visit).Should().Be(30);
+        strategy.CalculatePoints(visit.DailyScore).Should().Be(30);
     }
 
     [TestMethod]
@@ -42,7 +42,7 @@ public sealed class ImplementationStrategiesTest
     {
         var strategy = new AttractionPointsStrategy();
         var visit = new VisitRegistration { Attractions = [new() { Type = AttractionType.Simulator }] };
-        strategy.CalculatePoints(visit).Should().Be(20);
+        strategy.CalculatePoints(visit.DailyScore).Should().Be(20);
     }
 
     [TestMethod]
@@ -50,7 +50,7 @@ public sealed class ImplementationStrategiesTest
     {
         var strategy = new AttractionPointsStrategy();
         var visit = new VisitRegistration { Attractions = [new() { Type = (AttractionType)999 }] };
-        strategy.CalculatePoints(visit).Should().Be(10);
+        strategy.CalculatePoints(visit.DailyScore).Should().Be(10);
     }
 
     [TestMethod]
@@ -67,7 +67,7 @@ public sealed class ImplementationStrategiesTest
                 new() { Type = (AttractionType)999 }
             ]
         };
-        strategy.CalculatePoints(visit).Should().Be(50 + 30 + 20 + 10);
+        strategy.CalculatePoints(visit.DailyScore).Should().Be(50 + 30 + 20 + 10);
     }
     #endregion
 

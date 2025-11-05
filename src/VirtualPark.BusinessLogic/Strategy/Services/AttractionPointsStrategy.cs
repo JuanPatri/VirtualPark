@@ -8,7 +8,7 @@ public class AttractionPointsStrategy : IStrategy
 {
     public string Key { get; } = "Attraction";
 
-    public int CalculatePoints(VisitRegistration visit)
+    public int CalculatePoints(int visit)
     {
         if(visit.Attractions.Count == 0)
         {

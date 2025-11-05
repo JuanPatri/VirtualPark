@@ -601,7 +601,7 @@ public class VisitRegistrationServiceTest
 
         _strategyMock
             .Setup(s => s.CalculatePoints(It.Is<VisitRegistration>(v => ReferenceEquals(v, visit))))
-            .Returns((VisitRegistration v) => v.ScoreEvents.Count * 10); // 1 evento => 10
+            .Returns((VisitRegistration v) => v.ScoreEvents.Count * 10);
 
         _visitorRepoWriteMock
             .Setup(w => w.Update(It.Is<VisitorProfile>(vp => vp.Score == 10)))

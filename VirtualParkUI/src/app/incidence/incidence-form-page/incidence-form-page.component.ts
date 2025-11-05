@@ -10,6 +10,8 @@ import { MessageService } from '../../components/messages/service/message.servic
 import { AuthRoleService } from '../../auth-role/auth-role.service';
 import { TypeIncidenceService } from '../../../backend/services/type-incidence/type-incidence.service';
 import { TypeIncidenceModel } from '../../../backend/services/type-incidence/models/TypeIncidenceModel';
+import { AttractionService } from '../../../backend/services/attraction/attraction.service'; 
+import { AttractionModel } from '../../../backend/services/attraction/models/AttractionModel';
 
 @Component({
   selector: 'app-incidence-form',
@@ -29,6 +31,7 @@ export class IncidenceFormComponent implements OnInit {
   };
  
   typeList: TypeIncidenceModel[] = [];
+  attractionList: AttractionModel[] = [];
 
   isOperator = false;
 
@@ -38,17 +41,26 @@ export class IncidenceFormComponent implements OnInit {
     private readonly authRoleService: AuthRoleService,
     private readonly router: Router,
     private readonly typeService: TypeIncidenceService, 
+    private readonly attractionService: AttractionService
   ) {}
 
   ngOnInit() {
     this.isOperator = this.authRoleService.hasAnyRole(['Operator']);
     this.loadTypes();
+    this.loadAttractions();
   }
 
     loadTypes() {
     this.typeService.getAll().subscribe({
       next: (res) => this.typeList = res,
       error: () => this.messageService.show('Error loading types.', 'error')
+    });
+  }
+
+    loadAttractions() {
+    this.attractionService.getAll().subscribe({
+      next: (res) => (this.attractionList = res),
+      error: () => this.messageService.show('Error loading attractions.', 'error')
     });
   }
 

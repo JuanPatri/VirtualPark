@@ -7,6 +7,9 @@ import { TableComponent, TableColumn } from '../../components/table/generic-tabl
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
 import { MessageComponent } from '../../components/messages/message.component';
 import { MessageService } from '../../components/messages/service/message.service';
+import { TypeIncidenceService } from '../../../backend/services/type-incidence/type-incidence.service';
+import { TypeIncidenceModel } from '../../../backend/services/type-incidence/models/TypeIncidenceModel';
+
 
 @Component({
   selector: 'app-incidence-list-page',
@@ -27,23 +30,40 @@ export class IncidencePageListComponent implements OnInit {
     { key: 'active', label: 'Active', align: 'center' }
   ];
 
+  typeList: TypeIncidenceModel[] = [];
+  typeMap: Record<string, string> = {};
+
   constructor(
     private readonly incidenceService: IncidenceService,
     private readonly messageService: MessageService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly typeService: TypeIncidenceService,
   ) {}
 
   ngOnInit() {
-    this.loadIncidences();
+    this.loadTypes();
   }
 
+  loadTypes() {
+  this.typeService.getAll().subscribe({
+    next: (types) => {
+      this.typeList = types;
+      this.typeMap = Object.fromEntries(types.map(t => [t.id, t.type]));
+      this.loadIncidences();
+    },
+    error: () => this.messageService.show('Error loading types.', 'error')
+  });
+}
   loadIncidences() {
     this.loading = true;
     this.incidenceService.getAll().subscribe({
-      next: res => {
-        this.incidences = res;
-        this.loading = false;
-      },
+    next: res => {
+      this.incidences = res.map(i => ({
+        ...i,
+        typeId: this.typeMap[i.typeId] || '—'
+      }));
+      this.loading = false;
+    },
       error: () => {
         this.messageService.show('Error loading incidences.', "error");
         this.loading = false;

@@ -220,9 +220,38 @@ public sealed class ImplementationStrategiesTest
     [TestMethod]
     public void ComboPoints_ShouldBeZero_WhenNoAttractions()
     {
-        var strategy = new ComboPointsStrategy();
-        var visit = new VisitRegistration { Attractions = [] };
-        strategy.CalculatePoints(visit).Should().Be(0);
+        var visitorId = Guid.NewGuid();
+        var token = Guid.NewGuid();
+
+        var visitorProfile = new VisitorProfile { Id = visitorId };
+
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            VisitorProfileId = visitorId
+        };
+
+        var visit = new VisitRegistration
+        {
+            Visitor = visitorProfile,
+            IsActive = true,
+            Attractions = []
+        };
+
+        _sessionServiceMock
+            .Setup(s => s.GetUserLogged(token))
+            .Returns(user);
+
+        _visitRegistrationRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns(visit);
+
+        var result = _comboPointsStrategy.CalculatePoints(token);
+
+        result.Should().Be(0);
+
+        _sessionServiceMock.VerifyAll();
+        _visitRegistrationRepositoryMock.VerifyAll();
     }
 
     [DataTestMethod]

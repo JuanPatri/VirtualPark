@@ -13,7 +13,7 @@ type RoleGuardedMenuItem = DropdownItem & { roles: string[] };
 @Component({
     selector: 'app-header',
     standalone: true,
-    imports: [CommonModule, RouterModule, DropdownMenuComponent,  ButtonsComponent],
+    imports: [CommonModule, RouterModule, DropdownMenuComponent, ButtonsComponent],
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css']
 })
@@ -21,7 +21,7 @@ export class HeaderComponent implements OnDestroy {
     private readonly hiddenRoutes = new Set<string>(['', '/', '/user/login', '/user/register']);
     private subscription: Subscription | null = null;
     isVisible = true;
-    
+
     constructor(
         private sessionService: SessionService,
         private router: Router,
@@ -35,7 +35,7 @@ export class HeaderComponent implements OnDestroy {
                 this.isVisible = !this.shouldHide(event.urlAfterRedirects);
             });
     }
-    
+
     attractionsMenu: RoleGuardedMenuItem[] = [
         { label: 'List', path: '/attraction', roles: ['Administrator', 'Operator', 'Visitor'] },
         { label: 'Create', path: '/attraction/register', roles: ['Administrator', 'Operator'] },
@@ -57,13 +57,17 @@ export class HeaderComponent implements OnDestroy {
         { label: 'Create', path: '/rewards/create', roles: ['Administrator'] }
     ];
 
-  incidenceMenu = [
-    { label: 'Incidence', path: '/incidences', roles: ['Operator', 'Administrator'] },
-  ];
+    incidenceMenu = [
+        { label: 'Incidence', path: '/incidences', roles: ['Operator', 'Administrator'] },
+    ];
 
-  typeIncidenceMenu = [
-      { label: 'Types', path: '/typeincidences', roles: ['Operator', 'Administrator'] }
-  ]
+    typeIncidenceMenu = [
+        { label: 'Types', path: '/typeincidences', roles: ['Operator', 'Administrator'] }
+    ];
+
+    homeMenu: RoleGuardedMenuItem[] = [
+        { label: 'Home', path: '/user/home', roles: ['Administrator', 'Operator', 'Visitor'] }
+    ];
 
     clockMenu: RoleGuardedMenuItem[] = [
         { label: 'Clock', path: '/clock', roles: ['Administrator'] }
@@ -89,7 +93,7 @@ export class HeaderComponent implements OnDestroy {
         if (token) {
             this.sessionService.logout(token);
         }
-        
+
         this.router.navigate(['/user/login']);
     }
 

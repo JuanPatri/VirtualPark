@@ -99,11 +99,40 @@ public sealed class ImplementationStrategiesTest
     }
 
     [TestMethod]
-    public void AttractionPoints_Show()
+    public void AttractionPoints_ShouldBe30_WhenOneShow()
     {
-        var strategy = new AttractionPointsStrategy();
-        var visit = new VisitRegistration { Attractions = [new() { Type = AttractionType.Show }] };
-        strategy.CalculatePoints(visit.DailyScore).Should().Be(30);
+        var visitorId = Guid.NewGuid();
+        var token = Guid.NewGuid();
+
+        var visitorProfile = new VisitorProfile { Id = visitorId };
+
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            VisitorProfileId = visitorId
+        };
+
+        var visit = new VisitRegistration
+        {
+            Visitor = visitorProfile,
+            IsActive = true,
+            Attractions = [new Attraction { Type = AttractionType.Show }]
+        };
+
+        _sessionServiceMock
+            .Setup(s => s.GetUserLogged(token))
+            .Returns(user);
+
+        _visitRegistrationRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns(visit);
+
+        var result = _attractionPointsStrategy.CalculatePoints(token);
+
+        result.Should().Be(30);
+
+        _sessionServiceMock.VerifyAll();
+        _visitRegistrationRepositoryMock.VerifyAll();
     }
 
     [TestMethod]

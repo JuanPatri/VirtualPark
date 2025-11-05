@@ -66,11 +66,36 @@ public sealed class ImplementationStrategiesTest
     }
 
     [TestMethod]
-    public void AttractionPoints_RollerCoaster()
+    public void AttractionPoints_ShouldBe50_WhenOneRollerCoaster()
     {
-        var strategy = new AttractionPointsStrategy();
-        var visit = new VisitRegistration { Attractions = [new() { Type = AttractionType.RollerCoaster }] };
-        strategy.CalculatePoints(visit.DailyScore).Should().Be(50);
+        var visitorId = Guid.NewGuid();
+        var token = Guid.NewGuid();
+
+        var visitorProfile = new VisitorProfile { Id = visitorId };
+
+        var user = new User { Id = Guid.NewGuid(), VisitorProfileId = visitorId };
+
+        var visit = new VisitRegistration
+        {
+            Visitor = visitorProfile,
+            IsActive = true,
+            Attractions = [new Attraction { Type = AttractionType.RollerCoaster }]
+        };
+
+        _sessionServiceMock
+            .Setup(s => s.GetUserLogged(token))
+            .Returns(user);
+
+        _visitRegistrationRepositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns(visit);
+
+        var result = _attractionPointsStrategy.CalculatePoints(token);
+
+        result.Should().Be(50);
+
+        _sessionServiceMock.VerifyAll();
+        _visitRegistrationRepositoryMock.VerifyAll();
     }
 
     [TestMethod]

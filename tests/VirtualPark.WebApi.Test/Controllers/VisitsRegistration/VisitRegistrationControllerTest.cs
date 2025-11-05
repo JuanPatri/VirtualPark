@@ -48,13 +48,14 @@ public class VisitRegistrationControllerTest
     {
         var visitId = Guid.NewGuid();
         var body = new VisitScoreRequest { VisitRegistrationId = visitId.ToString(), Origin = "Canje", Points = "-50" };
+        var token = Guid.NewGuid();
 
         _svc.Setup(s => s.RecordVisitScore(It.Is<RecordVisitScoreArgs>(a =>
             a.VisitRegistrationId == visitId &&
             a.Origin == "Canje" &&
-            a.Points == -50)));
+            a.Points == -50), token));
 
-        var result = _controller.RecordScoreEvent(body);
+        var result = _controller.RecordScoreEvent(body, token.ToString());
 
         result.Should().BeOfType<NoContentResult>();
         _svc.VerifyAll();

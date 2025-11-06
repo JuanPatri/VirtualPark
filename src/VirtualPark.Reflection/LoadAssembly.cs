@@ -31,9 +31,5 @@ public sealed class LoadAssembly<TInterface>(string path) : ILoadAssembly<TInter
 
         return _implementations.ConvertAll(t => t.FullName);
     }
-
-    public TInterface GetImplementation(string assemblyName, params object[] args)
-    {
-        throw new NotImplementedException();
-    }
+    
 }

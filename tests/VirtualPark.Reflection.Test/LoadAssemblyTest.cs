@@ -1,7 +1,11 @@
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using VirtualPark.BusinessLogic.Sessions.Service;
 using VirtualPark.BusinessLogic.Strategy.Services;
+using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 using VirtualPark.ReflectionAbstractions;
+using VirtualPark.Repository;
 
 namespace VirtualPark.Reflection.Test;
 
@@ -105,6 +109,10 @@ public sealed class LoadAssemblyTest
         act.Should().Throw<InvalidOperationException>()
             .WithMessage("No strategies found in assembly 'VirtualPark.Tests.Copy.dll'.");
     }
+
+    #endregion
+    #region GetImplementation
+
 
     #endregion
 }

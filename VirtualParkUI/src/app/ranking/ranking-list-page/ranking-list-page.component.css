@@ -1,10 +1,14 @@
 .ranking-container {
   background-color: #fffce8;
   min-height: 100vh;
-  padding: 2rem;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 6rem 2rem 2rem;
   animation: fadeIn 0.5s ease-in;
 }
+
 
 .ranking-form {
   display: flex;

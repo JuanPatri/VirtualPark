@@ -130,7 +130,7 @@ public sealed class RankingServiceTest
         var r2 = new Ranking { Date = new DateTime(2025, 9, 28), Period = Period.Weekly };
 
         _mockRankingRepository
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns([r1, r2]);
 
         var result = _rankingService.GetAll();
@@ -146,7 +146,7 @@ public sealed class RankingServiceTest
     public void GetAll_WhenRepositoryReturnsEmpty_ShouldReturnEmptyList()
     {
         _mockRankingRepository
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns([]);
 
         var result = _rankingService.GetAll();
@@ -318,7 +318,7 @@ public sealed class RankingServiceTest
         };
 
         _mockVisitRegistrationsReadOnlyRepository
-            .Setup(r => r.GetAll(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Setup(r => r.GetAll())
             .Returns(visits);
 
         _mockUserReadOnlyRepository
@@ -379,7 +379,7 @@ public sealed class RankingServiceTest
         };
 
         _mockVisitRegistrationsReadOnlyRepository
-            .Setup(r => r.GetAll(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Setup(r => r.GetAll())
             .Returns(visits);
 
         _mockUserReadOnlyRepository

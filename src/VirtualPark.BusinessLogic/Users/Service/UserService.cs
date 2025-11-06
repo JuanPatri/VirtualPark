@@ -52,14 +52,17 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
 
     public List<User> GetAll()
     {
-        var users = _userRepository.GetAll();
+        var users = _userRepository.GetAll(
+            predicate: null,
+            include: q => q
+                .Include(u => u.Roles)
+                .Include(u => u.VisitorProfile));
 
-        if(users == null)
+        if (users == null || users.Count == 0)
         {
             throw new InvalidOperationException("Dont have any users");
         }
 
-        UploadVisitorProfile(users);
         return users;
     }
 

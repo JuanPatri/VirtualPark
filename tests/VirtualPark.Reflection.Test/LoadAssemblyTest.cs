@@ -54,5 +54,31 @@ public sealed class LoadAssemblyTest
            .WithMessage($"No strategies found in assembly '{Path.GetFileName(destDll)}'.");
     }
 
+    [TestMethod]
+    public void GetImplementations_WhenDirectoryHasStrategiesDll_ShouldReturnFullNames()
+    {
+        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PluingsTestDllTest_WithStrategies");
+        if (Directory.Exists(path))
+        {
+            Directory.Delete(path, true);
+        }
+
+        Directory.CreateDirectory(path);
+
+        var sourceDll = typeof(AttractionPointsStrategy).Assembly.Location;
+        var destDll = Path.Combine(path, Path.GetFileName(sourceDll));
+        File.Copy(sourceDll, destDll, true);
+
+        var loader = new LoadAssembly<IStrategy>(path);
+
+        var result = loader.GetImplementations();
+
+        result.Should().NotBeEmpty();
+        result.Should().Contain(typeof(AttractionPointsStrategy).FullName!);
+        result.Should().Contain(typeof(ComboPointsStrategy).FullName!);
+        result.Should().Contain(typeof(EventPointsStrategy).FullName!);
+    }
+
+
     #endregion
 }

@@ -156,7 +156,26 @@ public sealed class LoadAssemblyTest
         instance.Key.Should().Be("Test");
     }
 
-    
+    [TestMethod]
+    public void GetImplementation_ShouldCreateInstance_ByFullName()
+    {
+        var sourceDll = typeof(TestStrategy).Assembly.Location;
+        var destDll = Path.Combine(_testPath, "TestStrategies.dll");
+        File.Copy(sourceDll, destDll, overwrite: true);
+
+        var loader = new LoadAssembly<IStrategy>(_testPath);
+        loader.GetImplementations();
+
+        var fullName = typeof(TestStrategy).FullName!;
+
+        var instance = loader.GetImplementation(fullName);
+
+        instance.Should().NotBeNull();
+        instance.GetType().FullName.Should().Be(fullName);
+        instance.Key.Should().Be("Test");
+        instance.CalculatePoints(Guid.NewGuid()).Should().Be(123);
+    }
+
 
     #endregion
 }

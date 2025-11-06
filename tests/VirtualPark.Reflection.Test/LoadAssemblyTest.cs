@@ -1,11 +1,8 @@
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using VirtualPark.BusinessLogic.Sessions.Service;
 using VirtualPark.BusinessLogic.Strategy.Services;
-using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
+using VirtualPark.Reflection.Test.PluginDoubles;
 using VirtualPark.ReflectionAbstractions;
-using VirtualPark.Repository;
 
 namespace VirtualPark.Reflection.Test;
 
@@ -14,20 +11,42 @@ namespace VirtualPark.Reflection.Test;
 [TestCategory("LoadAssembly")]
 public sealed class LoadAssemblyTest
 {
+    private string _testPath = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _testPath = Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            $"PluginsTest_{Guid.NewGuid():N}");
+
+        Directory.CreateDirectory(_testPath);
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        try
+        {
+            if (Directory.Exists(_testPath))
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                Directory.Delete(_testPath, true);
+            }
+        }
+        catch
+        {
+            // Ignorar errores de limpieza
+        }
+    }
+
     #region GetImplementations
 
     [TestMethod]
     public void GetImplementations_WhenDirectoryExistsButHasNoDll_ShouldReturnEmpty()
     {
-        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PluingsTestDllTest");
-        if (Directory.Exists(path))
-        {
-            Directory.Delete(path, true);
-        }
-
-        Directory.CreateDirectory(path);
-
-        var loader = new LoadAssembly<IStrategy>(path);
+        var loader = new LoadAssembly<IStrategy>(_testPath);
 
         var result = loader.GetImplementations();
 
@@ -37,43 +56,27 @@ public sealed class LoadAssemblyTest
     [TestMethod]
     public void GetImplementations_WhenDirectoryHasDllWithoutStrategies_ShouldThrowInvalidOperation()
     {
-        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PluingsTestDllTest_NoStrategies");
-        if (Directory.Exists(path))
-        {
-            Directory.Delete(path, true);
-        }
+        var systemDll = typeof(System.Linq.Enumerable).Assembly.Location;
+        var destDll = Path.Combine(_testPath, "System.Linq.Copy.dll");
+        File.Copy(systemDll, destDll, overwrite: true);
 
-        Directory.CreateDirectory(path);
-
-        var sourceDll = typeof(LoadAssemblyTest).Assembly.Location;
-        var destDll = Path.Combine(path, Path.GetFileName(sourceDll));
-        File.Copy(sourceDll, destDll, true);
-
-        var loader = new LoadAssembly<IStrategy>(path);
+        var loader = new LoadAssembly<IStrategy>(_testPath);
 
         Action act = () => loader.GetImplementations();
 
         act.Should()
            .Throw<InvalidOperationException>()
-           .WithMessage($"No strategies found in assembly '{Path.GetFileName(destDll)}'.");
+           .WithMessage("*No strategies found in assembly*System.Linq.Copy.dll*");
     }
 
     [TestMethod]
     public void GetImplementations_WhenDirectoryHasStrategiesDll_ShouldReturnFullNames()
     {
-        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PluingsTestDllTest_WithStrategies");
-        if (Directory.Exists(path))
-        {
-            Directory.Delete(path, true);
-        }
-
-        Directory.CreateDirectory(path);
-
         var sourceDll = typeof(AttractionPointsStrategy).Assembly.Location;
-        var destDll = Path.Combine(path, Path.GetFileName(sourceDll));
-        File.Copy(sourceDll, destDll, true);
+        var destDll = Path.Combine(_testPath, "VirtualPark.Strategies.dll");
+        File.Copy(sourceDll, destDll, overwrite: true);
 
-        var loader = new LoadAssembly<IStrategy>(path);
+        var loader = new LoadAssembly<IStrategy>(_testPath);
 
         var result = loader.GetImplementations();
 
@@ -84,35 +87,24 @@ public sealed class LoadAssemblyTest
     }
 
     [TestMethod]
-    public void GetImplementations_WhenMixOfStrategyAndNonStrategyDlls_ShouldReturnOnlyStrategies()
+    public void GetImplementations_WhenMixOfStrategyAndNonStrategyDlls_ShouldThrowForNonStrategyDll()
     {
-        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PluingsTestDllTest_Mixed");
-        if (Directory.Exists(path))
-        {
-            Directory.Delete(path, true);
-        }
-
-        Directory.CreateDirectory(path);
-
         var strategyDll = typeof(AttractionPointsStrategy).Assembly.Location;
-        var strategyDest = Path.Combine(path, "VirtualPark.Strategies.Copy.dll");
-        File.Copy(strategyDll, strategyDest, true);
+        var strategyDest = Path.Combine(_testPath, "VirtualPark.Strategies.dll");
+        File.Copy(strategyDll, strategyDest, overwrite: true);
 
-        var testDll = typeof(LoadAssemblyTest).Assembly.Location;
-        var testDest = Path.Combine(path, "VirtualPark.Tests.Copy.dll");
-        File.Copy(testDll, testDest, true);
+        var systemDll = typeof(System.Linq.Enumerable).Assembly.Location;
+        var systemDest = Path.Combine(_testPath, "System.Linq.Copy.dll");
+        File.Copy(systemDll, systemDest, overwrite: true);
 
-        var loader = new LoadAssembly<IStrategy>(path);
+        var loader = new LoadAssembly<IStrategy>(_testPath);
 
         Action act = () => loader.GetImplementations();
 
-        act.Should().Throw<InvalidOperationException>()
-            .WithMessage("No strategies found in assembly 'VirtualPark.Tests.Copy.dll'.");
+        act.Should()
+           .Throw<InvalidOperationException>()
+           .WithMessage("*No strategies found in assembly*System.Linq.Copy.dll*");
     }
-
-    #endregion
-    #region GetImplementation
-
 
     #endregion
 }

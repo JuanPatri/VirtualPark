@@ -26,7 +26,7 @@ public class GenericRepository<T>(DbContext context) : IRepository<T>
     public List<T> GetAll(Expression<Func<T, bool>>? predicate)
     {
         IQueryable<T> query = _entities;
-        if (predicate != null)
+        if(predicate != null)
         {
             query = query.Where(predicate);
         }
@@ -39,12 +39,12 @@ public class GenericRepository<T>(DbContext context) : IRepository<T>
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include)
     {
         IQueryable<T> query = _entities;
-        if (include != null)
+        if(include != null)
         {
             query = include(query);
         }
 
-        if (predicate != null)
+        if(predicate != null)
         {
             query = query.Where(predicate);
         }

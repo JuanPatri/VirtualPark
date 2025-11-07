@@ -58,7 +58,7 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
                 .Include(u => u.Roles)
                 .Include(u => u.VisitorProfile));
 
-        if (users == null || users.Count == 0)
+        if(users == null || users.Count == 0)
         {
             throw new InvalidOperationException("Dont have any users");
         }
@@ -181,20 +181,6 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
         }
 
         return roles;
-    }
-
-    private List<User> UploadVisitorProfile(List<User> users)
-    {
-        foreach(var u in users)
-        {
-            if(u.VisitorProfileId.HasValue)
-            {
-                u.VisitorProfile =
-                    _visitorProfileRepository.Get(visitorProfile => visitorProfile.Id == u.VisitorProfileId);
-            }
-        }
-
-        return users;
     }
 
     private void DeleteVisitorProfile(Guid? id)

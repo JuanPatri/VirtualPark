@@ -24,12 +24,14 @@
         <tr>
           <th>#</th>
           <th>User</th>
+          <th>Points</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let userId of ranking.users; let i = index">
           <td>{{ i + 1 }}</td>
           <td>{{ getUserName(userId) }}</td>
+          <td>{{ getScoreFor(userId, i) }} pts</td>
         </tr>
       </tbody>
     </table>

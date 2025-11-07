@@ -126,7 +126,7 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
                     u => u.VisitorProfileId == vs.VisitorId,
                     q => q.Include(u => u.VisitorProfile));
 
-                if (user?.VisitorProfile != null)
+                if(user?.VisitorProfile != null)
                 {
                     user.VisitorProfile.Score = vs.TotalScore;
                 }

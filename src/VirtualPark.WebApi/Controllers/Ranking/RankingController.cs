@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using VirtualPark.BusinessLogic.Rankings.Service;
 using VirtualPark.WebApi.Controllers.Ranking.ModelsIn;
 using VirtualPark.WebApi.Controllers.Ranking.ModelsOut;
-using VirtualPark.WebApi.Filters.Authenticator;
-using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.Ranking;
 

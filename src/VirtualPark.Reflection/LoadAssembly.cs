@@ -18,7 +18,7 @@ public sealed class LoadAssembly<TInterface>(string path) : ILoadAssembly<TInter
             Assembly assemblyLoaded = Assembly.LoadFile(file.FullName);
             var loadedTypes = assemblyLoaded
                 .GetTypes()
-                .Where(t => t.IsClass && typeof(IStrategy).IsAssignableFrom(t))
+                .Where(t => t.IsClass && typeof(TInterface).IsAssignableFrom(t))
                 .ToList();
 
             if(loadedTypes.Count == 0)

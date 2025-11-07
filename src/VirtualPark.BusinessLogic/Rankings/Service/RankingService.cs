@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using VirtualPark.BusinessLogic.Rankings.Entity;
 using VirtualPark.BusinessLogic.Rankings.Models;
 using VirtualPark.BusinessLogic.Users.Entity;
@@ -26,9 +27,10 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
     {
         var topUsers = CalculateRanking(args.Date);
 
-        var ranking = _rankingRepository.Get(r =>
-            r.Date.Date == args.Date.Date &&
-            r.Period == args.Period);
+        var ranking = _rankingRepository.Get(
+            r => r.Date.Date == args.Date.Date &&
+                 r.Period == args.Period,
+            q => q.Include(r => r.Entries));
 
         if(ranking is null)
         {
@@ -99,8 +101,11 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
 
     private List<User> CalculateRanking(DateTime date)
     {
+        var startOfDay = date.Date;
+        var endOfDay = startOfDay.AddDays(1);
+
         var visitsOfDay = _visitRegistrationsReadOnlyRepository.GetAll()
-            .Where(v => v.Date.Date == date.Date)
+            .Where(v => v.Date >= startOfDay && v.Date < endOfDay)
             .ToList();
 
         var top10Ids = visitsOfDay
@@ -110,10 +115,9 @@ public sealed class RankingService(IRepository<Ranking> rankingRepository, IRead
             .Select(g => g.Key)
             .ToList();
 
-        List<User> top10Users = top10Ids
-            .Select(id => _userReadOnlyRepository.Get(u => u.Id == id))
-            .Where(u => u != null)
-            .ToList()!;
+        var top10Users = _userReadOnlyRepository.GetAll()
+            .Where(u => u.VisitorProfileId != null && top10Ids.Contains(u.VisitorProfileId.Value))
+            .ToList();
 
         return top10Users;
     }

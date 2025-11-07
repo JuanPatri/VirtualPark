@@ -9,13 +9,11 @@ namespace VirtualPark.WebApi.Controllers.Ranking;
 
 [ApiController]
 [Route("rankings")]
-[AuthenticationFilter]
 public sealed class RankingController(IRankingService rankingService) : ControllerBase
 {
     private readonly IRankingService _rankingService = rankingService;
 
     [HttpGet("filter")]
-    [AuthorizationFilter]
     public GetRankingResponse GetRanking([FromQuery] GetRankingRequest request)
     {
         var args = request.ToArgs();
@@ -24,7 +22,6 @@ public sealed class RankingController(IRankingService rankingService) : Controll
     }
 
     [HttpGet]
-    [AuthorizationFilter]
     public List<GetRankingResponse> GetAllRankings()
     {
         var rankings = _rankingService.GetAll();

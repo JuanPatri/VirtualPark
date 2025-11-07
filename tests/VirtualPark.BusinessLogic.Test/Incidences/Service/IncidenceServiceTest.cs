@@ -292,7 +292,7 @@ public sealed class IncidenceTest
             new() { Id = Guid.NewGuid(), Description = "Incidence 2" }
         };
         _mockIncidenceRepository
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns(data);
 
         _mockIncidenceRepository

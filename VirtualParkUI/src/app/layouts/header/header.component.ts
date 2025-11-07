@@ -73,6 +73,11 @@ export class HeaderComponent implements OnDestroy {
         { label: 'Clock', path: '/clock', roles: ['Administrator'] }
     ];
 
+    
+    rankingMenu: RoleGuardedMenuItem[] = [
+        { label: 'Ranking', path: '/ranking', roles: ['Administrator', 'Visitor'] }
+    ];
+
     canView(roles: string[]): boolean {
         return this.authRole.hasAnyRole(roles);
     }

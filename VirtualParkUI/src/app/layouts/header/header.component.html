@@ -28,12 +28,20 @@
         <app-dropdown-menu label="Rewards" [items]="rewardMenu" *ngIf="canView(['Administrator'])"></app-dropdown-menu>
 
         <app-dropdown-menu label="Incidences" [items]="incidenceMenu"
-            *ngIf="canView(['Operator', 'Administrator'])"></app-dropdown-menu>
+            *ngIf="canView(['Operator', 'Administrator'])">
+        </app-dropdown-menu>
 
         <app-dropdown-menu label="Type Incidences" [items]="typeIncidenceMenu"
-            *ngIf="canView(['Operator', 'Administrator'])"></app-dropdown-menu>
+            *ngIf="canView(['Operator', 'Administrator'])">
+        </app-dropdown-menu>
+
         <ng-container *ngIf="getVisibleMenu(clockMenu) as clockMenuItems">
             <app-dropdown-menu label="Clock" [items]="clockMenuItems" *ngIf="clockMenuItems.length"></app-dropdown-menu>
+        </ng-container>
+
+        <ng-container *ngIf="getVisibleMenu(rankingMenu) as rankingMenuItems">
+            <app-dropdown-menu label="Rankings" [items]="rankingMenuItems"
+                *ngIf="rankingMenuItems.length"></app-dropdown-menu>
         </ng-container>
     </nav>
 

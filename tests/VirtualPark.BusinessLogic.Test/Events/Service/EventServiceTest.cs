@@ -172,7 +172,7 @@ public sealed class EventServiceTest
         var events = new List<Event> { ev1, ev2 };
 
         _eventRepositoryMock
-            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Event, bool>>>()))
+            .Setup(r => r.GetAll())
             .Returns(events);
 
         List<Event> result = _eventService.GetAll();
@@ -192,7 +192,7 @@ public sealed class EventServiceTest
     public void GetAll_ShouldThrow_WhenRepositoryReturnsNull()
     {
         _eventRepositoryMock
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns((List<Event>)null!);
 
         Action act = () => _eventService.GetAll();
@@ -213,7 +213,7 @@ public sealed class EventServiceTest
     public void GetAll_WhenNoEventsExist_ShouldReturnEmptyList()
     {
         _eventRepositoryMock
-            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Event, bool>>>()))
+            .Setup(r => r.GetAll())
             .Returns([]);
 
         List<Event> result = _eventService.GetAll();

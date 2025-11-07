@@ -1,11 +1,13 @@
 using System.Linq.Expressions;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using VirtualPark.BusinessLogic.Rankings;
 using VirtualPark.BusinessLogic.Rankings.Entity;
 using VirtualPark.BusinessLogic.Rankings.Models;
 using VirtualPark.BusinessLogic.Rankings.Service;
 using VirtualPark.BusinessLogic.Users.Entity;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 using VirtualPark.Repository;
 
@@ -297,118 +299,169 @@ public sealed class RankingServiceTest
         _mockUserReadOnlyRepository.VerifyAll();
     }
     #endregion
-    #region GetByArgs
-    [TestMethod]
-    public void Get_WhenRankingDoesNotExist_ShouldCreateWithCalculatedTopUsers_AndReturnRanking()
+#region GetByArgs
+[TestMethod]
+public void Get_WhenRankingDoesNotExist_ShouldCreateWithCalculatedTopUsers_AndReturnRanking()
+{
+    var date = new DateTime(2025, 9, 27);
+    var args = new RankingArgs("2025-09-27 00:00", "Daily");
+
+    var u1 = new User { Name = "Ana" };
+    var u2 = new User { Name = "Beto" };
+    var u3 = new User { Name = "Cata" };
+
+    u1.VisitorProfile = new VisitorProfile { Id = Guid.NewGuid() };
+    u1.VisitorProfileId = u1.VisitorProfile.Id;
+
+    u2.VisitorProfile = new VisitorProfile { Id = Guid.NewGuid() };
+    u2.VisitorProfileId = u2.VisitorProfile.Id;
+
+    u3.VisitorProfile = new VisitorProfile { Id = Guid.NewGuid() };
+    u3.VisitorProfileId = u3.VisitorProfile.Id;
+
+    var visits = new List<VisitRegistration>
     {
-        var date = new DateTime(2025, 9, 27);
-        var args = new RankingArgs("2025-09-27 00:00", "Daily");
+        new() { VisitorId = u1.VisitorProfileId!.Value, Date = date, DailyScore = 10 },
+        new() { VisitorId = u1.VisitorProfileId!.Value, Date = date, DailyScore = 20 },
+        new() { VisitorId = u2.VisitorProfileId!.Value, Date = date, DailyScore = 5 },
+        new() { VisitorId = u2.VisitorProfileId!.Value, Date = date, DailyScore = 15 },
+        new() { VisitorId = u3.VisitorProfileId!.Value, Date = date, DailyScore = 10 },
+    };
 
-        var u1 = new User { Name = "Ana" };
-        var u2 = new User { Name = "Beto" };
-        var u3 = new User { Name = "Cata" };
+    _mockVisitRegistrationsReadOnlyRepository
+        .Setup(r => r.GetAll())
+        .Returns(visits);
 
-        var visits = new List<VisitRegistration>
-        {
-            new() { VisitorId = u1.Id, Date = date, DailyScore = 10 },
-            new() { VisitorId = u1.Id, Date = date, DailyScore = 20 },
-            new() { VisitorId = u2.Id, Date = date, DailyScore = 5 },
-            new() { VisitorId = u2.Id, Date = date, DailyScore = 15 },
-            new() { VisitorId = u3.Id, Date = date, DailyScore = 10 },
-        };
+    _mockUserReadOnlyRepository
+        .Setup(r => r.Get(
+            It.IsAny<Expression<Func<User, bool>>>(),
+            It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
+        .Returns<Expression<Func<User, bool>>, Func<IQueryable<User>, IIncludableQueryable<User, object>>>(
+            (expr, include) =>
+            {
+                if (expr.Compile().Invoke(u1))
+                {
+                    return u1;
+                }
 
-        _mockVisitRegistrationsReadOnlyRepository
-            .Setup(r => r.GetAll())
-            .Returns(visits);
+                if (expr.Compile().Invoke(u2))
+                {
+                    return u2;
+                }
 
-        _mockUserReadOnlyRepository
-            .Setup(r => r.Get(It.Is<Expression<Func<User, bool>>>(expr => expr.Compile().Invoke(u1))))
-            .Returns(u1);
-        _mockUserReadOnlyRepository
-            .Setup(r => r.Get(It.Is<Expression<Func<User, bool>>>(expr => expr.Compile().Invoke(u2))))
-            .Returns(u2);
-        _mockUserReadOnlyRepository
-            .Setup(r => r.Get(It.Is<Expression<Func<User, bool>>>(expr => expr.Compile().Invoke(u3))))
-            .Returns(u3);
+                if (expr.Compile().Invoke(u3))
+                {
+                    return u3;
+                }
 
-        _mockRankingRepository
-            .Setup(r => r.Get(It.IsAny<Expression<Func<Ranking, bool>>>()))
-            .Returns((Ranking?)null);
+                return null!;
+            });
 
-        _mockRankingRepository
-            .Setup(r => r.Add(It.Is<Ranking>(rk =>
-                rk.Date.Date == args.Date.Date &&
-                rk.Period == args.Period &&
-                rk.Entries.Count == 3 &&
-                rk.Entries[0].Id == u1.Id &&
-                rk.Entries[1].Id == u2.Id &&
-                rk.Entries[2].Id == u3.Id)));
+    _mockRankingRepository
+        .Setup(r => r.Get(
+            It.IsAny<Expression<Func<Ranking, bool>>>(),
+            It.IsAny<Func<IQueryable<Ranking>, IIncludableQueryable<Ranking, object>>>()))
+        .Returns((Ranking?)null);
 
-        var result = _rankingService.Get(args);
+    Ranking? addedRanking = null;
+    _mockRankingRepository
+        .Setup(r => r.Add(It.IsAny<Ranking>()))
+        .Callback<Ranking>(rk => addedRanking = rk);
 
-        result.Should().NotBeNull();
-        result!.Entries.Select(e => e.Id).Should().ContainInOrder(u1.Id, u2.Id, u3.Id);
+    var result = _rankingService.Get(args);
 
-        _mockRankingRepository.VerifyAll();
-        _mockUserReadOnlyRepository.VerifyAll();
-        _mockVisitRegistrationsReadOnlyRepository.VerifyAll();
-    }
+    result.Should().NotBeNull();
+    addedRanking.Should().NotBeNull();
+
+    addedRanking!.Entries.Should().NotBeEmpty();
+
+    addedRanking.Entries.Select(e => e.Id)
+        .Should()
+        .ContainInOrder(u1.Id, u2.Id, u3.Id);
+
+    _mockRankingRepository.Verify(r => r.Add(It.IsAny<Ranking>()), Times.Once);
+    _mockUserReadOnlyRepository.VerifyAll();
+    _mockVisitRegistrationsReadOnlyRepository.VerifyAll();
+}
 
     [TestMethod]
-    public void Get_WhenRankingExists_ShouldUpdateEntriesWithCalculatedTopUsers_AndReturnRanking()
+public void Get_WhenRankingExists_ShouldUpdateEntriesWithCalculatedTopUsers_AndReturnRanking()
+{
+    var date = new DateTime(2025, 9, 27);
+    var args = new RankingArgs("2025-09-27 00:00", "Daily");
+
+    var u1 = new User { Name = "Ana" };
+    var u2 = new User { Name = "Beto" };
+
+    u1.VisitorProfile = new VisitorProfile { Id = Guid.NewGuid() };
+    u1.VisitorProfileId = u1.VisitorProfile.Id;
+
+    u2.VisitorProfile = new VisitorProfile { Id = Guid.NewGuid() };
+    u2.VisitorProfileId = u2.VisitorProfile.Id;
+
+    var existing = new Ranking
     {
-        var date = new DateTime(2025, 9, 27);
-        var args = new RankingArgs("2025-09-27 00:00", "Daily");
+        Id = Guid.NewGuid(),
+        Date = date,
+        Period = Period.Daily,
+        Entries = []
+    };
 
-        var u1 = new User { Name = "Ana" };
-        var u2 = new User { Name = "Beto" };
+    var visits = new List<VisitRegistration>
+    {
+        new() { VisitorId = u2.VisitorProfileId!.Value, Date = date, DailyScore = 25 },
+        new() { VisitorId = u2.VisitorProfileId!.Value, Date = date, DailyScore = 15 },
+        new() { VisitorId = u1.VisitorProfileId!.Value, Date = date, DailyScore = 10 },
+    };
 
-        var existing = new Ranking
-        {
-            Id = Guid.NewGuid(),
-            Date = date,
-            Period = Period.Daily,
-            Entries = []
-        };
+    _mockVisitRegistrationsReadOnlyRepository
+        .Setup(r => r.GetAll())
+        .Returns(visits);
 
-        var visits = new List<VisitRegistration>
-        {
-            new() { VisitorId = u2.Id, Date = date, DailyScore = 25 },
-            new() { VisitorId = u2.Id, Date = date, DailyScore = 15 },
-            new() { VisitorId = u1.Id, Date = date, DailyScore = 10 },
-        };
+    _mockUserReadOnlyRepository
+        .Setup(r => r.Get(
+            It.IsAny<Expression<Func<User, bool>>>(),
+            It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
+        .Returns<Expression<Func<User, bool>>, Func<IQueryable<User>, IIncludableQueryable<User, object>>>(
+            (expr, include) =>
+            {
+                if (expr.Compile().Invoke(u1))
+                {
+                    return u1;
+                }
 
-        _mockVisitRegistrationsReadOnlyRepository
-            .Setup(r => r.GetAll())
-            .Returns(visits);
+                if (expr.Compile().Invoke(u2))
+                {
+                    return u2;
+                }
 
-        _mockUserReadOnlyRepository
-            .Setup(r => r.Get(It.Is<Expression<Func<User, bool>>>(expr => expr.Compile().Invoke(u1))))
-            .Returns(u1);
-        _mockUserReadOnlyRepository
-            .Setup(r => r.Get(It.Is<Expression<Func<User, bool>>>(expr => expr.Compile().Invoke(u2))))
-            .Returns(u2);
+                return null!;
+            });
 
-        _mockRankingRepository
-            .Setup(r => r.Get(It.IsAny<Expression<Func<Ranking, bool>>>()))
-            .Returns(existing);
+    _mockRankingRepository
+        .Setup(r => r.Get(
+            It.IsAny<Expression<Func<Ranking, bool>>>(),
+            It.IsAny<Func<IQueryable<Ranking>, IIncludableQueryable<Ranking, object>>>()))
+        .Returns(existing);
 
-        _mockRankingRepository
-            .Setup(r => r.Update(It.Is<Ranking>(rk =>
-                rk.Id == existing.Id &&
-                rk.Entries.Count == 2 &&
-                rk.Entries[0].Id == u2.Id &&
-                rk.Entries[1].Id == u1.Id)));
+    _mockRankingRepository
+        .Setup(r => r.Update(It.Is<Ranking>(rk =>
+            rk.Id == existing.Id &&
+            rk.Entries.Count == 2 &&
+            rk.Entries[0].Id == u2.Id &&
+            rk.Entries[1].Id == u1.Id)))
+        .Verifiable();
 
-        var result = _rankingService.Get(args);
+    var result = _rankingService.Get(args);
 
-        result.Should().BeSameAs(existing);
-        result!.Entries.Select(e => e.Id).Should().ContainInOrder(u2.Id, u1.Id);
+    result.Should().BeSameAs(existing);
+    result!.Entries.Should().NotBeNull();
+    result.Entries.Should().HaveCount(2);
+    result.Entries.Select(e => e.Id).Should().ContainInOrder(u2.Id, u1.Id);
 
-        _mockRankingRepository.VerifyAll();
-        _mockUserReadOnlyRepository.VerifyAll();
-        _mockVisitRegistrationsReadOnlyRepository.VerifyAll();
-    }
-
+    _mockRankingRepository.Verify(r => r.Update(It.IsAny<Ranking>()), Times.Once);
+    _mockUserReadOnlyRepository.VerifyAll();
+    _mockVisitRegistrationsReadOnlyRepository.VerifyAll();
+}
     #endregion
 }

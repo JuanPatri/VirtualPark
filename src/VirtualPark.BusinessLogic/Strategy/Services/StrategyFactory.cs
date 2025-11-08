@@ -51,4 +51,16 @@ public sealed class StrategyFactory(IEnumerable<IStrategy> strategies, ILoadAsse
         }
     }
 
+    private void DiscoverPlugins()
+    {
+        try
+        {
+            loadAssembly.GetImplementations();
+            _pluginsDiscovered = true;
+        }
+        catch
+        {
+            _pluginsDiscovered = true;
+        }
+    }
 }

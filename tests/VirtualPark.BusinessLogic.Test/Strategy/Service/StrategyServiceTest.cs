@@ -374,5 +374,24 @@ public class ActiveStrategyServiceTest
             _loadAssemblyMock.Verify(l => l.GetImplementations(), Times.Once);
             _loadAssemblyMock.VerifyNoOtherCalls();
         }
+
+        [TestMethod]
+        public void GetAllStrategies_ShouldNotThrow_WhenLoaderProvidesInvalidKeys_BecauseTheyAreFilteredBeforeCtor()
+        {
+            _loadAssemblyMock.Setup(l => l.GetImplementations())
+                .Returns(new List<string?> { string.Empty, "  ", null, "WeekendBonus" });
+
+            var act = () => _service.GetAllStrategies();
+            act.Should().NotThrow();
+
+            var result = act.Invoke();
+
+            result.Select(r => r.Key).Should().BeEquivalentTo(
+                new[] { "Attraction", "Combo", "Event", "WeekendBonus" },
+                opts => opts.WithoutStrictOrdering());
+
+            _loadAssemblyMock.Verify(l => l.GetImplementations());
+            _loadAssemblyMock.VerifyNoOtherCalls();
+        }
         #endregion
     }

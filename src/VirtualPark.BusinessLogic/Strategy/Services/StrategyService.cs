@@ -48,11 +48,6 @@ public sealed class ActiveStrategyService(IRepository<ActiveStrategy> activeStra
         return entities.Select(MapToArgs).ToList();
     }
 
-    public List<StrategyArgs> GetAllStrategies()
-    {
-        var strategies = _loadAssembly.GetImplementations();
-        strategies.AddRange(new[] { "Attraction", "Combo", "Event" });
-    }
     public void Update(ActiveStrategyArgs args, DateOnly date)
     {
         var entity = _activeStrategyRepository.Get(a => a.Date == date)

@@ -25,7 +25,7 @@ public class ActiveStrategyServiceTest
         _loadAssemblyMock = new Mock<ILoadAssembly<IStrategy>>(MockBehavior.Strict);
         _repoMock = new Mock<IRepository<ActiveStrategy>>(MockBehavior.Strict);
         _factoryMock = new Mock<IStrategyFactory>(MockBehavior.Strict);
-        _service = new ActiveStrategyService(_repoMock.Object, _factoryMock.Object);
+        _service = new ActiveStrategyService(_repoMock.Object, _factoryMock.Object, _loadAssemblyMock.Object);
     }
     #region Create
     #region Success
@@ -187,7 +187,6 @@ public class ActiveStrategyServiceTest
         result[1].Date.Should().Be(new DateOnly(2025,10,09));
 
         _repoMock.Verify(r => r.GetAll(null), Times.Once);
-        _loadAssemblyMock.Verify(l => l.GetImplementations(), Times.Once);
         _repoMock.VerifyNoOtherCalls();
         _loadAssemblyMock.VerifyNoOtherCalls();
         _factoryMock.VerifyNoOtherCalls();
@@ -214,7 +213,6 @@ public class ActiveStrategyServiceTest
         result.Should().BeEmpty();
 
         _repoMock.Verify(r => r.GetAll(null), Times.Once);
-        _loadAssemblyMock.Verify(l => l.GetImplementations(), Times.Once);
 
         _repoMock.VerifyNoOtherCalls();
         _loadAssemblyMock.VerifyNoOtherCalls();

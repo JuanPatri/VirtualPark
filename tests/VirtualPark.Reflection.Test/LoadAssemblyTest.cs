@@ -132,11 +132,11 @@ public sealed class LoadAssemblyTest
         var loader = new LoadAssembly<IStrategy>(_testPath);
         loader.GetImplementations();
 
-        Action act = () => loader.GetImplementation("No implementations loaded.");
+        Action act = () => loader.GetImplementation("DoesNotExist");
 
         act.Should()
-           .Throw<InvalidOperationException>()
-           .WithMessage("No implementations loaded.");
+            .Throw<InvalidOperationException>()
+            .WithMessage("Implementation 'DoesNotExist' not found among loaded assemblies.");
     }
 
     [TestMethod]

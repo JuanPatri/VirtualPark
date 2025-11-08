@@ -190,7 +190,7 @@ public sealed class LoadAssemblyTest
 
         act.Should()
            .Throw<InvalidOperationException>()
-           .WithMessage("*Failed to create instance of*EventPointsStrategy*");
+           .WithMessage("No implementations loaded.");
     }
 
     #endregion

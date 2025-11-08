@@ -66,6 +66,11 @@ public class StrategyFactoryTests
     [TestMethod]
     public void Create_ShouldThrowKeyNotFound_WhenKeyDoesNotExist()
     {
+        var loader = new Mock<ILoadAssembly<IStrategy>>(MockBehavior.Strict);
+        loader.Setup(l => l.GetImplementations()).Returns(new List<string?>());
+        loader.Setup(l => l.GetImplementation(It.IsAny<string>(), It.IsAny<object[]>()))
+            .Throws(new InvalidOperationException("not found"));
+
         var attraction = new Mock<IStrategy>(MockBehavior.Strict);
         attraction.SetupGet(s => s.Key).Returns("Attraction");
 
@@ -75,13 +80,16 @@ public class StrategyFactoryTests
         var evt = new Mock<IStrategy>(MockBehavior.Strict);
         evt.SetupGet(s => s.Key).Returns("Event");
 
-        var factory = new StrategyFactory([attraction.Object, combo.Object, evt.Object]);
+        var factory = new StrategyFactory(
+            new[] { attraction.Object, combo.Object, evt.Object },
+            loader.Object
+        );
 
         var act = () => factory.Create("Unknown");
 
         act.Should()
             .Throw<KeyNotFoundException>()
-            .WithMessage("Strategy 'Unknown' not found.");
+            .WithMessage("Strategy 'Unknown' not found in built-in strategies or plugins*");
     }
 
     [TestMethod]

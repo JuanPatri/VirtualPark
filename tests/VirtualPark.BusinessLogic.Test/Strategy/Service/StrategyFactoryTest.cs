@@ -42,10 +42,18 @@ public class StrategyFactoryTests
     [TestMethod]
     public void Create_ShouldBeCaseInsensitive()
     {
+        var loader = new Mock<ILoadAssembly<IStrategy>>(MockBehavior.Strict);
+        loader.Setup(l => l.GetImplementations()).Returns(new List<string?>());
+        loader.Setup(l => l.GetImplementation(It.IsAny<string>(), It.IsAny<object[]>()))
+            .Throws(new InvalidOperationException("not found"));
+
         var attraction = new Mock<IStrategy>(MockBehavior.Strict);
         attraction.SetupGet(s => s.Key).Returns("Attraction");
 
-        var factory = new StrategyFactory([attraction.Object]);
+        var factory = new StrategyFactory(
+            new[] { attraction.Object },
+            loader.Object
+        );
 
         var lower = factory.Create("attraction");
         var upper = factory.Create("ATTRACTION");
@@ -53,6 +61,7 @@ public class StrategyFactoryTests
         lower.Should().BeSameAs(attraction.Object);
         upper.Should().BeSameAs(attraction.Object);
     }
+
 
     [TestMethod]
     public void Create_ShouldThrowKeyNotFound_WhenKeyDoesNotExist()

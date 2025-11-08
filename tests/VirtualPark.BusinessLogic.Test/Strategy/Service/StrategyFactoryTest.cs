@@ -166,4 +166,22 @@ public class StrategyFactoryTests
         value.Should().BeTrue();
         loader.Verify(l => l.GetImplementations(), Times.Once);
     }
+
+    [TestMethod]
+    public void DiscoverPlugins_ShouldSetPluginsDiscovered_WhenLoadThrows()
+    {
+        var loader = new Mock<ILoadAssembly<IStrategy>>(MockBehavior.Strict);
+        loader.Setup(l => l.GetImplementations()).Throws(new InvalidOperationException("Bad DLL"));
+
+        var factory = new StrategyFactory(Array.Empty<IStrategy>(), loader.Object);
+
+        var method = typeof(StrategyFactory).GetMethod("DiscoverPlugins", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+        method.Invoke(factory, null);
+
+        var field = typeof(StrategyFactory).GetField("_pluginsDiscovered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+        var value = (bool)field.GetValue(factory)!;
+
+        value.Should().BeTrue();
+        loader.Verify(l => l.GetImplementations(), Times.Once);
+    }
 }

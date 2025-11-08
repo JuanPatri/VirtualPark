@@ -209,7 +209,22 @@ public sealed class LoadAssemblyTest
         keys.Should().BeEmpty();
     }
 
-    
+    [TestMethod]
+    public void GetImplementationKeys_WhenDirectoryHasTestStrategyDll_ShouldReturnItsKey()
+    {
+        var sourceDll = typeof(TestStrategy).Assembly.Location;
+        var destDll = Path.Combine(_testPath, "TestStrategies.dll");
+        File.Copy(sourceDll, destDll, overwrite: true);
+
+        var loader = new LoadAssembly<IStrategy>(_testPath);
+
+        loader.GetImplementations();
+
+        var keys = loader.GetImplementationKeys();
+
+        keys.Should().NotBeNull();
+        keys.Should().ContainSingle().Which.Should().Be("Test");
+    }
 
     #endregion
 }

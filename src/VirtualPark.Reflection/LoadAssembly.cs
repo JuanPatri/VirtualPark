@@ -11,41 +11,48 @@ public sealed class LoadAssembly<TInterface>(string path) : ILoadAssembly<TInter
 
     public List<string?> GetImplementations()
     {
+        var result = new List<string?>();
         var files = _directory.GetFiles("*.dll");
 
-        var strategies =
-            files
-                .SelectMany(file =>
-                {
-                    var assembly = Assembly.LoadFile(file.FullName);
+        foreach (var file in files)
+        {
+            var assembly = Assembly.LoadFile(file.FullName);
 
-                    return assembly
-                        .GetTypes()
-                        .Where(t => t.IsClass && !t.IsAbstract && typeof(TInterface).IsAssignableFrom(t))
-                        .Select(type =>
-                        {
-                            try
-                            {
-                                var instance = Activator.CreateInstance(type) as IStrategy;
-                                if (instance == null)
-                                {
-                                    return null;
-                                }
-
-                                _implementations.Add(type);
-                                return instance.Key;
-                            }
-                            catch
-                            {
-                                return null;
-                            }
-                        });
-                })
-                .Where(k => !string.IsNullOrWhiteSpace(k))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
+            var types = assembly
+                .GetTypes()
+                .Where(t => t.IsClass && !t.IsAbstract && typeof(TInterface).IsAssignableFrom(t))
                 .ToList();
 
-        return strategies!;
+            if (types.Count == 0)
+            {
+                throw new InvalidOperationException($"No strategies found in assembly '{file.Name}'.");
+            }
+
+            foreach (var type in types)
+            {
+                try
+                {
+                    var instance = Activator.CreateInstance(type) as IStrategy;
+                    if (instance is null)
+                    {
+                        continue;
+                    }
+
+                    _implementations.Add(type);
+                    result.Add(instance.Key);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException(
+                        $"Error instantiating '{type.FullName}' in '{file.Name}': {ex.Message}", ex);
+                }
+            }
+        }
+
+        return result
+            .Where(k => !string.IsNullOrWhiteSpace(k))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     public TInterface GetImplementation(string assemblyName, params object[] args)

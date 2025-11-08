@@ -6,10 +6,11 @@ using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Strategy.Services;
 
-public sealed class ActiveStrategyService(IRepository<ActiveStrategy> activeStrategyRepository, IStrategyFactory strategyFactory) : IStrategyService
+public sealed class ActiveStrategyService(IRepository<ActiveStrategy> activeStrategyRepository, IStrategyFactory strategyFactory, ILoadAssembly<IStrategy> loadAssembly) : IStrategyService
 {
     private readonly IRepository<ActiveStrategy> _activeStrategyRepository = activeStrategyRepository;
     private readonly IStrategyFactory _strategyFactory = strategyFactory;
+    private readonly ILoadAssembly<IStrategy> _loadAssembly = loadAssembly;
 
     public Guid Create(ActiveStrategyArgs args)
     {
@@ -47,6 +48,11 @@ public sealed class ActiveStrategyService(IRepository<ActiveStrategy> activeStra
         return entities.Select(MapToArgs).ToList();
     }
 
+    public List<StrategyArgs> GetAllStrategies()
+    {
+        var strategies = _loadAssembly.GetImplementations();
+        strategies.AddRange(new[] { "Attraction", "Combo", "Event" });
+    }
     public void Update(ActiveStrategyArgs args, DateOnly date)
     {
         var entity = _activeStrategyRepository.Get(a => a.Date == date)

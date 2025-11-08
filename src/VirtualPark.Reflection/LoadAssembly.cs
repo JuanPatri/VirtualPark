@@ -1,4 +1,5 @@
 using System.Reflection;
+using VirtualPark.ReflectionAbstractions;
 
 namespace VirtualPark.Reflection;
 
@@ -10,25 +11,41 @@ public sealed class LoadAssembly<TInterface>(string path) : ILoadAssembly<TInter
 
     public List<string?> GetImplementations()
     {
-        var files = _directory.GetFiles("*.dll").ToList();
+        var files = _directory.GetFiles("*.dll");
 
-        files.ForEach(file =>
-        {
-            Assembly assemblyLoaded = Assembly.LoadFile(file.FullName);
-            var loadedTypes = assemblyLoaded
-                .GetTypes()
-                .Where(t => t.IsClass && typeof(TInterface).IsAssignableFrom(t))
+        var strategies =
+            files
+                .SelectMany(file =>
+                {
+                    var assembly = Assembly.LoadFile(file.FullName);
+
+                    return assembly
+                        .GetTypes()
+                        .Where(t => t.IsClass && !t.IsAbstract && typeof(TInterface).IsAssignableFrom(t))
+                        .Select(type =>
+                        {
+                            try
+                            {
+                                var instance = Activator.CreateInstance(type) as IStrategy;
+                                if (instance == null)
+                                {
+                                    return null;
+                                }
+
+                                _implementations.Add(type);
+                                return instance.Key;
+                            }
+                            catch
+                            {
+                                return null;
+                            }
+                        });
+                })
+                .Where(k => !string.IsNullOrWhiteSpace(k))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            if(loadedTypes.Count == 0)
-            {
-                throw new InvalidOperationException($"No strategies found in assembly '{file.Name}'.");
-            }
-
-            _implementations = _implementations.Union(loadedTypes).ToList();
-        });
-
-        return _implementations.ConvertAll(t => t.FullName);
+        return strategies!;
     }
 
     public TInterface GetImplementation(string assemblyName, params object[] args)

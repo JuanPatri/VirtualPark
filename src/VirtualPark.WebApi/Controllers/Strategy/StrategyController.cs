@@ -37,7 +37,7 @@ public class StrategyController(IStrategyService strategyService) : ControllerBa
 
         return new GetActiveStrategyResponse(
             key: strategy.StrategyKey,
-            date: strategy.Date.ToString("yyyy-MM-dd"));
+            date: strategy.Date?.ToString("yyyy-MM-dd") ?? string.Empty);
     }
 
     [HttpGet]

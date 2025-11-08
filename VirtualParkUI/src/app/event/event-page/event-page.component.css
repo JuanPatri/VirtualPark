@@ -31,15 +31,11 @@
 }
 
 .event-content {
-  width: 90%;
-  max-width: 900px;
+  width: 95%;
+  max-width: 1100px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  box-sizing: border-box;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
   margin-bottom: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }

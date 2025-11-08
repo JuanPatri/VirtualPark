@@ -17,10 +17,11 @@
                 *ngIf="ticketsMenuItems.length"></app-dropdown-menu>
         </ng-container>
 
-        <ng-container *ngIf="getVisibleMenu(eventsMenu) as eventsMenuItems">
-            <app-dropdown-menu label="Events" [items]="eventsMenuItems"
-                *ngIf="eventsMenuItems.length"></app-dropdown-menu>
-        </ng-container>
+        <app-dropdown-menu
+        label="Events"
+        [path]="'/events'"
+        *ngIf="canView(['Administrator', 'Visitor'])">
+        </app-dropdown-menu>
 
         <app-dropdown-menu label="Rewards" [items]="rewardMenu" *ngIf="canView(['Administrator'])"></app-dropdown-menu>
 

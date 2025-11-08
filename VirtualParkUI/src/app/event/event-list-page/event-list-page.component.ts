@@ -42,7 +42,7 @@ export class EventListPageComponent implements OnInit {
   }
 
   edit(id: string): void {
-    this.router.navigate(['/events/edit', id]);
+    this.router.navigate(['/events/', id]);
   }
 
   remove(id: string): void {

@@ -2,36 +2,75 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 3rem;
   min-height: 100vh;
-  background-color: #fffce8;
+  background: none;
+  padding: 0;
+  margin-top: 60px;
 }
 
 .detail-card {
-  background-color: #fff;
-  padding: 2rem 3rem;
+  background-color: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  max-width: 700px;
-  width: 100%;
+  padding: 2.5rem 3rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  max-width: 1000px;
+  width: 95%;
+  transition: transform 0.2s ease;
+}
+
+.detail-card:hover {
+  transform: scale(1.01);
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 2.2rem;
+  color: #9a3f3f;
+  font-weight: bold;
+  margin-bottom: 1.2rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.detail-section {
+  margin-bottom: 2rem;
+}
+
+.detail-section h2 {
+  font-size: 1.4rem;
   color: #8b0000;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid #f0d6c3;
+  display: inline-block;
+}
+
+.detail-section p {
+  margin: 0.3rem 0;
+  color: #333;
+}
+
+.buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 button {
-  margin-left: 10px;
-  background-color: #8b0000;
-  color: white;
+  background-color: #9a3f3f;
+  color: #fff;
   border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 button:hover {
-  background-color: #a61a1a;
+  background-color: #b54a4a;
+}
+
+strong {
+  color: #9a3f3f;
 }

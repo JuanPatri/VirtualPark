@@ -27,7 +27,9 @@ public class ActiveStrategyServiceTest
         _factoryMock = new Mock<IStrategyFactory>(MockBehavior.Strict);
         _service = new ActiveStrategyService(_repoMock.Object, _factoryMock.Object, _loadAssemblyMock.Object);
     }
+
     #region Create
+
     #region Success
 
     [TestMethod]
@@ -66,7 +68,7 @@ public class ActiveStrategyServiceTest
     public void Create_ShouldUpdate_WhenDateAlreadyHasActiveStrategy()
     {
         var args = new ActiveStrategyArgs("Event", "2029-10-07");
-        var existing = new ActiveStrategy { StrategyKey = "Attraction", Date = args.Date};
+        var existing = new ActiveStrategy { StrategyKey = "Attraction", Date = args.Date };
 
         _factoryMock
             .Setup(f => f.Create(args.StrategyKey))
@@ -114,9 +116,11 @@ public class ActiveStrategyServiceTest
     }
 
     #endregion
+
     #endregion
 
     #region Get
+
     #region Success
 
     [TestMethod]
@@ -157,9 +161,11 @@ public class ActiveStrategyServiceTest
     }
 
     #endregion
+
     #endregion
 
     #region GetAll
+
     #region Success
 
     [TestMethod]
@@ -167,8 +173,8 @@ public class ActiveStrategyServiceTest
     {
         var list = new List<ActiveStrategy>
         {
-            new ActiveStrategy { StrategyKey = "Attraction", Date = new DateOnly(2025,10,08) },
-            new ActiveStrategy { StrategyKey = "Combo",      Date = new DateOnly(2025,10,09) }
+            new ActiveStrategy { StrategyKey = "Attraction", Date = new DateOnly(2025, 10, 08) },
+            new ActiveStrategy { StrategyKey = "Combo", Date = new DateOnly(2025, 10, 09) }
         };
 
         _repoMock.Setup(r => r.GetAll(null)).Returns(list);
@@ -182,9 +188,9 @@ public class ActiveStrategyServiceTest
         result.Should().NotBeNull();
         result.Should().HaveCount(2);
         result[0].StrategyKey.Should().Be("Attraction");
-        result[0].Date.Should().Be(new DateOnly(2025,10,08));
+        result[0].Date.Should().Be(new DateOnly(2025, 10, 08));
         result[1].StrategyKey.Should().Be("Combo");
-        result[1].Date.Should().Be(new DateOnly(2025,10,09));
+        result[1].Date.Should().Be(new DateOnly(2025, 10, 09));
 
         _repoMock.Verify(r => r.GetAll(null), Times.Once);
         _repoMock.VerifyNoOtherCalls();
@@ -220,9 +226,11 @@ public class ActiveStrategyServiceTest
     }
 
     #endregion
+
     #endregion
 
     #region Update
+
     #region Success
 
     [TestMethod]
@@ -273,9 +281,11 @@ public class ActiveStrategyServiceTest
     }
 
     #endregion
+
     #endregion
 
     #region Remove
+
     #region Success
 
     [TestMethod]
@@ -321,5 +331,33 @@ public class ActiveStrategyServiceTest
     }
 
     #endregion
+
     #endregion
-}
+
+    #region GetAllStrategies
+        [TestMethod]
+        public void GetAllStrategies_ShouldReturnOnlyHardcoded_WhenLoaderReturnsEmpty()
+        {
+            var loader = new Mock<ILoadAssembly<IStrategy>>(MockBehavior.Strict);
+            loader.Setup(l => l.GetImplementations()).Returns(new List<string?>());
+
+            var repo = new Mock<IRepository<ActiveStrategy>>(MockBehavior.Strict);
+            var factory = new Mock<IStrategyFactory>(MockBehavior.Strict);
+
+            var service = new ActiveStrategyService(repo.Object, factory.Object, loader.Object);
+
+            var result = service.GetAllStrategies();
+
+            result.Should().NotBeNull();
+            result.Select(x => x.Key)
+                .Should()
+                .BeEquivalentTo(new[] { "Attraction", "Combo", "Event" }, opts => opts.WithoutStrictOrdering());
+
+            loader.Verify(l => l.GetImplementations(), Times.Once);
+            repo.VerifyNoOtherCalls();
+            factory.VerifyNoOtherCalls();
+            loader.VerifyNoOtherCalls();
+        }
+
+        #endregion
+    }

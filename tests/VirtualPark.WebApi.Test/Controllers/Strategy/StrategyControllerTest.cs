@@ -5,6 +5,7 @@ using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.BusinessLogic.Strategy.Models;
 using VirtualPark.BusinessLogic.Strategy.Services;
 using VirtualPark.BusinessLogic.Validations.Services;
+using VirtualPark.ReflectionAbstractions;
 using VirtualPark.WebApi.Controllers.Strategy;
 using VirtualPark.WebApi.Controllers.Strategy.ModelsIn;
 using VirtualPark.WebApi.Controllers.Strategy.ModelsOut;
@@ -294,4 +295,35 @@ public class StrategyControllerTest
         _strategyServiceMock.VerifyAll();
     }
     #endregion
+
+    #region GetKeyStrategies
+
+    [TestMethod]
+    public void GetKeyStrategies_ShouldReturnMappedListOfKeys()
+    {
+        var strategies = new List<StrategyArgs>
+        {
+            new StrategyArgs("Attraction"),
+            new StrategyArgs("Combo"),
+            new StrategyArgs("Event")
+        };
+
+        _strategyServiceMock
+            .Setup(s => s.GetAllStrategies())
+            .Returns(strategies);
+
+        var result = _strategyController.GetKeyStrategies();
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(3);
+
+        result[0].Key.Should().Be("Attraction");
+        result[1].Key.Should().Be("Combo");
+        result[2].Key.Should().Be("Event");
+
+        _strategyServiceMock.VerifyAll();
+    }
+
+    #endregion
+
 }

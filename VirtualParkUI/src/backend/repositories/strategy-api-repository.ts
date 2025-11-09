@@ -12,9 +12,7 @@ export class StrategyApiRepository extends GenericApiRepository{
     }
 
     public createStrategy(body: StrategyModel): Observable<CreateStrategyResponse> {
-        {
             return this.create<CreateStrategyResponse>(body);
-        }
     }
     
     public getAllKeyStrategies() : Observable<GetStrategiesKeyResponse[]> {

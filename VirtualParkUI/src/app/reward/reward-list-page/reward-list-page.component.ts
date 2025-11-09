@@ -2,15 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { RewardService } from '../../../backend/services/reward/reward.service';
 import { Router } from '@angular/router';
 import { RewardModel } from '../../../backend/services/reward/models/RewardModel';
+import { ButtonsComponent } from '../../components/buttons/buttons.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-reward-page',
-  standalone: false,
-  templateUrl: './reward-page.component.html',
-  styleUrl: './reward-page.component.css',
+  standalone: true,
+  templateUrl: './reward-list-page.component.html',
+  styleUrl: './reward-list-page.component.css',
+  imports: [ButtonsComponent, CommonModule]
 })
 
-export class RewardPageComponent implements OnInit {
+export class RewardListPageComponent implements OnInit {
   rewards: RewardModel[] = [];
   loading = true;
 

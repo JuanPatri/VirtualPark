@@ -38,10 +38,7 @@ export class HeaderComponent implements OnDestroy {
 
     attractionsMenu: RoleGuardedMenuItem[] = [];
 
-    ticketsMenu: RoleGuardedMenuItem[] = [
-        { label: 'List', path: '/ticket', roles: ['Administrator'] },
-        { label: 'Create', path: '/ticket/register', roles: ['Visitor'] }
-    ];
+    ticketsMenu: RoleGuardedMenuItem[] = [];
 
     eventsMenu: RoleGuardedMenuItem[] = [];
 

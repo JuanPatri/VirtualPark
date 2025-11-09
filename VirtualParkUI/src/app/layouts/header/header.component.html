@@ -50,10 +50,11 @@
         *ngIf="canView(['Administrator'])">
         </app-dropdown-menu>
 
-        <ng-container *ngIf="getVisibleMenu(rankingMenu) as rankingMenuItems">
-            <app-dropdown-menu label="Rankings" [items]="rankingMenuItems"
-                *ngIf="rankingMenuItems.length"></app-dropdown-menu>
-        </ng-container>
+        <app-dropdown-menu
+        label="Ranking"
+        [path]="'/ranking'"
+        *ngIf="canView(['Administrator', 'Visitor'])">
+        </app-dropdown-menu>
     </nav>
 
     <app-buttons color="primary" text="Logout" (clicked)="logout()"></app-buttons>

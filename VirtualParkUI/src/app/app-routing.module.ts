@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { RankingPageComponent } from './ranking/ranking-list-page/ranking-page.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -21,7 +20,7 @@ const routes: Routes = [
         path: 'reedem',
         loadChildren: () => import('./reward-redemption/reward-redemption.module').then(m => m.RewardRedemptionModule),
     },
-    { path: 'ranking', component: RankingPageComponent },
+    { path: 'ranking', loadChildren: () => import('./ranking/ranking.module').then(m => m.RankingModule) },
     { path: 'events', loadChildren: () => import('./event/event.module').then(m => m.EventModule) },
     { path: 'incidences', loadChildren: () => import('./incidence/incidence.module').then(m => m.IncidenceModule) },
     { path: 'typeincidences', loadChildren: () => import('./type-incidence/type-incidence.module').then(m => m.TypeIncidenceModule) },

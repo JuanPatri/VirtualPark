@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { DropdownItem, DropdownMenuComponent } from '../../components/dropdown-menu/dropdown-menu.component';
 import { SessionService } from '../../../backend/services/session/session.service';
+import { ButtonsComponent } from '../../components/buttons/buttons.component';
 import { AuthRoleService } from '../../auth-role/auth-role.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -37,34 +38,23 @@ export class HeaderComponent implements OnDestroy {
             });
     }
 
-    attractionsMenu: RoleGuardedMenuItem[] = [
-        { label: 'List', path: '/attraction', roles: ['Administrator', 'Operator', 'Visitor'] },
-        { label: 'Create', path: '/attraction/register', roles: ['Administrator', 'Operator'] },
-        { label: 'Ranking', path: '/ranking', roles: ['Visitor', 'Administrator'] }
-    ];
+    attractionsMenu: RoleGuardedMenuItem[] = [];
 
-    ticketsMenu: RoleGuardedMenuItem[] = [
-        { label: 'List', path: '/ticket', roles: ['Administrator'] },
-        { label: 'Create', path: '/ticket/register', roles: ['Visitor'] }
-    ];
+    ticketsMenu: RoleGuardedMenuItem[] = [];
 
-    eventsMenu: RoleGuardedMenuItem[] = [
-        { label: 'Event', path: '/events', roles: ['Administrator'] },
-        { label: 'Create', path: '/events/new', roles: ['Administrator'] }
-    ];
+    eventsMenu: RoleGuardedMenuItem[] = [];
+
+    rewardRedemptionMenu: RoleGuardedMenuItem[] = [];
+
 
     rewardMenu: RoleGuardedMenuItem[] = [
         { label: 'Reward', path: '/reward', roles: ['Administrator'] },
         { label: 'Create', path: '/rewards/create', roles: ['Administrator'] }
     ];
 
-    incidenceMenu = [
-        { label: 'Incidence', path: '/incidences', roles: ['Operator', 'Administrator'] },
-    ];
+    incidenceMenu = [];
 
-    typeIncidenceMenu = [
-        { label: 'Types', path: '/typeincidences', roles: ['Operator', 'Administrator'] }
-    ];
+    typeIncidenceMenu = [];
 
     homeMenu: RoleGuardedMenuItem[] = [
         { label: 'Home', path: '/user/home', roles: ['Administrator', 'Operator', 'Visitor'] }
@@ -73,6 +63,9 @@ export class HeaderComponent implements OnDestroy {
     clockMenu: RoleGuardedMenuItem[] = [
         { label: 'Clock', path: '/clock', roles: ['Administrator'] }
     ];
+
+    
+    rankingMenu: RoleGuardedMenuItem[] = [];
 
     userMenu: RoleGuardedMenuItem[] = [
         { label: 'List', path: '/user/list', roles: ['Administrator'] },

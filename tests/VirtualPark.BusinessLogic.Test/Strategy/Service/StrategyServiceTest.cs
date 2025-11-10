@@ -168,7 +168,7 @@ public class ActiveStrategyServiceTest
         };
 
         _repoMock
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns(list);
 
         var result = _service.GetAll();
@@ -188,7 +188,7 @@ public class ActiveStrategyServiceTest
     public void GetAll_ShouldReturnEmptyList_WhenRepositoryReturnsEmptyList()
     {
         _repoMock
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns([]);
 
         var result = _service.GetAll();

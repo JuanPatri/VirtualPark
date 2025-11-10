@@ -130,7 +130,9 @@ public sealed class EventServiceTest
         var ev = new Event { Id = eventId, Name = "New Year Party" };
 
         _eventRepositoryMock
-            .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
             .Returns(ev);
 
         Event? result = _eventService.Get(eventId);
@@ -315,8 +317,14 @@ public sealed class EventServiceTest
         var attraction = new Attraction { Id = attractionId, Name = "Ferris Wheel" };
 
         _attractionRepositoryMock
-            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Setup(r => r.Get(It.Is<Expression<Func<Attraction, bool>>>(expr => expr.Compile().Invoke(attraction))))
             .Returns(attraction);
+
+        _eventRepositoryMock
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
+            .Returns(existing);
 
         _eventService.Update(args, existing.Id);
 
@@ -329,7 +337,81 @@ public sealed class EventServiceTest
         _eventRepositoryMock.Verify(r => r.Update(existing), Times.Once);
     }
 
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Update_WhenEventExists_ShouldClearOldAttractionsBeforeAddingNew()
+    {
+        var oldAttraction = new Attraction { Id = Guid.NewGuid(), Name = "Old Ride" };
+        var ev = new Event
+        {
+            Id = Guid.NewGuid(),
+            Name = "Summer Fest",
+            Attractions = [oldAttraction]
+        };
+
+        var newAttractionId = Guid.NewGuid();
+        var args = new EventsArgs("Updated Fest", "2025-12-25", 300, 1500, [newAttractionId.ToString()]);
+
+        var newAttraction = new Attraction { Id = newAttractionId, Name = "New Roller Coaster" };
+
+        _eventRepositoryMock
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
+            .Returns(ev);
+
+        _attractionRepositoryMock
+            .Setup(r => r.Get(It.Is<Expression<Func<Attraction, bool>>>(expr => expr.Compile().Invoke(newAttraction))))
+            .Returns(newAttraction);
+
+        _eventRepositoryMock.Setup(r => r.Update(ev));
+
+        _eventService.Update(args, ev.Id);
+
+        ev.Name.Should().Be("Updated Fest");
+        ev.Capacity.Should().Be(300);
+        ev.Cost.Should().Be(1500);
+
+        ev.Attractions.Should().HaveCount(1);
+        ev.Attractions.Should().Contain(newAttraction);
+        ev.Attractions.Should().NotContain(oldAttraction);
+
+        _eventRepositoryMock.Verify(r => r.Update(ev), Times.Once);
+    }
+
     #endregion
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Update_WhenArgsHaveNoAttractions_ShouldClearAllExistingOnes()
+    {
+        var oldA1 = new Attraction { Id = Guid.NewGuid(), Name = "A1" };
+        var oldA2 = new Attraction { Id = Guid.NewGuid(), Name = "A2" };
+
+        var ev = new Event
+        {
+            Id = Guid.NewGuid(),
+            Name = "Festival",
+            Attractions = [oldA1, oldA2]
+        };
+
+        var args = new EventsArgs("Festival Updated", "2025-11-15", 150, 700, []);
+
+        _eventRepositoryMock
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
+            .Returns(ev);
+
+        _eventRepositoryMock.Setup(r => r.Update(ev));
+
+        _eventService.Update(args, ev.Id);
+
+        ev.Name.Should().Be("Festival Updated");
+        ev.Attractions.Should().BeEmpty();
+
+        _eventRepositoryMock.Verify(r => r.Update(ev), Times.Once);
+    }
 
     #region Failure
 

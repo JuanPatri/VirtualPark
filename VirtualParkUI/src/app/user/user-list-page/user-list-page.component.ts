@@ -26,8 +26,8 @@ export class UserListPageComponent implements OnInit {
     errorMsg = '';
 
     columns: TableColumn<Row>[] = [
-        { key: 'name', label: 'Nombre' },
-        { key: 'lastName', label: 'Apellido' },
+        { key: 'name', label: 'Name' },
+        { key: 'lastName', label: 'Last Name' },
         { key: 'actions', label: 'Actions', width: '180px', align: 'right' },
     ];
 

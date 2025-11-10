@@ -5,10 +5,12 @@ import { UserLoginPageComponent } from './user-login-page/user-login-page.compon
 import { MainPageComponent } from '../main-page/main-page.component'
 import { UserEditPageComponent } from './user-edit-page/user-edit-page.component';
 import { UserListPageComponent } from './user-list-page/user-list-page.component';
+import { UserCreatePageComponent } from './user-create-page/user-create-page.component';
 
 const routes: Routes = [
     { path: 'list', component: UserListPageComponent },
     { path: 'register', component: UserRegisterPageComponent },
+    { path: 'create', component: UserCreatePageComponent },
     { path: 'login', component: UserLoginPageComponent },
     { path: 'home', component: MainPageComponent},
     { path: 'edit/:id', component: UserEditPageComponent},

@@ -42,7 +42,7 @@ export class UserEditPageComponent implements OnDestroy {
         const token = localStorage.getItem('token');
         if (!token) {
             this.userId = null;
-            this.errorMessage = 'No se encontró un token de sesión válido.';
+            this.errorMessage = 'No valid session token found.';
             return;
         }
 
@@ -54,12 +54,12 @@ export class UserEditPageComponent implements OnDestroy {
                 this.userId = res?.id ?? null;
                 this.loading = false;
                 if (!this.userId) {
-                    this.errorMessage = 'No se pudo identificar al usuario actual.';
+                    this.errorMessage = 'No valid user found.';
                 }
             },
             error: () => {
                 this.loading = false;
-                this.errorMessage = 'No se pudo obtener la información de la sesión.';
+                this.errorMessage = 'Could not retrieve session information.';
             }
         });
     }

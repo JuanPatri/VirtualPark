@@ -5,16 +5,16 @@
 
     <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading">
         <fieldset class="user-edit-form__section">
-            <legend>Datos del usuario</legend>
+            <legend>User Information</legend>
 
             <label class="user-edit-form__field">
-                <span>Nombre</span>
-                <input type="text" formControlName="name" placeholder="Nombre" />
+                <span>Name</span>
+                <input type="text" formControlName="name" placeholder="Name" />
             </label>
 
             <label class="user-edit-form__field">
-                <span>Apellido</span>
-                <input type="text" formControlName="lastName" placeholder="Apellido" />
+                <span>Last Name</span>
+                <input type="text" formControlName="lastName" placeholder="Last Name" />
             </label>
 
             <label class="user-edit-form__field">
@@ -25,30 +25,30 @@
         </fieldset>
 
         <fieldset class="user-edit-form__section" *ngIf="visitorProfile">
-            <legend>Perfil del visitante</legend>
+            <legend>Visitor Profile</legend>
 
             <label class="user-edit-form__field">
-                <span>Fecha de nacimiento</span>
+                <span>Date of Birth</span>
                 <input type="date" formControlName="dateOfBirth" />
             </label>
 
             <label class="user-edit-form__field">
                 <span>Membership</span>
                 <select formControlName="membership">
-                    <option value="">Selecciona una membresía</option>
+                    <option value="">Select a membership</option>
                     <option *ngFor="let option of membershipOptions" [value]="option">{{ option }}</option>
                 </select>
             </label>
 
             <label class="user-edit-form__field">
-                <span>Puntaje</span>
-                <input type="text" formControlName="score" placeholder="Puntaje" readonly />
+                <span>Score</span>
+                <input type="text" formControlName="score" placeholder="Score" readonly />
             </label>
         </fieldset>
 
         <div class="user-edit-form__actions">
             <button type="submit" [disabled]="saving || form.invalid">
-                {{ saving ? 'Guardando…' : 'Guardar cambios' }}
+                {{ saving ? 'Saving…' : 'Save Changes' }}
             </button>
         </div>
     </form>

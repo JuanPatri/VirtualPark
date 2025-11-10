@@ -95,9 +95,9 @@ public class EventService(IRepository<Event> eventRepository, IRepository<Attrac
 
         ev.Attractions.Clear();
 
-        if (args.AttractionIds.Count != 0)
+        if(args.AttractionIds.Count != 0)
         {
-            foreach (var attraction in args.AttractionIds.Select(attractionId => _attractionRepository.Get(a => a.Id == attractionId)).OfType<Attraction>())
+            foreach(var attraction in args.AttractionIds.Select(attractionId => _attractionRepository.Get(a => a.Id == attractionId)).OfType<Attraction>())
             {
                 ev.Attractions.Add(attraction);
             }

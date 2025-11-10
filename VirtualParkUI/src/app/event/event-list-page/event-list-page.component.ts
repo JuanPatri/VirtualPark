@@ -4,20 +4,24 @@ import { Router } from '@angular/router';
 import { EventService } from '../../../backend/services/event/event.service';
 import { EventModel } from '../../../backend/services/event/models/EventModel';
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
+import { AuthRoleService } from '../../auth-role/auth-role.service';
 
 @Component({
   selector: 'app-event-page',
   standalone: true,
   imports: [CommonModule, ButtonsComponent],
-  templateUrl: './event-page.component.html',
-  styleUrls: ['./event-page.component.css']
+  templateUrl: './event-list-page.component.html',
+  styleUrls: ['./event-list-page.component.css']
 })
-export class EventPageComponent implements OnInit {
+export class EventListPageComponent implements OnInit {
   events: EventModel[] = [];
   loading = false;
   error = '';
 
-  constructor(private eventSvc: EventService, private router: Router) {}
+  constructor(
+    private eventSvc: EventService, 
+    private router: Router, 
+    private authRole: AuthRoleService) {}
 
   ngOnInit(): void {
     this.loadEvents();
@@ -42,7 +46,7 @@ export class EventPageComponent implements OnInit {
   }
 
   edit(id: string): void {
-    this.router.navigate(['/events/edit', id]);
+    this.router.navigate(['/events/', id]);
   }
 
   remove(id: string): void {
@@ -51,5 +55,9 @@ export class EventPageComponent implements OnInit {
       next: () => this.loadEvents(),
       error: err => alert(`Removing error: ${err.message}`)
     });
+  }
+
+    canManageEvents(): boolean {
+    return this.authRole.hasAnyRole(['Administrator']);
   }
 }

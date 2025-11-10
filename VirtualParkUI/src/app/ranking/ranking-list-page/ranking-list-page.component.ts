@@ -17,7 +17,7 @@ import { UserModel } from '../../../backend/services/user/models/UserModel';
   templateUrl: './ranking-list-page.component.html',
   styleUrls: ['./ranking-list-page.component.css']
 })
-export class RankingPageComponent implements OnInit {
+export class RankingListPageComponent implements OnInit {
   ranking: RankingModel | null = null;
   date = new Date().toISOString().split('T')[0];
   period = 'Daily';

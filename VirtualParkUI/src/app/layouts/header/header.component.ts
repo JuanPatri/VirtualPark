@@ -36,34 +36,23 @@ export class HeaderComponent implements OnDestroy {
             });
     }
 
-    attractionsMenu: RoleGuardedMenuItem[] = [
-        { label: 'List', path: '/attraction', roles: ['Administrator', 'Operator', 'Visitor'] },
-        { label: 'Create', path: '/attraction/register', roles: ['Administrator', 'Operator'] },
-        { label: 'Ranking', path: '/ranking', roles: ['Visitor', 'Administrator'] }
-    ];
+    attractionsMenu: RoleGuardedMenuItem[] = [];
 
-    ticketsMenu: RoleGuardedMenuItem[] = [
-        { label: 'List', path: '/ticket', roles: ['Administrator'] },
-        { label: 'Create', path: '/ticket/register', roles: ['Visitor'] }
-    ];
+    ticketsMenu: RoleGuardedMenuItem[] = [];
 
-    eventsMenu: RoleGuardedMenuItem[] = [
-        { label: 'Event', path: '/events', roles: ['Administrator'] },
-        { label: 'Create', path: '/events/new', roles: ['Administrator'] }
-    ];
+    eventsMenu: RoleGuardedMenuItem[] = [];
+
+    rewardRedemptionMenu: RoleGuardedMenuItem[] = [];
+
 
     rewardMenu: RoleGuardedMenuItem[] = [
         { label: 'Reward', path: '/reward', roles: ['Administrator'] },
         { label: 'Create', path: '/rewards/create', roles: ['Administrator'] }
     ];
 
-    incidenceMenu = [
-        { label: 'Incidence', path: '/incidences', roles: ['Operator', 'Administrator'] },
-    ];
+    incidenceMenu = [];
 
-    typeIncidenceMenu = [
-        { label: 'Types', path: '/typeincidences', roles: ['Operator', 'Administrator'] }
-    ];
+    typeIncidenceMenu = [];
 
     homeMenu: RoleGuardedMenuItem[] = [
         { label: 'Home', path: '/user/home', roles: ['Administrator', 'Operator', 'Visitor'] }
@@ -74,9 +63,7 @@ export class HeaderComponent implements OnDestroy {
     ];
 
     
-    rankingMenu: RoleGuardedMenuItem[] = [
-        { label: 'Ranking', path: '/ranking', roles: ['Administrator', 'Visitor'] }
-    ];
+    rankingMenu: RoleGuardedMenuItem[] = [];
 
     canView(roles: string[]): boolean {
         return this.authRole.hasAnyRole(roles);

@@ -59,30 +59,41 @@ public sealed class LoadAssembly<TInterface>(string path) : ILoadAssembly<TInter
         return keys.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
     }
 
-    public TInterface GetImplementation(string assemblyName, params object[] args)
+    public TInterface GetImplementation(string key, params object[] args)
     {
         if (_implementations == null || _implementations.Count == 0)
         {
             throw new InvalidOperationException("No implementations loaded.");
         }
 
-        var type = _implementations.FirstOrDefault(t =>
-            string.Equals(t.Name, assemblyName, StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(t.FullName, assemblyName, StringComparison.OrdinalIgnoreCase));
+        var availableKeys = GetImplementationKeys();
 
-        if (type == null)
+        var keyExists = availableKeys.Any(k =>
+            string.Equals(k, key, StringComparison.OrdinalIgnoreCase));
+
+        if (!keyExists)
         {
-            throw new InvalidOperationException($"Implementation '{assemblyName}' not found among loaded assemblies.");
+            throw new InvalidOperationException(
+                $"Implementation with Key '{key}' not found. Available keys: {string.Join(", ", availableKeys)}");
         }
 
-        try
+        foreach (var type in _implementations)
         {
-            var instance = Activator.CreateInstance(type, args);
-            return (TInterface)instance!;
+            try
+            {
+                if (Activator.CreateInstance(type, args) is IStrategy strategy &&
+                    !string.IsNullOrWhiteSpace(strategy.Key) &&
+                    string.Equals(strategy.Key, key, StringComparison.OrdinalIgnoreCase))
+                {
+                    return (TInterface)(object)strategy;
+                }
+            }
+            catch
+            {
+                continue;
+            }
         }
-        catch (Exception ex)
-        {
-            throw new InvalidOperationException($"Failed to create instance of '{assemblyName}': {ex.Message}", ex);
-        }
+
+        throw new InvalidOperationException($"Implementation with Key '{key}' not found among loaded assemblies.");
     }
 }

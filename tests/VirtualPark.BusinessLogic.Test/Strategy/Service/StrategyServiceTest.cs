@@ -192,24 +192,15 @@ public class ActiveStrategyServiceTest
     public void GetAll_ShouldReturnEmptyList_WhenRepositoryReturnsEmptyList()
     {
         _repoMock
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns(new List<ActiveStrategy>());
-
-        _loadAssemblyMock
-            .Setup(l => l.GetImplementations())
-            .Returns(new List<string?>());
-
-        _loadAssemblyMock
-            .Setup(l => l.GetImplementation(It.IsAny<string>(), It.IsAny<object[]>()))
-            .Throws(new InvalidOperationException("not used"));
 
         var result = _service.GetAll();
 
         result.Should().NotBeNull();
         result.Should().BeEmpty();
 
-        _repoMock.Verify(r => r.GetAll(null), Times.Once);
-
+        _repoMock.Verify(r => r.GetAll(), Times.Once);
         _repoMock.VerifyNoOtherCalls();
         _loadAssemblyMock.VerifyNoOtherCalls();
         _factoryMock.VerifyNoOtherCalls();

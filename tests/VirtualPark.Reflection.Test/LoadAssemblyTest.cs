@@ -226,7 +226,24 @@ public sealed class LoadAssemblyTest
             .Throw<InvalidOperationException>()
             .WithMessage("Implementation with Key 'NeedsArg' not found*Available keys:*");
     }
-    
+
+    [TestMethod]
+    public void GetImplementation_ShouldSupportConstructorsWithArguments()
+    {
+        var sourceDll = typeof(NeedsArgStrategy).Assembly.Location;
+        var destDll = Path.Combine(_testPath, "ArgStrategies.dll");
+        File.Copy(sourceDll, destDll, overwrite: true);
+
+        var loader = new LoadAssembly<IStrategy>(_testPath);
+        loader.GetImplementations();
+
+        var instance = loader.GetImplementation("NeedsArg", "InjectedValue");
+
+        instance.Should().NotBeNull();
+        instance.Key.Should().Be("NeedsArg");
+        instance.GetType().GetProperty("InitMessage")!.GetValue(instance)
+            .Should().Be("InjectedValue");
+    }
 
     #endregion
 

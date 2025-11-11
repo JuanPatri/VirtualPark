@@ -66,17 +66,6 @@ public sealed class LoadAssembly<TInterface>(string path) : ILoadAssembly<TInter
             throw new InvalidOperationException("No implementations loaded.");
         }
 
-        var availableKeys = GetImplementationKeys();
-
-        var keyExists = availableKeys.Any(k =>
-            string.Equals(k, key, StringComparison.OrdinalIgnoreCase));
-
-        if (!keyExists)
-        {
-            throw new InvalidOperationException(
-                $"Implementation with Key '{key}' not found. Available keys: {string.Join(", ", availableKeys)}");
-        }
-
         foreach (var type in _implementations)
         {
             try
@@ -94,6 +83,8 @@ public sealed class LoadAssembly<TInterface>(string path) : ILoadAssembly<TInter
             }
         }
 
-        throw new InvalidOperationException($"Implementation with Key '{key}' not found among loaded assemblies.");
+        var availableKeys = GetImplementationKeys();
+        throw new InvalidOperationException(
+            $"Implementation with Key '{key}' not found. Available keys: {string.Join(", ", availableKeys)}");
     }
 }

@@ -6,7 +6,7 @@ import { StrategyService } from '../../../backend/services/strategy/strategy.ser
 import { GetStrategiesKeyResponse } from '../../../backend/services/strategy/models/GetStrategiesKeyResponse';
 import { StrategyModel } from '../../../backend/services/strategy/models/StrategyModel';
 import { ClockService } from '../../../backend/services/clock/clock.service';
-import { switchMap } from 'rxjs/operators'; // ✅ Importar operador
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-strategy-select-page',
@@ -46,10 +46,14 @@ export class StrategySelectPageComponent implements OnInit {
 
         this._clockService.get().pipe(
             switchMap(clock => {
+                const formattedDate = this.formatDate(clock.dateSystem);
+                
                 const strategyModel: StrategyModel = {
-                    key: this.selectedKey!,
-                    date: clock.dateSystem
+                    strategyKey: this.selectedKey!,
+                    date: formattedDate
                 };
+                
+                console.log('Sending strategy model:', strategyModel);
                 
                 return this._strategyService.create(strategyModel);
             })
@@ -68,5 +72,18 @@ export class StrategySelectPageComponent implements OnInit {
                 console.log('Strategy activation completed');
             }
         });
+    }
+
+    private formatDate(dateString: string): string {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+            return dateString;
+        }
+        
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        
+        return `${year}-${month}-${day}`;
     }
 }

@@ -124,6 +124,23 @@ public sealed class LoadAssemblyTest
         count1.Should().Be(count2);
         result1.Should().BeEquivalentTo(result2);
     }
+
+    [TestMethod]
+    public void GetImplementations_ShouldReloadImplementations_WhenNewDllIsAdded()
+    {
+        var loader = new LoadAssembly<IStrategy>(_testPath);
+        var result1 = loader.GetImplementations();
+
+        var sourceDll = typeof(TestStrategy).Assembly.Location;
+        var destDll = Path.Combine(_testPath, "TestStrategies.dll");
+        File.Copy(sourceDll, destDll, overwrite: true);
+
+        var result2 = loader.GetImplementations();
+
+        result1.Should().BeEmpty();
+        result2.Should().NotBeEmpty();
+        result2.Should().Contain(nameof(TestStrategy));
+    }
     #endregion
 
     #region GetImplementation

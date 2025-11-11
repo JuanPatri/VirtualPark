@@ -169,32 +169,22 @@ public class ActiveStrategyServiceTest
     #region Success
 
     [TestMethod]
-    public void GetAll_ShouldReturnListOfArgs_WhenRepositoryHasData()
+    public void GetAllStrategies_ShouldReturnListOfStrategyArgs_WhenRepositoryHasData()
     {
-        var list = new List<ActiveStrategy>
-        {
-            new ActiveStrategy { StrategyKey = "Attraction", Date = new DateOnly(2025, 10, 08) },
-            new ActiveStrategy { StrategyKey = "Combo", Date = new DateOnly(2025, 10, 09) }
-        };
+        var expectedKeys = new List<string> { "Attraction", "Combo", "Event" };
 
-        _repoMock.Setup(r => r.GetAll(null)).Returns(list);
+        _loadAssemblyMock.Setup(l => l.GetImplementationKeys())
+            .Returns(new List<string>());
 
-        _loadAssemblyMock.Setup(l => l.GetImplementations()).Returns(new List<string?>());
-        _loadAssemblyMock.Setup(l => l.GetImplementation(It.IsAny<string>(), It.IsAny<object[]>()))
-            .Throws(new InvalidOperationException("not used"));
-
-        var result = _service.GetAll();
+        var result = _service.GetAllStrategies();
 
         result.Should().NotBeNull();
-        result.Should().HaveCount(2);
-        result[0].StrategyKey.Should().Be("Attraction");
-        result[0].Date.Should().Be(new DateOnly(2025, 10, 08));
-        result[1].StrategyKey.Should().Be("Combo");
-        result[1].Date.Should().Be(new DateOnly(2025, 10, 09));
+        result.Should().HaveCount(3);
+        result.Select(r => r.Key).Should().BeEquivalentTo(expectedKeys);
 
-        _repoMock.Verify(r => r.GetAll(null), Times.Once);
-        _repoMock.VerifyNoOtherCalls();
+        _loadAssemblyMock.Verify(l => l.GetImplementationKeys(), Times.Once);
         _loadAssemblyMock.VerifyNoOtherCalls();
+        _repoMock.VerifyNoOtherCalls();
         _factoryMock.VerifyNoOtherCalls();
     }
 

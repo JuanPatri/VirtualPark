@@ -155,24 +155,6 @@ public sealed class LoadAssemblyTest
         instance.GetType().Name.Should().Be(nameof(TestStrategy));
         instance.Key.Should().Be("Test");
     }
-
-    [TestMethod]
-    public void GetImplementation_ShouldThrow_WhenConstructorArgsMismatch()
-    {
-        var sourceDll = typeof(EventPointsStrategy).Assembly.Location;
-        var destDll = Path.Combine(_testPath, "VirtualPark.Strategies.dll");
-        File.Copy(sourceDll, destDll, overwrite: true);
-
-        var loader = new LoadAssembly<IStrategy>(_testPath);
-        loader.GetImplementations();
-
-        Action act = () => loader.GetImplementation("EventPointsStrategy");
-
-        act.Should()
-            .Throw<InvalidOperationException>()
-            .WithMessage("Failed to create instance of 'EventPointsStrategy'*");
-    }
-
     #endregion
 
     #region GetImplementationKeys

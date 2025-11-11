@@ -122,7 +122,7 @@ public class EventControllerTest
         res.Name.Should().Be("Halloween Party");
         res.Date.Should().Be("2025-10-31");
         res.Attractions.Should().HaveCount(2);
-        res.Attractions.Should().Contain(new[] { a1.Id.ToString(), a2.Id.ToString() });
+        res.Attractions.Should().Contain([a1.Id.ToString(), a2.Id.ToString()]);
 
         _eventServiceMock.VerifyAll();
     }

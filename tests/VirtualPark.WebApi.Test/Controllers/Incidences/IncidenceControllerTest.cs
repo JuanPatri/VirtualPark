@@ -387,7 +387,7 @@ public class IncidenceControllerTest
             TypeId = typeId,
             Description = "Mantenimiento programado",
             Start = "2025-10-06",
-            End   = "2025-10-06",
+            End = "2025-10-06",
             AttractionId = attractionId,
             Active = "false"
         };
@@ -397,11 +397,11 @@ public class IncidenceControllerTest
         _incidenceServiceMock
             .Setup(s => s.Update(It.Is<IncidenceArgs>(a =>
                     a.TypeIncidence == expectedArgs.TypeIncidence &&
-                    a.Description   == expectedArgs.Description &&
-                    a.Start         == expectedArgs.Start &&
-                    a.End           == expectedArgs.End &&
-                    a.AttractionId  == expectedArgs.AttractionId &&
-                    a.Active        == expectedArgs.Active),
+                    a.Description == expectedArgs.Description &&
+                    a.Start == expectedArgs.Start &&
+                    a.End == expectedArgs.End &&
+                    a.AttractionId == expectedArgs.AttractionId &&
+                    a.Active == expectedArgs.Active),
                 id))
             .Verifiable();
 
@@ -422,7 +422,7 @@ public class IncidenceControllerTest
             TypeId = typeId,
             Description = "Falla intermitente",
             Start = "2025-10-06T10:00:00",
-            End   = "2025-10-06T11:00:00",
+            End = "2025-10-06T11:00:00",
             AttractionId = attractionId,
             Active = "true"
         };
@@ -432,11 +432,11 @@ public class IncidenceControllerTest
         _incidenceServiceMock
             .Setup(s => s.Create(It.Is<IncidenceArgs>(a =>
                 a.TypeIncidence == expected.TypeIncidence &&
-                a.Description   == expected.Description &&
-                a.Start         == expected.Start &&
-                a.End           == expected.End &&
-                a.AttractionId  == expected.AttractionId &&
-                a.Active        == expected.Active)))
+                a.Description == expected.Description &&
+                a.Start == expected.Start &&
+                a.End == expected.End &&
+                a.AttractionId == expected.AttractionId &&
+                a.Active == expected.Active)))
             .Returns(returnId);
 
         var res = _incidencesController.CreateIncidence(request);

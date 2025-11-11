@@ -1,6 +1,7 @@
 <div class="form-header">
   <h2 class="title">Select today's strategy</h2>
 </div>
+<app-messages></app-messages>
 
 <form class="form" (ngSubmit)="active()" #f="ngForm" novalidate>
   <div class="grid">
@@ -9,17 +10,22 @@
 
       <select
         id="strategyKey"
-        name="strategyKey"              
-        [(ngModel)]="selectedKey"      
-        required                      
-        aria-label="Seleccionar estrategia">
+        name="strategyKey"
+        [(ngModel)]="selectedKey"
+        required
+        aria-label="Select strategy">
         <option [ngValue]="null" disabled>Select the strategy</option>
-      <option *ngFor="let s of strategies" [ngValue]="s.key">
-        {{ s.key }}
-      </option>
+        <option *ngFor="let s of strategies" [ngValue]="s.key">
+          {{ s.key }}
+        </option>
       </select>
     </div>
 
-    <app-buttons color="primary" text="Active" [type]="'submit'"></app-buttons>
+    <app-buttons
+      color="primary"
+      text="Activate"
+      [type]="'submit'"
+      [disabled]="isActivating">
+    </app-buttons>
   </div>
 </form>

@@ -7,6 +7,7 @@ import { GetStrategiesKeyResponse } from '../../../backend/services/strategy/mod
 import { StrategyModel } from '../../../backend/services/strategy/models/StrategyModel';
 import { ClockService } from '../../../backend/services/clock/clock.service';
 import { switchMap } from 'rxjs/operators';
+import { MessageService } from '../../components/messages/service/message.service';
 
 @Component({
   selector: 'app-strategy-select-page',
@@ -22,7 +23,8 @@ export class StrategySelectPageComponent implements OnInit {
 
     constructor(
         private _strategyService: StrategyService, 
-        private _clockService: ClockService
+        private _clockService: ClockService,
+        private _messageService: MessageService
     ) {}
 
     ngOnInit(): void {
@@ -31,7 +33,7 @@ export class StrategySelectPageComponent implements OnInit {
                 this.strategies = data;
             },
             error: (err) => {
-                console.error('Error loading strategies:', err);
+                this._messageService.show(`Error fetching strategies: ${err.message || 'Please try again.'}`, 'error');
             }
         });
     }
@@ -46,44 +48,25 @@ export class StrategySelectPageComponent implements OnInit {
 
         this._clockService.get().pipe(
             switchMap(clock => {
-                const formattedDate = this.formatDate(clock.dateSystem);
+                const formattedDate = this._strategyService.formatDate(clock.dateSystem);
                 
                 const strategyModel: StrategyModel = {
                     strategyKey: this.selectedKey!,
                     date: formattedDate
-                };
-                
-                console.log('Sending strategy model:', strategyModel);
-                
+                };                
                 return this._strategyService.create(strategyModel);
             })
         ).subscribe({
             next: (response) => {
-                alert(`Strategy ${this.selectedKey} activated successfully.`);
-                console.log('Response:', response);
                 this.isActivating = false;
             },
             error: (err) => {
-                console.error('Error activating strategy:', err);
-                alert(`Error: Could not activate strategy. ${err.message || 'Please try again.'}`);
+                this._messageService.show(`Error activating strategy: ${err.message || 'Please try again.'}`, 'error');
                 this.isActivating = false;
             },
             complete: () => {
-                console.log('Strategy activation completed');
+                this._messageService.show('Strategy activated successfully!', 'success');
             }
         });
-    }
-
-    private formatDate(dateString: string): string {
-        if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-            return dateString;
-        }
-        
-        const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        
-        return `${year}-${month}-${day}`;
     }
 }

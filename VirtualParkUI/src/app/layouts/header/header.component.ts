@@ -1,42 +1,86 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Router, RouterModule} from '@angular/router';
-import { DropdownMenuComponent } from '../../components/dropdown-menu/dropdown-menu.component';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { DropdownItem, DropdownMenuComponent } from '../../components/dropdown-menu/dropdown-menu.component';
 import { SessionService } from '../../../backend/services/session/session.service';
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
+import { AuthRoleService } from '../../auth-role/auth-role.service';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
+type RoleGuardedMenuItem = DropdownItem & { roles: string[] };
 
 @Component({
     selector: 'app-header',
     standalone: true,
-    imports: [CommonModule, RouterModule, DropdownMenuComponent,  ButtonsComponent],
+    imports: [CommonModule, RouterModule, DropdownMenuComponent, ButtonsComponent],
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
+    private readonly hiddenRoutes = new Set<string>(['', '/', '/user/login', '/user/register']);
+    private subscription: Subscription | null = null;
+    isVisible = true;
+
     constructor(
         private sessionService: SessionService,
-        private router: Router
-    ) {}
-    
-    attractionsMenu = [
-        { label: 'List', path: '/attraction' },
-        { label: 'Create', path: '/attraction/new' },
-        { label: 'Ranking', path: '/ranking' }
+        private router: Router,
+        private authRole: AuthRoleService
+    ) {
+        this.isVisible = !this.shouldHide(this.router.url);
+
+        this.subscription = this.router.events
+            .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+            .subscribe(event => {
+                this.isVisible = !this.shouldHide(event.urlAfterRedirects);
+            });
+    }
+
+    attractionsMenu: RoleGuardedMenuItem[] = [];
+
+    ticketsMenu: RoleGuardedMenuItem[] = [];
+
+    eventsMenu: RoleGuardedMenuItem[] = [];
+
+    rewardRedemptionMenu: RoleGuardedMenuItem[] = [];
+
+
+    rewardMenu: RoleGuardedMenuItem[] = [
+        { label: 'Reward', path: '/reward', roles: ['Administrator'] },
+        { label: 'Create', path: '/rewards/create', roles: ['Administrator'] }
     ];
 
-    eventsMenu = [
-        { label: 'Event', path: '/events' },
-        { label: 'Create', path: '/events/new' }
+    incidenceMenu = [];
+
+    typeIncidenceMenu = [];
+
+    homeMenu: RoleGuardedMenuItem[] = [
+        { label: 'Home', path: '/user/home', roles: ['Administrator', 'Operator', 'Visitor'] }
     ];
 
-    rewardMenu = [
-        { label: 'Reward', path: '/reward' },
-        { label: 'Create', path: '/rewards/create' },  
+    clockMenu: RoleGuardedMenuItem[] = [
+        { label: 'Clock', path: '/clock', roles: ['Administrator'] }
     ];
 
     strategyMenu = [
         { label: 'Active Strategies', path: '/strategy/active' }
     ];
+    
+    rankingMenu: RoleGuardedMenuItem[] = [];
+
+    canView(roles: string[]): boolean {
+        return this.authRole.hasAnyRole(roles);
+    }
+
+    ngOnDestroy(): void {
+        this.subscription?.unsubscribe();
+    }
+
+    getVisibleMenu(menu: RoleGuardedMenuItem[]): DropdownItem[] {
+        return menu
+            .filter(item => this.canView(item.roles))
+            .map(({ label, path }) => ({ label, path }));
+    }
 
     logout(): void {
         const token = localStorage.getItem('token');
@@ -44,8 +88,14 @@ export class HeaderComponent {
         if (token) {
             this.sessionService.logout(token);
         }
-        
+
         this.router.navigate(['/user/login']);
+    }
+
+    private shouldHide(url: string): boolean {
+        if (!url) return true;
+        const cleaned = url.split('?')[0].split('#')[0];
+        return this.hiddenRoutes.has(cleaned);
     }
 
 }

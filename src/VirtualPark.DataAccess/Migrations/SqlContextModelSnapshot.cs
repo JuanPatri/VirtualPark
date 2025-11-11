@@ -529,6 +529,12 @@ namespace VirtualPark.DataAccess.Migrations
                             Id = new Guid("56565656-1111-1111-1111-111111111114"),
                             Description = "Allows retrieving redemptions of a specific visitor",
                             Key = "GetRewardRedemptionsByVisitor-RewardRedemption"
+                        },
+                        new
+                        {
+                            Id = new Guid("88888888-1111-1111-1111-111111111114"),
+                            Description = "Allows update clockApp",
+                            Key = "UpdateClock-ClockApp"
                         });
                 });
 
@@ -886,6 +892,11 @@ namespace VirtualPark.DataAccess.Migrations
                         },
                         new
                         {
+                            RoleId = new Guid("aaaa1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("88888888-1111-1111-1111-111111111114")
+                        },
+                        new
+                        {
                             RoleId = new Guid("bbbb1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("11111111-1111-1111-1111-111111111112")
                         },
@@ -932,6 +943,11 @@ namespace VirtualPark.DataAccess.Migrations
                         new
                         {
                             RoleId = new Guid("bbbb1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("66666666-1111-1111-1111-111111111114")
+                        },
+                        new
+                        {
+                            RoleId = new Guid("bbbb1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("66666666-1111-1111-1111-111111111115")
                         },
                         new
@@ -943,6 +959,21 @@ namespace VirtualPark.DataAccess.Migrations
                         {
                             RoleId = new Guid("bbbb1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("44444444-1111-1111-1111-111111111112")
+                        },
+                        new
+                        {
+                            RoleId = new Guid("bbbb1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("44444444-1111-1111-1111-111111111113")
+                        },
+                        new
+                        {
+                            RoleId = new Guid("bbbb1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("44444444-1111-1111-1111-111111111115")
+                        },
+                        new
+                        {
+                            RoleId = new Guid("bbbb1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("44444444-1111-1111-1111-111111111114")
                         },
                         new
                         {
@@ -988,6 +1019,21 @@ namespace VirtualPark.DataAccess.Migrations
                         {
                             RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("56565656-1111-1111-1111-111111111114")
+                        },
+                        new
+                        {
+                            RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("10101010-1111-1111-1111-111111111112")
+                        },
+                        new
+                        {
+                            RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("11111111-1111-1111-1111-111111111113")
+                        },
+                        new
+                        {
+                            RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("22222222-1111-1111-1111-111111111113")
                         });
                 });
 

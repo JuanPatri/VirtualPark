@@ -188,7 +188,7 @@ public class AttractionServiceTest
         };
 
         _mockAttractionRepository
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns(attractions);
 
         var result = _attractionService.GetAll();
@@ -199,7 +199,7 @@ public class AttractionServiceTest
         result.Should().Contain(a => a.Name == "FerrisWheel");
 
         _mockAttractionRepository.Verify(
-            r => r.GetAll(null),
+            r => r.GetAll(),
             Times.Once);
     }
 
@@ -208,7 +208,7 @@ public class AttractionServiceTest
     public void GetAll_WhenNoAttractionsExist_ShouldReturnEmptyList()
     {
         _mockAttractionRepository
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns([]);
 
         var result = _attractionService.GetAll();
@@ -217,7 +217,7 @@ public class AttractionServiceTest
         result.Should().BeEmpty();
 
         _mockAttractionRepository.Verify(
-            r => r.GetAll(null),
+            r => r.GetAll(),
             Times.Once);
     }
     #endregion
@@ -1149,11 +1149,11 @@ public class AttractionServiceTest
         var a2 = new Attraction { Name = "Simulador B" };
 
         _mockAttractionRepository
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns([a1, a2]);
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns([]);
 
         var result = _attractionService.AttractionsReport(from, to);
@@ -1176,7 +1176,7 @@ public class AttractionServiceTest
         var a2 = new Attraction { Id = Guid.NewGuid(), Name = "Simulador B" };
 
         _mockAttractionRepository
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns([a1, a2]);
 
         var visitInside = new VisitRegistration
@@ -1191,7 +1191,7 @@ public class AttractionServiceTest
         };
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns([visitInside, visitOutside]);
 
         var result = _attractionService.AttractionsReport(from, to);

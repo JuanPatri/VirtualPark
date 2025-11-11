@@ -476,7 +476,7 @@ public class VisitRegistrationServiceTest
         v1.Attractions = [a1];
 
         _repositoryMock
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns([v1, v2]);
 
         _ticketRepoMock
@@ -525,7 +525,7 @@ public class VisitRegistrationServiceTest
     public void GetAll_ShouldThrow_WhenRepositoryReturnsNull()
     {
         _repositoryMock
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns((List<VisitRegistration>)null!);
 
         var act = _service.GetAll;

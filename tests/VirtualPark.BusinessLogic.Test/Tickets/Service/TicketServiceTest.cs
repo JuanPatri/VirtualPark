@@ -209,7 +209,7 @@ public class TicketServiceTest
         var tickets = new List<Ticket> { ticket1, ticket2 };
 
         _ticketRepositoryMock
-            .Setup(r => r.GetAll(null))
+            .Setup(r => r.GetAll())
             .Returns(tickets);
 
         var result = _ticketService.GetAll();
@@ -219,7 +219,7 @@ public class TicketServiceTest
         result.Should().Contain(ticket1);
         result.Should().Contain(ticket2);
 
-        _ticketRepositoryMock.Verify(r => r.GetAll(null), Times.Once);
+        _ticketRepositoryMock.Verify(r => r.GetAll(), Times.Once);
     }
     #endregion
     #region Null
@@ -228,7 +228,7 @@ public class TicketServiceTest
     public void GetAll_WhenNoTicketsExist_ShouldReturnEmptyList()
     {
         _ticketRepositoryMock
-            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Setup(r => r.GetAll())
             .Returns([]);
 
         var result = _ticketService.GetAll();

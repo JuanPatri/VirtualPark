@@ -52,14 +52,17 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
 
     public List<User> GetAll()
     {
-        var users = _userRepository.GetAll();
+        var users = _userRepository.GetAll(
+            predicate: null,
+            include: q => q
+                .Include(u => u.Roles)
+                .Include(u => u.VisitorProfile));
 
-        if(users == null)
+        if(users == null || users.Count == 0)
         {
             throw new InvalidOperationException("Dont have any users");
         }
 
-        UploadVisitorProfile(users);
         return users;
     }
 
@@ -96,19 +99,6 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
 
         _userRepository.Update(user!);
     }
-
-    /*public bool HasPermission(Guid id, string permissionKey)
-    {
-        var user = _userRepository.Get(u => u.Id == id);
-
-        foreach(var r in user.Roles)
-        {
-            var role = _rolesRepository.Get(role => role.Id == r.Id);
-            return (role.Permissions != null) && role.Permissions.Any(permission => permission.Key == permissionKey);
-        }
-
-        return false;
-    }*/
 
     public bool HasPermission(Guid id, string permissionKey)
     {
@@ -191,20 +181,6 @@ public class UserService(IRepository<User> userRepository, IReadOnlyRepository<R
         }
 
         return roles;
-    }
-
-    private List<User> UploadVisitorProfile(List<User> users)
-    {
-        foreach(var u in users)
-        {
-            if(u.VisitorProfileId.HasValue)
-            {
-                u.VisitorProfile =
-                    _visitorProfileRepository.Get(visitorProfile => visitorProfile.Id == u.VisitorProfileId);
-            }
-        }
-
-        return users;
     }
 
     private void DeleteVisitorProfile(Guid? id)

@@ -190,6 +190,44 @@ public sealed class LoadAssemblyTest
         instance.GetType().Name.Should().Be(nameof(TestStrategy));
         instance.Key.Should().Be("Test");
     }
+
+    [TestMethod]
+    public void GetImplementation_ShouldBeCaseInsensitive_WhenMatchingKey()
+    {
+        var sourceDll = typeof(TestStrategy).Assembly.Location;
+        var destDll = Path.Combine(_testPath, "TestStrategies.dll");
+        File.Copy(sourceDll, destDll, overwrite: true);
+
+        var loader = new LoadAssembly<IStrategy>(_testPath);
+        loader.GetImplementations();
+
+        var lower = loader.GetImplementation("test");
+        var upper = loader.GetImplementation("TEST");
+
+        lower.Should().NotBeNull();
+        upper.Should().NotBeNull();
+        lower.Key.Should().Be("Test");
+        upper.Key.Should().Be("Test");
+    }
+
+    [TestMethod]
+    public void GetImplementation_ShouldThrow_WhenMissingRequiredConstructorArgs()
+    {
+        var sourceDll = typeof(NeedsArgStrategy).Assembly.Location;
+        var destDll = Path.Combine(_testPath, "ArgStrategies.dll");
+        File.Copy(sourceDll, destDll, overwrite: true);
+
+        var loader = new LoadAssembly<IStrategy>(_testPath);
+        loader.GetImplementations();
+
+        Action act = () => loader.GetImplementation("NeedsArg");
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("Implementation with Key 'NeedsArg' not found*Available keys:*");
+    }
+    
+
     #endregion
 
     #region GetImplementationKeys

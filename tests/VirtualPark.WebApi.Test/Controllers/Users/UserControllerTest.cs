@@ -199,6 +199,36 @@ public class UserControllerTest
         act.Should().Throw<FormatException>();
         _userServiceMock.VerifyNoOtherCalls();
     }
+
+    [TestMethod]
+    public void GetUserById_ShouldReturnUserWithMultipleRoles()
+    {
+        var role1 = new Role { Name = "Admin" };
+        var role2 = new Role { Name = "Manager" };
+
+        var user = new User
+        {
+            Name = "Pepe",
+            LastName = "Perez",
+            Email = "pepe@mail.com",
+            Password = "Password123!",
+            Roles = [role1, role2],
+            VisitorProfile = null,
+            VisitorProfileId = null
+        };
+
+        _userServiceMock
+            .Setup(s => s.Get(user.Id))
+            .Returns(user);
+
+        var result = _usersController.GetUserById(user.Id.ToString());
+
+        result.Roles.Should().HaveCount(2);
+        result.Roles.Should().Contain(role1.Id.ToString());
+        result.Roles.Should().Contain(role2.Id.ToString());
+
+        _userServiceMock.VerifyAll();
+    }
     #endregion
 
     #region GetAll

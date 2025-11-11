@@ -123,7 +123,7 @@ public sealed class LoadAssemblyTest
     }
 
     [TestMethod]
-    public void GetImplementation_ShouldThrow_WhenNameNotFound()
+    public void GetImplementation_ShouldThrow_WhenKeyNotFound()
     {
         var sourceDll = typeof(AttractionPointsStrategy).Assembly.Location;
         var destDll = Path.Combine(_testPath, "VirtualPark.Strategies.dll");
@@ -136,7 +136,7 @@ public sealed class LoadAssemblyTest
 
         act.Should()
             .Throw<InvalidOperationException>()
-            .WithMessage("Implementation 'DoesNotExist' not found among loaded assemblies.");
+            .WithMessage("Implementation with Key 'DoesNotExist' not found. Available keys:*");
     }
 
     [TestMethod]
@@ -154,26 +154,6 @@ public sealed class LoadAssemblyTest
         instance.Should().NotBeNull();
         instance.GetType().Name.Should().Be(nameof(TestStrategy));
         instance.Key.Should().Be("Test");
-    }
-
-    [TestMethod]
-    public void GetImplementation_ShouldCreateInstance_ByFullName()
-    {
-        var sourceDll = typeof(TestStrategy).Assembly.Location;
-        var destDll = Path.Combine(_testPath, "TestStrategies.dll");
-        File.Copy(sourceDll, destDll, overwrite: true);
-
-        var loader = new LoadAssembly<IStrategy>(_testPath);
-        loader.GetImplementations();
-
-        var fullName = typeof(TestStrategy).FullName!;
-
-        var instance = loader.GetImplementation(fullName);
-
-        instance.Should().NotBeNull();
-        instance.GetType().FullName.Should().Be(fullName);
-        instance.Key.Should().Be("Test");
-        instance.CalculatePoints(Guid.NewGuid()).Should().Be(123);
     }
 
     [TestMethod]

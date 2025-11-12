@@ -9,8 +9,10 @@
         <app-dropdown-menu label="Home" [path]="'/user/home'" *ngIf="canView(['Administrator', 'Operator', 'Visitor'])">
         </app-dropdown-menu>
 
-
         <app-dropdown-menu label="Users" [path]="'/user-home/list'" *ngIf="canView(['Administrator'])">
+        </app-dropdown-menu>
+
+        <app-dropdown-menu label="Report" [path]="'/reports/attractions'" *ngIf="canView(['Administrator'])">
         </app-dropdown-menu>
 
         <app-dropdown-menu label="Attractions" [path]="'/attraction'"

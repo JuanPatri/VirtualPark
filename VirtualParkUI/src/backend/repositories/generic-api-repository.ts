@@ -36,8 +36,8 @@ export default abstract class GenericApiRepository {
     }
 
 
-    public getAll<T>(): Observable<T> {
-        return this.http.get<T>(this.buildUrl(), this.requestOptions()).pipe(
+    public getAll<T>(additionalPath = ''): Observable<T> {
+        return this.http.get<T>(this.buildUrl(additionalPath), this.requestOptions()).pipe(
             retry(2), catchError(this.handleError)
         );
     }

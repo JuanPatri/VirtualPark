@@ -535,6 +535,12 @@ namespace VirtualPark.DataAccess.Migrations
                             Id = new Guid("88888888-1111-1111-1111-111111111114"),
                             Description = "Allows update clockApp",
                             Key = "UpdateClock-ClockApp"
+                        },
+                        new
+                        {
+                            Id = new Guid("13131313-1111-1111-1111-111111111116"),
+                            Description = "Allows creating active strategy",
+                            Key = "CreateActiveStrategy-Strategy"
                         });
                 });
 
@@ -804,6 +810,11 @@ namespace VirtualPark.DataAccess.Migrations
                         {
                             RoleId = new Guid("aaaa1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("13131313-1111-1111-1111-111111111115")
+                        },
+                        new
+                        {
+                            RoleId = new Guid("aaaa1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("13131313-1111-1111-1111-111111111116")
                         },
                         new
                         {

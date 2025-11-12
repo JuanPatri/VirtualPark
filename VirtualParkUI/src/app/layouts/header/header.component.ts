@@ -62,6 +62,9 @@ export class HeaderComponent implements OnDestroy {
         { label: 'Clock', path: '/clock', roles: ['Administrator'] }
     ];
 
+    strategyMenu: RoleGuardedMenuItem[] = [
+        { label: 'Strategies', path: '/strategy', roles: ['Administrator'] }
+    ];
     
     rankingMenu: RoleGuardedMenuItem[] = [];
 

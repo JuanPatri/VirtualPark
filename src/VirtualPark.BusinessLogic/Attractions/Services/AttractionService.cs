@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Attractions.Models;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
@@ -129,7 +130,11 @@ public sealed class AttractionService(
 
     private List<VisitRegistration> GetAllVisitRegistrations()
     {
-        return _visitRegistrationRepository.GetAll();
+        return _visitRegistrationRepository.GetAll(
+            null,
+            v => v
+                .Include(vr => vr.Attractions)
+                .Include(vr => vr.ScoreEvents));
     }
 
     public static void ApplyArgsToEntity(Attraction entity, AttractionArgs args)

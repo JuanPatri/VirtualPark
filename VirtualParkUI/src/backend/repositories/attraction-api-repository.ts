@@ -34,9 +34,11 @@ export class AttractionRepository extends GenericApiRepository {
     return this.updateById<void>(id, body);
   }
 
-    getAttractionsReport(from: string, to: string): Observable<ReportAttractionResponse[]> {
-    return this.http.get<ReportAttractionResponse[]>(`${this.baseUrl}/report`, {
-      params: { from, to }
-    });
+  getAttractionsReport(from: string, to: string) {
+    return this.getWithParams<ReportAttractionResponse[]>(
+      { from, to },
+      true,
+      'report'
+    );
   }
 }

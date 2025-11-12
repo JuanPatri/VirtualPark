@@ -54,6 +54,8 @@ export class HeaderComponent implements OnDestroy {
 
     incidenceMenu = [];
 
+    reportMenu = [];
+
     typeIncidenceMenu = [];
 
     clockMenu: RoleGuardedMenuItem[] = [

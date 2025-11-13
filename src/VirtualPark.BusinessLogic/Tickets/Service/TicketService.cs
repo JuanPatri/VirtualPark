@@ -58,11 +58,7 @@ public class TicketService(
             var eventEntity = _eventRepository.Get(e => e.Id == args.EventId.Value)
                               ?? throw new InvalidOperationException($"Event with id {args.EventId} not found.");
 
-            foreach (var attraction in eventEntity.Attractions.Where(attraction => _incidenceService.HasActiveIncidenceForAttraction(attraction.Id, ticketDate)))
-            {
-                throw new InvalidOperationException(
-                    $"Cannot create ticket: attraction {attraction.Name} is under preventive maintenance at that time.");
-            }
+            ValidateEventMaintenance(eventEntity, ticketDate);
         }
 
         var ticket = new Ticket
@@ -85,6 +81,15 @@ public class TicketService(
         }
 
         return ticket;
+    }
+
+    private void ValidateEventMaintenance(Event eventEntity, DateTime ticketDate)
+    {
+        foreach (var attraction in eventEntity.Attractions.Where(attraction => _incidenceService.HasActiveIncidenceForAttraction(attraction.Id, ticketDate)))
+        {
+            throw new InvalidOperationException(
+                $"Cannot create ticket: attraction {attraction.Name} is under preventive maintenance at that time.");
+        }
     }
 
     private VisitorProfile? GetVisitorEntity(TicketArgs args)

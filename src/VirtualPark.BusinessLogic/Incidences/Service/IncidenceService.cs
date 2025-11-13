@@ -109,4 +109,15 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
         entity.AttractionId = args.AttractionId;
         entity.Active = args.Active;
     }
+
+    public bool HasActiveIncidenceForAttraction(Guid attractionId, DateTime dateTime)
+    {
+        var incidences = _incidenceRepository.GetAll(
+            i => i.AttractionId == attractionId
+                 && i.Active
+                 && i.Start <= dateTime
+                 && i.End >= dateTime);
+
+        return incidences.Count != 0;
+    }
 }

@@ -459,12 +459,9 @@ public sealed class IncidenceTest
                 TypeIncidenceId = Guid.NewGuid(),
             }
         };
-            _mockIncidenceRepository
-            .Setup(r => r.GetAll(
-                It.IsAny<Expression<Func<Incidence, bool>>>(),
-                It.IsAny<Func<IQueryable<Incidence>, IIncludableQueryable<Incidence, object>>>()))
-            .Returns((Expression<Func<Incidence, bool>>? filter,
-                Func<IQueryable<Incidence>, IIncludableQueryable<Incidence, object>>? include) =>
+        _mockIncidenceRepository
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Incidence, bool>>>()))
+            .Returns((Expression<Func<Incidence, bool>>? filter) =>
             {
                 var query = incidencesInDb.AsQueryable();
                 return filter == null ? query.ToList() : query.Where(filter).ToList();

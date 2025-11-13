@@ -4,6 +4,8 @@ using Moq;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.BusinessLogic.Events.Entity;
+using VirtualPark.BusinessLogic.Incidences.Entity;
+using VirtualPark.BusinessLogic.Incidences.Service;
 using VirtualPark.BusinessLogic.Tickets;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.Tickets.Models;
@@ -20,7 +22,9 @@ public class TicketServiceTest
     private Mock<IRepository<VisitorProfile>> _visitorRepositoryMock = null!;
     private Mock<IRepository<Event>> _eventRepositoryMock = null!;
     private Mock<IRepository<Attraction>> _attractionRepositoryMock = null!;
+    private Mock<IRepository<Incidence>> _incidenceRepositoryMock = null!;
     private Mock<IClockAppService> _clockMock = null!;
+    private Mock<IIncidenceService> _incidenceServiceMock = null!;
     private TicketService _ticketService = null!;
 
     [TestInitialize]
@@ -31,6 +35,8 @@ public class TicketServiceTest
         _eventRepositoryMock = new Mock<IRepository<Event>>(MockBehavior.Strict);
         _attractionRepositoryMock = new Mock<IRepository<Attraction>>(MockBehavior.Strict);
         _clockMock = new Mock<IClockAppService>(MockBehavior.Strict);
+        _incidenceRepositoryMock = new Mock<IRepository<Incidence>>(MockBehavior.Strict);
+        _incidenceServiceMock = new Mock<IIncidenceService>(MockBehavior.Strict);
 
         _clockMock.Setup(c => c.Now()).Returns(new DateTime(2025, 12, 15));
 
@@ -38,7 +44,7 @@ public class TicketServiceTest
             _ticketRepositoryMock.Object,
             _visitorRepositoryMock.Object,
             _eventRepositoryMock.Object,
-            _clockMock.Object);
+            _clockMock.Object, _incidenceServiceMock.Object);
     }
 
     #region Create
@@ -117,6 +123,7 @@ public class TicketServiceTest
         _visitorRepositoryMock.VerifyAll();
         _ticketRepositoryMock.VerifyAll();
     }
+
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Create_WhenAttractionIsUnderMaintenance_ShouldThrowInvalidOperationException()
@@ -145,11 +152,11 @@ public class TicketServiceTest
             visitorId.ToString());
 
         _visitorRepositoryMock
-            .Setup(r => r.Get(v => v.Id == visitorId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>()))
             .Returns(visitorProfile);
 
         _eventRepositoryMock
-            .Setup(r => r.Get(e => e.Id == eventId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(ev);
 
         _incidenceServiceMock
@@ -166,6 +173,7 @@ public class TicketServiceTest
         _eventRepositoryMock.VerifyAll();
         _incidenceServiceMock.VerifyAll();
     }
+
     #endregion
 
     #region Remove

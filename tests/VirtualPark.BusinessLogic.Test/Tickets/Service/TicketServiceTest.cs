@@ -117,6 +117,55 @@ public class TicketServiceTest
         _visitorRepositoryMock.VerifyAll();
         _ticketRepositoryMock.VerifyAll();
     }
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Create_WhenAttractionIsUnderMaintenance_ShouldThrowInvalidOperationException()
+    {
+        var visitorId = Guid.NewGuid();
+        var eventId = Guid.NewGuid();
+        var attractionId = Guid.NewGuid();
+
+        var date = new DateTime(2025, 12, 15);
+
+        var visitorProfile = new VisitorProfile { Id = visitorId };
+
+        var attraction = new Attraction { Id = attractionId, Name = "RollerCoaster" };
+
+        var ev = new Event
+        {
+            Id = eventId,
+            Attractions = [attraction],
+            Capacity = 10
+        };
+
+        var args = new TicketArgs(
+            date.ToString("yyyy-MM-dd"),
+            "Event",
+            eventId.ToString(),
+            visitorId.ToString());
+
+        _visitorRepositoryMock
+            .Setup(r => r.Get(v => v.Id == visitorId))
+            .Returns(visitorProfile);
+
+        _eventRepositoryMock
+            .Setup(r => r.Get(e => e.Id == eventId))
+            .Returns(ev);
+
+        _incidenceServiceMock
+            .Setup(i => i.HasActiveIncidenceForAttraction(attractionId, date))
+            .Returns(true);
+
+        Action act = () => _ticketService.Create(args);
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage($"Cannot create ticket: attraction {attraction.Name} is under preventive maintenance at that time.");
+
+        _visitorRepositoryMock.VerifyAll();
+        _eventRepositoryMock.VerifyAll();
+        _incidenceServiceMock.VerifyAll();
+    }
     #endregion
 
     #region Remove

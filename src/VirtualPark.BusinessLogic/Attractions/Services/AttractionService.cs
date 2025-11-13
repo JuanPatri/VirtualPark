@@ -3,6 +3,7 @@ using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Attractions.Models;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.BusinessLogic.Events.Entity;
+using VirtualPark.BusinessLogic.Incidences.Service;
 using VirtualPark.BusinessLogic.Tickets;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.Validations.Services;
@@ -18,7 +19,8 @@ public sealed class AttractionService(
     IRepository<Ticket> ticketRepository,
     IRepository<Event> eventRepository,
     IRepository<VisitRegistration> visitRegistrationRepository,
-    IClockAppService clockAppService) : IAttractionService
+    IClockAppService clockAppService,
+    IIncidenceService incidenceService) : IAttractionService
 {
     private readonly IRepository<Attraction> _attractionRepository = attractionRepository;
     private readonly IRepository<Event> _eventRepository = eventRepository;
@@ -26,6 +28,7 @@ public sealed class AttractionService(
     private readonly IRepository<VisitorProfile> _visitorProfileRepository = visitorProfileRepository;
     private readonly IRepository<VisitRegistration> _visitRegistrationRepository = visitRegistrationRepository;
     private readonly IClockAppService _clock = clockAppService;
+    private readonly IIncidenceService _incidenceService = incidenceService;
 
     public Guid Create(AttractionArgs args)
     {

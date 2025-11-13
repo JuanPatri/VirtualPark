@@ -7,6 +7,8 @@ using VirtualPark.BusinessLogic.Attractions.Models;
 using VirtualPark.BusinessLogic.Attractions.Services;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.BusinessLogic.Events.Entity;
+using VirtualPark.BusinessLogic.Incidences.Entity;
+using VirtualPark.BusinessLogic.Incidences.Service;
 using VirtualPark.BusinessLogic.Tickets;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
@@ -29,6 +31,8 @@ public class AttractionServiceTest
     private AttractionArgs _attractionArgs = null!;
     private Mock<IClockAppService> _mockClock = null!;
     private Mock<IReadOnlyRepository<Attraction>> _mockReadOnlyAttractionRepository = null!;
+    private Mock<IRepository<Incidence>> _mockIncidenceRepository = null!;
+    private Mock<IIncidenceService> _mockIncidenceService = null!;
     private readonly DateTime _now = new DateTime(2025, 10, 15, 10, 0, 0);
 
     [TestInitialize]
@@ -40,12 +44,14 @@ public class AttractionServiceTest
         _mockVisitorRegistrationRepository = new Mock<IRepository<VisitRegistration>>(MockBehavior.Strict);
         _mockEventRepository = new Mock<IRepository<Event>>(MockBehavior.Strict);
         _mockClock = new Mock<IClockAppService>(MockBehavior.Strict);
+        _mockIncidenceService = new Mock<IIncidenceService>(MockBehavior.Strict);
+        _mockIncidenceRepository = new Mock<IRepository<Incidence>>(MockBehavior.Strict);
 
         _mockClock.Setup(c => c.Now()).Returns(_now);
 
         _attractionService = new AttractionService(_mockAttractionRepository.Object,
             _mockVisitorProfileRepository.Object, _mockTicketRepository.Object, _mockEventRepository.Object,
-            _mockVisitorRegistrationRepository.Object, _mockClock.Object);
+            _mockVisitorRegistrationRepository.Object, _mockClock.Object, _mockIncidenceService.Object);
 
         _attractionArgs = new AttractionArgs("RollerCoaster", "The Big Bang", "13", "500", "Description", "50", "true");
         _mockReadOnlyAttractionRepository = new Mock<IReadOnlyRepository<Attraction>>(MockBehavior.Strict);
@@ -469,6 +475,56 @@ public class AttractionServiceTest
         var result = _attractionService.ValidateEntryByNfc(attractionId, visitorId);
 
         result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    [TestCategory("Maintenance")]
+    public void ValidateEntryByNfc_WhenAttractionHasActiveIncidence_ShouldReturnFalse()
+    {
+        var attractionId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        var attraction = new Attraction
+        {
+            Id = attractionId,
+            Available = true,
+            Capacity = 10,
+            CurrentVisitors = 2,
+            MiniumAge = 10
+        };
+
+        var visitor = new VisitorProfile
+        {
+            Id = visitorId,
+            DateOfBirth = new DateOnly(2000, 1, 1)
+        };
+
+        _mockAttractionRepository
+            .Setup(r => r.Get(a => a.Id == attractionId))
+            .Returns(attraction);
+
+        _mockVisitorProfileRepository
+            .Setup(r => r.Get(v => v.Id == visitorId))
+            .Returns(visitor);
+
+        _mockIncidenceService
+            .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, _now))
+            .Returns(true);
+
+        _attractionService = new AttractionService(
+            _mockAttractionRepository.Object,
+            _mockVisitorProfileRepository.Object,
+            _mockTicketRepository.Object,
+            _mockEventRepository.Object,
+            _mockVisitorRegistrationRepository.Object,
+            _mockClock.Object,
+            _mockIncidenceService.Object);
+
+        var result = _attractionService.ValidateEntryByNfc(attractionId, visitorId);
+
+        result.Should().BeFalse("because the attraction is under active maintenance/incidence");
+
+        _mockIncidenceService.VerifyAll();
     }
 
     #endregion

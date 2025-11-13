@@ -208,6 +208,11 @@ public sealed class AttractionService(
             return false;
         }
 
+        if (_incidenceService.HasActiveIncidenceForAttraction(attractionId, _clock.Now()))
+        {
+            return false;
+        }
+
         VisitRegistration? visitRegistration = _visitRegistrationRepository.Get(v => v.VisitorId == visitorId);
 
         visitRegistration = ValidateVisitRegistration(visitorId, visitRegistration, attraction);
@@ -364,5 +369,10 @@ public sealed class AttractionService(
         attraction.CurrentVisitors++;
         _attractionRepository.Update(attraction);
         return true;
+    }
+
+    public bool HasActiveIncidenceForAttraction(Guid attractionId, DateTime now)
+    {
+        return _incidenceService.HasActiveIncidenceForAttraction(attractionId, _clock.Now());
     }
 }

@@ -511,14 +511,18 @@ public class AttractionServiceTest
             .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, _now))
             .Returns(true);
 
-        _attractionService = new AttractionService(
-            _mockAttractionRepository.Object,
-            _mockVisitorProfileRepository.Object,
-            _mockTicketRepository.Object,
-            _mockEventRepository.Object,
-            _mockVisitorRegistrationRepository.Object,
-            _mockClock.Object,
-            _mockIncidenceService.Object);
+        _mockVisitorRegistrationRepository
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns((VisitRegistration?)null);
+
+        _mockVisitorRegistrationRepository
+            .Setup(r => r.Add(It.IsAny<VisitRegistration>()));
+
+        _mockVisitorRegistrationRepository
+            .Setup(r => r.Update(It.IsAny<VisitRegistration>()));
+
+        _mockAttractionRepository
+            .Setup(r => r.Update(It.IsAny<Attraction>()));
 
         var result = _attractionService.ValidateEntryByNfc(attractionId, visitorId);
 
@@ -528,6 +532,7 @@ public class AttractionServiceTest
     }
 
     #endregion
+
     #region Success
     [TestMethod]
     public void ValidateEntryByNfc_WhenVisitorMeetsAllRequirements_ShouldReturnTrueAndIncrementCurrentVisitors()

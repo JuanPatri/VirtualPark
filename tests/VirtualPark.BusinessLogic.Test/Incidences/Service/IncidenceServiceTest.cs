@@ -472,4 +472,56 @@ public sealed class IncidenceTest
         result.Should().BeTrue();
         _mockAttractionRepository.VerifyAll();
     }
+
+        [TestMethod]
+    [TestCategory("Maintenance")]
+    public void HasActiveIncidenceForAttraction_WhenNoIncidenceOverlapsDate_ShouldReturnFalse()
+    {
+        var attractionId = Guid.NewGuid();
+        var now = new DateTime(2025, 01, 01, 10, 00, 00);
+
+        var incidencesInDb = new List<Incidence>
+        {
+            new()
+            {
+                Id = Guid.NewGuid(),
+                AttractionId = Guid.NewGuid(),
+                Start = now.AddHours(-1),
+                End = now.AddHours(1),
+                Active = true,
+                Description = "Other problem"
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                AttractionId = attractionId,
+                Start = now.AddHours(-3),
+                End = now.AddHours(-2),
+                Active = true,
+                Description = "Old"
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                AttractionId = attractionId,
+                Start = now.AddHours(-1),
+                End = now.AddHours(1),
+                Active = false,
+                Description = "Inactive"
+            }
+        };
+
+        _mockIncidenceRepository
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Incidence, bool>>>()))
+            .Returns((Expression<Func<Incidence, bool>>? filter) =>
+            {
+                var query = incidencesInDb.AsQueryable();
+                return filter == null ? query.ToList() : query.Where(filter).ToList();
+            });
+
+        var result = _incidenceService.HasActiveIncidenceForAttraction(attractionId, now);
+
+        result.Should().BeFalse();
+        _mockIncidenceRepository.VerifyAll();
+    }
 }

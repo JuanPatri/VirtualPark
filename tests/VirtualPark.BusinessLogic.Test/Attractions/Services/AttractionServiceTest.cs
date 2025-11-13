@@ -472,6 +472,10 @@ public class AttractionServiceTest
         _mockAttractionRepository
             .Setup(r => r.Update(attraction));
 
+        _mockIncidenceService
+            .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, It.IsAny<DateTime>()))
+            .Returns(false);
+
         var result = _attractionService.ValidateEntryByNfc(attractionId, visitorId);
 
         result.Should().BeFalse();
@@ -559,6 +563,10 @@ public class AttractionServiceTest
             Date = DateTime.Today,
             IsActive = false
         };
+
+        _mockIncidenceService
+            .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, It.IsAny<DateTime>()))
+            .Returns(false);
 
         _mockAttractionRepository
             .Setup(r => r.Update(It.IsAny<Attraction>()));
@@ -939,6 +947,9 @@ public class AttractionServiceTest
             IsActive = false,
             Attractions = []
         };
+        _mockIncidenceService
+            .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, It.IsAny<DateTime>()))
+            .Returns(false);
 
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
         _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
@@ -999,6 +1010,9 @@ public class AttractionServiceTest
             IsActive = false,
             Attractions = []
         };
+        _mockIncidenceService
+            .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, It.IsAny<DateTime>()))
+            .Returns(false);
 
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
         _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
@@ -1058,7 +1072,9 @@ public class AttractionServiceTest
             IsActive = false,
             Attractions = []
         };
-
+        _mockIncidenceService
+            .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, It.IsAny<DateTime>()))
+            .Returns(false);
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
         _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
         _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
@@ -1104,6 +1120,9 @@ public class AttractionServiceTest
             IsActive = false,
             Attractions = []
         };
+        _mockIncidenceService
+            .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, It.IsAny<DateTime>()))
+            .Returns(false);
 
         _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
         _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
@@ -1227,7 +1246,9 @@ public class AttractionServiceTest
             MiniumAge = 0,
             Available = true
         };
-
+        _mockIncidenceService
+            .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, It.IsAny<DateTime>()))
+            .Returns(false);
         _mockVisitorRegistrationRepository
             .Setup(r => r.Get(v => v.VisitorId == visitorId))
             .Returns((VisitRegistration?)null);
@@ -1273,6 +1294,10 @@ public class AttractionServiceTest
 
         var dob = DateOnly.FromDateTime(_now.Date.AddYears(-minAge));
         var visitor = new VisitorProfile { Id = visitorId, DateOfBirth = dob };
+
+        _mockIncidenceService
+            .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, It.IsAny<DateTime>()))
+            .Returns(false);
 
         _mockAttractionRepository
             .Setup(r => r.Get(a => a.Id == attractionId))

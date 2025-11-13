@@ -286,6 +286,11 @@ public sealed class AttractionService(
             return false;
         }
 
+        if (_incidenceService.HasActiveIncidenceForAttraction(attractionId, _clock.Now()))
+        {
+            return false;
+        }
+
         Guid visitorId = ticket.Visitor.Id;
 
         VisitRegistration? visitRegistration = _visitRegistrationRepository.Get(v => v.VisitorId == visitorId);

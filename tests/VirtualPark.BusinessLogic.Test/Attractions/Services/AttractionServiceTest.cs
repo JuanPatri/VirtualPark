@@ -1125,6 +1125,79 @@ public class AttractionServiceTest
 
     #region Success
     [TestMethod]
+    [TestCategory("Maintenance")]
+    public void ValidateEntryByQr_WhenAttractionHasNoIncidence_ShouldReturnTrue()
+    {
+        var attractionId = Guid.NewGuid();
+        var qrId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        var attraction = new Attraction
+        {
+            Id = attractionId,
+            Available = true,
+            Capacity = 10,
+            CurrentVisitors = 2,
+            MiniumAge = 0
+        };
+
+        var visitor = new VisitorProfile
+        {
+            Id = visitorId,
+            DateOfBirth = new DateOnly(2000, 1, 1)
+        };
+
+        var ticket = new Ticket
+        {
+            Id = Guid.NewGuid(),
+            QrId = qrId,
+            Date = _now,
+            Type = EntranceType.General,
+            Visitor = visitor,
+            VisitorProfileId = visitorId
+        };
+
+        var visit = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Visitor = visitor,
+            Date = _now.Date,
+            IsActive = false,
+            Attractions = []
+        };
+
+        _mockAttractionRepository
+            .Setup(r => r.Get(a => a.Id == attractionId))
+            .Returns(attraction);
+
+        _mockTicketRepository
+            .Setup(r => r.Get(t => t.QrId == qrId))
+            .Returns(ticket);
+
+        _mockVisitorRegistrationRepository
+            .Setup(r => r.Get(v => v.VisitorId == visitorId))
+            .Returns(visit);
+
+        _mockVisitorRegistrationRepository
+            .Setup(r => r.Update(It.IsAny<VisitRegistration>()));
+
+        _mockAttractionRepository
+            .Setup(r => r.Update(It.IsAny<Attraction>()));
+
+        _mockIncidenceService
+            .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, _now))
+            .Returns(false);
+
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(_now);
+
+        var ok = _attractionService.ValidateEntryByQr(attractionId, qrId);
+
+        ok.Should().BeTrue();
+    }
+
+    [TestMethod]
     [TestCategory("Behaviour")]
     public void ValidateEntryByQr_WhenTicketIsGeneralAndValid_ShouldReturnTrueAndCreateVisitRegistration()
     {

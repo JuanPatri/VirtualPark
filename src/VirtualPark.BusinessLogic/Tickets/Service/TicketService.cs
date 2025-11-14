@@ -53,7 +53,7 @@ public class TicketService(
 
         var ticketDate = args.Date;
 
-        if (args.EventId.HasValue)
+        if(args.EventId.HasValue)
         {
             var eventEntity = _eventRepository.Get(e => e.Id == args.EventId.Value)
                               ?? throw new InvalidOperationException($"Event with id {args.EventId} not found.");
@@ -85,7 +85,7 @@ public class TicketService(
 
     private void ValidateEventMaintenance(Event eventEntity, DateTime ticketDate)
     {
-        foreach (var attraction in eventEntity.Attractions.Where(attraction => _incidenceService.HasActiveIncidenceForAttraction(attraction.Id, ticketDate)))
+        foreach(var attraction in eventEntity.Attractions.Where(attraction => _incidenceService.HasActiveIncidenceForAttraction(attraction.Id, ticketDate)))
         {
             throw new InvalidOperationException(
                 $"Cannot create ticket: attraction {attraction.Name} is under preventive maintenance at that time.");

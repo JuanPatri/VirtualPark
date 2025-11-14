@@ -208,7 +208,7 @@ public sealed class AttractionService(
             return false;
         }
 
-        if (!AttractionIsUnderIncidence(attractionId))
+        if(!AttractionIsUnderIncidence(attractionId))
         {
             return false;
         }
@@ -232,7 +232,7 @@ public sealed class AttractionService(
 
     private bool AttractionIsUnderIncidence(Guid attractionId)
     {
-        if (_incidenceService.HasActiveIncidenceForAttraction(attractionId, _clock.Now()))
+        if(_incidenceService.HasActiveIncidenceForAttraction(attractionId, _clock.Now()))
         {
             return false;
         }
@@ -296,7 +296,7 @@ public sealed class AttractionService(
             return false;
         }
 
-        if (!AttractionIsUnderIncidence(attractionId))
+        if(!AttractionIsUnderIncidence(attractionId))
         {
             return false;
         }

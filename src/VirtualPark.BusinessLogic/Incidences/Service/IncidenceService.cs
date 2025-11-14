@@ -39,7 +39,7 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
             .OfType<Incidence>()
             .ToList();
 
-        foreach (var inc in incidences)
+        foreach(var inc in incidences)
         {
             AutoDeactivateIfExpired(inc, now);
         }
@@ -54,7 +54,7 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
             include: q => q.Include(i => i.Type)
                 .Include(i => i.Attraction));
 
-        if (incidence == null)
+        if(incidence == null)
         {
             throw new InvalidOperationException("Incidence don't exist");
         }
@@ -133,7 +133,7 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
 
         var hasActive = false;
 
-        foreach (var inc in incidences.Where(inc => !AutoDeactivateIfExpired(inc, dateTime)).
+        foreach(var inc in incidences.Where(inc => !AutoDeactivateIfExpired(inc, dateTime)).
                      Where(inc => inc.Start <= dateTime && inc.End >= dateTime))
         {
             hasActive = true;

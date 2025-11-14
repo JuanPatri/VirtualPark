@@ -5,6 +5,11 @@
 
   <div class="actions">
     <app-buttons text="New Incidence" color="primary" (clicked)="goToCreate()"></app-buttons>
+    <app-buttons 
+    text="Schedule maintenance" 
+    color="primary" 
+    (clicked)="goToMaintenance()">
+    </app-buttons>
   </div>
 
   <div *ngIf="loading" class="loading">Loading incidences...</div>

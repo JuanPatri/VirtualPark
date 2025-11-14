@@ -119,4 +119,10 @@ export class IncidencePageListComponent implements OnInit {
         this.messageService.show('Error updating incidence.', 'error')
     });
   }
+
+  goToMaintenance() {
+    this.router.navigate(['/incidences/new'], {
+      state: { maintenance: true }
+    });
+  }
 }

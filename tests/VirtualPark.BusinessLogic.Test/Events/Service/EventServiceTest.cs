@@ -192,7 +192,7 @@ public sealed class EventServiceTest
     [TestCategory("Behaviour")]
     public void GetAll_ShouldIncludeTickets()
     {
-        var ev1 = new Event { Id = Guid.NewGuid(), Tickets = [ new Ticket { Id = Guid.NewGuid() }] };
+        var ev1 = new Event { Id = Guid.NewGuid(), Tickets = [new Ticket { Id = Guid.NewGuid() }] };
         var ev2 = new Event { Id = Guid.NewGuid(), Tickets = [] };
 
         _eventRepositoryMock
@@ -524,7 +524,7 @@ public sealed class EventServiceTest
         {
             Id = eventId,
             Name = "Test Event",
-            Tickets = [ new Ticket { Id = Guid.NewGuid() } ]
+            Tickets = [new Ticket { Id = Guid.NewGuid() }]
         };
 
         _eventRepositoryMock

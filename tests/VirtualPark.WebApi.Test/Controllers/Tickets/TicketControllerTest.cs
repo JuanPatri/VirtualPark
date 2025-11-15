@@ -262,7 +262,7 @@ public sealed class TicketControllerTest
 
         _ticketServiceMock
             .Setup(s => s.GetTicketsByVisitor(visitorId))
-            .Returns(new List<Ticket>());
+            .Returns([]);
 
         var result = _controller.GetTicketsByVisitor(visitorId.ToString());
 

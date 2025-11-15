@@ -74,6 +74,10 @@ public class TicketServiceTest
             .Returns(ev);
 
         _ticketRepositoryMock
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(false);
+
+        _ticketRepositoryMock
             .Setup(r => r.GetAll(It.IsAny<Expression<Func<Ticket, bool>>>()))
             .Returns([]);
 
@@ -81,8 +85,7 @@ public class TicketServiceTest
             .Setup(r => r.Add(It.Is<Ticket>(t =>
                 t.VisitorProfileId == visitorId &&
                 t.EventId == eventId &&
-                t.QrId != Guid.Empty
-            )));
+                t.QrId != Guid.Empty)));
 
         var result = _ticketService.Create(args);
 
@@ -92,6 +95,7 @@ public class TicketServiceTest
         _eventRepositoryMock.VerifyAll();
         _ticketRepositoryMock.VerifyAll();
     }
+    #endregion
 
     [TestMethod]
     [TestCategory("Behaviour")]
@@ -212,6 +216,10 @@ public class TicketServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>()))
             .Returns(visitor);
 
+        _ticketRepositoryMock
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(false);
+
         _eventRepositoryMock
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns((Event?)null);
@@ -224,6 +232,7 @@ public class TicketServiceTest
 
         _visitorRepositoryMock.VerifyAll();
         _eventRepositoryMock.VerifyAll();
+        _ticketRepositoryMock.Verify(r => r.Exist(It.IsAny<Expression<Func<Ticket, bool>>>()), Times.Once);
     }
 
     [TestMethod]
@@ -248,6 +257,10 @@ public class TicketServiceTest
         _visitorRepositoryMock
             .Setup(r => r.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>()))
             .Returns(visitor);
+
+        _ticketRepositoryMock
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(false);
 
         _eventRepositoryMock
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
@@ -303,6 +316,10 @@ public class TicketServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>()))
             .Returns(visitor);
 
+        _ticketRepositoryMock
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(false);
+
         _eventRepositoryMock
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(ev);
@@ -327,6 +344,7 @@ public class TicketServiceTest
         var visitor = new VisitorProfile { Id = visitorId };
 
         var pastDate = new DateTime(2025, 12, 22);
+
         _clockMock.Setup(c => c.Now()).Returns(new DateTime(2025, 12, 27));
 
         var args = new TicketArgs(
@@ -339,15 +357,19 @@ public class TicketServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>()))
             .Returns(visitor);
 
-        _ticketRepositoryMock.Verify(
-            r => r.GetAll(It.IsAny<Expression<Func<Ticket, bool>>>()),
-            Times.Never);
+        _ticketRepositoryMock
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(false);
 
         Action act = () => _ticketService.Create(args);
 
         act.Should()
             .Throw<InvalidOperationException>()
             .WithMessage("Cannot create tickets for past dates.");
+
+        _ticketRepositoryMock.Verify(
+            r => r.GetAll(It.IsAny<Expression<Func<Ticket, bool>>>()),
+            Times.Never);
 
         _visitorRepositoryMock.VerifyAll();
         _clockMock.VerifyAll();
@@ -381,6 +403,10 @@ public class TicketServiceTest
         _visitorRepositoryMock
             .Setup(r => r.Get(It.IsAny<Expression<Func<VisitorProfile, bool>>>()))
             .Returns(visitor);
+
+        _ticketRepositoryMock
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(false);
 
         _eventRepositoryMock
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
@@ -416,17 +442,23 @@ public class TicketServiceTest
             string.Empty,
             visitorId.ToString());
 
-        _visitorRepositoryMock.Setup(r => r.Get(v => v.Id == args.VisitorId))
+        _visitorRepositoryMock
+            .Setup(r => r.Get(v => v.Id == args.VisitorId))
             .Returns(visitorProfile);
 
-        _ticketRepositoryMock.Setup(r => r.Add(It.Is<Ticket>(t =>
-            t.Visitor == visitorProfile &&
-            t.Event == null &&
-            !t.EventId.HasValue &&
-            t.Type == EntranceType.General &&
-            t.VisitorProfileId == visitorId &&
-            t.QrId != Guid.Empty &&
-            t.Date == date)));
+        _ticketRepositoryMock
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(false);
+
+        _ticketRepositoryMock
+            .Setup(r => r.Add(It.Is<Ticket>(t =>
+                t.Visitor == visitorProfile &&
+                t.Event == null &&
+                !t.EventId.HasValue &&
+                t.Type == EntranceType.General &&
+                t.VisitorProfileId == visitorId &&
+                t.QrId != Guid.Empty &&
+                t.Date == date)));
 
         var result = _ticketService.Create(args);
 
@@ -447,7 +479,6 @@ public class TicketServiceTest
         var date = new DateTime(2025, 12, 15);
 
         var visitorProfile = new VisitorProfile { Id = visitorId };
-
         var attraction = new Attraction { Id = attractionId, Name = "RollerCoaster" };
 
         var ev = new Event
@@ -472,13 +503,17 @@ public class TicketServiceTest
             .Setup(r => r.Get(It.IsAny<Expression<Func<Event, bool>>>()))
             .Returns(ev);
 
-        _incidenceServiceMock
-            .Setup(i => i.HasActiveIncidenceForAttraction(attractionId, date))
-            .Returns(true);
+        _ticketRepositoryMock
+            .Setup(r => r.Exist(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(false);
 
         _ticketRepositoryMock
             .Setup(r => r.GetAll(It.IsAny<Expression<Func<Ticket, bool>>>()))
             .Returns([]);
+
+        _incidenceServiceMock
+            .Setup(i => i.HasActiveIncidenceForAttraction(attractionId, date))
+            .Returns(true);
 
         Action act = () => _ticketService.Create(args);
 
@@ -490,8 +525,6 @@ public class TicketServiceTest
         _eventRepositoryMock.VerifyAll();
         _incidenceServiceMock.VerifyAll();
     }
-
-    #endregion
 
     #region Remove
     #region Success

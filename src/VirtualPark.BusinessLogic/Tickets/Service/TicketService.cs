@@ -60,7 +60,7 @@ public class TicketService(
         ValidateDuplicateTicket(ticketDate, args.VisitorId);
         var today = _clockAppService.Now().Date;
 
-        if (ticketDate.Date < today)
+        if(ticketDate.Date < today)
         {
             throw new InvalidOperationException("Cannot create tickets for past dates.");
         }
@@ -69,12 +69,12 @@ public class TicketService(
         {
             var eventEntity = _eventRepository.Get(e => e.Id == args.EventId.Value)
                               ?? throw new InvalidOperationException($"Event with id {args.EventId} not found.");
-            if (eventEntity.Date.Date < today)
+            if(eventEntity.Date.Date < today)
             {
                 throw new InvalidOperationException("This event has already finished.");
             }
 
-            if (eventEntity.Date.Date != ticketDate.Date)
+            if(eventEntity.Date.Date != ticketDate.Date)
             {
                 throw new InvalidOperationException(
                     $"The ticket date must be the same as the event date: {eventEntity.Date:yyyy-MM-dd}");
@@ -113,7 +113,7 @@ public class TicketService(
             t.VisitorProfileId == visitorId &&
             t.Date.Date == date.Date);
 
-        if (exists)
+        if(exists)
         {
             throw new InvalidOperationException("The visitor already has a ticket for this date.");
         }
@@ -123,7 +123,7 @@ public class TicketService(
     {
         var sold = _ticketRepository.GetAll(t => t.EventId == ev.Id).Count;
 
-        if (sold >= ev.Capacity)
+        if(sold >= ev.Capacity)
         {
             throw new InvalidOperationException("This event is already sold out.");
         }

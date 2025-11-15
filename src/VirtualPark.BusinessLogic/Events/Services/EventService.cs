@@ -71,10 +71,9 @@ public class EventService(IRepository<Event> eventRepository, IRepository<Attrac
             predicate: null,
             include: q => q
                 .Include(e => e.Attractions)
-                .Include(e => e.Tickets)
-        );
+                .Include(e => e.Tickets));
 
-        if (events == null)
+        if(events == null)
         {
             throw new InvalidOperationException("Do not have any events");
         }

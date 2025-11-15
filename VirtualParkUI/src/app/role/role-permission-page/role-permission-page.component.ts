@@ -7,11 +7,13 @@ import { PermissionService } from '../../../backend/services/permission/permissi
 import { PermissionModel } from '../../../backend/services/permission/models/PermissionModel';
 import { CommonModule } from '@angular/common';
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
+import { CreateRoleRequest } from '../../../backend/services/role/models/CreateRoleRequest';
+import { MessageComponent } from '../../components/messages/message.component';
 
 @Component({
     selector: 'app-role-permission-page',
     standalone: true,
-    imports: [FormsModule, CommonModule, ButtonsComponent],
+    imports: [FormsModule, CommonModule, ButtonsComponent, MessageComponent],
     templateUrl: './role-permission-page.component.html',
     styleUrls: ['./role-permission-page.component.css']
 })
@@ -39,9 +41,7 @@ export class RolePermissionPageComponent {
             },
             error: (err) => {
                 this._messageService.show(
-                    `Error fetching roles: ${err.message || 'Please try again.'}`,
-                    'error'
-                );
+                    `Error fetching roles: ${err.message || 'Please try again.'}`,'error');
             }
         });
     }
@@ -52,21 +52,22 @@ export class RolePermissionPageComponent {
                 this.permissions = data;
             },
             error: (err) => {
-                this._messageService.show(
-                    `Error fetching permissions: ${err.message || 'Please try again.'}`,
-                    'error'
-                );
+                this._messageService.show(`Error fetching permissions: ${err.message || 'Please try again.'}`,'error');
             }
         });
     }
 
     onRoleChange() {
-        this.selectedPermissionIds = [];
+        const roleSelected = this.roles.find(r => r.id === this.selectedRoleId);
+
+        this.selectedPermissionIds = roleSelected?.permissionsIds ?? [];
     }
+
 
     isPermissionSelected(permissionId: string): boolean {
         return this.selectedPermissionIds.includes(permissionId);
     }
+
     onPermissionToggle(permissionId: string, event: Event) {
     const input = event.target as HTMLInputElement;
     const checked = input.checked;
@@ -86,5 +87,31 @@ export class RolePermissionPageComponent {
             this._messageService.show('Please select a role first.', 'error');
             return;
         }
+
+        const roleToUpdate = this.roles.find(r => r.id === this.selectedRoleId);
+
+        if (!roleToUpdate) {
+            this._messageService.show('Selected role not found.', 'error');
+            return;
+        }
+
+        const roleUpdate: CreateRoleRequest = {
+            name: roleToUpdate.name,
+            description: roleToUpdate.description,
+            permissionsIds: this.selectedPermissionIds
+        };
+
+        this._roleService.update(this.selectedRoleId, roleUpdate).subscribe({
+            next: () => {
+            this._messageService.show('Permissions updated successfully.', 'success');
+            },
+            error: (err) => {
+            this._messageService.show(
+                `Error updating permissions: ${err.message || 'Please try again.'}`,
+                'error'
+            );
+            }
+        });
     }
+
 }

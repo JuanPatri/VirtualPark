@@ -1,5 +1,6 @@
 <div class="role-permission-page">
   <div class="layout">
+      <app-message></app-message>
     <div class="roles-column">
           <h3>Role</h3>
       <div class="form-group">
@@ -40,7 +41,8 @@
   <app-buttons
     text="Save"
     color="primary"
-    type="submit">
+    type="submit"
+    (click)="onSavePermissions()">
   </app-buttons>
 </div>
 </div>

@@ -46,9 +46,6 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
     public void Update(RoleArgs args, Guid roleId)
     {
         var role = Get(roleId);
-
-        ValidateRoleName(args.Name);
-
         ApplyArgsToEntity(role, args);
         _roleRepository.Update(role);
     }

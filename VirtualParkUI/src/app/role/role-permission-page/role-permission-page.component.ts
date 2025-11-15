@@ -6,11 +6,12 @@ import { MessageService } from '../../components/messages/service/message.servic
 import { PermissionService } from '../../../backend/services/permission/permission.service';
 import { PermissionModel } from '../../../backend/services/permission/models/PermissionModel';
 import { CommonModule } from '@angular/common';
+import { ButtonsComponent } from '../../components/buttons/buttons.component';
 
 @Component({
     selector: 'app-role-permission-page',
     standalone: true,
-    imports: [FormsModule, CommonModule],
+    imports: [FormsModule, CommonModule, ButtonsComponent],
     templateUrl: './role-permission-page.component.html',
     styleUrls: ['./role-permission-page.component.css']
 })

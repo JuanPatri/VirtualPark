@@ -1,40 +1,46 @@
 <div class="role-permission-page">
-  <h2>Role Permissions</h2>
+  <div class="layout">
+    <div class="roles-column">
+          <h3>Role</h3>
+      <div class="form-group">
+        <select
+          id="roleSelect"
+          name="roleSelect"
+          class="form-control"
+          [(ngModel)]="selectedRoleId"
+          (change)="onRoleChange()"
+        >
+          <option [ngValue]="null">-- Select a role --</option>
+          <option *ngFor="let role of roles" [ngValue]="role.id">
+            {{ role.name }}
+          </option>
+        </select>
+      </div>
+    </div>
 
-  <div class="form-group">
-    <label for="roleSelect">Role</label>
-    <select
-      id="roleSelect"
-      name="roleSelect"
-      class="form-control"
-      [(ngModel)]="selectedRoleId"
-      (change)="onRoleChange()"
-    >
-      <option [ngValue]="null">-- Select a role --</option>
-      <option *ngFor="let role of roles" [ngValue]="role.id">
-        {{ role.name }}
-      </option>
-    </select>
-  </div>
+    <div class="permissions-column" *ngIf="selectedRoleId">
+      <h3>Permissions</h3>
 
-  <div class="form-group" *ngIf="selectedRoleId">
-    <h3>Permissions</h3>
-    <div class="permissions-list">
-      <label *ngFor="let permission of permissions" class="permission-item">
-<input
-  type="checkbox"
-  [checked]="isPermissionSelected(permission.id)"
-  (change)="onPermissionToggle(permission.id, $event)"
-/>
-
-        {{ permission.key }}
-      </label>
+      <div class="permissions-list">
+        <label *ngFor="let permission of permissions" class="permission-chip">
+          <input
+            type="checkbox"
+            [checked]="isPermissionSelected(permission.id)"
+            (change)="onPermissionToggle(permission.id, $event)"
+          />
+          <span class="permission-key">
+            {{ permission.key }}
+          </span>
+        </label>
+      </div>
     </div>
   </div>
 
-  <div class="actions" *ngIf="selectedRoleId">
-    <button (click)="onSavePermissions()">
-      Save permissions
-    </button>
-  </div>
+<div class="actions" *ngIf="selectedRoleId">
+  <app-buttons
+    text="Save"
+    color="primary"
+    type="submit">
+  </app-buttons>
+</div>
 </div>

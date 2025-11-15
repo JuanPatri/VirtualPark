@@ -57,6 +57,7 @@ public class TicketService(
                       ?? throw new InvalidOperationException($"Visitor with id {args.VisitorId} not found.");
 
         var ticketDate = args.Date;
+        ValidateDuplicateTicket(ticketDate, args.VisitorId);
         var today = _clockAppService.Now().Date;
 
         if (ticketDate.Date < today)
@@ -104,6 +105,18 @@ public class TicketService(
         }
 
         return ticket;
+    }
+
+    private void ValidateDuplicateTicket(DateTime date, Guid visitorId)
+    {
+        var exists = _ticketRepository.Exist(t =>
+            t.VisitorProfileId == visitorId &&
+            t.Date.Date == date.Date);
+
+        if (exists)
+        {
+            throw new InvalidOperationException("The visitor already has a ticket for this date.");
+        }
     }
 
     private void ValidateEventCapacity(Event ev)

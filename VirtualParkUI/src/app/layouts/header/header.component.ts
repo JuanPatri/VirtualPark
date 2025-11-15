@@ -74,7 +74,7 @@ export class HeaderComponent implements OnDestroy {
     ];
     
     roleMenu: RoleGuardedMenuItem[] = [
-        { label: 'List', path: './role/list', roles: ['Administrator', 'Operator', 'Visitor'] },
+        { label: 'List', path: './role/list', roles: ['Administrator', 'Operator'] },
         { label: 'Create', path: '/role/create', roles: ['Administrator'] },
         { label: 'Edit Permission', path: '/role/permission', roles: ['Administrator'] }
     ]

@@ -207,5 +207,20 @@ public sealed class VisitRegistrationTest
         visit.AttractionUp.Should().BeSameAs(attractionUp);
     }
     #endregion
+
+    #region Set
+    [TestMethod]
+    [TestCategory("Setter")]
+    public void AttractionUp_Setter()
+    {
+        var attractionUp = new Attraction();
+        var visit = new VisitRegistration();
+
+        visit.AttractionUp = attractionUp;
+
+        visit.AttractionUp.Should().NotBeNull();
+        visit.AttractionUp.Should().BeSameAs(attractionUp);
+    }
+    #endregion
     #endregion
 }

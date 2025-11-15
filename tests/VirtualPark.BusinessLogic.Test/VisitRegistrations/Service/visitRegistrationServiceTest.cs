@@ -2,8 +2,10 @@ using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
+using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Strategy.Models;
 using VirtualPark.BusinessLogic.Strategy.Services;
+using VirtualPark.BusinessLogic.Tickets;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
@@ -990,5 +992,117 @@ public class VisitRegistrationServiceTest
         _repositoryMock.VerifyAll();
     }
     #endregion
+    #endregion
+
+    #region GetAttractionsForTicket
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetAttractionsForTicket_ShouldReturnAllAttractions_WhenTicketIsGeneral()
+    {
+        var now = new DateTime(2025, 10, 08, 10, 00, 00, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+        var today = DateOnly.FromDateTime(now);
+
+        var visitor = new VisitorProfile();
+        var visitorId = visitor.Id;
+
+        var generalTicket = new Ticket
+        {
+            Type = EntranceType.General
+        };
+
+        var visitToday = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Date = now,
+            Ticket = generalTicket,
+            TicketId = generalTicket.Id
+        };
+
+        var otherVisit = new VisitRegistration
+        {
+            VisitorId = Guid.NewGuid(),
+            Date = now,
+            Ticket = new Ticket { Type = EntranceType.Event }
+        };
+
+        var allVisits = new List<VisitRegistration> { visitToday, otherVisit };
+
+        _repositoryMock
+            .Setup(r => r.GetAll())
+            .Returns(allVisits);
+
+        var a1 = new Attraction { Name = "Roller" };
+        var a2 = new Attraction { Name = "Wheel" };
+        var allAttractions = new List<Attraction> { a1, a2 };
+
+        _attractionRepoMock
+            .Setup(r => r.GetAll())
+            .Returns(allAttractions);
+
+        var result = _service.GetAttractionsForTicket(visitorId);
+
+        result.Should().HaveCount(2);
+        result[0].Should().BeSameAs(a1);
+        result[1].Should().BeSameAs(a2);
+
+        _clockMock.VerifyAll();
+        _repositoryMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetAttractionsForTicket_ShouldReturnEventAttractions_WhenTicketIsEvent()
+    {
+        var now = new DateTime(2025, 10, 08, 15, 00, 00, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+        var today = DateOnly.FromDateTime(now);
+
+        var visitor = new VisitorProfile();
+        var visitorId = visitor.Id;
+
+        var ev = new Event
+        {
+            Name = "Fiesta Halloween",
+            Date = now
+        };
+        var ea1 = new Attraction { Name = "Casa del Terror" };
+        var ea2 = new Attraction { Name = "Labertinto" };
+        ev.Attractions = new List<Attraction> { ea1, ea2 };
+
+        var eventTicket = new Ticket
+        {
+            Type = EntranceType.Event,
+            Event = ev,
+            EventId = ev.Id
+        };
+
+        var visitToday = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Date = now,
+            Ticket = eventTicket,
+            TicketId = eventTicket.Id
+        };
+
+        var allVisits = new List<VisitRegistration> { visitToday };
+
+        _repositoryMock
+            .Setup(r => r.GetAll())
+            .Returns(allVisits);
+
+        _attractionRepoMock.VerifyNoOtherCalls();
+
+        var result = _service.GetAttractionsForTicket(visitorId);
+
+        result.Should().HaveCount(2);
+        result[0].Should().BeSameAs(ea1);
+        result[1].Should().BeSameAs(ea2);
+
+        _clockMock.VerifyAll();
+        _repositoryMock.VerifyAll();
+    }
+
     #endregion
 }

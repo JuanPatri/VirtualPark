@@ -127,6 +127,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     public void UpToAttraction(Guid visitId, Guid attractionId)
     {
         var visitRegistration = _visitRegistrationRepository.Get(v => v.Id == visitId);
+
         var attraction = _attractionRepository.Get(a => a.Id == attractionId);
 
         visitRegistration.CurrentAttraction = attraction;

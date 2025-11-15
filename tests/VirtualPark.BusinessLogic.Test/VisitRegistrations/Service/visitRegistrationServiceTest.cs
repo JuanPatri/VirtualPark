@@ -890,31 +890,29 @@ public class VisitRegistrationServiceTest
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
     }
+    #endregion
+
+    #region Failure
 
     [TestMethod]
-    [TestCategory("Behaviour")]
-    public void UpToAttraction_SameAttraction_ShouldNotCallUpdate()
+    [TestCategory("Validation")]
+    public void UpToAttraction_ShouldThrow_WhenVisitRegistrationDoesNotExist()
     {
-        var visit = new VisitRegistration();
-        var visitId = visit.Id;
-
-        var same = new Attraction { Name = "Same" };
-        visit.CurrentAttraction = same;
-        visit.CurrentAttractionId = same.Id;
+        var visitId = Guid.NewGuid();
+        var attractionId = Guid.NewGuid();
 
         _repositoryMock
             .Setup(r => r.Get(v => v.Id == visitId))
-            .Returns(visit);
+            .Returns((VisitRegistration?)null);
 
-        _attractionRepoMock
-            .Setup(r => r.Get(a => a.Id == same.Id))
-            .Returns(same);
+        Action act = () => _service.UpToAttraction(visitId, attractionId);
 
-        _service.UpToAttraction(visitId, same.Id);
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("VisitRegistration not found");
 
-        _repositoryMock.Verify(r => r.Update(It.IsAny<VisitRegistration>()), Times.Never);
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
+        _repositoryMock.VerifyAll();
     }
     #endregion
     #endregion

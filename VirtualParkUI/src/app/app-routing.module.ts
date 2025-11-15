@@ -33,7 +33,7 @@ const routes: Routes = [
         path: 'clock',
         loadChildren: () => import('./clock/clock.module').then(m => m.ClockModule)
     },
-    { path: 'reports/attractions', loadChildren: () => import('./report/report.module').then(m => m.ReportsModule) }
+    { path: 'reports/attractions', loadChildren: () => import('./report/report.module').then(m => m.ReportsModule) },
 
 
     { path: 'strategy', loadChildren: () => import('./strategy/strategy.module').then(m => m.StrategyModule) }
@@ -43,4 +43,4 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

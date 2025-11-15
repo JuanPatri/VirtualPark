@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
@@ -191,5 +192,20 @@ public sealed class VisitRegistrationTest
         visit.ScoreEvents[0].Origin.Should().Be("Atracción");
         visit.ScoreEvents[0].Points.Should().Be(50);
     }
+    #endregion
+
+    #region AttractionUp
+    #region Get
+    [TestMethod]
+    [TestCategory("Getter")]
+    public void AttractionUp_Getter()
+    {
+        var attractionUp = new Attraction();
+        var visit = new VisitRegistration { AttractionUp = attractionUp };
+
+        visit.AttractionUp.Should().NotBeNull();
+        visit.AttractionUp.Should().BeSameAs(attractionUp);
+    }
+    #endregion
     #endregion
 }

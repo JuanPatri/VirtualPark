@@ -3,6 +3,8 @@ import { AddPermissionRoleFormComponent } from '../../business-components/role/a
 import { RoleService } from '../../../backend/services/role/role.service';
 import { RoleModel } from '../../../backend/services/role/models/RoleModel';
 import { MessageService } from '../../components/messages/service/message.service';
+import { PermissionService } from '../../../backend/services/permission/permission.service';
+import { PermissionModel } from '../../../backend/services/permission/models/PermissionModel';
 
 @Component({
     selector: 'app-role-permission-page',
@@ -14,15 +16,16 @@ import { MessageService } from '../../components/messages/service/message.servic
 export class RolePermissionPageComponent {
     errorMessage = '';
     roles: RoleModel[] = [];
+    permissions: PermissionModel[] = [];
 
-    constructor(private _roleService: RoleService, private _messageService: MessageService) {
+    constructor(private _roleService: RoleService, private _messageService: MessageService, private _permissionService: PermissionService) {
         this.loadRoles();
         this.loadPermissions();
     }
 
     loadRoles() {
         this._roleService.getAll().subscribe({
-            next: (data) => {
+            next: (data: RoleModel[]) => {
                 this.roles = data;
             },
             error: (err) => {
@@ -32,6 +35,13 @@ export class RolePermissionPageComponent {
     }
 
     loadPermissions(){
-        
-    }
+        this._permissionService.getAll().subscribe({
+            next: (data: PermissionModel[]) => {
+                this.permissions = data;
+            },
+            error: (err) => {
+                this._messageService.show( `Error fetching permissions: ${err.message || 'Please try again.'}`,'error');
+            }
+    });
+}
 }

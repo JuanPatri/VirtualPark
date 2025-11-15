@@ -21,14 +21,19 @@ export class TicketRegisterPageComponent {
   private eventService = inject(EventService);
   private router = inject(Router);
 
-  events$: Observable<EventOption[]> = this.eventService.getAll().pipe(
-    map(events =>
-      events.map(e => ({
+events$: Observable<EventOption[]> = this.eventService.getAll().pipe(
+  map(events => {
+    const today = new Date().setHours(0,0,0,0);
+
+    return events
+      .filter(e => new Date(e.date).getTime() >= today)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .map(e => ({
         id: e.id,
         label: `${e.name} (${e.date})`
-      }))
-    )
-  );
+      }));
+  })
+);
 
   form = this.fb.group({
     date: ['', [Validators.required]],

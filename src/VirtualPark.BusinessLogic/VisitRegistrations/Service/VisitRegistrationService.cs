@@ -133,6 +133,10 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         }
 
         var attraction = _attractionRepository.Get(a => a.Id == attractionId);
+        if (attraction is null)
+        {
+            throw new InvalidOperationException("Attraction don't exist");
+        }
 
         visitRegistration.CurrentAttraction = attraction;
         visitRegistration.CurrentAttractionId = attraction.Id;

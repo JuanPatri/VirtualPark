@@ -21,11 +21,12 @@
     <h3>Permissions</h3>
     <div class="permissions-list">
       <label *ngFor="let permission of permissions" class="permission-item">
-        <input
-          type="checkbox"
-          [checked]="isPermissionSelected(permission.id)"
-          (change)="onPermissionToggle(permission.id, $event.target.checked)"
-        />
+<input
+  type="checkbox"
+  [checked]="isPermissionSelected(permission.id)"
+  (change)="onPermissionToggle(permission.id, $event)"
+/>
+
         {{ permission.key }}
       </label>
     </div>

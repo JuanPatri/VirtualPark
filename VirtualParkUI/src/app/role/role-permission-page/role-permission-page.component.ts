@@ -5,11 +5,12 @@ import { RoleModel } from '../../../backend/services/role/models/RoleModel';
 import { MessageService } from '../../components/messages/service/message.service';
 import { PermissionService } from '../../../backend/services/permission/permission.service';
 import { PermissionModel } from '../../../backend/services/permission/models/PermissionModel';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-role-permission-page',
     standalone: true,
-    imports: [FormsModule],
+    imports: [FormsModule, CommonModule],
     templateUrl: './role-permission-page.component.html',
     styleUrls: ['./role-permission-page.component.css']
 })
@@ -18,8 +19,8 @@ export class RolePermissionPageComponent {
     roles: RoleModel[] = [];
     permissions: PermissionModel[] = [];
 
-    selectedRoleId: number | null = null;
-    selectedPermissionIds: number[] = [];
+    selectedRoleId: string | null = null;
+    selectedPermissionIds: string[] = [];
 
     constructor(
         private _roleService: RoleService,
@@ -58,30 +59,27 @@ export class RolePermissionPageComponent {
         });
     }
 
-    // 👇 se dispara cuando el usuario cambia el rol en el select
     onRoleChange() {
-        // Acá podrías cargar los permisos actuales del rol desde el backend.
-        // Por ahora, lo dejo simple: limpiamos la selección
         this.selectedPermissionIds = [];
     }
 
-    // ayuda para saber si un permiso está seleccionado
-    isPermissionSelected(permissionId: number): boolean {
+    isPermissionSelected(permissionId: string): boolean {
         return this.selectedPermissionIds.includes(permissionId);
     }
+    onPermissionToggle(permissionId: string, event: Event) {
+    const input = event.target as HTMLInputElement;
+    const checked = input.checked;
 
-    // se dispara cuando el usuario tilda/destilda un permiso
-    onPermissionToggle(permissionId: number, checked: boolean) {
-        if (checked) {
-            if (!this.selectedPermissionIds.includes(permissionId)) {
-                this.selectedPermissionIds.push(permissionId);
-            }
-        } else {
-            this.selectedPermissionIds = this.selectedPermissionIds.filter(id => id !== permissionId);
+    if (checked) {
+        if (!this.selectedPermissionIds.includes(permissionId)) {
+        this.selectedPermissionIds.push(permissionId);
         }
+    } else {
+        this.selectedPermissionIds = this.selectedPermissionIds.filter(id => id !== permissionId);
+    }
     }
 
-    // guardar la asignación (ejemplo)
+
     onSavePermissions() {
         if (!this.selectedRoleId) {
             this._messageService.show('Please select a role first.', 'error');

@@ -236,5 +236,18 @@ public sealed class VisitRegistrationTest
         visit.CurrentAttractionId.Should().Be(currentAttractionId);
     }
     #endregion
+
+    #region Set
+    [TestMethod]
+    [TestCategory("SetterCurrentAttractionId")]
+    public void CurrentAttractionId_Setter_ShouldReturnAssignedInstance()
+    {
+        var currentAttractionId = Guid.NewGuid();
+        var visit = new VisitRegistration();
+        visit.CurrentAttractionId = currentAttractionId;
+
+        visit.CurrentAttractionId.Should().Be(currentAttractionId);
+    }
+    #endregion
     #endregion
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualPark.DataAccess;
 
@@ -11,9 +12,11 @@ using VirtualPark.DataAccess;
 namespace VirtualPark.DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    partial class SqlContextModelSnapshot : ModelSnapshot
+    [Migration("20251115185934_GetTicketPermissionToVisitor")]
+    partial class GetTicketPermissionToVisitor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1006,11 +1009,6 @@ namespace VirtualPark.DataAccess.Migrations
                         {
                             RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("33333333-1111-1111-1111-111111111115")
-                        },
-                        new
-                        {
-                            RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
-                            PermissionId = new Guid("33333333-1111-1111-1111-111111111113")
                         },
                         new
                         {

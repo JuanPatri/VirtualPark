@@ -6,12 +6,19 @@ import { Observable, map } from 'rxjs';
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
 import { TicketService } from '../../../backend/services/ticket/ticket.service';
 import { EventService } from '../../../backend/services/event/event.service';
+import { MessageComponent } from '../../components/messages/message.component';
+import { MessageService } from '../../components/messages/service/message.service';
 
-type EventOption = { id: string; label: string };
+type EventOption = {
+  id: string;
+  label: string;
+  soldOut: boolean;
+};
+
 @Component({
   selector: 'app-ticket-register-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ButtonsComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ButtonsComponent, MessageComponent],
   templateUrl: './ticket-register-page.component.html',
   styleUrls: ['./ticket-register-page.component.css']
 })
@@ -20,15 +27,25 @@ export class TicketRegisterPageComponent {
   private ticketService = inject(TicketService);
   private eventService = inject(EventService);
   private router = inject(Router);
+  private messageService = inject(MessageService);
 
   events$: Observable<EventOption[]> = this.eventService.getAll().pipe(
-    map(events =>
-      events.map(e => ({
-        id: e.id,
-        label: `${e.name} (${e.date})`
-      }))
-    )
+    map(events => {
+      const today = new Date().setHours(0,0,0,0);
+
+      return events
+        .filter(e => new Date(e.date).getTime() >= today)
+
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+
+        .map(e => ({
+          id: e.id,
+          label: `${e.name} (${e.date}) - ${e.ticketsSold}/${e.capacity}`,
+          soldOut: Number(e.ticketsSold) >= Number(e.capacity)
+        }));
+    })
   );
+
 
   form = this.fb.group({
     date: ['', [Validators.required]],
@@ -40,6 +57,7 @@ export class TicketRegisterPageComponent {
   trackById = (_: number, e: { id: string }) => e.id;
 
   submit() {
+    
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
 
     const visitorId = localStorage.getItem('visitorId')!;
@@ -64,10 +82,13 @@ export class TicketRegisterPageComponent {
 
     this.ticketService.create(payload).subscribe({
       next: (res) => {
-        alert(`Ticket creado`);
+        alert(`Ticket created`);
         this.router.navigate(['/ticket']);
       },
-      error: (e) => alert('Error creando ticket: ' + (e?.message ?? e))
+      error: (e) => {
+        const backendMsg = e?.error?.message ?? 'Unknown error';
+        this.messageService.show(backendMsg, 'error');
+      }
     });
   }
 

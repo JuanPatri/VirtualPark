@@ -228,7 +228,7 @@ public sealed class VisitRegistrationTest
     #region Get
     [TestMethod]
     [TestCategory("GetterCurrentAttractionId")]
-    public void CurrentAttractionId_Getter()
+    public void CurrentAttractionId_Getter_ShouldReturnAssignedInstance()
     {
         var currentAttractionId = Guid.NewGuid();
         var visit = new VisitRegistration { CurrentAttractionId = currentAttractionId };

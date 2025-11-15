@@ -914,6 +914,31 @@ public class VisitRegistrationServiceTest
         _attractionRepoMock.VerifyAll();
         _repositoryMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void UpToAttraction_ShouldThrow_WhenAttractionDoesNotExist()
+    {
+        var visit = new VisitRegistration();
+        var visitId = visit.Id;
+        var missingAttractionId = Guid.NewGuid();
+
+        _repositoryMock
+            .Setup(r => r.Get(v => v.Id == visitId))
+            .Returns(visit);
+
+        _attractionRepoMock
+            .Setup(r => r.Get(a => a.Id == missingAttractionId))
+            .Returns((Attraction?)null);
+
+        Action act = () => _service.UpToAttraction(visitId, missingAttractionId);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Attraction don't exist");
+
+        _repositoryMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
     #endregion
     #endregion
 }

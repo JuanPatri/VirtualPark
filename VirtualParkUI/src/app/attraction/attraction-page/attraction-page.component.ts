@@ -16,4 +16,8 @@ export class AttractionPageComponent {
   canViewCreate(): boolean {
     return this.authRole.hasAnyRole(['Administrator', 'Operator']);
   }
+
+  canRide(): boolean {
+    return this.authRole.hasAnyRole(['Visitor']);
+  }
 }

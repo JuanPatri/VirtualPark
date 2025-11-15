@@ -2,10 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.BusinessLogic.VisitRegistrations.Service;
 using VirtualPark.WebApi.Controllers.VisitsScore.ModelsIn;
+using VirtualPark.WebApi.Filters.Authenticator;
 using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.VisitsRegistration;
 
+[ApiController]
+[AuthenticationFilter]
 public class VisitRegistrationController(IVisitRegistrationService svc) : ControllerBase
 {
     private readonly IVisitRegistrationService _svc = svc;

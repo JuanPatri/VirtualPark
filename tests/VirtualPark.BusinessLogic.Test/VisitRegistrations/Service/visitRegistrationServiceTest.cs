@@ -854,4 +854,42 @@ public class VisitRegistrationServiceTest
         _clockMock.VerifyAll();
     }
     #endregion
+
+    #region UpToAttraction
+    #region Success
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void UpToAttraction_ShouldSetCurrentAttraction_AndPersist_WhenVisitAndAttractionExist()
+    {
+        var visit = new VisitRegistration();
+        var visitId = visit.Id;
+
+        var target = new Attraction { Name = "Roller Coaster" };
+        var targetId = target.Id;
+
+        _repositoryMock
+            .Setup(r => r.Get(v => v.Id == visitId))
+            .Returns(visit);
+
+        _attractionRepoMock
+            .Setup(r => r.Get(a => a.Id == targetId))
+            .Returns(target);
+
+        _repositoryMock
+            .Setup(r => r.Update(It.Is<VisitRegistration>(vr =>
+                vr.Id == visitId &&
+                vr.CurrentAttraction == target &&
+                vr.CurrentAttractionId == targetId)));
+
+        _service.UpToAttraction(visitId, targetId);
+
+        visit.CurrentAttraction.Should().BeSameAs(target);
+        visit.CurrentAttractionId.Should().Be(targetId);
+
+        _repositoryMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
+    #endregion
+    #endregion
 }

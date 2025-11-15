@@ -890,6 +890,32 @@ public class VisitRegistrationServiceTest
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void UpToAttraction_SameAttraction_ShouldNotCallUpdate()
+    {
+        var visit = new VisitRegistration();
+        var visitId = visit.Id;
+
+        var same = new Attraction { Name = "Same" };
+        visit.CurrentAttraction = same;
+        visit.CurrentAttractionId = same.Id;
+
+        _repositoryMock
+            .Setup(r => r.Get(v => v.Id == visitId))
+            .Returns(visit);
+
+        _attractionRepoMock
+            .Setup(r => r.Get(a => a.Id == same.Id))
+            .Returns(same);
+
+        _service.UpToAttraction(visitId, same.Id);
+
+        _repositoryMock.Verify(r => r.Update(It.IsAny<VisitRegistration>()), Times.Never);
+        _repositoryMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
     #endregion
     #endregion
 }

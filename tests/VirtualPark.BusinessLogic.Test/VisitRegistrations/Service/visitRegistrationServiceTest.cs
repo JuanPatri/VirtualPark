@@ -1122,5 +1122,73 @@ public class VisitRegistrationServiceTest
         _repositoryMock.VerifyAll();
     }
 
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAttractionsForTicket_ShouldThrow_WhenRepositoryReturnsNullVisitRegistrations()
+    {
+        var visitorId = Guid.NewGuid();
+        var now = new DateTime(2025, 10, 08, 10, 00, 00, DateTimeKind.Utc);
+
+        _clockMock
+            .Setup(c => c.Now())
+            .Returns(now);
+
+        _repositoryMock
+            .Setup(r => r.GetAll())
+            .Returns((List<VisitRegistration>)null!);
+
+        Action act = () => _service.GetAttractionsForTicket(visitorId);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Dont have any visit registrations");
+
+        _clockMock.VerifyAll();
+        _repositoryMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAttractionsForTicket_ShouldThrow_WhenVisitForTodayDoesNotExistForVisitor()
+    {
+        var now = new DateTime(2025, 10, 08, 10, 00, 00, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var visitor = new VisitorProfile();
+        var visitorId = visitor.Id;
+
+        var otherVisitorVisitToday = new VisitRegistration
+        {
+            VisitorId = Guid.NewGuid(),
+            Date = now,
+            Ticket = new Ticket { Type = EntranceType.General }
+        };
+
+        var sameVisitorOtherDay = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Date = now.AddDays(-1),
+            Ticket = new Ticket { Type = EntranceType.General }
+        };
+
+        var allVisits = new List<VisitRegistration>
+        {
+            otherVisitorVisitToday,
+            sameVisitorOtherDay
+        };
+
+        _repositoryMock
+            .Setup(r => r.GetAll())
+            .Returns(allVisits);
+
+        Action act = () => _service.GetAttractionsForTicket(visitorId);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("VisitRegistration for today don't exist");
+
+        _clockMock.VerifyAll();
+        _repositoryMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
     #endregion
 }

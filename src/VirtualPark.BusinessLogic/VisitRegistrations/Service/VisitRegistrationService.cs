@@ -144,6 +144,25 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         _visitRegistrationRepository.Update(visitRegistration);
     }
 
+    public void DownToAttraction(Guid visitId)
+    {
+        var visitRegistration = _visitRegistrationRepository.Get(v => v.Id == visitId);
+        if (visitRegistration is null)
+        {
+            throw new InvalidOperationException("VisitRegistration not found");
+        }
+
+        if (visitRegistration.CurrentAttractionId is null)
+        {
+            return;
+        }
+
+        visitRegistration.CurrentAttraction = null;
+        visitRegistration.CurrentAttractionId = null;
+
+        _visitRegistrationRepository.Update(visitRegistration);
+    }
+
     private Ticket SearchTicket(Guid id)
     {
         var ticket = _ticketRepository.Get(t => t.Id == id);

@@ -943,20 +943,13 @@ public class VisitRegistrationServiceTest
     #endregion
 
     #region DownToAttraction
-    #region HappyPath
-
+    #region Success
     [TestMethod]
     [TestCategory("Behaviour")]
     public void DownToAttraction_ShouldNullCurrentAttraction_AndPersist_WhenThereIsOne()
     {
         var visit = new VisitRegistration { Attractions = [] };
         var visitId = visit.Id;
-
-        var visitor = new VisitorProfile();
-        visit.VisitorId = visitor.Id;
-
-        var ticket = new Ticket();
-        visit.TicketId = ticket.Id;
 
         var current = new Attraction { Name = "Coaster" };
         visit.CurrentAttraction = current;
@@ -966,19 +959,8 @@ public class VisitRegistrationServiceTest
             .Setup(r => r.Get(v => v.Id == visitId))
             .Returns(visit);
 
-        _visitorRepoMock
-            .Setup(r => r.Get(v => v.Id == visitor.Id))
-            .Returns(visitor);
-
-        _ticketRepoMock
-            .Setup(r => r.Get(t => t.Id == ticket.Id))
-            .Returns(ticket);
-
         _repositoryMock
-            .Setup(r => r.Update(It.Is<VisitRegistration>(vr =>
-                vr.Id == visitId &&
-                vr.CurrentAttraction == null &&
-                vr.CurrentAttractionId == null)));
+            .Setup(r => r.Update(visit));
 
         _service.DownToAttraction(visitId);
 
@@ -986,8 +968,6 @@ public class VisitRegistrationServiceTest
         visit.CurrentAttractionId.Should().BeNull();
 
         _repositoryMock.VerifyAll();
-        _visitorRepoMock.VerifyAll();
-        _ticketRepoMock.VerifyAll();
     }
 
     [TestMethod]
@@ -997,12 +977,6 @@ public class VisitRegistrationServiceTest
         var visit = new VisitRegistration { Attractions = [] };
         var visitId = visit.Id;
 
-        var visitor = new VisitorProfile();
-        visit.VisitorId = visitor.Id;
-
-        var ticket = new Ticket();
-        visit.TicketId = ticket.Id;
-
         visit.CurrentAttraction = null;
         visit.CurrentAttractionId = null;
 
@@ -1010,20 +984,10 @@ public class VisitRegistrationServiceTest
             .Setup(r => r.Get(v => v.Id == visitId))
             .Returns(visit);
 
-        _visitorRepoMock
-            .Setup(r => r.Get(v => v.Id == visitor.Id))
-            .Returns(visitor);
-
-        _ticketRepoMock
-            .Setup(r => r.Get(t => t.Id == ticket.Id))
-            .Returns(ticket);
-
         _service.DownToAttraction(visitId);
 
-        _repositoryMock.Verify(r => r.Update(It.IsAny<VisitRegistration>()), Times.Never);
+        _repositoryMock.Verify(r => r.Update(visit), Times.Never);
         _repositoryMock.VerifyAll();
-        _visitorRepoMock.VerifyAll();
-        _ticketRepoMock.VerifyAll();
     }
     #endregion
     #endregion

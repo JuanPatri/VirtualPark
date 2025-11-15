@@ -481,6 +481,7 @@ public sealed class EventServiceTest
     #endregion
 
     #endregion
+    #region Get
     [TestMethod]
     [TestCategory("Behaviour")]
     public void Get_ShouldIncludeTickets()
@@ -512,4 +513,5 @@ public sealed class EventServiceTest
                     It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()),
             Times.Once);
     }
+    #endregion
 }

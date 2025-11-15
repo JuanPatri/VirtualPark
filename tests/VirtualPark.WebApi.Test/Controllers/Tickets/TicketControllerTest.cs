@@ -24,6 +24,37 @@ public sealed class TicketControllerTest
     }
 
     #region Get
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetTicketById_WhenGuidIsInvalid_ShouldThrowFormatException()
+    {
+        const string invalidId = "NOT_A_GUID";
+
+        Action act = () => _controller.GetTicketById(invalidId);
+
+        act.Should()
+            .Throw<FormatException>()
+            .WithMessage($"The value '{invalidId}' is not a valid GUID.");
+    }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetTicketById_WhenServiceReturnsNull_ShouldThrowInvalidOperationException()
+    {
+        var id = Guid.NewGuid();
+
+        _ticketServiceMock
+            .Setup(s => s.Get(id))
+            .Returns((Ticket?)null);
+
+        Action act = () => _controller.GetTicketById(id.ToString());
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage($"Ticket with id {id} not found.");
+
+        _ticketServiceMock.VerifyAll();
+    }
 
     [TestMethod]
     [TestCategory("Behaviour")]
@@ -129,6 +160,37 @@ public sealed class TicketControllerTest
 
         _ticketServiceMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void CreateTicket_WhenEventIdIsEmpty_ShouldMapToArgsWithNullEventId()
+    {
+        var visitorId = Guid.NewGuid().ToString();
+        var returnId = Guid.NewGuid();
+
+        var request = new CreateTicketRequest
+        {
+            VisitorId = visitorId,
+            Type = "General",
+            EventId = string.Empty,
+            Date = "2025-12-15"
+        };
+
+        var expectedArgs = request.ToArgs();
+
+        _ticketServiceMock
+            .Setup(s => s.Create(It.Is<TicketArgs>(a =>
+                a.EventId == null &&
+                a.Type == expectedArgs.Type &&
+                a.VisitorId == expectedArgs.VisitorId)))
+            .Returns(returnId);
+
+        var response = _controller.CreateTicket(request);
+
+        response.Id.Should().Be(returnId.ToString());
+        _ticketServiceMock.VerifyAll();
+    }
+
     #endregion
 
     #region GetAll
@@ -182,6 +244,23 @@ public sealed class TicketControllerTest
 
         _ticketServiceMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetAllTickets_WhenServiceReturnsEmpty_ShouldReturnEmptyList()
+    {
+        _ticketServiceMock
+            .Setup(s => s.GetAll())
+            .Returns([]);
+
+        var result = _controller.GetAllTickets();
+
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+
+        _ticketServiceMock.VerifyAll();
+    }
+
     #endregion
 
     #region Delete
@@ -274,6 +353,19 @@ public sealed class TicketControllerTest
         second.EventId.Should().Be(t2.EventId.ToString());
 
         _ticketServiceMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetTicketsByVisitor_WhenGuidIsInvalid_ShouldThrowFormatException()
+    {
+        const string invalid = "AAA-BBB-CCC";
+
+        Action act = () => _controller.GetTicketsByVisitor(invalid);
+
+        act.Should()
+            .Throw<FormatException>()
+            .WithMessage($"The value '{invalid}' is not a valid GUID.");
     }
 
     #endregion

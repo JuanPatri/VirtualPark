@@ -186,6 +186,32 @@ public sealed class EventServiceTest
         result.Should().Contain(ev2);
     }
 
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetAll_ShouldIncludeTickets()
+    {
+        var ev1 = new Event { Id = Guid.NewGuid(), Tickets = [ new Ticket { Id = Guid.NewGuid() }] };
+        var ev2 = new Event { Id = Guid.NewGuid(), Tickets = [] };
+
+        _eventRepositoryMock
+            .Setup(r => r.GetAll(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
+            .Returns([ev1, ev2]);
+
+        var result = _eventService.GetAll();
+
+        result.Should().HaveCount(2);
+        result[0].Tickets.Should().HaveCount(1);
+        result[1].Tickets.Should().BeEmpty();
+
+        _eventRepositoryMock.Verify(r =>
+                r.GetAll(
+                    It.IsAny<Expression<Func<Event, bool>>>(),
+                    It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()),
+            Times.Once);
+    }
+
     #endregion
 
     #region Failure

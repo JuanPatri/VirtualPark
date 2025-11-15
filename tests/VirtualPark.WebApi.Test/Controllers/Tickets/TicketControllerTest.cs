@@ -202,6 +202,26 @@ public sealed class TicketControllerTest
     #endregion
 
     #region GetTicketByVisitorId
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetTicketsByVisitor_WhenNoTicketsExist_ShouldReturnEmptyList()
+    {
+        var visitorId = Guid.NewGuid();
+
+        _ticketServiceMock
+            .Setup(s => s.GetTicketsByVisitor(visitorId))
+            .Returns([]);
+
+        var result = _controller.GetTicketsByVisitor(visitorId.ToString());
+
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+
+        _ticketServiceMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
     public void GetTicketsByVisitor_WhenTicketsExist_ShouldReturnMappedList()
     {
         var visitorId = Guid.NewGuid();
@@ -242,6 +262,7 @@ public sealed class TicketControllerTest
         first.Type.Should().Be(t1.Type.ToString());
         first.Date.Should().Be(t1.Date.ToString("yyyy-MM-dd"));
         first.QrId.Should().Be(t1.QrId.ToString());
+        first.VisitorId.Should().Be(visitorId.ToString());
         first.EventId.Should().Be(string.Empty);
 
         var second = result.Last();
@@ -249,25 +270,8 @@ public sealed class TicketControllerTest
         second.Type.Should().Be(t2.Type.ToString());
         second.Date.Should().Be(t2.Date.ToString("yyyy-MM-dd"));
         second.QrId.Should().Be(t2.QrId.ToString());
+        second.VisitorId.Should().Be(visitorId.ToString());
         second.EventId.Should().Be(t2.EventId.ToString());
-
-        _ticketServiceMock.VerifyAll();
-    }
-
-    [TestMethod]
-    [TestCategory("Behaviour")]
-    public void GetTicketsByVisitor_WhenNoTicketsExist_ShouldReturnEmptyList()
-    {
-        var visitorId = Guid.NewGuid();
-
-        _ticketServiceMock
-            .Setup(s => s.GetTicketsByVisitor(visitorId))
-            .Returns([]);
-
-        var result = _controller.GetTicketsByVisitor(visitorId.ToString());
-
-        result.Should().NotBeNull();
-        result.Should().BeEmpty();
 
         _ticketServiceMock.VerifyAll();
     }

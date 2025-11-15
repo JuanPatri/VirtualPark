@@ -38,7 +38,17 @@ export class TicketListPageComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
-        this.service.getAll().subscribe({
+
+        const roles = JSON.parse(localStorage.getItem('roles') ?? '[]');
+        const userId = localStorage.getItem('visitorId');
+
+        const isVisitor = roles.includes('Visitor');
+
+        const request$ = isVisitor
+            ? this.service.getByVisitor(userId!)
+            : this.service.getAll();
+
+        request$.subscribe({
             next: (items: any[]) => {
                 this.data = (items ?? []).map(it => ({
                     id: it.id ?? it.Id,

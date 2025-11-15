@@ -201,25 +201,25 @@ public sealed class VisitRegistrationTest
     public void AttractionUp_Getter_ShouldReturnAssignedInstance()
     {
         var attractionUp = new Attraction();
-        var visit = new VisitRegistration { AttractionUp = attractionUp };
+        var visit = new VisitRegistration { CurrentAttraction = attractionUp };
 
-        visit.AttractionUp.Should().NotBeNull();
-        visit.AttractionUp.Should().BeSameAs(attractionUp);
+        visit.CurrentAttraction.Should().NotBeNull();
+        visit.CurrentAttraction.Should().BeSameAs(attractionUp);
     }
     #endregion
 
     #region Set
     [TestMethod]
     [TestCategory("Setter")]
-    public void AttractionUp_Setter()
+    public void AttractionUp_Setter_ShouldReturnAssignedInstance()
     {
         var attractionUp = new Attraction();
         var visit = new VisitRegistration();
 
-        visit.AttractionUp = attractionUp;
+        visit.CurrentAttraction = attractionUp;
 
-        visit.AttractionUp.Should().NotBeNull();
-        visit.AttractionUp.Should().BeSameAs(attractionUp);
+        visit.CurrentAttraction.Should().NotBeNull();
+        visit.CurrentAttraction.Should().BeSameAs(attractionUp);
     }
     #endregion
     #endregion

@@ -132,4 +132,26 @@ public class GetEventResponseTest
         response.Attractions.Should().BeEquivalentTo(attractions);
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void TicketsSold_Getter_ReturnsAssignedValue()
+    {
+        var attractions = new List<string>
+        {
+            new(Guid.NewGuid().ToString()),
+            new(Guid.NewGuid().ToString())
+        };
+
+        var response = new GetEventResponse(
+            Guid.NewGuid().ToString(),
+            "Halloween Party",
+            "2025-12-01",
+            "200",
+            "1500",
+            attractions,
+            ticketsSold: "32");
+
+        response.TicketsSold.Should().Be("32");
+    }
 }

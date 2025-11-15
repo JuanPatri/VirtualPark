@@ -1300,5 +1300,46 @@ public class VisitRegistrationServiceTest
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAttractionsForTicket_ShouldThrow_WhenAttractionsRepositoryReturnsNull_ForGeneralTicket()
+    {
+        var now = new DateTime(2025, 10, 08, 9, 00, 00, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var visitor = new VisitorProfile();
+        var visitorId = visitor.Id;
+
+        var generalTicket = new Ticket
+        {
+            Type = EntranceType.General
+        };
+
+        var visitToday = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Date = now,
+            Ticket = generalTicket,
+            TicketId = generalTicket.Id
+        };
+
+        _repositoryMock
+            .Setup(r => r.GetAll())
+            .Returns(new List<VisitRegistration> { visitToday });
+
+        _attractionRepoMock
+            .Setup(r => r.GetAll())
+            .Returns((List<Attraction>)null!);
+
+        Action act = () => _service.GetAttractionsForTicket(visitorId);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Dont have any attractions");
+
+        _clockMock.VerifyAll();
+        _repositoryMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
     #endregion
 }

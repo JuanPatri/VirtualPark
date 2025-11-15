@@ -4,6 +4,7 @@ using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Events.Models;
 using VirtualPark.BusinessLogic.Events.Services;
+using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.WebApi.Controllers.Events;
 using VirtualPark.WebApi.Controllers.Events.ModelsIn;
 using VirtualPark.WebApi.Controllers.Events.ModelsOut;
@@ -126,6 +127,38 @@ public class EventControllerTest
 
         _eventServiceMock.VerifyAll();
     }
+
+    [TestMethod]
+    public void GetEventById_ShouldIncludeTicketsSold()
+    {
+        var attraction = new Attraction { Name = "Roller", Capacity = 10, Available = true };
+
+        var ev = new Event
+        {
+            Name = "Halloween",
+            Date = new DateTime(2025, 10, 31),
+            Capacity = 100,
+            Cost = 200,
+            Attractions = [attraction],
+            Tickets =
+            [
+                new Ticket { Id = Guid.NewGuid() },
+                new Ticket { Id = Guid.NewGuid() },
+                new Ticket { Id = Guid.NewGuid() }
+            ]
+        };
+
+        var id = ev.Id;
+
+        _eventServiceMock.Setup(s => s.Get(id)).Returns(ev);
+
+        var result = _eventController.GetEventById(id.ToString());
+
+        result.TicketsSold.Should().Be("3");
+
+        _eventServiceMock.VerifyAll();
+    }
+
     #endregion
 
     #region GetAll

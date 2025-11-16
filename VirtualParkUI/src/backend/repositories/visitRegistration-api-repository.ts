@@ -12,8 +12,8 @@ export class VisitRegistrationApiRepository extends GenericApiRepository {
         super('visitRegistrations', http);
     }
 
-    recordScoreEvent(token: string, body: VisitScoreRequest): Observable<void> {
-        return this.create<void>(body, true, `scoreEvents/${token}`);
+    recordScoreEvent(body: VisitScoreRequest): Observable<void> {
+        return this.create<void>(body, true, `scoreEvents/`);
     }
 
     upToAttraction(visitorId: string, attractionId: string): Observable<void> {

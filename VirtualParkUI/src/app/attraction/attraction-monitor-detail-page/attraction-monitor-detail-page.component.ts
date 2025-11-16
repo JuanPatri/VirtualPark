@@ -5,6 +5,7 @@ import { TableColumn, TableComponent } from '../../components/table/generic-tabl
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
 import { VisitRegistrationService } from '../../../backend/services/visitRegistration/visit-registration.service';
 import { VisitorInAttractionModel } from '../../../backend/services/visitRegistration/models/VisitorInAttractionModel';
+import { VisitScoreRequest } from '../../../backend/services/visitRegistration/models/VisitScoreRequest';
 import { MessageComponent } from '../../components/messages/message.component';
 import { MessageService } from '../../components/messages/service/message.service';
 import { AttractionService } from '../../../backend/services/attraction/attraction.service';
@@ -102,12 +103,26 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
             next: () => {
                 this.processingId = null;
                 this.messageService.show('Visitor was removed from the attraction.', 'success');
+                this.recordScoreEvent(row.visitorProfileId);
                 this.loadVisitors();
             },
             error: () => {
                 this.processingId = null;
                 this.messageService.show('Unable to remove the visitor from the attraction.', 'error');
             }
+        });
+    }
+
+    private recordScoreEvent(visitRegistrationId: string): void {
+        const payload: VisitScoreRequest = {
+            visitRegistrationId,
+            origin: 'Attraction',
+            points: null,
+        };
+
+        this.visitRegistrationService.recordScoreEvent(payload).subscribe({
+            next: () => {},
+            error: () => {}
         });
     }
 

@@ -11,8 +11,8 @@ import { VisitorInAttractionModel } from './models/VisitorInAttractionModel';
 export class VisitRegistrationService {
     constructor(private readonly repository: VisitRegistrationApiRepository) {}
 
-    recordScoreEvent(token: string, payload: VisitScoreRequest): Observable<void> {
-        return this.repository.recordScoreEvent(token, payload);
+    recordScoreEvent(payload: VisitScoreRequest): Observable<void> {
+        return this.repository.recordScoreEvent(payload);
     }
 
     upToAttraction(visitorId: string, attractionId: string): Observable<void> {

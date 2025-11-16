@@ -235,6 +235,28 @@ public sealed class RoleServiceTest
     }
 
     [TestMethod]
+    public void Update_ShouldThrow_WhenNameIsEmpty()
+    {
+        var existing = new Role { Name = "Old" };
+        Guid id = existing.Id;
+
+        _mockRoleRepository
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Role, bool>>>(),
+                It.IsAny<Func<IQueryable<Role>, IIncludableQueryable<Role, object>>>()))
+            .Returns(existing);
+
+        var args = new RoleArgs(string.Empty, "Desc", []);
+
+        Action act = () => _roleService.Update(args, id);
+
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage("Role name cannot be empty.*")
+            .And.ParamName.Should().Be("newName");
+    }
+
+    [TestMethod]
     public void Update_ShouldThrow_WhenNameEmpty()
     {
         var roleId = Guid.NewGuid();

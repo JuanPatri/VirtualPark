@@ -27,9 +27,9 @@
 
     <ng-template #actionsTpl let-row>
         <div class="action-buttons">
-            <app-buttons color="primary" text="NFC" [disabled]="processingId === row.id" (clicked)="onRide(row)">
+            <app-buttons color="primary" text="NFC" [disabled]="processingId === row.id" (clicked)="onRideNfc(row)">
             </app-buttons>
-            <app-buttons color="secondary" text="QR" [disabled]="processingId === row.id" (clicked)="onRide(row)">
+            <app-buttons color="secondary" text="QR" [disabled]="processingId === row.id" (clicked)="onRideQr(row)">
             </app-buttons>
         </div>
     </ng-template>

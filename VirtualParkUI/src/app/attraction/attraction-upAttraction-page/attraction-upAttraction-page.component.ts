@@ -5,6 +5,7 @@ import { ButtonsComponent } from '../../components/buttons/buttons.component';
 import { VisitRegistrationService } from '../../../backend/services/visitRegistration/visit-registration.service';
 import { AttractionModel } from '../../../backend/services/attraction/models/AttractionModel';
 import { SessionService } from '../../../backend/services/session/session.service';
+import { AttractionService } from '../../../backend/services/attraction/attraction.service';
 
 type Row = {
     id: string;
@@ -44,21 +45,72 @@ export class AttractionUpAttractionPageComponent implements OnInit {
 
     constructor(
         private visitRegistrationService: VisitRegistrationService,
-        private sessionService: SessionService
+        private sessionService: SessionService,
+        private attractionService: AttractionService
     ) { }
 
     ngOnInit(): void {
         this.ensureVisitorId();
     }
 
-    onRide(row: Row): void {
-        if (!this.visitRegistrationId) {
+    onRideNfc(row: Row): void {
+        if (!this.visitRegistrationId || !this.visitorId) {
             this.errorMessage = 'No se encontró una visita activa para hoy.';
             return;
         }
         this.processingId = row.id;
         this.errorMessage = '';
         this.successMessage = '';
+        this.attractionService.validateEntryByNfc(row.id, this.visitorId).subscribe({
+            next: res => {
+                if (!res?.isValid) {
+                    this.processingId = null;
+                    this.errorMessage = 'El acceso por NFC no es válido.';
+                    return;
+                }
+                this.registerRide(row);
+            },
+            error: () => {
+                this.processingId = null;
+                this.errorMessage = 'No se pudo validar el acceso por NFC.';
+            }
+        });
+    }
+
+    onRideQr(row: Row): void {
+        if (!this.visitRegistrationId) {
+            this.errorMessage = 'No se encontró una visita activa para hoy.';
+            return;
+        }
+        const qrId = prompt('Escanea o ingresa el código del QR:')?.trim();
+        if (!qrId) {
+            this.errorMessage = 'Debes ingresar un código QR válido.';
+            return;
+        }
+        this.processingId = row.id;
+        this.errorMessage = '';
+        this.successMessage = '';
+        this.attractionService.validateEntryByQr(row.id, qrId).subscribe({
+            next: res => {
+                if (!res?.isValid) {
+                    this.processingId = null;
+                    this.errorMessage = 'El QR presentado no es válido.';
+                    return;
+                }
+                this.registerRide(row);
+            },
+            error: () => {
+                this.processingId = null;
+                this.errorMessage = 'No se pudo validar el acceso por QR.';
+            }
+        });
+    }
+
+    private registerRide(row: Row): void {
+        if (!this.visitRegistrationId) {
+            this.errorMessage = 'No se encontró una visita activa para hoy.';
+            return;
+        }
         this.visitRegistrationService.upToAttraction(this.visitRegistrationId, row.id).subscribe({
             next: () => {
                 this.processingId = null;

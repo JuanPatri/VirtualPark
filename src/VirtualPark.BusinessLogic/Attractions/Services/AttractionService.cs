@@ -41,7 +41,7 @@ public sealed class AttractionService(
 
     public List<Attraction> GetAll()
     {
-        return _attractionRepository.GetAll();
+        return _attractionRepository.GetAll(a => !a.IsDeleted);
     }
 
     public Attraction? Get(Guid id)

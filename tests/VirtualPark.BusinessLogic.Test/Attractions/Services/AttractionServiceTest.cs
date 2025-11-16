@@ -58,7 +58,7 @@ public class AttractionServiceTest
         _mockReadOnlyAttractionRepository = new Mock<IReadOnlyRepository<Attraction>>(MockBehavior.Strict);
     }
 
-    #region create
+    #region Create
 
     [TestMethod]
     public void Create_WhenArgsAreValid_ShouldReturnIdAndPersistEntity()
@@ -98,7 +98,7 @@ public class AttractionServiceTest
     }
     #endregion
 
-    #region validationName
+    #region ValidationName
     [TestCategory("Validation")]
     [TestMethod]
     public void Create_WhenNameIsEmpty_ShouldThrowException()
@@ -182,7 +182,32 @@ public class AttractionServiceTest
     }
     #endregion
 
-    #region getAll
+    #region GetAll
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAll_WhenSomeAttractionsAreDeleted_ShouldReturnOnlyNotDeleted()
+    {
+        var a1 = new Attraction { Id = Guid.NewGuid(), Name = "RollerCoaster", IsDeleted = false };
+        var a2 = new Attraction { Id = Guid.NewGuid(), Name = "BoatRide",     IsDeleted = true };
+        var a3 = new Attraction { Id = Guid.NewGuid(), Name = "FreeFall",     IsDeleted = false };
+
+        _mockAttractionRepository
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns((Expression<Func<Attraction, bool>> filter) => new List<Attraction> { a1, a2, a3 }
+                .Where(filter.Compile())
+                .ToList());
+
+        var result = _attractionService.GetAll();
+
+        result.Should().HaveCount(2, "only attractions where IsDeleted == false must be returned");
+        result.Should().Contain(a1);
+        result.Should().Contain(a3);
+        result.Should().NotContain(a2, "deleted items must not be returned");
+
+        _mockAttractionRepository.Verify(
+            r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()),
+            Times.Once);
+    }
 
     [TestMethod]
     [TestCategory("Validation")]
@@ -195,7 +220,7 @@ public class AttractionServiceTest
         };
 
         _mockAttractionRepository
-            .Setup(r => r.GetAll())
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()))
             .Returns(attractions);
 
         var result = _attractionService.GetAll();
@@ -206,7 +231,7 @@ public class AttractionServiceTest
         result.Should().Contain(a => a.Name == "FerrisWheel");
 
         _mockAttractionRepository.Verify(
-            r => r.GetAll(),
+            r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()),
             Times.Once);
     }
 
@@ -215,7 +240,7 @@ public class AttractionServiceTest
     public void GetAll_WhenNoAttractionsExist_ShouldReturnEmptyList()
     {
         _mockAttractionRepository
-            .Setup(r => r.GetAll())
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()))
             .Returns([]);
 
         var result = _attractionService.GetAll();
@@ -224,7 +249,7 @@ public class AttractionServiceTest
         result.Should().BeEmpty();
 
         _mockAttractionRepository.Verify(
-            r => r.GetAll(),
+            r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()),
             Times.Once);
     }
     #endregion
@@ -1549,7 +1574,7 @@ public class AttractionServiceTest
         var a2 = new Attraction { Name = "Simulador B" };
 
         _mockAttractionRepository
-            .Setup(r => r.GetAll())
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()))
             .Returns([a1, a2]);
 
         _mockVisitorRegistrationRepository
@@ -1578,7 +1603,7 @@ public class AttractionServiceTest
         var a2 = new Attraction { Id = Guid.NewGuid(), Name = "Simulador B" };
 
         _mockAttractionRepository
-            .Setup(r => r.GetAll())
+            .Setup(r => r.GetAll(It.IsAny<Expression<Func<Attraction, bool>>>()))
             .Returns([a1, a2]);
 
         var visitInside = new VisitRegistration

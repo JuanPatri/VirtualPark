@@ -33,14 +33,22 @@ public class TicketService(
 
     private void CreateVisitRegistration(Ticket ticket)
     {
-        var registration = new VisitRegistration
+        try
         {
-            Date = ticket.Date,
-            VisitorId = ticket.VisitorProfileId,
-            TicketId = ticket.Id,
-            Ticket = ticket
-        };
-        _visitRegistrationRepository.Add(registration);
+            var registration = new VisitRegistration
+            {
+                Date = ticket.Date,
+                VisitorId = ticket.VisitorProfileId,
+                TicketId = ticket.Id,
+                Ticket = ticket
+            };
+
+            _visitRegistrationRepository.Add(registration);
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     public void Remove(Guid ticketId)

@@ -37,4 +37,18 @@ public class VisitorInAttractionResponseTest
         response.UserId.Should().Be(userId);
     }
     #endregion
+
+    #region Name
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Name_Getter_ReturnsAssignedValue()
+    {
+        var response = new VisitorInAttractionResponse
+        {
+            Name = "Pepe"
+        };
+
+        response.Name.Should().Be("Pepe");
+    }
+    #endregion
 }

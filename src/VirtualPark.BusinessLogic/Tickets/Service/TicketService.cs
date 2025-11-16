@@ -3,6 +3,7 @@ using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.Tickets.Models;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
+using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Tickets.Service;

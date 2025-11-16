@@ -9,6 +9,7 @@ using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.Tickets.Models;
 using VirtualPark.BusinessLogic.Tickets.Service;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
+using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Test.Tickets.Service;
@@ -22,7 +23,7 @@ public class TicketServiceTest
     private Mock<IRepository<Attraction>> _attractionRepositoryMock = null!;
     private Mock<IClockAppService> _clockMock = null!;
     private TicketService _ticketService = null!;
-
+    private Mock<IRepository<VisitRegistration>> _visitRegistrationRepositoryMock = null!;
     [TestInitialize]
     public void Setup()
     {
@@ -31,6 +32,7 @@ public class TicketServiceTest
         _eventRepositoryMock = new Mock<IRepository<Event>>(MockBehavior.Strict);
         _attractionRepositoryMock = new Mock<IRepository<Attraction>>(MockBehavior.Strict);
         _clockMock = new Mock<IClockAppService>(MockBehavior.Strict);
+        _visitRegistrationRepositoryMock = new Mock<IRepository<VisitRegistration>>(MockBehavior.Strict);
 
         _clockMock.Setup(c => c.Now()).Returns(new DateTime(2025, 12, 15));
 
@@ -38,7 +40,8 @@ public class TicketServiceTest
             _ticketRepositoryMock.Object,
             _visitorRepositoryMock.Object,
             _eventRepositoryMock.Object,
-            _clockMock.Object);
+            _clockMock.Object,
+            _visitRegistrationRepositoryMock.Object);
     }
 
     #region Create
@@ -116,6 +119,61 @@ public class TicketServiceTest
 
         _visitorRepositoryMock.VerifyAll();
         _ticketRepositoryMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Create_WhenArgsAreValid_ShouldAlsoCreateVisitRegistration()
+    {
+        var visitorId = Guid.NewGuid();
+        var eventId = Guid.NewGuid();
+        var date = new DateTime(2025, 12, 15);
+
+        var visitorProfile = new VisitorProfile { Id = visitorId };
+        var ev = new Event { Id = eventId, Capacity = 10 };
+
+        var args = new TicketArgs(
+            date.ToString("yyyy-MM-dd"),
+            "General",
+            eventId.ToString(),
+            visitorId.ToString());
+
+        _visitorRepositoryMock
+            .Setup(r => r.Get(v => v.Id == args.VisitorId))
+            .Returns(visitorProfile);
+
+        _eventRepositoryMock
+            .Setup(r => r.Get(e => e.Id == args.EventId.Value))
+            .Returns(ev);
+
+        Ticket? capturedTicket = null;
+
+        _ticketRepositoryMock
+            .Setup(r => r.Add(It.Is<Ticket>(t =>
+                t.Visitor == visitorProfile &&
+                t.Event == ev &&
+                t.Type == EntranceType.General &&
+                t.VisitorProfileId == visitorId &&
+                t.EventId == eventId &&
+                t.QrId != Guid.Empty &&
+                t.Date == date)))
+            .Callback<Ticket>(t => capturedTicket = t);
+
+        _visitRegistrationRepositoryMock
+            .Setup(r => r.Add(It.Is<VisitRegistration>(vr =>
+                vr.Date == date &&
+                vr.VisitorId == visitorId &&
+                vr.Ticket == capturedTicket &&
+                vr.TicketId == capturedTicket!.Id)));
+
+        var result = _ticketService.Create(args);
+
+        result.Should().Be(capturedTicket!.Id);
+
+        _visitorRepositoryMock.VerifyAll();
+        _eventRepositoryMock.VerifyAll();
+        _ticketRepositoryMock.VerifyAll();
+        _visitRegistrationRepositoryMock.VerifyAll();
     }
     #endregion
 

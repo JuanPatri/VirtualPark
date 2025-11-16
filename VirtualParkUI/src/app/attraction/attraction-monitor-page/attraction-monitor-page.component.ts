@@ -7,6 +7,7 @@ import { AttractionService } from '../../../backend/services/attraction/attracti
 import { MessageComponent } from '../../components/messages/message.component';
 import { MessageService } from '../../components/messages/service/message.service';
 import { AuthRoleService } from '../../auth-role/auth-role.service';
+import { VisitRegistrationService } from '../../../backend/services/visitRegistration/visit-registration.service';
 
 type Row = {
     id: string;
@@ -28,6 +29,7 @@ export class AttractionMonitorPageComponent implements OnInit {
     private router = inject(Router);
     private messageService = inject(MessageService);
     private authRole = inject(AuthRoleService);
+    private visitRegistrationService = inject(VisitRegistrationService);
 
     loading = false;
     emptyMessage = 'No attractions available.';
@@ -67,6 +69,8 @@ export class AttractionMonitorPageComponent implements OnInit {
                 }));
                 if (!this.data.length) {
                     this.emptyMessage = 'No attractions were found.';
+                } else {
+                    this.refreshVisitorCounts();
                 }
                 this.loading = false;
             },
@@ -92,5 +96,20 @@ export class AttractionMonitorPageComponent implements OnInit {
         const normalized = String(type ?? '').trim();
         const resolved = typeMap[normalized] ?? normalized;
         return resolved || '—';
+    }
+
+    private refreshVisitorCounts(): void {
+        this.data.forEach(row => {
+            if (!row.id) return;
+            this.visitRegistrationService.getVisitorsInAttraction(row.id).subscribe({
+                next: visitors => {
+                    const value = String((visitors ?? []).length);
+                    this.data = this.data.map(current =>
+                        current.id === row.id ? { ...current, currentVisitors: value } : current
+                    );
+                },
+                error: () => { /* ignore count errors */ }
+            });
+        });
     }
 }

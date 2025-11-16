@@ -78,7 +78,7 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
                 this.data = (visitors ?? []).map(v => ({
                     visitorProfileId: v.visitorProfileId ?? (v as any).VisitorProfileId ?? '',
                     name: `${v.name ?? (v as any).Name ?? ''} ${v.lastName ?? (v as any).LastName ?? ''}`.trim(),
-                    membership: v.membership ?? (v as any).Membership ?? '—',
+                    membership: this.formatMembership(v.membership ?? (v as any).Membership),
                     score: String(v.score ?? (v as any).Score ?? '0'),
                     nfcId: v.nfcId ?? (v as any).NfcId ?? '—',
                 }));
@@ -109,5 +109,24 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
                 this.messageService.show('Unable to remove the visitor from the attraction.', 'error');
             }
         });
+    }
+
+    private formatMembership(value: any): string {
+        if (typeof value === 'string' && value.trim()) {
+            return value;
+        }
+
+        const membershipMap: Record<number, string> = {
+            0: 'Standard',
+            1: 'Premium',
+            2: 'VIP',
+        };
+
+        if (typeof value === 'number' && membershipMap[value] !== undefined) {
+            return membershipMap[value];
+        }
+
+        const normalized = String(value ?? '').trim();
+        return normalized || '—';
     }
 }

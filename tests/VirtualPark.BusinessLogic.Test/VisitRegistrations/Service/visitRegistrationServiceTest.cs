@@ -1584,7 +1584,10 @@ public class VisitRegistrationServiceTest
         var result = _service.GetVisitorsInAttraction(attractionId);
 
         result.Should().HaveCount(1);
-        result[0].Id.Should().Be(vp1.Id);
+        var item = result[0];
+        item.VisitRegistrationId.Should().Be(visitTodayInAttraction.Id);
+        item.Visitor.Should().BeSameAs(vp1);
+        item.Visitor.Id.Should().Be(vp1.Id);
 
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();

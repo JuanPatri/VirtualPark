@@ -12,6 +12,7 @@ import { AttractionService } from '../../../backend/services/attraction/attracti
 
 type Row = {
     visitorProfileId: string;
+    visitRegistrationId?: string;
     name: string;
     membership: string;
     score: string;
@@ -78,6 +79,7 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
             next: (visitors: VisitorInAttractionModel[]) => {
                 this.data = (visitors ?? []).map(v => ({
                     visitorProfileId: v.visitorProfileId ?? (v as any).VisitorProfileId ?? '',
+                    visitRegistrationId: v.visitRegistrationId ?? (v as any).VisitRegistrationId ?? '',
                     name: `${v.name ?? (v as any).Name ?? ''} ${v.lastName ?? (v as any).LastName ?? ''}`.trim(),
                     membership: this.formatMembership(v.membership ?? (v as any).Membership),
                     score: String(v.score ?? (v as any).Score ?? '0'),
@@ -103,7 +105,7 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
             next: () => {
                 this.processingId = null;
                 this.messageService.show('Visitor was removed from the attraction.', 'success');
-                this.recordScoreEvent(row.visitorProfileId);
+                this.recordScoreEvent(row.visitRegistrationId);
                 this.loadVisitors();
             },
             error: () => {
@@ -113,7 +115,8 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
         });
     }
 
-    private recordScoreEvent(visitRegistrationId: string): void {
+    private recordScoreEvent(visitRegistrationId?: string): void {
+        if (!visitRegistrationId) return;
         const payload: VisitScoreRequest = {
             visitRegistrationId,
             origin: 'Attraction',

@@ -6,4 +6,5 @@ export interface VisitorInAttractionModel {
     score: number;
     membership: string;
     nfcId: string;
+    visitRegistrationId?: string;
 }

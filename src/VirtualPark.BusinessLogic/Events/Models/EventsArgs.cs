@@ -8,5 +8,5 @@ public sealed class EventsArgs(string name, string date, int capacity, int cost,
     public DateOnly Date { get; } = ValidationServices.ValidateDateOnly(date);
     public int Capacity { get; } = ValidationServices.ValidatePositive(capacity);
     public int Cost { get; } = ValidationServices.ValidatePositive(cost);
-    public List<Guid> AttractionIds { get; init; } = ValidationServices.ValidateAndParseGuidAttractionsList(attractionsIds);
+    public List<Guid> AttractionIds { get; } = ValidationServices.ValidateAndParseGuidAttractionsList(attractionsIds);
 }

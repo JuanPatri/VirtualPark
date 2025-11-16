@@ -119,4 +119,29 @@ export class IncidencePageListComponent implements OnInit {
         this.messageService.show('Error updating incidence.', 'error')
     });
   }
+
+  goToMaintenance() {
+    this.router.navigate(['/incidences/new'], {
+      state: { maintenance: true }
+    });
+  }
+
+  parseDate(d: string): Date {
+  const parts = d.split(/[\s/:]/); 
+
+  return new Date(
+    Number(parts[2]),
+    Number(parts[1]) - 1,
+    Number(parts[0]),
+    Number(parts[3] || 0),
+    Number(parts[4] || 0),
+    Number(parts[5] || 0)
+  );
+}
+
+isExpired(inc: IncidenceModel): boolean {
+  const end = this.parseDate(inc.end);
+  return end < new Date();
+}
+
 }

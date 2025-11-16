@@ -60,12 +60,19 @@ public class EventService(IRepository<Event> eventRepository, IRepository<Attrac
     {
         return _eventRepository.Get(
             e => e.Id == eventId,
-            include: q => q.Include(e => e.Attractions));
+            include: q => q
+                .Include(e => e.Attractions)
+                .Include(e => e.Tickets));
     }
 
     public List<Event> GetAll()
     {
-        List<Event> events = _eventRepository.GetAll();
+        var events = _eventRepository.GetAll(
+            predicate: null,
+            include: q => q
+                .Include(e => e.Attractions)
+                .Include(e => e.Tickets));
+
         if(events == null)
         {
             throw new InvalidOperationException("Do not have any events");

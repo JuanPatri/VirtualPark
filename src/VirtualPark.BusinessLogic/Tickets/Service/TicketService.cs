@@ -1,5 +1,6 @@
 using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.BusinessLogic.Events.Entity;
+using VirtualPark.BusinessLogic.Incidences.Service;
 using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.BusinessLogic.Tickets.Models;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
@@ -12,6 +13,7 @@ public class TicketService(
     IRepository<Ticket> ticketRepository,
     IRepository<VisitorProfile> visitorProfileRepository,
     IRepository<Event> eventRepository,
+    IIncidenceService incidenceService,
     IClockAppService clockAppService,
     IRepository<VisitRegistration> visitRegistrationRepository) : ITicketService
 {
@@ -20,6 +22,7 @@ public class TicketService(
     private readonly IRepository<VisitorProfile> _visitorProfileRepository = visitorProfileRepository;
     private readonly IRepository<VisitRegistration> _visitRegistrationRepository = visitRegistrationRepository;
     private readonly IClockAppService _clockAppService = clockAppService;
+    private readonly IIncidenceService _incidenceService = incidenceService;
 
     public Guid Create(TicketArgs args)
     {
@@ -69,10 +72,44 @@ public class TicketService(
         return _ticketRepository.GetAll();
     }
 
+    public List<Ticket> GetTicketsByVisitor(Guid visitorId)
+    {
+        return _ticketRepository.GetAll(t => t.VisitorProfileId == visitorId);
+    }
+
     private Ticket MapToEntity(TicketArgs args)
     {
         var visitor = GetVisitorEntity(args)
                       ?? throw new InvalidOperationException($"Visitor with id {args.VisitorId} not found.");
+
+        var ticketDate = args.Date;
+        ValidateDuplicateTicket(ticketDate, args.VisitorId);
+        var today = _clockAppService.Now().Date;
+
+        if(ticketDate.Date < today)
+        {
+            throw new InvalidOperationException("Cannot create tickets for past dates.");
+        }
+
+        if(args.EventId.HasValue)
+        {
+            var eventEntity = _eventRepository.Get(e => e.Id == args.EventId.Value)
+                              ?? throw new InvalidOperationException($"Event with id {args.EventId} not found.");
+            if(eventEntity.Date.Date < today)
+            {
+                throw new InvalidOperationException("This event has already finished.");
+            }
+
+            if(eventEntity.Date.Date != ticketDate.Date)
+            {
+                throw new InvalidOperationException(
+                    $"The ticket date must be the same as the event date: {eventEntity.Date:yyyy-MM-dd}");
+            }
+
+            ValidateEventCapacity(eventEntity);
+
+            ValidateEventMaintenance(eventEntity, ticketDate);
+        }
 
         var ticket = new Ticket
         {
@@ -94,6 +131,37 @@ public class TicketService(
         }
 
         return ticket;
+    }
+
+    private void ValidateDuplicateTicket(DateTime date, Guid visitorId)
+    {
+        var exists = _ticketRepository.Exist(t =>
+            t.VisitorProfileId == visitorId &&
+            t.Date.Date == date.Date);
+
+        if(exists)
+        {
+            throw new InvalidOperationException("The visitor already has a ticket for this date.");
+        }
+    }
+
+    private void ValidateEventCapacity(Event ev)
+    {
+        var sold = _ticketRepository.GetAll(t => t.EventId == ev.Id).Count;
+
+        if(sold >= ev.Capacity)
+        {
+            throw new InvalidOperationException("This event is already sold out.");
+        }
+    }
+
+    private void ValidateEventMaintenance(Event eventEntity, DateTime ticketDate)
+    {
+        foreach(var attraction in eventEntity.Attractions.Where(attraction => _incidenceService.HasActiveIncidenceForAttraction(attraction.Id, ticketDate)))
+        {
+            throw new InvalidOperationException(
+                $"Cannot create ticket: attraction {attraction.Name} is under preventive maintenance at that time.");
+        }
     }
 
     private VisitorProfile? GetVisitorEntity(TicketArgs args)

@@ -20,6 +20,7 @@ public sealed class EventController(IEventService eventService) : ControllerBase
     [AuthorizationFilter]
     public CreateEventResponse CreateEvent([FromBody] CreateEventRequest request)
     {
+        ArgumentNullException.ThrowIfNull(request);
         EventsArgs args = request.ToArgs();
         Guid eventId = _eventService.Create(args);
         return new CreateEventResponse(eventId.ToString());
@@ -31,6 +32,10 @@ public sealed class EventController(IEventService eventService) : ControllerBase
     {
         var eventId = ValidationServices.ValidateAndParseGuid(id);
         var ev = _eventService.Get(eventId)!;
+        if(ev == null)
+        {
+            throw new InvalidOperationException($"Event with id {id} not found.");
+        }
 
         return new GetEventResponse(
             id: ev.Id.ToString(),
@@ -38,7 +43,9 @@ public sealed class EventController(IEventService eventService) : ControllerBase
             date: ev.Date.ToString("yyyy-MM-dd"),
             capacity: ev.Capacity.ToString(),
             cost: ev.Cost.ToString(),
-            attractions: ev.Attractions.Select(a => a.Id.ToString()).ToList());
+            attractions: ev.Attractions.Select(a => a.Id.ToString()).ToList(),
+            ticketsSold:
+            ev.Tickets?.Count.ToString() ?? "0");
     }
 
     [HttpGet("/events")]
@@ -63,7 +70,8 @@ public sealed class EventController(IEventService eventService) : ControllerBase
             date: ev.Date.ToString("yyyy-MM-dd"),
             capacity: ev.Capacity.ToString(),
             cost: ev.Cost.ToString(),
-            attractions: attractions);
+            attractions: attractions,
+            ticketsSold: ev.Tickets?.Count.ToString() ?? "0");
     }
 
     [HttpDelete("/events/{id}")]
@@ -78,6 +86,7 @@ public sealed class EventController(IEventService eventService) : ControllerBase
     [AuthorizationFilter]
     public void UpdateEvent(CreateEventRequest request, string id)
     {
+        ArgumentNullException.ThrowIfNull(request);
         var eventId = ValidationServices.ValidateAndParseGuid(id);
         var args = request.ToArgs();
         _eventService.Update(args, eventId);

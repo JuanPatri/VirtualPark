@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualPark.DataAccess;
 
@@ -11,9 +12,11 @@ using VirtualPark.DataAccess;
 namespace VirtualPark.DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    partial class SqlContextModelSnapshot : ModelSnapshot
+    [Migration("20251115184832_GetEventPermissionToVisitor")]
+    partial class GetEventPermissionToVisitor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -304,12 +307,6 @@ namespace VirtualPark.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = new Guid("33333333-1111-1111-1111-111111111115"),
-                            Description = "Allows listing a ticket by visitor",
-                            Key = "GetTicketsByVisitor-Ticket"
-                        },
-                        new
-                        {
                             Id = new Guid("12121212-1111-1111-1111-111111111111"),
                             Description = "Allows retrieving visitor profile",
                             Key = "GetVisitorProfileById-VisitorProfile"
@@ -535,12 +532,6 @@ namespace VirtualPark.DataAccess.Migrations
                             Id = new Guid("56565656-1111-1111-1111-111111111114"),
                             Description = "Allows retrieving redemptions of a specific visitor",
                             Key = "GetRewardRedemptionsByVisitor-RewardRedemption"
-                        },
-                        new
-                        {
-                            Id = new Guid("56565656-2222-1111-1111-111111111111"),
-                            Description = "Allows listing available attractions for a visitor visit",
-                            Key = "GetAttractionsForTicket-VisitRegistration"
                         },
                         new
                         {
@@ -1011,16 +1002,6 @@ namespace VirtualPark.DataAccess.Migrations
                         new
                         {
                             RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
-                            PermissionId = new Guid("33333333-1111-1111-1111-111111111115")
-                        },
-                        new
-                        {
-                            RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
-                            PermissionId = new Guid("33333333-1111-1111-1111-111111111113")
-                        },
-                        new
-                        {
-                            RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("10101010-1111-1111-1111-111111111111")
                         },
                         new
@@ -1072,11 +1053,6 @@ namespace VirtualPark.DataAccess.Migrations
                         {
                             RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("22222222-1111-1111-1111-111111111113")
-                        },
-                        new
-                        {
-                            RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
-                            PermissionId = new Guid("56565656-2222-1111-1111-111111111111")
                         },
                         new
                         {
@@ -1223,6 +1199,13 @@ namespace VirtualPark.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("TypeIncidences", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("99999999-9999-9999-9999-999999999999"),
+                            Type = "PREVENTIVE_MAINTENANCE"
+                        });
                 });
 
             modelBuilder.Entity("VirtualPark.BusinessLogic.UserRoles.Entity.UserRole", b =>
@@ -1491,7 +1474,7 @@ namespace VirtualPark.DataAccess.Migrations
             modelBuilder.Entity("VirtualPark.BusinessLogic.Tickets.Entity.Ticket", b =>
                 {
                     b.HasOne("VirtualPark.BusinessLogic.Events.Entity.Event", "Event")
-                        .WithMany()
+                        .WithMany("Tickets")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -1574,6 +1557,11 @@ namespace VirtualPark.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("VisitRegistration");
+                });
+
+            modelBuilder.Entity("VirtualPark.BusinessLogic.Events.Entity.Event", b =>
+                {
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("VirtualPark.BusinessLogic.VisitRegistrations.Entity.VisitRegistration", b =>

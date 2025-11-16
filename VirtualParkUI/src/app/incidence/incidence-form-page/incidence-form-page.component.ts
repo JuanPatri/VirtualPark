@@ -30,6 +30,7 @@ export class IncidenceFormComponent implements OnInit {
     active: 'true'
   };
  
+  isMaintenanceMode = false;
   typeList: TypeIncidenceModel[] = [];
   attractionList: AttractionModel[] = [];
 
@@ -48,14 +49,42 @@ export class IncidenceFormComponent implements OnInit {
     this.isOperator = this.authRoleService.hasAnyRole(['Operator']);
     this.loadTypes();
     this.loadAttractions();
+    const navState = history.state;
+    this.isMaintenanceMode = !!navState?.maintenance;
   }
 
-    loadTypes() {
+  prepareMaintenanceForm() {
+    const preventive = this.typeList.find(t => t.type === 'PREVENTIVE_MAINTENANCE');
+
+    this.form = {
+      typeId: preventive?.id ?? '',
+      description: 'Preventive maintenance',
+      start: '',
+      end: '',
+      attractionId: '',
+      active: 'true'
+    };
+  }
+  
+  loadTypes() {
     this.typeService.getAll().subscribe({
-      next: (res) => this.typeList = res,
+      next: (types) => {
+        this.typeList = types.map(t => ({
+          ...t,
+          typeLabel: t.type === "PREVENTIVE_MAINTENANCE"
+            ? "Preventive Maintenance"
+            : t.type
+        }));
+
+        const navState = history.state;
+        if (navState?.maintenance) {
+          this.prepareMaintenanceForm();
+        }
+      },
       error: () => this.messageService.show('Error loading types.', 'error')
     });
   }
+
 
     loadAttractions() {
     this.attractionService.getAll().subscribe({

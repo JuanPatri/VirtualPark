@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualPark.DataAccess;
 
@@ -11,9 +12,11 @@ using VirtualPark.DataAccess;
 namespace VirtualPark.DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    partial class SqlContextModelSnapshot : ModelSnapshot
+    [Migration("20251115173638_FixEventTicketsRelation")]
+    partial class FixEventTicketsRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -301,12 +304,6 @@ namespace VirtualPark.DataAccess.Migrations
                             Id = new Guid("33333333-1111-1111-1111-111111111114"),
                             Description = "Allows deleting a ticket",
                             Key = "DeleteTicket-Ticket"
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-1111-1111-1111-111111111115"),
-                            Description = "Allows listing a ticket by visitor",
-                            Key = "GetTicketsByVisitor-Ticket"
                         },
                         new
                         {
@@ -1005,16 +1002,6 @@ namespace VirtualPark.DataAccess.Migrations
                         new
                         {
                             RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
-                            PermissionId = new Guid("33333333-1111-1111-1111-111111111115")
-                        },
-                        new
-                        {
-                            RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
-                            PermissionId = new Guid("33333333-1111-1111-1111-111111111113")
-                        },
-                        new
-                        {
-                            RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("10101010-1111-1111-1111-111111111111")
                         },
                         new
@@ -1066,11 +1053,6 @@ namespace VirtualPark.DataAccess.Migrations
                         {
                             RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("22222222-1111-1111-1111-111111111113")
-                        },
-                        new
-                        {
-                            RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
-                            PermissionId = new Guid("22222222-1111-1111-1111-111111111111")
                         });
                 });
 

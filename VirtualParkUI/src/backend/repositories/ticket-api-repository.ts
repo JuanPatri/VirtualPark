@@ -27,4 +27,7 @@ export class TicketRepository extends GenericApiRepository {
   deleteTicket(id: string): Observable<void> {
     return super.deleteById<void>(id);
   }
+  getTicketsByVisitor(visitorId: string): Observable<TicketModel[]> {
+    return this.getAll<TicketModel[]>(`visitor/${visitorId}`);
+  }
 }

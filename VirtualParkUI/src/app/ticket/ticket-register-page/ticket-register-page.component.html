@@ -3,6 +3,7 @@
         <div class="form-header">
             <h1 class="title">Create Ticket</h1>
         </div>
+    <app-message></app-message>
 
         <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
             <div class="grid">
@@ -17,8 +18,12 @@
                     <label for="eventId">Event (opcional)</label>
                     <select id="eventId" formControlName="eventId">
                         <option value="">— Sin evento —</option>
-                        <option *ngFor="let e of (events$ | async) ?? []; trackBy: trackById" [value]="e.id">
-                            {{ e.label }}
+                        <option 
+                            *ngFor="let e of (events$ | async) ?? []; trackBy: trackById"
+                            [value]="e.id"
+                            [disabled]="e.soldOut">
+
+                            {{ e.label }} <span *ngIf="e.soldOut"> — SOLD OUT</span>
                         </option>
                     </select>
                 </div>

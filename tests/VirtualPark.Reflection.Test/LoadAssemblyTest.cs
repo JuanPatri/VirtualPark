@@ -37,7 +37,6 @@ public sealed class LoadAssemblyTest
         }
         catch
         {
-            // Ignorar errores de limpieza
         }
     }
 

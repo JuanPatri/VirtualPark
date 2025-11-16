@@ -4,6 +4,7 @@ using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Events.Models;
 using VirtualPark.BusinessLogic.Events.Services;
+using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.WebApi.Controllers.Events;
 using VirtualPark.WebApi.Controllers.Events.ModelsIn;
 using VirtualPark.WebApi.Controllers.Events.ModelsOut;
@@ -23,6 +24,17 @@ public class EventControllerTest
         _eventController = new EventController(_eventServiceMock.Object);
     }
     #region Create
+    [TestMethod]
+    public void CreateEvent_WhenRequestIsNull_ShouldThrowArgumentNullException()
+    {
+        Action act = () => _eventController.CreateEvent(null!);
+
+        act.Should()
+            .Throw<ArgumentNullException>();
+
+        _eventServiceMock.VerifyNoOtherCalls();
+    }
+
     [TestMethod]
     public void CreateEvent_ValidInput_ReturnsCreatedEventResponse()
     {
@@ -59,6 +71,24 @@ public class EventControllerTest
     }
     #endregion
     #region Get
+    [TestMethod]
+    public void GetEventById_WhenEventDoesNotExist_ShouldThrowInvalidOperationException()
+    {
+        var id = Guid.NewGuid();
+
+        _eventServiceMock
+            .Setup(s => s.Get(id))
+            .Returns((Event?)null);
+
+        Action act = () => _eventController.GetEventById(id.ToString());
+
+        act.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage($"Event with id {id} not found.");
+
+        _eventServiceMock.VerifyAll();
+    }
+
     [TestMethod]
     public void GetEventById_ValidInput_ReturnsGetEventResponse()
     {
@@ -126,9 +156,65 @@ public class EventControllerTest
 
         _eventServiceMock.VerifyAll();
     }
+
+    [TestMethod]
+    public void GetEventById_ShouldIncludeTicketsSold()
+    {
+        var attraction = new Attraction { Name = "Roller", Capacity = 10, Available = true };
+
+        var ev = new Event
+        {
+            Name = "Halloween",
+            Date = new DateTime(2025, 10, 31),
+            Capacity = 100,
+            Cost = 200,
+            Attractions = [attraction],
+            Tickets =
+            [
+                new Ticket { Id = Guid.NewGuid() },
+                new Ticket { Id = Guid.NewGuid() },
+                new Ticket { Id = Guid.NewGuid() }
+            ]
+        };
+
+        var id = ev.Id;
+
+        _eventServiceMock.Setup(s => s.Get(id)).Returns(ev);
+
+        var result = _eventController.GetEventById(id.ToString());
+
+        result.TicketsSold.Should().Be("3");
+
+        _eventServiceMock.VerifyAll();
+    }
+
     #endregion
 
     #region GetAll
+    [TestMethod]
+    public void GetAllEvents_WhenTicketsAreNull_ShouldMapTicketsSoldAsZero()
+    {
+        var ev = new Event
+        {
+            Name = "Test",
+            Date = new DateTime(2025, 10, 31),
+            Capacity = 100,
+            Cost = 200,
+            Attractions = [],
+            Tickets = null
+        };
+
+        _eventServiceMock
+            .Setup(s => s.GetAll())
+            .Returns([ev]);
+
+        var result = _eventController.GetAllEvents().First();
+
+        result.TicketsSold.Should().Be("0");
+
+        _eventServiceMock.VerifyAll();
+    }
+
     [TestMethod]
     public void GetAllEvents_ShouldReturnMappedList()
     {
@@ -242,6 +328,16 @@ public class EventControllerTest
     #endregion
 
     #region Update
+    [TestMethod]
+    public void UpdateEvent_WhenRequestIsNull_ShouldThrowArgumentNullException()
+    {
+        var id = Guid.NewGuid();
+
+        Action act = () => _eventController.UpdateEvent(null!, id.ToString());
+
+        act.Should().Throw<ArgumentNullException>();
+    }
+
     [TestMethod]
     public void UpdateEvent_ValidInput_ShouldCallServiceUpdate()
     {

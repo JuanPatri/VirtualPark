@@ -6,6 +6,7 @@ using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.Events.Entity;
 using VirtualPark.BusinessLogic.Events.Models;
 using VirtualPark.BusinessLogic.Events.Services;
+using VirtualPark.BusinessLogic.Tickets.Entity;
 using VirtualPark.Repository;
 
 namespace VirtualPark.BusinessLogic.Test.Events.Service;
@@ -174,7 +175,9 @@ public sealed class EventServiceTest
         var events = new List<Event> { ev1, ev2 };
 
         _eventRepositoryMock
-            .Setup(r => r.GetAll())
+            .Setup(r => r.GetAll(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
             .Returns(events);
 
         List<Event> result = _eventService.GetAll();
@@ -183,6 +186,32 @@ public sealed class EventServiceTest
         result.Should().HaveCount(2);
         result.Should().Contain(ev1);
         result.Should().Contain(ev2);
+    }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetAll_ShouldIncludeTickets()
+    {
+        var ev1 = new Event { Id = Guid.NewGuid(), Tickets = [new Ticket { Id = Guid.NewGuid() }] };
+        var ev2 = new Event { Id = Guid.NewGuid(), Tickets = [] };
+
+        _eventRepositoryMock
+            .Setup(r => r.GetAll(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
+            .Returns([ev1, ev2]);
+
+        var result = _eventService.GetAll();
+
+        result.Should().HaveCount(2);
+        result[0].Tickets.Should().HaveCount(1);
+        result[1].Tickets.Should().BeEmpty();
+
+        _eventRepositoryMock.Verify(r =>
+                r.GetAll(
+                    It.IsAny<Expression<Func<Event, bool>>>(),
+                    It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()),
+            Times.Once);
     }
 
     #endregion
@@ -194,8 +223,10 @@ public sealed class EventServiceTest
     public void GetAll_ShouldThrow_WhenRepositoryReturnsNull()
     {
         _eventRepositoryMock
-            .Setup(r => r.GetAll())
-            .Returns((List<Event>)null!);
+            .Setup(r => r.GetAll(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
+            .Returns((List<Event>?)null);
 
         Action act = () => _eventService.GetAll();
 
@@ -215,7 +246,9 @@ public sealed class EventServiceTest
     public void GetAll_WhenNoEventsExist_ShouldReturnEmptyList()
     {
         _eventRepositoryMock
-            .Setup(r => r.GetAll())
+            .Setup(r => r.GetAll(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
             .Returns([]);
 
         List<Event> result = _eventService.GetAll();
@@ -479,5 +512,38 @@ public sealed class EventServiceTest
 
     #endregion
 
+    #endregion
+    #region Get
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void Get_ShouldIncludeTickets()
+    {
+        var eventId = Guid.NewGuid();
+
+        var ev = new Event
+        {
+            Id = eventId,
+            Name = "Test Event",
+            Tickets = [new Ticket { Id = Guid.NewGuid() }]
+        };
+
+        _eventRepositoryMock
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
+            .Returns(ev);
+
+        var result = _eventService.Get(eventId);
+
+        result.Should().NotBeNull();
+        result!.Tickets.Should().NotBeNull();
+        result.Tickets.Should().HaveCount(1);
+
+        _eventRepositoryMock.Verify(r =>
+                r.Get(
+                    It.IsAny<Expression<Func<Event, bool>>>(),
+                    It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()),
+            Times.Once);
+    }
     #endregion
 }

@@ -24,4 +24,7 @@ export class TicketService {
   delete(id: string): Observable<void> {
     return this._repo.deleteTicket(id);
   }
+  getByVisitor(visitorId: string): Observable<TicketModel[]> {
+    return this._repo.getTicketsByVisitor(visitorId);
+  }
 }

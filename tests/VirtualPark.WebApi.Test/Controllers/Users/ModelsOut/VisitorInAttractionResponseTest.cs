@@ -51,4 +51,18 @@ public class VisitorInAttractionResponseTest
         response.Name.Should().Be("Pepe");
     }
     #endregion
+
+    #region LastName
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void LastName_Getter_ReturnsAssignedValue()
+    {
+        var response = new VisitorInAttractionResponse
+        {
+            LastName = "Pérez"
+        };
+
+        response.LastName.Should().Be("Pérez");
+    }
+    #endregion
 }

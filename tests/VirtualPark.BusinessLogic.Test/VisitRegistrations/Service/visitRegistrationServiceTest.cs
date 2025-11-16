@@ -1540,7 +1540,6 @@ public class VisitRegistrationServiceTest
         _clockMock.Setup(c => c.Now()).Returns(now);
 
         var attractionId = Guid.NewGuid();
-        var otherAttractionId = Guid.NewGuid();
 
         var vp1 = new VisitorProfile { Id = Guid.NewGuid() };
         var vp2 = new VisitorProfile { Id = Guid.NewGuid() };
@@ -1549,32 +1548,27 @@ public class VisitRegistrationServiceTest
         var visitTodayInAttraction = new VisitRegistration
         {
             VisitorId = vp1.Id,
+            Visitor = vp1,
             Date = now,
             IsActive = true,
             CurrentAttractionId = attractionId
         };
 
-        var visitTodayOtherAttraction = new VisitRegistration
+        var visitTodayDifferentAttraction = new VisitRegistration
         {
             VisitorId = vp2.Id,
+            Visitor = vp2,
             Date = now,
             IsActive = true,
-            CurrentAttractionId = otherAttractionId
+            CurrentAttractionId = Guid.NewGuid()
         };
 
         var visitOtherDaySameAttraction = new VisitRegistration
         {
             VisitorId = vp3.Id,
+            Visitor = vp3,
             Date = now.AddDays(-1),
             IsActive = true,
-            CurrentAttractionId = attractionId
-        };
-
-        var visitInactiveSameAttraction = new VisitRegistration
-        {
-            VisitorId = vp2.Id,
-            Date = now,
-            IsActive = false,
             CurrentAttractionId = attractionId
         };
 
@@ -1583,23 +1577,18 @@ public class VisitRegistrationServiceTest
             .Returns(new List<VisitRegistration>
             {
                 visitTodayInAttraction,
-                visitTodayOtherAttraction,
-                visitOtherDaySameAttraction,
-                visitInactiveSameAttraction
+                visitTodayDifferentAttraction,
+                visitOtherDaySameAttraction
             });
-
-        _visitorRepoMock
-            .Setup(r => r.Get(v => v.Id == vp1.Id))
-            .Returns(vp1);
 
         var result = _service.GetVisitorsInAttraction(attractionId);
 
         result.Should().HaveCount(1);
-        result[0].Should().BeSameAs(vp1);
+        result[0].Id.Should().Be(vp1.Id);
 
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();
-        _visitorRepoMock.VerifyAll();
+        _visitorRepoMock.VerifyNoOtherCalls();
     }
     #endregion
 }

@@ -398,4 +398,39 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
         _visitorProfileWriteRepository.Update(visit.Visitor);
     }
+
+    public List<VisitorProfile> GetVisitorsInAttraction(Guid attractionId)
+    {
+        var visits = _visitRegistrationRepository.GetAll();
+        if (visits is null)
+        {
+            throw new InvalidOperationException("Dont have any visit registrations");
+        }
+
+        var today = DateOnly.FromDateTime(_clockAppService.Now());
+
+        var todayVisitsInAttraction = visits
+            .Where(v =>
+                v.IsActive &&
+                v.CurrentAttractionId == attractionId &&
+                DateOnly.FromDateTime(v.Date) == today)
+            .ToList();
+
+        var result = new List<VisitorProfile>();
+
+        foreach (var visit in todayVisitsInAttraction)
+        {
+            if (visit.Visitor is not null)
+            {
+                result.Add(visit.Visitor);
+            }
+            else
+            {
+                var visitor = SearchVisitorProfile(visit.VisitorId);
+                result.Add(visitor);
+            }
+        }
+
+        return result;
+    }
 }

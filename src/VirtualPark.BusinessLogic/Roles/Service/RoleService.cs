@@ -60,7 +60,7 @@ public sealed class RoleService(IRepository<Role> roleRepository, IReadOnlyRepos
         var role = Get(id);
         _roleRepository.Remove(role);
     }
-
+    
     private void ApplyArgsToEntity(Role role, RoleArgs args)
     {
         role.Name = args.Name;

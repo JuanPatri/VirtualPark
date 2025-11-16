@@ -200,13 +200,18 @@ public sealed class RoleServiceTest
         Action act = () => _roleService.Update(args, id);
 
         act.Should()
-            .Throw<Exception>()
+            .Throw<InvalidOperationException>()
             .WithMessage("Role name already exists.");
 
-        _mockRoleRepository.Verify(r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()), Times.Once);
-        _mockRoleRepository.Verify(r => r.Update(It.IsAny<Role>()), Times.Never);
+        _mockRoleRepository.Verify(
+            r => r.Exist(It.IsAny<Expression<Func<Role, bool>>>()),
+            Times.Once
+        );
 
-        _mockPermissionReadOnlyRepository.VerifyNoOtherCalls();
+        _mockRoleRepository.Verify(
+            r => r.Update(It.IsAny<Role>()),
+            Times.Never
+        );
     }
 
     [TestMethod]

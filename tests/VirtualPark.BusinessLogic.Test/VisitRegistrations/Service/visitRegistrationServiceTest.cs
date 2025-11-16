@@ -1164,7 +1164,6 @@ public class VisitRegistrationServiceTest
     {
         var now = new DateTime(2025, 10, 08, 10, 00, 00, DateTimeKind.Utc);
         _clockMock.Setup(c => c.Now()).Returns(now);
-        var today = DateOnly.FromDateTime(now);
 
         var visitor = new VisitorProfile();
         var visitorId = visitor.Id;
@@ -1179,14 +1178,16 @@ public class VisitRegistrationServiceTest
             VisitorId = visitorId,
             Date = now,
             Ticket = generalTicket,
-            TicketId = generalTicket.Id
+            TicketId = generalTicket.Id,
+            Attractions = []
         };
 
         var otherVisit = new VisitRegistration
         {
             VisitorId = Guid.NewGuid(),
             Date = now,
-            Ticket = new Ticket { Type = EntranceType.Event }
+            Ticket = new Ticket { Type = EntranceType.Event },
+            Attractions = []
         };
 
         var allVisits = new List<VisitRegistration> { visitToday, otherVisit };
@@ -1194,6 +1195,10 @@ public class VisitRegistrationServiceTest
         _repositoryMock
             .Setup(r => r.GetAll())
             .Returns(allVisits);
+
+        _visitorRepoMock
+            .Setup(r => r.Get(v => v.Id == visitorId))
+            .Returns(visitor);
 
         var a1 = new Attraction { Name = "Roller" };
         var a2 = new Attraction { Name = "Wheel" };
@@ -1212,6 +1217,7 @@ public class VisitRegistrationServiceTest
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
     }
 
     [TestMethod]
@@ -1220,7 +1226,6 @@ public class VisitRegistrationServiceTest
     {
         var now = new DateTime(2025, 10, 08, 15, 00, 00, DateTimeKind.Utc);
         _clockMock.Setup(c => c.Now()).Returns(now);
-        var today = DateOnly.FromDateTime(now);
 
         var visitor = new VisitorProfile();
         var visitorId = visitor.Id;
@@ -1246,7 +1251,8 @@ public class VisitRegistrationServiceTest
             VisitorId = visitorId,
             Date = now,
             Ticket = eventTicket,
-            TicketId = eventTicket.Id
+            TicketId = eventTicket.Id,
+            Attractions = []
         };
 
         var allVisits = new List<VisitRegistration> { visitToday };
@@ -1255,7 +1261,9 @@ public class VisitRegistrationServiceTest
             .Setup(r => r.GetAll())
             .Returns(allVisits);
 
-        _attractionRepoMock.VerifyNoOtherCalls();
+        _visitorRepoMock
+            .Setup(r => r.Get(v => v.Id == visitorId))
+            .Returns(visitor);
 
         var result = _service.GetAttractionsForTicket(visitorId);
 
@@ -1265,6 +1273,7 @@ public class VisitRegistrationServiceTest
 
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
     }
 
     [TestMethod]
@@ -1290,6 +1299,8 @@ public class VisitRegistrationServiceTest
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
     }
 
     [TestMethod]
@@ -1306,14 +1317,16 @@ public class VisitRegistrationServiceTest
         {
             VisitorId = Guid.NewGuid(),
             Date = now,
-            Ticket = new Ticket { Type = EntranceType.General }
+            Ticket = new Ticket { Type = EntranceType.General },
+            Attractions = []
         };
 
         var sameVisitorOtherDay = new VisitRegistration
         {
             VisitorId = visitorId,
             Date = now.AddDays(-1),
-            Ticket = new Ticket { Type = EntranceType.General }
+            Ticket = new Ticket { Type = EntranceType.General },
+            Attractions = []
         };
 
         var allVisits = new List<VisitRegistration>
@@ -1334,6 +1347,8 @@ public class VisitRegistrationServiceTest
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
     }
 
     [TestMethod]
@@ -1358,12 +1373,17 @@ public class VisitRegistrationServiceTest
             VisitorId = visitorId,
             Date = now,
             Ticket = eventTicket,
-            TicketId = eventTicket.Id
+            TicketId = eventTicket.Id,
+            Attractions = []
         };
 
         _repositoryMock
             .Setup(r => r.GetAll())
             .Returns(new List<VisitRegistration> { visitToday });
+
+        _visitorRepoMock
+            .Setup(r => r.Get(v => v.Id == visitorId))
+            .Returns(visitor);
 
         Action act = () => _service.GetAttractionsForTicket(visitorId);
 
@@ -1373,6 +1393,8 @@ public class VisitRegistrationServiceTest
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
     }
 
     [TestMethod]
@@ -1397,12 +1419,17 @@ public class VisitRegistrationServiceTest
             VisitorId = visitorId,
             Date = now,
             Ticket = weirdTicket,
-            TicketId = weirdTicket.Id
+            TicketId = weirdTicket.Id,
+            Attractions = []
         };
 
         _repositoryMock
             .Setup(r => r.GetAll())
             .Returns(new List<VisitRegistration> { visitToday });
+
+        _visitorRepoMock
+            .Setup(r => r.Get(v => v.Id == visitorId))
+            .Returns(visitor);
 
         Action act = () => _service.GetAttractionsForTicket(visitorId);
 
@@ -1412,6 +1439,8 @@ public class VisitRegistrationServiceTest
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
     }
 
     [TestMethod]
@@ -1423,18 +1452,24 @@ public class VisitRegistrationServiceTest
 
         var visitor = new VisitorProfile();
         var visitorId = visitor.Id;
+        var ticketId = Guid.NewGuid();
 
         var visitToday = new VisitRegistration
         {
             VisitorId = visitorId,
             Date = now,
             Ticket = null!,
-            TicketId = Guid.NewGuid()
+            TicketId = ticketId,
+            Attractions = []
         };
 
         _repositoryMock
             .Setup(r => r.GetAll())
             .Returns(new List<VisitRegistration> { visitToday });
+
+        _ticketRepoMock
+            .Setup(r => r.Get(t => t.Id == ticketId))
+            .Returns((Ticket?)null);
 
         Action act = () => _service.GetAttractionsForTicket(visitorId);
 
@@ -1444,6 +1479,8 @@ public class VisitRegistrationServiceTest
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
     }
 
     [TestMethod]
@@ -1466,12 +1503,17 @@ public class VisitRegistrationServiceTest
             VisitorId = visitorId,
             Date = now,
             Ticket = generalTicket,
-            TicketId = generalTicket.Id
+            TicketId = generalTicket.Id,
+            Attractions = []
         };
 
         _repositoryMock
             .Setup(r => r.GetAll())
             .Returns(new List<VisitRegistration> { visitToday });
+
+        _visitorRepoMock
+            .Setup(r => r.Get(v => v.Id == visitorId))
+            .Returns(visitor);
 
         _attractionRepoMock
             .Setup(r => r.GetAll())
@@ -1485,6 +1527,7 @@ public class VisitRegistrationServiceTest
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
     }
     #endregion
 }

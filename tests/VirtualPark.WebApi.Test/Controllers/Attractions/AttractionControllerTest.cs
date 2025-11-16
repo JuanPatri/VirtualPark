@@ -468,4 +468,48 @@ public class AttractionControllerTest
         _attractionService.VerifyAll();
     }
     #endregion
+
+    #region ValidateEntryByNfc
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void ValidateEntryByNfc_WhenServiceReturnsTrue_ShouldReturnIsValidTrue()
+    {
+        var attractionId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        _attractionService
+            .Setup(s => s.ValidateEntryByNfc(attractionId, visitorId))
+            .Returns(true);
+
+        var request = new ValidateEntryByNfcRequest { VisitorId = visitorId.ToString() };
+
+        var result = _attractionController.ValidateEntryByNfc(attractionId.ToString(), request);
+
+        result.Should().NotBeNull();
+        result.IsValid.Should().BeTrue();
+
+        _attractionService.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void ValidateEntryByNfc_WhenServiceReturnsFalse_ShouldReturnIsValidFalse()
+    {
+        var attractionId = Guid.NewGuid();
+        var visitorId = Guid.NewGuid();
+
+        _attractionService
+            .Setup(s => s.ValidateEntryByNfc(attractionId, visitorId))
+            .Returns(false);
+
+        var request = new ValidateEntryByNfcRequest { VisitorId = visitorId.ToString() };
+
+        var result = _attractionController.ValidateEntryByNfc(attractionId.ToString(), request);
+
+        result.Should().NotBeNull();
+        result.IsValid.Should().BeFalse();
+
+        _attractionService.VerifyAll();
+    }
+    #endregion
 }

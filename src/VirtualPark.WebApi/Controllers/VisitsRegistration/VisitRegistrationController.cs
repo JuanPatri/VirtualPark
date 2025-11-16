@@ -64,24 +64,29 @@ public class VisitRegistrationController(IVisitRegistrationService svc, IUserSer
     {
         var aId = ValidationServices.ValidateAndParseGuid(attractionId);
 
-        var visitorProfiles = _svc.GetVisitorsInAttraction(aId);
+        var visitorsInAttraction = _svc.GetVisitorsInAttraction(aId);
 
-        var vpIds = visitorProfiles.Select(vp => vp.Id).ToList();
+        var vpIds = visitorsInAttraction
+            .Select(v => v.Visitor.Id)
+            .ToList();
+
         var users = _userService.GetByVisitorProfileIds(vpIds);
 
         var result =
-            (from vp in visitorProfiles
+            (from v in visitorsInAttraction
+                let vp = v.Visitor
                 let user = users.SingleOrDefault(u => u.VisitorProfileId == vp.Id)
                 where user != null
                 select new VisitorInAttractionResponse
                 {
+                    VisitRegistrationId = v.VisitRegistrationId,
                     VisitorProfileId = vp.Id,
                     UserId = user.Id,
                     Name = user.Name,
                     LastName = user.LastName,
                     Score = vp.Score,
                     Membership = vp.Membership,
-                    NfcId = vp.NfcId,
+                    NfcId = vp.NfcId
                 }).ToList();
 
         return Ok(result);

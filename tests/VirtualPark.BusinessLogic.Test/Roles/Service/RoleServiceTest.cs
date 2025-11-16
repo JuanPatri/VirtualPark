@@ -215,6 +215,26 @@ public sealed class RoleServiceTest
     }
 
     [TestMethod]
+    public void Update_ShouldThrow()
+    {
+        Guid id = Guid.NewGuid();
+
+        _mockRoleRepository
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Role, bool>>>(),
+                It.IsAny<Func<IQueryable<Role>, IIncludableQueryable<Role, object>>>()))
+            .Returns((Role)null);
+
+        var args = new RoleArgs("Admin", "Desc", []);
+
+        Action act = () => _roleService.Update(args, id);
+
+        act.Should()
+            .Throw<KeyNotFoundException>()
+            .WithMessage($"Role with ID '{id}' not found.");
+    }
+
+    [TestMethod]
     public void Update_ShouldThrow_WhenNameEmpty()
     {
         var roleId = Guid.NewGuid();

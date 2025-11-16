@@ -65,4 +65,18 @@ public class VisitorInAttractionResponseTest
         response.LastName.Should().Be("Pérez");
     }
     #endregion
+
+    #region Score
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void Score_Getter_ReturnsAssignedValue()
+    {
+        var response = new VisitorInAttractionResponse
+        {
+            Score = 123
+        };
+
+        response.Score.Should().Be(123);
+    }
+    #endregion
 }

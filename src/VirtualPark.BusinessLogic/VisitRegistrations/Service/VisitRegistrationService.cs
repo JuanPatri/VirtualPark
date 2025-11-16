@@ -161,6 +161,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
         visitRegistration.CurrentAttraction = null;
         visitRegistration.CurrentAttractionId = null;
+        visitRegistration.IsActive = false;
 
         _visitRegistrationRepository.Update(visitRegistration);
     }

@@ -393,6 +393,12 @@ public static class PermissionSeed
                 Id = Guid.Parse("56565656-2222-1111-1111-111111111112"),
                 Key = "UpToAttraction-VisitRegistration",
                 Description = "Allows registering an attraction boarding for a visit"
+            },
+            new Permission
+            {
+                Id = Guid.Parse("56565656-2222-1111-1111-111111111113"),
+                Key = "DownToAttraction-VisitRegistration",
+                Description = "Allows registering when a visitor leaves an attraction"
             });
     }
 }

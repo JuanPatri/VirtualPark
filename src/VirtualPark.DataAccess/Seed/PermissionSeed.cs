@@ -387,6 +387,12 @@ public static class PermissionSeed
                 Id = Guid.Parse("11111111-1111-1111-1111-111111111117"),
                 Key = "ValidateEntryByQr-Attraction",
                 Description = "Allows validating entrance via QR"
+            },
+            new Permission
+            {
+                Id = Guid.Parse("56565656-2222-1111-1111-111111111112"),
+                Key = "UpToAttraction-VisitRegistration",
+                Description = "Allows registering an attraction boarding for a visit"
             });
     }
 }

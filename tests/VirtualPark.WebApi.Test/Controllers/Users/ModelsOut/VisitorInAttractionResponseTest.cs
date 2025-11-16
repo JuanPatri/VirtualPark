@@ -112,4 +112,19 @@ public class VisitorInAttractionResponseTest
         response.NfcId.Should().Be(nfcId);
     }
     #endregion
+
+    #region UserId
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void VisitRegistrationId_Getter_ReturnsAssignedValue()
+    {
+        var visitRegistrationId = Guid.NewGuid();
+        var response = new VisitorInAttractionResponse
+        {
+            VisitRegistrationId = visitRegistrationId
+        };
+
+        response.VisitRegistrationId.Should().Be(visitRegistrationId);
+    }
+    #endregion
 }

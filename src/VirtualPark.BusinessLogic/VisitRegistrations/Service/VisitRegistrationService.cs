@@ -401,7 +401,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         _visitorProfileWriteRepository.Update(visit.Visitor);
     }
 
-    public List<VisitorProfile> GetVisitorsInAttraction(Guid attractionId)
+    public List<VisitorInAttraction> GetVisitorsInAttraction(Guid attractionId)
     {
         var visits = _visitRegistrationRepository.GetAll();
         if (visits is null)
@@ -418,19 +418,17 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
                 DateOnly.FromDateTime(v.Date) == today)
             .ToList();
 
-        var result = new List<VisitorProfile>();
+        var result = new List<VisitorInAttraction>();
 
         foreach (var visit in todayVisitsInAttraction)
         {
-            if (visit.Visitor is not null)
+            var visitor = visit.Visitor ?? SearchVisitorProfile(visit.VisitorId);
+
+            result.Add(new VisitorInAttraction
             {
-                result.Add(visit.Visitor);
-            }
-            else
-            {
-                var visitor = SearchVisitorProfile(visit.VisitorId);
-                result.Add(visitor);
-            }
+                VisitRegistrationId = visit.Id,
+                Visitor = visitor
+            });
         }
 
         return result;

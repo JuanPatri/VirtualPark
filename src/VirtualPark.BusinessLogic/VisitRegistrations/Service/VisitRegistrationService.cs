@@ -169,6 +169,10 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         var today = DateOnly.FromDateTime(_clockAppService.Now());
 
         var visit = GetTodayVisitForVisitor(visitorId, today);
+        visit.Ticket ??= SearchTicket(visit.TicketId);
+        visit.Visitor ??= SearchVisitorProfile(visit.VisitorId);
+        visit.Attractions = RefreshAttractions(visit.Attractions);
+
         var ticket = EnsureTicketLoaded(visit);
 
         return GetAttractionsForTicketInternal(ticket);

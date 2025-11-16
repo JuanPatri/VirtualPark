@@ -115,6 +115,7 @@ export class HeaderComponent implements OnDestroy {
                     this.router.navigate(['/user/login']);
                 },
                 error: () => {
+                    localStorage.removeItem('token');
                     this.closeSettings();
                     this.router.navigate(['/user/login']);
                 }

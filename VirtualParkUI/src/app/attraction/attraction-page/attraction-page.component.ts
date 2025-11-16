@@ -20,4 +20,8 @@ export class AttractionPageComponent {
   canRide(): boolean {
     return this.authRole.hasAnyRole(['Visitor']);
   }
+
+  canMonitor(): boolean {
+    return this.authRole.hasAnyRole(['Operator']);
+  }
 }

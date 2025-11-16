@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import GenericApiRepository from './generic-api-repository';
 import { VisitScoreRequest } from '../services/visitRegistration/models/VisitScoreRequest';
 import { AttractionModel } from '../services/attraction/models/AttractionModel';
+import { VisitorInAttractionModel } from '../services/visitRegistration/models/VisitorInAttractionModel';
 
 @Injectable({ providedIn: 'root' })
 export class VisitRegistrationApiRepository extends GenericApiRepository {
@@ -25,5 +26,9 @@ export class VisitRegistrationApiRepository extends GenericApiRepository {
 
     getAvailableAttractions(visitorId: string): Observable<AttractionModel[]> {
         return this.getAll<AttractionModel[]>(`${visitorId}/availableAttractions`);
+    }
+
+    getVisitorsInAttraction(attractionId: string): Observable<VisitorInAttractionModel[]> {
+        return this.getAll<VisitorInAttractionModel[]>(`attractions/${attractionId}/visitors`);
     }
 }

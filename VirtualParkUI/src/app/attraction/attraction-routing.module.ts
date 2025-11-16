@@ -5,6 +5,8 @@ import { AttractionEditPageComponent } from './attraction-edit-page/attraction-e
 import { AttractionListPageComponent } from './attraction-list-page/attraction-list-page.component'
 import { AttractionPageComponent } from './attraction-page/attraction-page.component';
 import { AttractionUpAttractionPageComponent } from './attraction-upAttraction-page/attraction-upAttraction-page.component';
+import { AttractionMonitorPageComponent } from './attraction-monitor-page/attraction-monitor-page.component';
+import { AttractionMonitorDetailPageComponent } from './attraction-monitor-detail-page/attraction-monitor-detail-page.component';
 
 const routes: Routes = [
   {
@@ -14,6 +16,8 @@ const routes: Routes = [
       { path: '', component: AttractionListPageComponent },
       { path: 'register', component: AttractionRegisterPageComponent },
       { path: 'ride', component: AttractionUpAttractionPageComponent },
+      { path: 'monitor', component: AttractionMonitorPageComponent },
+      { path: 'monitor/:id', component: AttractionMonitorDetailPageComponent },
       { path: ':id/edit', component: AttractionEditPageComponent },
     ],
   },

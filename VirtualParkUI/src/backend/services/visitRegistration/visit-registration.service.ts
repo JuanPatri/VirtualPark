@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { VisitRegistrationApiRepository } from '../../repositories/visitRegistration-api-repository';
 import { VisitScoreRequest } from './models/VisitScoreRequest';
 import { AttractionModel } from '../attraction/models/AttractionModel';
+import { VisitorInAttractionModel } from './models/VisitorInAttractionModel';
 
 @Injectable({
     providedIn: 'root'
@@ -24,5 +25,9 @@ export class VisitRegistrationService {
 
     getAvailableAttractions(visitorId: string): Observable<AttractionModel[]> {
         return this.repository.getAvailableAttractions(visitorId);
+    }
+
+    getVisitorsInAttraction(attractionId: string): Observable<VisitorInAttractionModel[]> {
+        return this.repository.getVisitorsInAttraction(attractionId);
     }
 }

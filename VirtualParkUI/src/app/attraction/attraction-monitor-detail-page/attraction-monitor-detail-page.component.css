@@ -1,0 +1,22 @@
+.monitor-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.monitor-detail__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.link-back {
+    text-decoration: none;
+    color: #1a73e8;
+}
+
+.state {
+    padding: 12px;
+    background: #f4f4f4;
+    border-radius: 8px;
+}

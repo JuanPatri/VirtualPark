@@ -1,3 +1,5 @@
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
+
 namespace VirtualPark.WebApi.Controllers.Users.ModelsOut;
 
 public class VisitorInAttractionResponse
@@ -7,4 +9,5 @@ public class VisitorInAttractionResponse
     public string Name { get; init; } = null!;
     public string LastName { get; init; } = null!;
     public int Score { get; init; }
+    public Membership Membership { get; init; }
 }

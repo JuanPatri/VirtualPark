@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.WebApi.Controllers.Users.ModelsOut;
 
 namespace VirtualPark.WebApi.Test.Controllers.Users.ModelsOut;

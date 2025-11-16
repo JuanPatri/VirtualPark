@@ -301,7 +301,7 @@ public sealed class AttractionService(
             return false;
         }
 
-        Guid visitorId = ticket.Visitor.Id;
+        Guid visitorId = ticket.VisitorProfileId;
 
         VisitRegistration? visitRegistration = _visitRegistrationRepository.Get(v => v.VisitorId == visitorId);
 

@@ -7,6 +7,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 @Component({
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   selector: 'app-attraction-page',
+  standalone: true,
   templateUrl: './attraction-page.component.html',
   styleUrls: ['./attraction-page.component.css']
 })

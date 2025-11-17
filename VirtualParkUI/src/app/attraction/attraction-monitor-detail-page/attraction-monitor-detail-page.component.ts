@@ -101,31 +101,43 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
     onDownVisitor(row: Row): void {
         if (!row.visitorProfileId) return;
         this.processingId = row.visitorProfileId;
-        this.visitRegistrationService.downToAttraction(row.visitorProfileId).subscribe({
+        if (!row.visitRegistrationId) {
+            this.executeDown(row.visitorProfileId);
+            return;
+        }
+
+        const payload: VisitScoreRequest = {
+            visitRegistrationId: row.visitRegistrationId,
+            origin: 'Attraction',
+            points: null,
+        };
+
+        this.visitRegistrationService.recordScoreEvent(payload).subscribe({
+            next: () => {
+                this.executeDown(row.visitorProfileId);
+            },
+            error: err => {
+                this.processingId = null;
+                const backendMsg =
+                    err?.error?.message ??
+                    err?.message ??
+                    'Unable to register the score event.';
+                this.messageService.show(backendMsg, 'error');
+            }
+        });
+    }
+
+    private executeDown(visitorProfileId: string): void {
+        this.visitRegistrationService.downToAttraction(visitorProfileId).subscribe({
             next: () => {
                 this.processingId = null;
                 this.messageService.show('Visitor was removed from the attraction.', 'success');
-                this.recordScoreEvent(row.visitRegistrationId);
                 this.loadVisitors();
             },
             error: () => {
                 this.processingId = null;
                 this.messageService.show('Unable to remove the visitor from the attraction.', 'error');
             }
-        });
-    }
-
-    private recordScoreEvent(visitRegistrationId?: string): void {
-        if (!visitRegistrationId) return;
-        const payload: VisitScoreRequest = {
-            visitRegistrationId,
-            origin: 'Attraction',
-            points: null,
-        };
-
-        this.visitRegistrationService.recordScoreEvent(payload).subscribe({
-            next: () => {},
-            error: () => {}
         });
     }
 

@@ -159,6 +159,15 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
             return;
         }
 
+        var origin = string.IsNullOrWhiteSpace(visitRegistration.CurrentAttraction?.Name)
+            ? "Atracción"
+            : visitRegistration.CurrentAttraction.Name;
+
+        RecordVisitScore(new RecordVisitScoreArgs(
+            visitRegistration.Id.ToString(),
+            origin,
+            null));
+
         visitRegistration.CurrentAttraction = null;
         visitRegistration.CurrentAttractionId = null;
         visitRegistration.IsActive = false;
@@ -182,21 +191,22 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
     private VisitRegistration GetTodayVisitForVisitor(Guid visitorId, DateOnly today)
     {
-        var visits = _visitRegistrationRepository.GetAll();
-        if (visits is null)
-        {
-            throw new InvalidOperationException("Dont have any visit registrations");
-        }
+        var start = today.ToDateTime(TimeOnly.MinValue);
+        var end = today.ToDateTime(TimeOnly.MaxValue);
 
-        var visit = visits
-            .FirstOrDefault(v =>
-                v.VisitorId == visitorId &&
-                DateOnly.FromDateTime(v.Date) == today);
+        var visit = _visitRegistrationRepository.Get(v =>
+            v.VisitorId == visitorId &&
+            v.Date >= start &&
+            v.Date <= end);
 
         if (visit is null)
         {
             throw new InvalidOperationException("VisitRegistration for today don't exist");
         }
+
+        visit.Visitor = SearchVisitorProfile(visit.VisitorId);
+        visit.Attractions = RefreshAttractions(visit.Attractions);
+        visit.Ticket = SearchTicket(visit.TicketId);
 
         return visit;
     }

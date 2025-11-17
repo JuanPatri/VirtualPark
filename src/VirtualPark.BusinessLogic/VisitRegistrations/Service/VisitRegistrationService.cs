@@ -407,6 +407,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
         visit.DailyScore = newTotal;
         visit.Visitor.Score += delta;
+        visit.Visitor.PointsAvailable += delta;
 
         _visitorProfileWriteRepository.Update(visit.Visitor);
     }

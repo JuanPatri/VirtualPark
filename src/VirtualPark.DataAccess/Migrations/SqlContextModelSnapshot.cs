@@ -61,6 +61,11 @@ namespace VirtualPark.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<int>("MiniumAge")
                         .HasColumnType("int");
 
@@ -1427,6 +1432,9 @@ namespace VirtualPark.DataAccess.Migrations
                     b.Property<Guid>("NfcId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("PointsAvailable")
+                        .HasColumnType("int");
+
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
@@ -1555,13 +1563,13 @@ namespace VirtualPark.DataAccess.Migrations
                     b.HasOne("VirtualPark.BusinessLogic.Permissions.Entity.Permission", null)
                         .WithMany()
                         .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("VirtualPark.BusinessLogic.Roles.Entity.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

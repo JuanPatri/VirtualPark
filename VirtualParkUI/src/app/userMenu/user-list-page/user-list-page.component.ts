@@ -4,6 +4,9 @@ import { RouterLink } from '@angular/router';
 import { TableColumn, TableComponent } from '../../components/table/generic-table.component';
 import { UserService } from '../../../backend/services/user/user.service';
 import { ButtonsComponent } from '../../components/buttons/buttons.component';
+import { MessageService } from '../../components/messages/service/message.service';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
+import { MessageComponent } from "../../components/messages/message.component";
 
 type Row = {
     id: string;
@@ -14,13 +17,17 @@ type Row = {
 @Component({
     selector: 'app-user-list-page',
     standalone: true,
-    imports: [CommonModule, TableComponent, RouterLink, ButtonsComponent],
+    imports: [CommonModule, TableComponent, RouterLink, ButtonsComponent, ConfirmDialogComponent, MessageComponent],
     templateUrl: './user-list-page.component.html',
     styleUrls: ['./user-list-page.component.css']
 })
 export class UserListPageComponent implements OnInit {
     private userService = inject(UserService);
+    private messageService = inject(MessageService);
 
+    showConfirm = false;
+    selectedUserId: string | null = null;
+    
     loading = true;
     deletingId: string | null = null;
     errorMsg = '';
@@ -61,21 +68,32 @@ export class UserListPageComponent implements OnInit {
     }
 
     onDelete(row: Row): void {
-        if (this.deletingId || !row?.id) {
-            return;
-        }
-
-        this.deletingId = row.id;
-        this.userService.remove(row.id).subscribe({
-            next: () => {
-                this.data = this.data.filter(item => item.id !== row.id);
-                this.deletingId = null;
-            },
-            error: (error) => {
-                console.error(error);
-                this.errorMsg = 'No se pudo eliminar el usuario.';
-                this.deletingId = null;
-            }
-        });
+        this.selectedUserId = row.id;
+        this.showConfirm = true;
     }
+
+    onConfirmDelete(result: boolean) {
+    this.showConfirm = false;
+
+    if (!result || !this.selectedUserId) {
+        return;
+    }
+
+    this.deletingId = this.selectedUserId;
+
+    this.userService.remove(this.selectedUserId).subscribe({
+        next: () => {
+            this.data = this.data.filter(item => item.id !== this.selectedUserId);
+            this.deletingId = null;
+            this.selectedUserId = null;
+
+            this.messageService.show('User successfully deleted!', 'success');
+        },
+        error: () => {
+            this.deletingId = null;
+            this.messageService.show('Could not delete the user.', 'error');
+        }
+    });
+}
+
 }

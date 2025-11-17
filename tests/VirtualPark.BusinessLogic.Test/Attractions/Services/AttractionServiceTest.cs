@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.Attractions.Entity;
@@ -466,7 +467,7 @@ public class AttractionServiceTest
             .Returns(visitor);
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.Get(v => v.VisitorId == visitorId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>()))
             .Returns(activeVisit);
 
         _mockAttractionRepository
@@ -516,7 +517,7 @@ public class AttractionServiceTest
             .Returns(true);
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>()))
             .Returns((VisitRegistration?)null);
 
         _mockVisitorRegistrationRepository
@@ -580,7 +581,7 @@ public class AttractionServiceTest
             .Returns(visitor);
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.Get(v => v.VisitorId == visitorId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>()))
             .Returns(inactiveVisit);
 
         _mockVisitorRegistrationRepository
@@ -640,7 +641,7 @@ public class AttractionServiceTest
             .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, It.IsAny<DateTime>()))
             .Returns(false);
         _mockVisitorRegistrationRepository
-            .Setup(r => r.Get(v => v.VisitorId == visitorId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>()))
             .Returns(inactiveVisit);
 
         _mockVisitorRegistrationRepository
@@ -777,7 +778,7 @@ public class AttractionServiceTest
             .Returns(ev);
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.Get(v => v.VisitorId == visitorId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>()))
             .Returns((VisitRegistration?)null);
 
         _mockVisitorRegistrationRepository
@@ -829,7 +830,7 @@ public class AttractionServiceTest
             .Returns(attraction);
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>()))
             .Returns((VisitRegistration?)null);
 
         _mockIncidenceService
@@ -897,7 +898,7 @@ public class AttractionServiceTest
             .Returns(ticket);
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.Get(v => v.VisitorId == visitorId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>()))
             .Returns(activeVisit);
 
         var result = _attractionService.ValidateEntryByQr(attractionId, qrId);
@@ -953,7 +954,7 @@ public class AttractionServiceTest
 
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
         _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
-        _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
+        _mockVisitorRegistrationRepository.Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>())).Returns(existingVisit);
         _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
         _mockEventRepository.Setup(r => r.Get(e => e.Id == ticket.EventId)).Returns(ev);
         _mockTicketRepository.Setup(r => r.GetAll(t => t.EventId == ticket.EventId)).Returns([]);
@@ -1016,7 +1017,7 @@ public class AttractionServiceTest
 
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
         _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
-        _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
+        _mockVisitorRegistrationRepository.Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>())).Returns(existingVisit);
         _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
         _mockEventRepository.Setup(r => r.Get(e => e.Id == ticket.EventId)).Returns(ev);
         _mockTicketRepository.Setup(r => r.GetAll(t => t.EventId == ticket.EventId)).Returns([ticket]);
@@ -1077,7 +1078,7 @@ public class AttractionServiceTest
             .Returns(false);
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
         _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
-        _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
+        _mockVisitorRegistrationRepository.Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>())).Returns(existingVisit);
         _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
         _mockEventRepository.Setup(r => r.Get(e => e.Id == ticket.EventId)).Returns(ev);
 
@@ -1124,7 +1125,7 @@ public class AttractionServiceTest
             .Setup(s => s.HasActiveIncidenceForAttraction(attractionId, It.IsAny<DateTime>()))
             .Returns(false);
 
-        _mockVisitorRegistrationRepository.Setup(r => r.Get(v => v.VisitorId == visitorId)).Returns(existingVisit);
+        _mockVisitorRegistrationRepository.Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>())).Returns(existingVisit);
         _mockVisitorRegistrationRepository.Setup(r => r.Update(existingVisit));
         _mockTicketRepository.Setup(r => r.Get(t => t.QrId == qrId)).Returns(ticket);
         _mockAttractionRepository.Setup(r => r.Get(a => a.Id == attractionId)).Returns(attraction);
@@ -1194,7 +1195,7 @@ public class AttractionServiceTest
             .Returns(ticket);
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.Get(v => v.VisitorId == visitorId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>()))
             .Returns(visit);
 
         _mockVisitorRegistrationRepository
@@ -1253,7 +1254,7 @@ public class AttractionServiceTest
             .Returns(false);
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.Get(v => v.VisitorId == visitorId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>()))
             .Returns((VisitRegistration?)null);
 
         _mockVisitorRegistrationRepository
@@ -1319,7 +1320,7 @@ public class AttractionServiceTest
             .Returns(visitor);
 
         _mockVisitorRegistrationRepository
-            .Setup(r => r.Get(v => v.VisitorId == visitorId))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>(), It.IsAny<Func<IQueryable<VisitRegistration>, IIncludableQueryable<VisitRegistration, object>>?>()))
             .Returns((VisitRegistration?)null);
 
         _mockVisitorRegistrationRepository

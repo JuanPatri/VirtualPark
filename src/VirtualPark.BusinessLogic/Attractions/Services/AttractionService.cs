@@ -213,7 +213,10 @@ public sealed class AttractionService(
             return false;
         }
 
-        VisitRegistration? visitRegistration = _visitRegistrationRepository.Get(v => v.VisitorId == visitorId);
+        var today = _clock.Now().Date;
+        VisitRegistration? visitRegistration = _visitRegistrationRepository.Get(
+            v => v.VisitorId == visitorId && v.Date.Date == today,
+            include: q => q.Include(v => v.Attractions));
 
         visitRegistration = ValidateVisitRegistration(visitorId, visitRegistration, attraction);
 
@@ -225,6 +228,11 @@ public sealed class AttractionService(
         attraction.CurrentVisitors++;
         _attractionRepository.Update(attraction);
         visitRegistration.IsActive = true;
+        if(!visitRegistration.Attractions.Any(a => a.Id == attraction.Id))
+        {
+            visitRegistration.Attractions.Add(attraction);
+        }
+
         _visitRegistrationRepository.Update(visitRegistration);
 
         return true;
@@ -303,7 +311,10 @@ public sealed class AttractionService(
 
         Guid visitorId = ticket.VisitorProfileId;
 
-        VisitRegistration? visitRegistration = _visitRegistrationRepository.Get(v => v.VisitorId == visitorId);
+        var today = _clock.Now().Date;
+        VisitRegistration? visitRegistration = _visitRegistrationRepository.Get(
+            v => v.VisitorId == visitorId && v.Date.Date == today,
+            include: q => q.Include(v => v.Attractions));
 
         if(visitRegistration == null)
         {
@@ -319,7 +330,11 @@ public sealed class AttractionService(
             }
 
             visitRegistration.IsActive = true;
-            visitRegistration.Attractions.Add(attraction);
+            if(!visitRegistration.Attractions.Any(a => a.Id == attraction.Id))
+            {
+                visitRegistration.Attractions.Add(attraction);
+            }
+
             visitRegistration.Date = _clock.Now().Date;
 
             _visitRegistrationRepository.Update(visitRegistration);

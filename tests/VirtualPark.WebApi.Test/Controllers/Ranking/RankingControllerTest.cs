@@ -130,7 +130,7 @@ public sealed class RankingControllerTest
         var ranking = new BusinessLogic.Rankings.Entity.Ranking
         {
             Id = Guid.NewGuid(),
-            Date = new DateTime(2025, 10, 06, 14, 20, 00), 
+            Date = new DateTime(2025, 10, 06, 14, 20, 00),
             Period = Period.Weekly,
             Entries = users
         };

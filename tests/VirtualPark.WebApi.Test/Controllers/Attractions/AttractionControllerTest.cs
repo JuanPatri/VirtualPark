@@ -425,6 +425,7 @@ public class AttractionControllerTest
     }
     #endregion
 
+    #region GetDeleted
     [TestMethod]
     public void GetDeletedAttractions_ShouldReturnMappedList()
     {
@@ -474,4 +475,5 @@ public class AttractionControllerTest
 
         _attractionService.VerifyAll();
     }
+    #endregion
 }

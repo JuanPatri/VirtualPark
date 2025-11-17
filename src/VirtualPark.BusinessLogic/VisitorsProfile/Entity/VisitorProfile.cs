@@ -2,15 +2,9 @@ namespace VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 
 public class VisitorProfile
 {
-    public Guid Id { get; init; }
+    public Guid Id { get; init; } = Guid.NewGuid();
     public DateOnly DateOfBirth { get; set; }
     public Membership Membership { get; set; }
     public int Score { get; set; } = 0;
-    public Guid NfcId { get; set; }
-
-    public VisitorProfile()
-    {
-        Id = Guid.NewGuid();
-        NfcId = Guid.NewGuid();
-    }
+    public Guid NfcId { get; set; } = Guid.NewGuid();
 }

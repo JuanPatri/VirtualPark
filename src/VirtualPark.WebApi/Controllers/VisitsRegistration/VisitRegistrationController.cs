@@ -6,11 +6,12 @@ using VirtualPark.WebApi.Filters.Authorization;
 
 namespace VirtualPark.WebApi.Controllers.VisitsRegistration;
 
+[Route("visitRegistrations")]
 public class VisitRegistrationController(IVisitRegistrationService svc) : ControllerBase
 {
     private readonly IVisitRegistrationService _svc = svc;
 
-    [HttpPost("visitRegistrations/scoreEvents/{token}")]
+    [HttpPost("scoreEvents/{token}")]
     [AuthorizationFilter]
     public IActionResult RecordScoreEvent([FromBody] VisitScoreRequest body, string token)
     {

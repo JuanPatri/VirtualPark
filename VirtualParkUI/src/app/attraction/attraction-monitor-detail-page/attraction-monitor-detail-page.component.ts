@@ -36,6 +36,9 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
     attractionName = '';
     loading = false;
     emptyMessage = 'No visitors are currently registered for this attraction.';
+    capacity = 0;
+    visitorCount = 0;
+    availableSlots = 0;
 
     columns: TableColumn<Row>[] = [
         { key: 'name', label: 'Visitor' },
@@ -65,9 +68,14 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
         this.attractionService.getById(this.attractionId).subscribe({
             next: res => {
                 this.attractionName = (res as any)?.name ?? (res as any)?.Name ?? '';
+                const capacityValue = Number((res as any)?.capacity ?? (res as any)?.Capacity ?? 0);
+                this.capacity = Number.isFinite(capacityValue) && capacityValue >= 0 ? capacityValue : 0;
+                this.updateAvailability();
             },
             error: () => {
                 this.attractionName = '';
+                this.capacity = 0;
+                this.updateAvailability();
             }
         });
     }
@@ -88,6 +96,7 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
                 if (!this.data.length) {
                     this.emptyMessage = 'No visitors are currently registered for this attraction.';
                 }
+                this.updateAvailability();
                 this.loading = false;
             },
             error: () => {
@@ -158,5 +167,12 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
 
         const normalized = String(value ?? '').trim();
         return normalized || '—';
+    }
+
+    private updateAvailability(): void {
+        this.visitorCount = this.data.length;
+        this.availableSlots = this.capacity > 0
+            ? Math.max(this.capacity - this.visitorCount, 0)
+            : 0;
     }
 }

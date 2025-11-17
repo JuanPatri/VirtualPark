@@ -9,6 +9,21 @@
 
     <app-message></app-message>
 
+    <div class="monitor-summary" *ngIf="!loading">
+        <div class="summary-item">
+            <span class="summary-label">Visitors onboard</span>
+            <strong class="summary-value">{{ visitorCount }}</strong>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Total capacity</span>
+            <strong class="summary-value">{{ capacity > 0 ? capacity : '—' }}</strong>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Slots available</span>
+            <strong class="summary-value">{{ capacity > 0 ? availableSlots : '—' }}</strong>
+        </div>
+    </div>
+
     <div *ngIf="loading" class="state">Loading visitors...</div>
 
     <app-generic-table *ngIf="!loading"

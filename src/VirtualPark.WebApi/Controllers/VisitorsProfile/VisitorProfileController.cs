@@ -9,11 +9,12 @@ namespace VirtualPark.WebApi.Controllers.VisitorsProfile;
 
 [ApiController]
 [AuthenticationFilter]
+[Route("visitorProfiles")]
 public sealed class VisitorProfileController(IVisitorProfileService visitorProfileServiceService) : ControllerBase
 {
     private readonly IVisitorProfileService _visitorProfileServiceService = visitorProfileServiceService;
 
-    [HttpGet("visitorProfiles/{id}")]
+    [HttpGet("{id}")]
     [AuthorizationFilter]
     public GetVisitorProfileResponse GetVisitorProfileById(string id)
     {
@@ -29,7 +30,7 @@ public sealed class VisitorProfileController(IVisitorProfileService visitorProfi
             nfcId: vp.NfcId.ToString());
     }
 
-    [HttpGet("visitorProfiles")]
+    [HttpGet]
     [AuthorizationFilter]
     public List<GetVisitorProfileResponse> GetAllVisitorProfiles()
     {

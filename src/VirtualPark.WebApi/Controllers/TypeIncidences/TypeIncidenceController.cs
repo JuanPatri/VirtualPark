@@ -10,11 +10,12 @@ namespace VirtualPark.WebApi.Controllers.TypeIncidences;
 
 [ApiController]
 [AuthenticationFilter]
+[Route("typeIncidences")]
 public sealed class TypeIncidenceController(ITypeIncidenceService service) : ControllerBase
 {
     private readonly ITypeIncidenceService _service = service;
 
-    [HttpPost("typeIncidences")]
+    [HttpPost]
     [AuthorizationFilter]
     public CreateTypeIncidenceResponse CreateTypeIncidence(CreateTypeIncidenceRequest request)
     {
@@ -25,7 +26,7 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
         return new CreateTypeIncidenceResponse(id.ToString());
     }
 
-    [HttpGet("typeIncidences/{id}")]
+    [HttpGet("{id}")]
     [AuthorizationFilter]
     public GetTypeIncidenceResponse GetTypeIncidenceById(string id)
     {
@@ -38,7 +39,7 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
             type: typeIncidence.Type);
     }
 
-    [HttpGet("typeIncidences")]
+    [HttpGet]
     [AuthorizationFilter]
     public List<GetTypeIncidenceResponse> GetAllTypeIncidences()
     {
@@ -49,7 +50,7 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
             .ToList();
     }
 
-    [HttpDelete("typeIncidences/{id}")]
+    [HttpDelete("{id}")]
     [AuthorizationFilter]
     public void DeleteTypeIncidence(string id)
     {
@@ -57,7 +58,7 @@ public sealed class TypeIncidenceController(ITypeIncidenceService service) : Con
         _service.Delete(guid);
     }
 
-    [HttpPut("typeIncidences/{id}")]
+    [HttpPut("{id}")]
     [AuthorizationFilter]
     public void UpdateTypeIncidence(string id, CreateTypeIncidenceRequest request)
     {

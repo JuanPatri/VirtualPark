@@ -98,8 +98,6 @@ export class AttractionListPageComponent implements OnInit {
             this.selectedId = null;
             },
             error: (err) => {
-            console.warn("ERROR COMPLETO (raw):", err);
-
             const backendMsg =
                 err?.error?.message ??
                 err?.error?.Message ??

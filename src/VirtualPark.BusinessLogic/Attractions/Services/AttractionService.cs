@@ -53,6 +53,7 @@ public sealed class AttractionService(
     {
         Attraction attraction = Get(id) ?? throw new InvalidOperationException($"Attraction with id {id} not found.");
         ApplyArgsToEntity(attraction, args);
+        attraction.IsDeleted = false;
 
         _attractionRepository.Update(attraction);
     }

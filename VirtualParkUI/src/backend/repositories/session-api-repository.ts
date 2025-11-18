@@ -24,7 +24,9 @@ export class SessionApiRepository extends GenericApiRepository {
         return this.deleteById<void>(token, true,'logout').pipe(
             finalize(() => {
                 localStorage.removeItem('token')
-                localStorage.removeItem('roles');})
+                localStorage.removeItem('roles')
+                localStorage.removeItem('visitorId')
+            })
         );
     }
 

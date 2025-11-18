@@ -22,12 +22,12 @@ public class EventPointsStrategy(IReadOnlyRepository<VisitRegistration> visitReg
                 .Include(v => v.Attractions)
                 .Include(v => v.Visitor));
 
-        if (visit == null || visit.Attractions == null || visit.Attractions.Count == 0)
+        if(visit == null || visit.Attractions == null || visit.Attractions.Count == 0)
         {
             return 0;
         }
 
-        if (visit.DailyScore == 0)
+        if(visit.DailyScore == 0)
         {
             return FirstVisitPoints;
         }

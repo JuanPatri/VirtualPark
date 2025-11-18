@@ -8,6 +8,7 @@ import { AttractionUpAttractionPageComponent } from './attraction-upAttraction-p
 import { AttractionMonitorPageComponent } from './attraction-monitor-page/attraction-monitor-page.component';
 import { AttractionMonitorDetailPageComponent } from './attraction-monitor-detail-page/attraction-monitor-detail-page.component';
 import { AttractionDeletedComponent } from './attraction-deleted/attraction-deleted.component';
+import { VisitScoreHistoryComponent } from './visit-score-history/visit-score-history.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'ride', component: AttractionUpAttractionPageComponent },
       { path: 'monitor', component: AttractionMonitorPageComponent },
       { path: 'monitor/:id', component: AttractionMonitorDetailPageComponent },
+      { path: 'scores', component: VisitScoreHistoryComponent },
       { path: 'deleted', component: AttractionDeletedComponent },
       { path: ':id/edit', component: AttractionEditPageComponent },
     ],

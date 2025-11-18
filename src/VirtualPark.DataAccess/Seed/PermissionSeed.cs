@@ -417,6 +417,12 @@ public static class PermissionSeed
                 Id = Guid.Parse("56565656-2222-1111-1111-111111111115"),
                 Key = "RecordScoreEvent-VisitRegistration",
                 Description = "Allows registering a score event for a visit"
+            },
+            new Permission
+            {
+                Id = Guid.Parse("56565656-2222-1111-1111-111111111120"),
+                Key = "GetHistoryById-VisitScores",
+                Description = "Allows retrieving the visit score history"
             });
     }
 }

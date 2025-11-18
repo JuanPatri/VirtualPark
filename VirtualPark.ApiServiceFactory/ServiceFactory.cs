@@ -19,6 +19,7 @@ using VirtualPark.BusinessLogic.Users.Service;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.BusinessLogic.VisitorsProfile.Service;
 using VirtualPark.BusinessLogic.VisitRegistrations.Service;
+using VirtualPark.BusinessLogic.VisitsScore.Service;
 using VirtualPark.DataAccess;
 using VirtualPark.EntityFrameworkCore;
 using VirtualPark.Reflection;
@@ -62,6 +63,8 @@ public static class ServiceFactory
         services.AddScoped<IVisitRegistrationService, VisitRegistrationService>();
         services.AddScoped<IRewardService, RewardService>();
         services.AddScoped<IRewardRedemptionService, RewardRedemptionService>();
+        services.AddScoped<IVisitScoreRepository, VisitScoreRepository>();
+        services.AddScoped<IVisitScoreService, VisitScoreService>();
         services.BuildServiceProvider().GetRequiredService<IClockAppService>();
         ValidationServices.ClockService = services.BuildServiceProvider().GetRequiredService<IClockAppService>();
         var configured = cfg["Plugins:Path"] ?? "Plugins";

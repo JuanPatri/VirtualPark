@@ -12,8 +12,8 @@ using VirtualPark.DataAccess;
 namespace VirtualPark.DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    [Migration("20251116215206_Add-Permission-To-Operator-ToDownToattraction")]
-    partial class AddPermissionToOperatorToDownToattraction
+    [Migration("20251118033540_FixPermissionSeed")]
+    partial class FixPermissionSeed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,6 +63,11 @@ namespace VirtualPark.DataAccess.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("MiniumAge")
                         .HasColumnType("int");
@@ -250,6 +255,12 @@ namespace VirtualPark.DataAccess.Migrations
                             Id = new Guid("11111111-1111-1111-1111-111111111115"),
                             Description = "Allows deleting an attraction",
                             Key = "DeleteAttraction-Attraction"
+                        },
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111119"),
+                            Description = "Allows listening all deleted attractions",
+                            Key = "GetDeletedAttractions-Attraction"
                         },
                         new
                         {
@@ -586,6 +597,12 @@ namespace VirtualPark.DataAccess.Migrations
                             Id = new Guid("56565656-2222-1111-1111-111111111114"),
                             Description = "Allows listing the visitors currently in an attraction",
                             Key = "GetVisitorsInAttraction-VisitRegistration"
+                        },
+                        new
+                        {
+                            Id = new Guid("56565656-2222-1111-1111-111111111115"),
+                            Description = "Allows registering a score event for a visit",
+                            Key = "RecordScoreEvent-VisitRegistration"
                         });
                 });
 
@@ -725,6 +742,11 @@ namespace VirtualPark.DataAccess.Migrations
                         {
                             RoleId = new Guid("aaaa1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("11111111-1111-1111-1111-111111111115")
+                        },
+                        new
+                        {
+                            RoleId = new Guid("aaaa1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("11111111-1111-1111-1111-111111111119")
                         },
                         new
                         {
@@ -1045,6 +1067,11 @@ namespace VirtualPark.DataAccess.Migrations
                         {
                             RoleId = new Guid("bbbb1111-1111-1111-1111-111111111111"),
                             PermissionId = new Guid("56565656-2222-1111-1111-111111111113")
+                        },
+                        new
+                        {
+                            RoleId = new Guid("bbbb1111-1111-1111-1111-111111111111"),
+                            PermissionId = new Guid("56565656-2222-1111-1111-111111111115")
                         },
                         new
                         {
@@ -1419,6 +1446,9 @@ namespace VirtualPark.DataAccess.Migrations
                     b.Property<Guid>("NfcId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("PointsAvailable")
+                        .HasColumnType("int");
+
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
@@ -1547,13 +1577,13 @@ namespace VirtualPark.DataAccess.Migrations
                     b.HasOne("VirtualPark.BusinessLogic.Permissions.Entity.Permission", null)
                         .WithMany()
                         .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("VirtualPark.BusinessLogic.Roles.Entity.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

@@ -559,7 +559,7 @@ namespace VirtualPark.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = new Guid("11111111-1111-1111-1111-111111111116"),
+                            Id = new Guid("11111111-1111-1111-1111-111111111118"),
                             Description = "Allows validating entrance via NFC",
                             Key = "ValidateEntryByNfc-Attraction"
                         },
@@ -1114,7 +1114,7 @@ namespace VirtualPark.DataAccess.Migrations
                         new
                         {
                             RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
-                            PermissionId = new Guid("11111111-1111-1111-1111-111111111116")
+                            PermissionId = new Guid("11111111-1111-1111-1111-111111111118")
                         },
                         new
                         {

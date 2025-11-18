@@ -72,7 +72,7 @@ public static class PermissionSeed
             },
             new Permission
             {
-                Id = Guid.Parse("11111111-1111-1111-1111-111111111116"),
+                Id = Guid.Parse("11111111-1111-1111-1111-111111111119"),
                 Key = "GetDeletedAttractions-Attraction",
                 Description = "Allows listening all deleted attractions"
             },
@@ -384,7 +384,7 @@ public static class PermissionSeed
             },
             new Permission
             {
-                Id = Guid.Parse("11111111-1111-1111-1111-111111111116"),
+                Id = Guid.Parse("11111111-1111-1111-1111-111111111118"),
                 Key = "ValidateEntryByNfc-Attraction",
                 Description = "Allows validating entrance via NFC"
             },

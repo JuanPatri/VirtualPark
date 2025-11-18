@@ -117,6 +117,8 @@ public sealed class AttractionController(IAttractionService attractionService) :
         var isValid = _attractionService.ValidateEntryByNfc(attractionId, visitorId);
 
         return new ValidateEntryResponse { IsValid = isValid };
+    }
+
     [HttpGet("attractions/deleted")]
     [AuthorizationFilter]
     public List<GetAttractionResponse> GetDeletedAttractions()

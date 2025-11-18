@@ -18,7 +18,7 @@ namespace VirtualPark.DataAccess.Migrations
                 columns: new[] { "Id", "Description", "Key" },
                 values: new object[,]
                 {
-                    { new Guid("11111111-1111-1111-1111-111111111116"), "Allows validating entrance via NFC", "ValidateEntryByNfc-Attraction" },
+                    { new Guid("11111111-1111-1111-1111-111111111118"), "Allows validating entrance via NFC", "ValidateEntryByNfc-Attraction" },
                     { new Guid("11111111-1111-1111-1111-111111111117"), "Allows validating entrance via QR", "ValidateEntryByQr-Attraction" }
                 });
 
@@ -27,7 +27,7 @@ namespace VirtualPark.DataAccess.Migrations
                 columns: new[] { "PermissionId", "RoleId" },
                 values: new object[,]
                 {
-                    { new Guid("11111111-1111-1111-1111-111111111116"), new Guid("cccc1111-1111-1111-1111-111111111111") },
+                    { new Guid("11111111-1111-1111-1111-111111111118"), new Guid("cccc1111-1111-1111-1111-111111111111") },
                     { new Guid("11111111-1111-1111-1111-111111111117"), new Guid("cccc1111-1111-1111-1111-111111111111") }
                 });
         }
@@ -38,7 +38,7 @@ namespace VirtualPark.DataAccess.Migrations
             migrationBuilder.DeleteData(
                 table: "RolePermissions",
                 keyColumns: new[] { "PermissionId", "RoleId" },
-                keyValues: new object[] { new Guid("11111111-1111-1111-1111-111111111116"), new Guid("cccc1111-1111-1111-1111-111111111111") });
+                keyValues: new object[] { new Guid("11111111-1111-1111-1111-111111111118"), new Guid("cccc1111-1111-1111-1111-111111111111") });
 
             migrationBuilder.DeleteData(
                 table: "RolePermissions",
@@ -48,7 +48,7 @@ namespace VirtualPark.DataAccess.Migrations
             migrationBuilder.DeleteData(
                 table: "Permissions",
                 keyColumn: "Id",
-                keyValue: new Guid("11111111-1111-1111-1111-111111111116"));
+                keyValue: new Guid("11111111-1111-1111-1111-111111111118"));
 
             migrationBuilder.DeleteData(
                 table: "Permissions",

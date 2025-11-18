@@ -508,6 +508,9 @@ public class AttractionControllerTest
 
         result.Should().NotBeNull();
         result.IsValid.Should().BeFalse();
+    }
+    #endregion
+
     #region GetDeleted
     [TestMethod]
     public void GetDeletedAttractions_ShouldReturnMappedList()

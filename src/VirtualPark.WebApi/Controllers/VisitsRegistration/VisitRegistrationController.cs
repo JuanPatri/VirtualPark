@@ -88,7 +88,8 @@ public class VisitRegistrationController(IVisitRegistrationService svc, IUserSer
                  LastName = user.LastName,
                  Score = vp.Score,
                  Membership = vp.Membership,
-                 NfcId = vp.NfcId
+                 NfcId = vp.NfcId,
+                 TicketType = v.TicketType
              }).ToList();
 
         return Ok(result);

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualPark.DataAccess;
 
@@ -11,9 +12,11 @@ using VirtualPark.DataAccess;
 namespace VirtualPark.DataAccess.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    partial class SqlContextModelSnapshot : ModelSnapshot
+    [Migration("20251118221915_addPermission-GetHistoryById")]
+    partial class addPermissionGetHistoryById
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1159,7 +1162,7 @@ namespace VirtualPark.DataAccess.Migrations
                         new
                         {
                             RoleId = new Guid("cccc1111-1111-1111-1111-111111111111"),
-                            PermissionId = new Guid("56565656-2222-1111-1111-111111111120")
+                            PermissionId = new Guid("56565656-2222-1111-1111-111111111115")
                         },
                         new
                         {

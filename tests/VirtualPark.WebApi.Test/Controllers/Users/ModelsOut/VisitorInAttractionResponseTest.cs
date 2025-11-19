@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Tickets;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.WebApi.Controllers.Users.ModelsOut;
 
@@ -125,6 +126,22 @@ public class VisitorInAttractionResponseTest
         };
 
         response.VisitRegistrationId.Should().Be(visitRegistrationId);
+    }
+    #endregion
+
+    #region TicketType
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void TicketType_Getter_ReturnsAssignedValue()
+    {
+        var ticketType = (EntranceType)2;
+
+        var response = new VisitorInAttractionResponse
+        {
+            TicketType = ticketType
+        };
+
+        response.TicketType.Should().Be(ticketType);
     }
     #endregion
 }

@@ -31,9 +31,7 @@ public sealed class SessionController(ISessionService sessionService) : Controll
     public GetUserLoggedSessionResponse GetUserLogged()
     {
         var user = (User)HttpContext.Items["UserLogged"];
-        var roleNames = user.Roles.Select(r => r.Name).ToList();
-
-        return new GetUserLoggedSessionResponse(user.Id.ToString(), user.VisitorProfileId.ToString(), roleNames);
+        return new GetUserLoggedSessionResponse(user);
     }
 
     [HttpDelete]

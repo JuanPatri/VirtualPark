@@ -438,7 +438,8 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
             result.Add(new VisitorInAttraction
             {
                 VisitRegistrationId = visit.Id,
-                Visitor = visitor
+                Visitor = visitor,
+                TicketType = visit.Ticket.Type
             });
         }
 

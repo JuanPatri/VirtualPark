@@ -1,4 +1,5 @@
 using FluentAssertions;
+using VirtualPark.BusinessLogic.Tickets;
 using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Models;
 
@@ -55,6 +56,32 @@ public class VisitorInAttractionTest
         model.Visitor.Should().BeSameAs(visitor);
         model.Visitor.Score.Should().Be(150);
         model.Visitor.Membership.Should().Be(Membership.Premium);
+    }
+    #endregion
+
+    #region TicketType
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void TicketType_Getter_ReturnsAssignedValue()
+    {
+        var visitRegistrationId = Guid.NewGuid();
+
+        var visitor = new VisitorProfile
+        {
+            DateOfBirth = new DateOnly(2000, 1, 1),
+            Membership = Membership.Standard
+        };
+
+        var ticketType = (EntranceType)1;
+
+        var model = new VisitorInAttraction
+        {
+            VisitRegistrationId = visitRegistrationId,
+            Visitor = visitor,
+            TicketType = ticketType
+        };
+
+        model.TicketType.Should().Be(ticketType);
     }
     #endregion
 }

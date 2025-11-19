@@ -1,12 +1,25 @@
+using VirtualPark.BusinessLogic.Events.Entity;
+
 namespace VirtualPark.WebApi.Controllers.Events.ModelsOut;
 
-public sealed class GetEventResponse(string id, string name, string date, string capacity, string cost, List<string> attractions, string ticketsSold)
+public sealed class GetEventResponse
 {
-    public List<string> Attractions { get; } = attractions;
-    public string Capacity { get; } = capacity;
-    public string Cost { get; } = cost;
-    public string Date { get; } = date;
-    public string Id { get; } = id;
-    public string Name { get; } = name;
-    public string TicketsSold { get; } = ticketsSold;
+    public string Id { get; }
+    public string Name { get; }
+    public string Date { get; }
+    public string Capacity { get; }
+    public string Cost { get; }
+    public List<string> Attractions { get; }
+    public string TicketsSold { get; }
+
+    public GetEventResponse(Event ev)
+    {
+        Id = ev.Id.ToString();
+        Name = ev.Name;
+        Date = ev.Date.ToString("yyyy-MM-dd");
+        Capacity = ev.Capacity.ToString();
+        Cost = ev.Cost.ToString();
+        Attractions = ev.Attractions.Select(a => a.Id.ToString()).ToList();
+        TicketsSold = ev.Tickets?.Count.ToString() ?? "0";
+    }
 }

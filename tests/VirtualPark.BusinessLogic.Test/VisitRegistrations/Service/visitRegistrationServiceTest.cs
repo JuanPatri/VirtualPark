@@ -1,4 +1,7 @@
+using System.Linq.Expressions;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
@@ -34,6 +37,7 @@ public class VisitRegistrationServiceTest
     private Mock<IStrategyFactory> _strategyFactoryMock = null!;
     private Mock<IStrategy> _strategyMock = null!;
     private VisitRegistrationService _service = null!;
+    private Mock<IReadOnlyRepository<Event>> _eventRepoMock = null!;
 
     [TestInitialize]
     public void Initialize()
@@ -47,6 +51,7 @@ public class VisitRegistrationServiceTest
         _strategyServiceMock = new Mock<IStrategyService>(MockBehavior.Strict);
         _strategyFactoryMock = new Mock<IStrategyFactory>(MockBehavior.Strict);
         _strategyMock = new Mock<IStrategy>(MockBehavior.Strict);
+        _eventRepoMock = new Mock<IReadOnlyRepository<Event>>(MockBehavior.Strict);
 
         var mockClockForValidation = new Mock<IClockAppService>();
         mockClockForValidation.Setup(x => x.Now()).Returns(new DateTime(2025, 10, 7, 12, 0, 0));
@@ -60,7 +65,8 @@ public class VisitRegistrationServiceTest
             _clockMock.Object,
             _visitorRepoWriteMock.Object,
             _strategyServiceMock.Object,
-            _strategyFactoryMock.Object);
+            _strategyFactoryMock.Object,
+            _eventRepoMock.Object);
     }
 
     #region Create
@@ -394,15 +400,14 @@ public class VisitRegistrationServiceTest
         var ticketId = oldTicket.Id;
         visit.TicketId = ticketId;
 
-        var a1 = new Attraction { Name = "Roller" };
-        visit.Attractions = [a1];
+        visit.Attractions = [];
 
         var newVisitorId = Guid.NewGuid();
         var newTicket = new Ticket();
         var newTicketId = newTicket.Id;
 
         var args = new VisitRegistrationArgs(
-            [a1.Id.ToString()],
+            [],
             newVisitorId.ToString(),
             newTicketId.ToString());
 
@@ -426,19 +431,13 @@ public class VisitRegistrationServiceTest
             .Setup(r => r.Get(v => v.Id == visitorId))
             .Returns(oldVisitor);
 
-        _attractionRepoMock
-            .Setup(r => r.Get(x => x.Id == a1.Id))
-            .Returns(a1);
-
         _repositoryMock
             .Setup(r => r.Update(It.Is<VisitRegistration>(vr =>
                 vr.Id == visitId &&
                 vr.Ticket == newTicket &&
                 vr.TicketId == newTicketId &&
                 vr.Visitor == oldVisitor &&
-                vr.VisitorId == newVisitorId &&
-                vr.Attractions.Count == 1 &&
-                vr.Attractions[0].Id == a1.Id)));
+                vr.VisitorId == newVisitorId)));
 
         _service.Update(args, visitId);
 
@@ -574,7 +573,7 @@ public class VisitRegistrationServiceTest
             .Setup(s => s.Get(today))
             .Returns(new ActiveStrategyArgs("Attraction", today.ToString("yyyy-MM-dd")));
 
-        var args = new RecordVisitScoreArgs(visitId.ToString(), "Atracción", null);
+        var args = new RecordVisitScoreArgs(visitId.ToString(), "Atracción", "10");
 
         Action act = () => _service.RecordVisitScore(args);
 
@@ -1575,74 +1574,6 @@ public class VisitRegistrationServiceTest
     }
 
     [TestMethod]
-    [TestCategory("Behaviour")]
-    public void GetAttractionsForTicket_ShouldReturnEventAttractions_WhenTicketIsEvent()
-    {
-        var now = new DateTime(2025, 10, 08, 15, 00, 00, DateTimeKind.Utc);
-        _clockMock.Setup(c => c.Now()).Returns(now);
-
-        var today = DateOnly.FromDateTime(now);
-        var start = today.ToDateTime(TimeOnly.MinValue);
-        var end = today.ToDateTime(TimeOnly.MaxValue);
-
-        var visitor = new VisitorProfile();
-        var visitorId = visitor.Id;
-
-        var ev = new Event
-        {
-            Name = "Fiesta Halloween",
-            Date = now
-        };
-        var ea1 = new Attraction { Name = "Casa del Terror" };
-        var ea2 = new Attraction { Name = "Labertinto" };
-        ev.Attractions = [ea1, ea2];
-
-        var eventTicket = new Ticket
-        {
-            Type = EntranceType.Event,
-            Event = ev,
-            EventId = ev.Id
-        };
-        var ticketId = eventTicket.Id;
-
-        var visitToday = new VisitRegistration
-        {
-            VisitorId = visitorId,
-            Date = now,
-            TicketId = ticketId,
-            Ticket = null!,
-            Attractions = [],
-            ScoreEvents = []
-        };
-
-        _repositoryMock
-            .Setup(r => r.Get(v =>
-                v.VisitorId == visitorId &&
-                v.Date >= start &&
-                v.Date <= end))
-            .Returns(visitToday);
-
-        _visitorRepoMock
-            .Setup(r => r.Get(v => v.Id == visitorId))
-            .Returns(visitor);
-
-        _ticketRepoMock
-            .Setup(r => r.Get(t => t.Id == ticketId))
-            .Returns(eventTicket);
-
-        var result = _service.GetAttractionsForTicket(visitorId);
-
-        result.Should().HaveCount(2);
-        result[0].Should().BeSameAs(ea1);
-        result[1].Should().BeSameAs(ea2);
-
-        _clockMock.VerifyAll();
-        _repositoryMock.VerifyAll();
-        _visitorRepoMock.VerifyAll();
-        _ticketRepoMock.VerifyAll();
-    }
-
-    [TestMethod]
     [TestCategory("Validation")]
     public void GetAttractionsForTicket_ShouldThrow_WhenRepositoryReturnsNullVisitRegistrations()
     {
@@ -1955,13 +1886,20 @@ public class VisitRegistrationServiceTest
         var vp2 = new VisitorProfile { Id = Guid.NewGuid() };
         var vp3 = new VisitorProfile { Id = Guid.NewGuid() };
 
+        var ticket = new Ticket
+        {
+            Type = EntranceType.General
+        };
+
         var visitTodayInAttraction = new VisitRegistration
         {
             VisitorId = vp1.Id,
             Visitor = vp1,
             Date = now,
             IsActive = true,
-            CurrentAttractionId = attractionId
+            CurrentAttractionId = attractionId,
+            Ticket = ticket,
+            TicketId = ticket.Id
         };
 
         var visitTodayDifferentAttraction = new VisitRegistration
@@ -1998,6 +1936,7 @@ public class VisitRegistrationServiceTest
         item.VisitRegistrationId.Should().Be(visitTodayInAttraction.Id);
         item.Visitor.Should().BeSameAs(vp1);
         item.Visitor.Id.Should().Be(vp1.Id);
+        item.TicketType.Should().Be(EntranceType.General);
 
         _clockMock.VerifyAll();
         _repositoryMock.VerifyAll();

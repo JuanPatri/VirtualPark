@@ -260,11 +260,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
     private Ticket SearchTicket(Guid id)
     {
-        var ticket = _ticketRepository.Get(
-            t => t.Id == id,
-            include: q => q
-                .Include(t => t.Event)
-                .ThenInclude(e => e.Attractions));
+        var ticket = _ticketRepository.Get(t => t.Id == id);
         if(ticket is null)
         {
             throw new InvalidOperationException("Ticket don't exist");
@@ -454,12 +450,13 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         foreach(var visit in todayVisitsInAttraction)
         {
             var visitor = visit.Visitor ?? SearchVisitorProfile(visit.VisitorId);
+            var ticket = visit.Ticket ?? SearchTicket(visit.TicketId);
 
             result.Add(new VisitorInAttraction
             {
                 VisitRegistrationId = visit.Id,
                 Visitor = visitor,
-                TicketType = visit.Ticket.Type
+                TicketType = ticket.Type
             });
         }
 

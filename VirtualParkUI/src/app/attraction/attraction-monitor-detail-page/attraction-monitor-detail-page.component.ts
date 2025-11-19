@@ -180,7 +180,8 @@ export class AttractionMonitorDetailPageComponent implements OnInit {
     }
 
     private resolveOrigin(ticketType?: string): string {
-        if ((ticketType ?? '').toLowerCase() === 'event') {
+        const normalized = (ticketType ?? '').toString().trim().toLowerCase();
+        if (normalized === 'event' || normalized === '1') {
             return 'Event';
         }
         return 'Attraction';

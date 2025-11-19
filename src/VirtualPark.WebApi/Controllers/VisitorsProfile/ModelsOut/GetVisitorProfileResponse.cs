@@ -1,11 +1,23 @@
+using VirtualPark.BusinessLogic.VisitorsProfile.Entity;
+
 namespace VirtualPark.WebApi.Controllers.VisitorsProfile.ModelsOut;
 
-public class GetVisitorProfileResponse(string id, string dateOfBirth, string membership, string score, string nfcId, string pointsAvailable)
+public class GetVisitorProfileResponse
 {
-    public string Id { get; } = id;
-    public string DateOfBirth { get; } = dateOfBirth;
-    public string Membership { get; } = membership;
-    public string Score { get; } = score;
-    public string NfcId { get; } = nfcId;
-    public string PointsAvailable { get; } = pointsAvailable;
+    public string Id { get; }
+    public string DateOfBirth { get; }
+    public string Membership { get; }
+    public string Score { get; }
+    public string NfcId { get; }
+    public string PointsAvailable { get; }
+
+    public GetVisitorProfileResponse(VisitorProfile vp)
+    {
+        Id = vp.Id.ToString();
+        DateOfBirth = vp.DateOfBirth.ToString("yyyy-MM-dd");
+        Membership = vp.Membership.ToString();
+        Score = vp.Score.ToString();
+        NfcId = vp.NfcId.ToString();
+        PointsAvailable = vp.PointsAvailable.ToString();
+    }
 }

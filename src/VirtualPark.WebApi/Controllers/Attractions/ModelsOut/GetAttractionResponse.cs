@@ -13,7 +13,7 @@ public class GetAttractionResponse
     public List<string>? EventIds { get; }
     public string? Available { get; }
 
-    public GetAttractionResponse(Attraction a)
+    public GetAttractionResponse(Attraction? a)
     {
         Id = a.Id.ToString();
         Name = a.Name;

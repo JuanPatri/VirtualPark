@@ -608,8 +608,7 @@ public class AttractionControllerTest
         first.EventIds.Should().NotBeNull();
         first.EventIds.Should().BeEquivalentTo(
             ev1.Id.ToString(),
-            ev2.Id.ToString()
-        );
+            ev2.Id.ToString());
 
         _attractionService.VerifyAll();
     }

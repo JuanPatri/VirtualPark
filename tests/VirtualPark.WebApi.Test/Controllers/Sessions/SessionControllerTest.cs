@@ -235,7 +235,7 @@ public class SessionControllerTest
             HttpContext = httpContext
         };
 
-        Action act = () => _sessionController.LogOut();
+        Action act = _sessionController.LogOut;
 
         act.Should().Throw<FormatException>();
 

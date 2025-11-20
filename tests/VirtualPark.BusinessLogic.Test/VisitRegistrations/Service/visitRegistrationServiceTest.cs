@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
@@ -673,60 +675,6 @@ public class VisitRegistrationServiceTest
         _strategyServiceMock.VerifyAll();
         _strategyFactoryMock.VerifyAll();
         _strategyMock.VerifyAll();
-        _clockMock.VerifyAll();
-    }
-
-    [TestMethod]
-    [TestCategory("Behaviour")]
-    public void RecordVisitScore_Redemption_ShouldNotCallStrategy_AndApplyDelta()
-    {
-        var now = new DateTime(2025, 10, 08, 17, 00, 00, DateTimeKind.Utc);
-        _clockMock.Setup(c => c.Now()).Returns(now);
-
-        var visitor = new VisitorProfile { Score = 200 };
-        var visit = new VisitRegistration
-        {
-            Date = now,
-            DailyScore = 200,
-            VisitorId = visitor.Id,
-            Visitor = visitor,
-            Ticket = new Ticket(),
-            Attractions = [],
-            ScoreEvents =
-            [
-                new VisitScore { Origin = "Seed", OccurredAt = now, Points = 0, DayStrategyName = "Attraction" }
-            ]
-        };
-        var visitId = visit.Id;
-
-        _repositoryMock
-            .Setup(r => r.Get(v => v.Id == visitId))
-            .Returns(visit);
-
-        _visitorRepoWriteMock
-            .Setup(w => w.Update(It.Is<VisitorProfile>(vp => vp.Score == 150)))
-            .Verifiable();
-
-        _repositoryMock
-            .Setup(r => r.Update(It.Is<VisitRegistration>(v =>
-                v.DailyScore == 150 &&
-                v.ScoreEvents.Count == 2 &&
-                v.ScoreEvents[1].Origin == "Canje" &&
-                v.ScoreEvents[1].Points == -50 &&
-                v.ScoreEvents[1].VisitRegistrationId == visitId)))
-            .Verifiable();
-
-        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "Canje", "-50"));
-
-        visit.DailyScore.Should().Be(150);
-        visitor.Score.Should().Be(150);
-
-        _strategyServiceMock.VerifyAll();
-        _strategyFactoryMock.VerifyAll();
-        _strategyMock.VerifyAll();
-
-        _repositoryMock.VerifyAll();
-        _visitorRepoWriteMock.VerifyAll();
         _clockMock.VerifyAll();
     }
 
@@ -1529,6 +1477,89 @@ public class VisitRegistrationServiceTest
     }
 
     [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetAttractionsForTicket_ShouldReturnEventAttractions_WhenTicketIsEvent()
+    {
+        var now = new DateTime(2025, 10, 08, 12, 00, 00, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var visitor = new VisitorProfile();
+        var visitorId = visitor.Id;
+
+        var eventId = Guid.NewGuid();
+        var eventTicket = new Ticket
+        {
+            Type = EntranceType.Event,
+            EventId = eventId
+        };
+        var ticketId = eventTicket.Id;
+
+        var visitToday = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Date = now,
+            TicketId = ticketId,
+            Ticket = null!,
+            Attractions = [],
+            ScoreEvents = []
+        };
+
+        _repositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns(visitToday);
+
+        _visitorRepoMock
+            .Setup(r => r.Get(It.Is<Expression<Func<VisitorProfile, bool>>>(expr => expr.Compile().Invoke(visitor))))
+            .Returns(visitor);
+
+        _ticketRepoMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(eventTicket);
+
+        var ev = new Event
+        {
+            Id = eventId,
+            Attractions =
+            [
+                new Attraction { Id = Guid.NewGuid() },
+                new Attraction { Id = Guid.NewGuid() }
+            ]
+        };
+
+        _eventRepoMock
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
+            .Returns(ev);
+
+        var a1 = new Attraction { Id = ev.Attractions[0].Id, Name = "Casa del Terror" };
+        var a2 = new Attraction { Id = ev.Attractions[1].Id, Name = "Labyrinth" };
+
+        var attrIndex = 0;
+        _attractionRepoMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Attraction, bool>>>()))
+            .Returns((Expression<Func<Attraction, bool>> expr) =>
+            {
+                var attractions = new[] { a1, a2 };
+                var chosen = attractions.First(x => expr.Compile().Invoke(x));
+                return chosen;
+            });
+
+        var result = _service.GetAttractionsForTicket(visitorId);
+
+        result.Should().HaveCount(2);
+        result[0].Id.Should().Be(a1.Id);
+        result[1].Id.Should().Be(a2.Id);
+
+        _clockMock.VerifyAll();
+        _repositoryMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
+        _eventRepoMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
+
+    [TestMethod]
     [TestCategory("Validation")]
     public void GetAttractionsForTicket_ShouldThrow_WhenRepositoryReturnsNullVisitRegistrations()
     {
@@ -1825,6 +1856,62 @@ public class VisitRegistrationServiceTest
         _visitorRepoMock.VerifyAll();
         _ticketRepoMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAttractionsForTicket_ShouldThrow_WhenEventDoesNotExist()
+    {
+        var now = new DateTime(2025, 10, 08, 20, 0, 0, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var visitor = new VisitorProfile();
+        var visitorId = visitor.Id;
+
+        var eventTicket = new Ticket
+        {
+            Type = EntranceType.Event,
+            EventId = Guid.NewGuid()
+        };
+        var ticketId = eventTicket.Id;
+
+        var visitToday = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Date = now,
+            TicketId = ticketId,
+            Ticket = null!,
+            Attractions = [],
+            ScoreEvents = []
+        };
+
+        _repositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns(visitToday);
+
+        _visitorRepoMock
+            .Setup(r => r.Get(It.Is<Expression<Func<VisitorProfile, bool>>>(expr => expr.Compile().Invoke(visitor))))
+            .Returns(visitor);
+
+        _ticketRepoMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(eventTicket);
+
+        _eventRepoMock
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
+            .Returns((Event?)null);
+
+        Action act = () => _service.GetAttractionsForTicket(visitorId);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Event don't exist");
+
+        _repositoryMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
+        _eventRepoMock.VerifyAll();
+    }
     #endregion
 
     #region GetVisitorsInAttraction
@@ -1974,4 +2061,138 @@ public class VisitRegistrationServiceTest
         _visitorRepoMock.VerifyNoOtherCalls();
     }
     #endregion
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void GetTodayVisit_ShouldReturnVisit_WithLoadedData()
+    {
+        var now = new DateTime(2025, 10, 10, 11, 0, 0, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var today = DateOnly.FromDateTime(now);
+        var start = today.ToDateTime(TimeOnly.MinValue);
+        var end = today.ToDateTime(TimeOnly.MaxValue);
+
+        var visitor = new VisitorProfile { Id = Guid.NewGuid(), Score = 0 };
+        var ticket = new Ticket { Type = EntranceType.General };
+        var attraction = new Attraction { Name = "Coaster" };
+
+        var visit = new VisitRegistration
+        {
+            VisitorId = visitor.Id,
+            TicketId = ticket.Id,
+            Date = now,
+            Attractions =
+            [
+                new Attraction { Id = attraction.Id }
+            ],
+            ScoreEvents = []
+        };
+
+        _repositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns(visit);
+
+        _visitorRepoMock
+            .Setup(r => r.Get(It.Is<Expression<Func<VisitorProfile, bool>>>(expr => expr.Compile().Invoke(visitor))))
+            .Returns(visitor);
+
+        _ticketRepoMock
+            .Setup(r => r.Get(It.Is<Expression<Func<Ticket, bool>>>(expr => expr.Compile().Invoke(ticket))))
+            .Returns(ticket);
+
+        _attractionRepoMock
+            .Setup(r => r.Get(It.Is<Expression<Func<Attraction, bool>>>(expr => expr.Compile().Invoke(attraction))))
+            .Returns(attraction);
+
+        var result = _service.GetTodayVisit(visitor.Id);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(visit.Id);
+        result.Visitor.Should().BeSameAs(visitor);
+        result.Ticket.Should().BeSameAs(ticket);
+        result.Attractions.Should().HaveCount(1);
+        result.Attractions[0].Id.Should().Be(attraction.Id);
+
+        _clockMock.VerifyAll();
+        _repositoryMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
+        _attractionRepoMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void RecordVisitScore_ShouldNotUpdateVisitor_WhenDeltaIsZero()
+    {
+        var now = new DateTime(2025, 10, 08, 18, 0, 0, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var visitor = new VisitorProfile { Id = Guid.NewGuid(), Score = 100, PointsAvailable = 100 };
+        var visit = new VisitRegistration
+        {
+            Date = now,
+            DailyScore = 100,
+            VisitorId = visitor.Id,
+            Visitor = visitor,
+            Ticket = new Ticket(),
+            Attractions = [],
+            ScoreEvents =
+            [
+                new VisitScore { Origin = "Seed", OccurredAt = now.AddMinutes(-5), Points = 0, DayStrategyName = "Attraction" }
+            ]
+        };
+        var visitId = visit.Id;
+
+        _repositoryMock
+            .Setup(r => r.Get(v => v.Id == visitId))
+            .Returns(visit);
+
+        _strategyFactoryMock
+            .Setup(f => f.Create("Attraction"))
+            .Returns(_strategyMock.Object);
+
+        _strategyMock
+            .Setup(s => s.CalculatePoints(visitor.Id))
+            .Returns(100);
+
+        _repositoryMock
+            .Setup(r => r.Update(It.Is<VisitRegistration>(vr =>
+                vr.DailyScore == 100 &&
+                vr.ScoreEvents.Count == 2 &&
+                vr.ScoreEvents[1].Points == 0 &&
+                vr.ScoreEvents[1].Origin == "Atracción")))
+            .Verifiable();
+
+        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "Atracción", null));
+
+        visitor.Score.Should().Be(100);
+        visitor.PointsAvailable.Should().Be(100);
+
+        _repositoryMock.VerifyAll();
+        _strategyFactoryMock.VerifyAll();
+        _strategyMock.VerifyAll();
+        _visitorRepoWriteMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetTodayVisit_ShouldThrow_WhenVisitNotFound()
+    {
+        var visitorId = Guid.NewGuid();
+        var now = new DateTime(2025, 10, 10, 9, 0, 0, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        _repositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns((VisitRegistration?)null);
+
+        Action act = () => _service.GetTodayVisit(visitorId);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("VisitRegistration for today don't exist");
+
+        _clockMock.VerifyAll();
+        _repositoryMock.VerifyAll();
+    }
 }

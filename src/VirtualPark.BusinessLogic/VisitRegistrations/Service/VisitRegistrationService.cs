@@ -160,6 +160,12 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         return GetAttractionsForTicketInternal(ticket);
     }
 
+    public VisitRegistration GetTodayVisit(Guid visitorId)
+    {
+        var today = DateOnly.FromDateTime(_clockAppService.Now());
+        return GetTodayVisitForVisitor(visitorId, today);
+    }
+
     private VisitRegistration GetTodayVisitForVisitor(Guid visitorId, DateOnly today)
     {
         var start = today.ToDateTime(TimeOnly.MinValue);
@@ -348,6 +354,25 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
     private void ApplyDelta(VisitRegistration visit, VisitScore scoreEvent, int delta, int newTotal)
     {
+        var isRedemption = string.Equals(scoreEvent.Origin, "Canje", StringComparison.OrdinalIgnoreCase);
+
+        if(isRedemption)
+        {
+            if(delta == 0)
+            {
+                scoreEvent.Points = 0;
+                return;
+            }
+
+            visit.Visitor ??= _visitorProfileRepository.Get(v => v.Id == visit.VisitorId)
+                              ?? throw new InvalidOperationException("Visitor not found.");
+
+            scoreEvent.Points = -delta;
+
+            _visitorProfileWriteRepository.Update(visit.Visitor);
+            return;
+        }
+
         scoreEvent.Points = delta;
 
         if(delta == 0)

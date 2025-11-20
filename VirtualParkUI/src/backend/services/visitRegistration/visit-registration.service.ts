@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { VisitRegistrationApiRepository } from '../../repositories/visitRegistration-api-repository';
 import { VisitScoreRequest } from './models/VisitScoreRequest';
+import { VisitRegistrationTodayResponse } from './models/VisitRegistrationTodayResponse';
 import { AttractionModel } from '../attraction/models/AttractionModel';
 import { VisitorInAttractionModel } from './models/VisitorInAttractionModel';
 
@@ -31,4 +32,7 @@ export class VisitRegistrationService {
         return this.repository.getVisitorsInAttraction(attractionId);
     }
     
+    getTodayVisit(visitorId: string): Observable<VisitRegistrationTodayResponse> {
+        return this.repository.getTodayVisit(visitorId);
+    }
 }

@@ -3,6 +3,7 @@ using VirtualPark.BusinessLogic.Users.Service;
 using VirtualPark.BusinessLogic.Validations.Services;
 using VirtualPark.BusinessLogic.VisitRegistrations.Service;
 using VirtualPark.WebApi.Controllers.Users.ModelsOut;
+using VirtualPark.WebApi.Controllers.VisitsRegistration.ModelsOut;
 using VirtualPark.WebApi.Controllers.VisitsScore.ModelsIn;
 using VirtualPark.WebApi.Filters.Authenticator;
 using VirtualPark.WebApi.Filters.Authorization;
@@ -93,5 +94,16 @@ public class VisitRegistrationController(IVisitRegistrationService svc, IUserSer
              }).ToList();
 
         return Ok(result);
+    }
+
+    [HttpGet("{visitorId}/today")]
+    [AuthorizationFilter]
+    public IActionResult GetVisitForToday(string visitorId)
+    {
+        var vId = ValidationServices.ValidateAndParseGuid(visitorId);
+
+        var visit = _svc.GetTodayVisit(vId);
+
+        return Ok(new VisitRegistrationTodayResponse(visit));
     }
 }

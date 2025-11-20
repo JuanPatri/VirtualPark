@@ -1980,4 +1980,79 @@ public class VisitRegistrationServiceTest
         _ticketRepoMock.VerifyAll();
         _attractionRepoMock.VerifyAll();
     }
+
+    [TestMethod]
+    [TestCategory("Behaviour")]
+    public void RecordVisitScore_ShouldNotUpdateVisitor_WhenDeltaIsZero()
+    {
+        var now = new DateTime(2025, 10, 08, 18, 0, 0, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var visitor = new VisitorProfile { Id = Guid.NewGuid(), Score = 100, PointsAvailable = 100 };
+        var visit = new VisitRegistration
+        {
+            Date = now,
+            DailyScore = 100,
+            VisitorId = visitor.Id,
+            Visitor = visitor,
+            Ticket = new Ticket(),
+            Attractions = [],
+            ScoreEvents =
+            [
+                new VisitScore { Origin = "Seed", OccurredAt = now.AddMinutes(-5), Points = 0, DayStrategyName = "Attraction" }
+            ]
+        };
+        var visitId = visit.Id;
+
+        _repositoryMock
+            .Setup(r => r.Get(v => v.Id == visitId))
+            .Returns(visit);
+
+        _strategyFactoryMock
+            .Setup(f => f.Create("Attraction"))
+            .Returns(_strategyMock.Object);
+
+        _strategyMock
+            .Setup(s => s.CalculatePoints(visitor.Id))
+            .Returns(100);
+
+        _repositoryMock
+            .Setup(r => r.Update(It.Is<VisitRegistration>(vr =>
+                vr.DailyScore == 100 &&
+                vr.ScoreEvents.Count == 2 &&
+                vr.ScoreEvents[1].Points == 0 &&
+                vr.ScoreEvents[1].Origin == "Atracción")))
+            .Verifiable();
+
+        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "Atracción", null));
+
+        visitor.Score.Should().Be(100);
+        visitor.PointsAvailable.Should().Be(100);
+
+        _repositoryMock.VerifyAll();
+        _strategyFactoryMock.VerifyAll();
+        _strategyMock.VerifyAll();
+        _visitorRepoWriteMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetTodayVisit_ShouldThrow_WhenVisitNotFound()
+    {
+        var visitorId = Guid.NewGuid();
+        var now = new DateTime(2025, 10, 10, 9, 0, 0, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        _repositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns((VisitRegistration?)null);
+
+        Action act = () => _service.GetTodayVisit(visitorId);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("VisitRegistration for today don't exist");
+
+        _clockMock.VerifyAll();
+        _repositoryMock.VerifyAll();
+    }
 }

@@ -688,6 +688,45 @@ public class ValidationServicesTest
         result.Should().Be(new DateOnly(2024, 1, 1));
     }
     #endregion
+
+    #region ValidateDateTimeTickets
+
+    [TestMethod]
+    [TestCategory("Validations")]
+    public void ValidateDateTimeTickets_ShouldAllowSameDayAsClock()
+    {
+        var input = "2024-01-01";
+
+        var result = ValidationServices.ValidateDateTimeTickets(input);
+
+        result.Should().Be(new DateTime(2024, 1, 1));
+    }
+
+    [TestMethod]
+    [TestCategory("Validations")]
+    public void ValidateDateTimeTickets_ShouldThrow_WhenDateIsInPast()
+    {
+        var input = "2023-12-31";
+
+        var act = () => ValidationServices.ValidateDateTimeTickets(input);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invalid date: 2023-12-31. Date cannot be in the past");
+    }
+
+    [TestMethod]
+    [TestCategory("Validations")]
+    public void ValidateDateTimeTickets_ShouldThrow_WhenFormatIsInvalid()
+    {
+        var input = "2024/01/01";
+
+        var act = () => ValidationServices.ValidateDateTimeTickets(input);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Invalid date format: 2024/01/01. Expected format is yyyy-MM-dd or yyyy-MM-dd HH:mm[:ss]");
+    }
+
+    #endregion
     #region ValidateDateOfBirth
 
     [TestMethod]

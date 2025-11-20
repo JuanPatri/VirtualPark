@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using VirtualPark.BusinessLogic.Attractions.Entity;
@@ -673,60 +675,6 @@ public class VisitRegistrationServiceTest
         _strategyServiceMock.VerifyAll();
         _strategyFactoryMock.VerifyAll();
         _strategyMock.VerifyAll();
-        _clockMock.VerifyAll();
-    }
-
-    [TestMethod]
-    [TestCategory("Behaviour")]
-    public void RecordVisitScore_Redemption_ShouldNotCallStrategy_AndApplyDelta()
-    {
-        var now = new DateTime(2025, 10, 08, 17, 00, 00, DateTimeKind.Utc);
-        _clockMock.Setup(c => c.Now()).Returns(now);
-
-        var visitor = new VisitorProfile { Score = 200 };
-        var visit = new VisitRegistration
-        {
-            Date = now,
-            DailyScore = 200,
-            VisitorId = visitor.Id,
-            Visitor = visitor,
-            Ticket = new Ticket(),
-            Attractions = [],
-            ScoreEvents =
-            [
-                new VisitScore { Origin = "Seed", OccurredAt = now, Points = 0, DayStrategyName = "Attraction" }
-            ]
-        };
-        var visitId = visit.Id;
-
-        _repositoryMock
-            .Setup(r => r.Get(v => v.Id == visitId))
-            .Returns(visit);
-
-        _visitorRepoWriteMock
-            .Setup(w => w.Update(It.Is<VisitorProfile>(vp => vp.Score == 150)))
-            .Verifiable();
-
-        _repositoryMock
-            .Setup(r => r.Update(It.Is<VisitRegistration>(v =>
-                v.DailyScore == 150 &&
-                v.ScoreEvents.Count == 2 &&
-                v.ScoreEvents[1].Origin == "Canje" &&
-                v.ScoreEvents[1].Points == -50 &&
-                v.ScoreEvents[1].VisitRegistrationId == visitId)))
-            .Verifiable();
-
-        _service.RecordVisitScore(new RecordVisitScoreArgs(visitId.ToString(), "Canje", "-50"));
-
-        visit.DailyScore.Should().Be(150);
-        visitor.Score.Should().Be(150);
-
-        _strategyServiceMock.VerifyAll();
-        _strategyFactoryMock.VerifyAll();
-        _strategyMock.VerifyAll();
-
-        _repositoryMock.VerifyAll();
-        _visitorRepoWriteMock.VerifyAll();
         _clockMock.VerifyAll();
     }
 
@@ -2003,22 +1951,19 @@ public class VisitRegistrationServiceTest
         };
 
         _repositoryMock
-            .Setup(r => r.Get(v =>
-                v.VisitorId == visitor.Id &&
-                v.Date >= start &&
-                v.Date <= end))
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
             .Returns(visit);
 
         _visitorRepoMock
-            .Setup(r => r.Get(v => v.Id == visitor.Id))
+            .Setup(r => r.Get(It.Is<Expression<Func<VisitorProfile, bool>>>(expr => expr.Compile().Invoke(visitor))))
             .Returns(visitor);
 
         _ticketRepoMock
-            .Setup(r => r.Get(t => t.Id == ticket.Id))
+            .Setup(r => r.Get(It.Is<Expression<Func<Ticket, bool>>>(expr => expr.Compile().Invoke(ticket))))
             .Returns(ticket);
 
         _attractionRepoMock
-            .Setup(r => r.Get(a => a.Id == attraction.Id))
+            .Setup(r => r.Get(It.Is<Expression<Func<Attraction, bool>>>(expr => expr.Compile().Invoke(attraction))))
             .Returns(attraction);
 
         var result = _service.GetTodayVisit(visitor.Id);

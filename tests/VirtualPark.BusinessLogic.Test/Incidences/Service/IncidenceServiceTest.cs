@@ -727,4 +727,39 @@ public sealed class IncidenceTest
 
         _mockIncidenceRepository.VerifyAll();
     }
+    [TestMethod]
+    [TestCategory("AutoActivate")]
+    public void Get_WhenInactiveButNowIsWithinRange_ShouldActivateAndUpdate()
+    {
+        var id = Guid.NewGuid();
+        var now = DateTime.Now;
+
+        var inactive = new Incidence
+        {
+            Id = id,
+            Active = false,
+            Start = now.AddHours(-1),
+            End = now.AddHours(1),
+        };
+
+        _mockIncidenceRepository
+            .Setup(r => r.Get(
+                i => i.Id == id,
+                It.IsAny<Func<IQueryable<Incidence>, IIncludableQueryable<Incidence, object>>>()))
+            .Returns(inactive);
+
+        _mockIncidenceRepository
+            .Setup(r => r.Update(It.Is<Incidence>(x =>
+                x.Id == id &&
+                x.Active == true
+            )));
+
+        var result = _incidenceService.Get(id);
+
+        result.Should().NotBeNull();
+        result.Active.Should().BeTrue();
+
+        _mockIncidenceRepository.VerifyAll();
+    }
+
 }

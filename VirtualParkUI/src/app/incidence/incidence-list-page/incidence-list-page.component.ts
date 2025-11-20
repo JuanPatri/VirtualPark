@@ -130,8 +130,8 @@ askDelete(id: string) {
     const updatedStatus = incidence.active === 'True' ? 'False' : 'True';
 
     const formatDate = (dateStr: string) => {
-      const date = new Date(dateStr);
-      return date.toISOString().split('.')[0];
+      const d = this.parseIncDate(dateStr);
+      return d.toISOString().split('.')[0];
     };
 
     const updated = {
@@ -177,5 +177,14 @@ askDelete(id: string) {
     const end = this.parseDate(inc.end);
     return end < this.systemNow;
   }
+
+  parseIncDate(dateStr: string): Date {
+  const [datePart, timePart] = dateStr.split(" ");
+  const [day, month, year] = datePart.split("/").map(Number);
+  const [hour, minute, second] = timePart.split(":").map(Number);
+
+  return new Date(year, month - 1, day, hour, minute, second);
+  }
+
 
 }

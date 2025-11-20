@@ -24,6 +24,7 @@ export class RewardRedemptionComponent implements OnInit {
   loading = false;
   visitorId = localStorage.getItem("visitorId")!;
   visitorScore: number = 0;
+  private visitRegistrationId: string | null = null;
 
   constructor(
     private readonly rewardService: RewardService,
@@ -36,6 +37,7 @@ export class RewardRedemptionComponent implements OnInit {
   ngOnInit(): void {
     this.loadVisitor();
     this.loadRewards();
+    this.loadVisitRegistration();
   }
 
   private loadVisitor(): void {
@@ -59,6 +61,15 @@ export class RewardRedemptionComponent implements OnInit {
     });
   }
 
+  private loadVisitRegistration(): void {
+    if (!this.visitorId) return;
+
+    this.visitRegistrationService.getTodayVisit(this.visitorId).subscribe({
+      next: resp => this.visitRegistrationId = resp.visitRegistrationId,
+      error: () => this.messageService.show('Unable to load today visit information.', 'error')
+    });
+  }
+
   redeem(reward: RewardModel): void {
     const redemption: CreateRewardRedemptionRequest = {
       rewardId: reward.id,
@@ -78,10 +89,13 @@ export class RewardRedemptionComponent implements OnInit {
   }
 
   private recordRedeemScore(reward: RewardModel): void {
-    if (!this.visitorId) return;
+    if (!this.visitRegistrationId) {
+      this.messageService.show('Visit information is missing. Please try again later.', 'error');
+      return;
+    }
 
     const payload: VisitScoreRequest = {
-      visitRegistrationId: this.visitorId,
+      visitRegistrationId: this.visitRegistrationId,
       origin: 'Canje',
       points: reward.cost?.toString() ?? '0'
     };

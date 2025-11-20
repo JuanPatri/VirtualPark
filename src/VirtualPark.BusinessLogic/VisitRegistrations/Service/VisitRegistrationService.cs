@@ -160,6 +160,12 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
         return GetAttractionsForTicketInternal(ticket);
     }
 
+    public VisitRegistration GetTodayVisit(Guid visitorId)
+    {
+        var today = DateOnly.FromDateTime(_clockAppService.Now());
+        return GetTodayVisitForVisitor(visitorId, today);
+    }
+
     private VisitRegistration GetTodayVisitForVisitor(Guid visitorId, DateOnly today)
     {
         var start = today.ToDateTime(TimeOnly.MinValue);

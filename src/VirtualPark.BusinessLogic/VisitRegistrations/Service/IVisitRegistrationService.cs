@@ -1,4 +1,5 @@
 using VirtualPark.BusinessLogic.Attractions.Entity;
+using VirtualPark.BusinessLogic.VisitRegistrations.Entity;
 using VirtualPark.BusinessLogic.VisitRegistrations.Models;
 using VirtualPark.BusinessLogic.VisitsScore.Models;
 
@@ -11,4 +12,5 @@ public interface IVisitRegistrationService
     public void DownToAttraction(Guid visitId);
     public List<Attraction> GetAttractionsForTicket(Guid visitorId);
     public List<VisitorInAttraction> GetVisitorsInAttraction(Guid attractionId);
+    public VisitRegistration GetTodayVisit(Guid visitorId);
 }

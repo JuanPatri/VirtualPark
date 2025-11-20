@@ -689,4 +689,43 @@ public sealed class IncidenceTest
     }
     #endregion
     #endregion
+    [TestMethod]
+    [TestCategory("AutoActivate")]
+    public void GetAll_WhenIncidenceWasInactiveButNowIsValid_ShouldActivateAndCallUpdate()
+    {
+        var id = Guid.NewGuid();
+        var now = DateTime.Now;
+
+        var inactive = new Incidence
+        {
+            Id = id,
+            Active = false,
+            Start = now.AddHours(-1),
+            End = now.AddHours(1),
+        };
+
+        _mockIncidenceRepository
+            .Setup(r => r.GetAll())
+            .Returns([inactive]);
+
+        _mockIncidenceRepository
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Incidence, bool>>>(),
+                It.IsAny<Func<IQueryable<Incidence>, IIncludableQueryable<Incidence, object>>>()))
+            .Returns(inactive);
+
+        _mockIncidenceRepository
+            .Setup(r => r.Update(It.Is<Incidence>(x =>
+                    x.Id == id &&
+                    x.Active == true
+            )));
+
+        var result = _incidenceService.GetAll();
+
+        result.Should().HaveCount(1);
+        result.First().Active.Should().BeTrue();
+
+        _mockIncidenceRepository.VerifyAll();
+    }
+
 }

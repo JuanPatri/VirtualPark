@@ -1,5 +1,6 @@
 using System.Globalization;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using VirtualPark.BusinessLogic.Attractions;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
@@ -21,6 +22,7 @@ public class ValidationServicesTest
         _mockClockService = new Mock<IClockAppService>();
         _mockClockService.Setup(x => x.Now()).Returns(new DateTime(2024, 1, 1, 12, 0, 0));
         ValidationServices.ClockService = _mockClockService.Object;
+        ValidationServices.ScopeFactory = null;
     }
 
     #region ParseBool
@@ -724,6 +726,31 @@ public class ValidationServicesTest
 
         act.Should().Throw<ArgumentException>()
             .WithMessage("Invalid date format: 2024/01/01. Expected format is yyyy-MM-dd or yyyy-MM-dd HH:mm[:ss]");
+    }
+
+    [TestMethod]
+    [TestCategory("Validations")]
+    public void ValidateDateTimeTickets_ShouldUseScopeFactory_WhenClockServiceIsNull()
+    {
+        ValidationServices.ClockService = null;
+
+        var expectedNow = new DateTime(2024, 1, 1, 8, 0, 0);
+        var clockMock = new Mock<IClockAppService>();
+        clockMock.Setup(c => c.Now()).Returns(expectedNow);
+
+        var services = new ServiceCollection();
+        services.AddSingleton(clockMock.Object);
+        var provider = services.BuildServiceProvider();
+
+        ValidationServices.ScopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+
+        Action act = () => ValidationServices.ValidateDateTimeTickets("2024-01-02");
+
+        act.Should().NotThrow();
+        clockMock.Verify(c => c.Now(), Times.Once);
+
+        ValidationServices.ScopeFactory = null;
+        ValidationServices.ClockService = _mockClockService?.Object;
     }
 
     #endregion

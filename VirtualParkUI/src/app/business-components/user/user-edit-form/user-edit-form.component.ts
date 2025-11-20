@@ -8,6 +8,7 @@ import { GetUserResponse } from '../../../../backend/services/user/models/GetUse
 import { VisitorProfileModel } from '../../../../backend/services/visitorProfile/models/VisitorProfileModel';
 import { EditUserRequest } from '../../../../backend/services/user/models/EditUserRequest';
 import { CreateVisitorProfileRequest } from '../../../../backend/services/user/models/CreateVisitorProfileRequest';
+import { AuthRoleService } from '../../../../backend/services/auth/auth-role.service';
 
 @Component({
     selector: 'app-user-edit-form',
@@ -31,11 +32,13 @@ export class UserEditFormComponent implements OnInit, OnChanges, OnDestroy {
     private userResponse: GetUserResponse | null = null;
     private visitorProfileSub?: Subscription;
     private roles: string[] = [];
+    canEditMembership = false;
 
     constructor(
         private fb: FormBuilder,
         private userService: UserService,
-        private visitorProfileService: VisitorProfileService
+        private visitorProfileService: VisitorProfileService,
+        private auth: AuthRoleService
     ) { }
 
     ngOnInit(): void {
@@ -47,6 +50,7 @@ export class UserEditFormComponent implements OnInit, OnChanges, OnDestroy {
             membership: [''],
             score: ['']
         });
+        this.canEditMembership = this.auth.hasAnyRole(['Administrator']);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -74,7 +78,7 @@ export class UserEditFormComponent implements OnInit, OnChanges, OnDestroy {
         const roleIds = [...(this.roles ?? [])];
         if (!roleIds.length) {
             this.saving = false;
-            this.errorMessage = 'El usuario debe tener al menos un rol asignado.';
+            this.errorMessage = 'The user must have at least one role assigned.';
             return;
         }
 
@@ -85,7 +89,7 @@ export class UserEditFormComponent implements OnInit, OnChanges, OnDestroy {
             const scoreValue = (raw.score ?? this.visitorProfile.score ?? '').toString().trim();
             if (!dateOfBirth || !membershipValue || !scoreValue) {
                 this.saving = false;
-                this.errorMessage = 'Completa los datos del perfil del visitante.';
+                this.errorMessage = 'Complete the visitors profile information.';
                 return;
             }
             visitorProfilePayload = {
@@ -123,11 +127,11 @@ export class UserEditFormComponent implements OnInit, OnChanges, OnDestroy {
                         score: updatedProfile.score ?? currentVisitor.score ?? ''
                     };
                 }
-                this.successMessage = 'Cambios guardados correctamente.';
+                this.successMessage = 'Changes saved successfully.';
             },
             error: () => {
                 this.saving = false;
-                this.errorMessage = 'No se pudo guardar los cambios. Intenta nuevamente.';
+                this.errorMessage = 'Could not save the changes. Please try again.';
             }
         });
     }
@@ -164,7 +168,7 @@ export class UserEditFormComponent implements OnInit, OnChanges, OnDestroy {
             },
             error: () => {
                 this.loading = false;
-                this.errorMessage = 'No se pudo obtener la información del usuario.';
+                this.errorMessage = 'Could not retrieve the users information.';
             }
         });
     }
@@ -178,11 +182,14 @@ export class UserEditFormComponent implements OnInit, OnChanges, OnDestroy {
                     membership: profile.membership ?? '',
                     score: profile.score ?? ''
                 });
+                if (!this.canEditMembership) {
+                    this.form.get('membership')?.disable();
+                }
                 this.loading = false;
             },
             error: () => {
                 this.loading = false;
-                this.errorMessage = 'No se pudo obtener el perfil del visitante.';
+                this.errorMessage = 'Could not retrieve the visitors profile.';
             }
         });
     }

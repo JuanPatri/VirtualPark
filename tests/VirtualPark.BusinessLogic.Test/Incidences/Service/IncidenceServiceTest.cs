@@ -886,8 +886,7 @@ public sealed class IncidenceTest
         _mockIncidenceRepository
             .Setup(r => r.Update(It.Is<Incidence>(x =>
                     x.Id == id &&
-                    x.Active == true
-            )));
+                    x.Active == true)));
 
         var result = _incidenceService.GetAll();
 
@@ -925,8 +924,7 @@ public sealed class IncidenceTest
         _mockIncidenceRepository
             .Setup(r => r.Update(It.Is<Incidence>(x =>
                 x.Id == id &&
-                x.Active == true
-            )));
+                x.Active == true)));
 
         var result = _incidenceService.Get(id);
 
@@ -1022,7 +1020,7 @@ public sealed class IncidenceTest
         var method = typeof(IncidenceService)
             .GetMethod("AutoDeactivateIfExpired", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        return (bool)method.Invoke(_incidenceService, new object[] { inc, now });
+        return (bool)method.Invoke(_incidenceService, [inc, now]);
     }
 
     [TestMethod]
@@ -1112,7 +1110,7 @@ public sealed class IncidenceTest
         var method = typeof(IncidenceService)
             .GetMethod("AutoActivateIfValid", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        return (bool)method.Invoke(_incidenceService, new object[] { inc, now });
+        return (bool)method.Invoke(_incidenceService, [inc, now]);
     }
 
     #endregion

@@ -41,7 +41,7 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
             .OfType<Incidence>()
             .ToList();
 
-        foreach (var inc in incidences)
+        foreach(var inc in incidences)
         {
             AutoActivateIfValid(inc, now);
 
@@ -113,7 +113,7 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
         entity.End = args.End;
         entity.AttractionId = args.AttractionId;
 
-        if (entity.Active != args.Active)
+        if(entity.Active != args.Active)
         {
             entity.ManualOverride = true;
         }
@@ -139,9 +139,9 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
 
     private bool AutoDeactivateIfExpired(Incidence incidence, DateTime now)
     {
-        if (incidence.End < now)
+        if(incidence.End < now)
         {
-            if (incidence.Active)
+            if(incidence.Active)
             {
                 incidence.Active = false;
                 _incidenceRepository.Update(incidence);
@@ -150,12 +150,12 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
             return true;
         }
 
-        if (incidence.ManualOverride)
+        if(incidence.ManualOverride)
         {
             return false;
         }
 
-        if (!incidence.Active || incidence.End >= now)
+        if(!incidence.Active || incidence.End >= now)
         {
             return false;
         }
@@ -167,17 +167,17 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
 
     private bool AutoActivateIfValid(Incidence incidence, DateTime now)
     {
-        if (incidence.ManualOverride)
+        if(incidence.ManualOverride)
         {
             return false;
         }
 
-        if (incidence.Active)
+        if(incidence.Active)
         {
             return false;
         }
 
-        if (incidence.Start <= now && now <= incidence.End)
+        if(incidence.Start <= now && now <= incidence.End)
         {
             incidence.Active = true;
             _incidenceRepository.Update(incidence);

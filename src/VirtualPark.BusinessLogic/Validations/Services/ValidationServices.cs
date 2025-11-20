@@ -297,7 +297,7 @@ public static class ValidationServices
 
     public static void ValidateDateOfBirth(DateOnly date)
     {
-        if (date > DateOnly.FromDateTime(DateTime.Today))
+        if(date > DateOnly.FromDateTime(DateTime.Today))
         {
             throw new InvalidOperationException("Date of birth cannot be in the future.");
         }

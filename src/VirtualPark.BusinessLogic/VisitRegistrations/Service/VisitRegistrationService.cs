@@ -356,9 +356,9 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
     {
         var isRedemption = string.Equals(scoreEvent.Origin, "Canje", StringComparison.OrdinalIgnoreCase);
 
-        if (isRedemption)
+        if(isRedemption)
         {
-            if (delta == 0)
+            if(delta == 0)
             {
                 scoreEvent.Points = 0;
                 return;
@@ -375,7 +375,7 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
         scoreEvent.Points = delta;
 
-        if (delta == 0)
+        if(delta == 0)
         {
             return;
         }

@@ -27,7 +27,7 @@ export class AttractionRegisterPageComponent {
         this.messageService.show('Attraction created successfully!', 'success');
         this.router.navigate(['/attraction']);
       },
-      error: (e) => alert('Error creating: ' + e.message)
+      error: (e) => this.messageService.show(e.error?.message ?? 'Error creating attraction.', 'error')
     });
   }
 }

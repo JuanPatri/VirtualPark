@@ -39,8 +39,10 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
             .OfType<Incidence>()
             .ToList();
 
-        foreach(var inc in incidences)
+        foreach (var inc in incidences)
         {
+            AutoActivateIfValid(inc, now);
+
             AutoDeactivateIfExpired(inc, now);
         }
 
@@ -134,5 +136,22 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
         incidence.Active = false;
         _incidenceRepository.Update(incidence);
         return true;
+    }
+
+    private bool AutoActivateIfValid(Incidence incidence, DateTime now)
+    {
+        if (incidence.Active)
+        {
+            return false;
+        }
+
+        if (incidence.Start <= now && now <= incidence.End)
+        {
+            incidence.Active = true;
+            _incidenceRepository.Update(incidence);
+            return true;
+        }
+
+        return false;
     }
 }

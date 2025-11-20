@@ -727,5 +727,4 @@ public sealed class IncidenceTest
 
         _mockIncidenceRepository.VerifyAll();
     }
-
 }

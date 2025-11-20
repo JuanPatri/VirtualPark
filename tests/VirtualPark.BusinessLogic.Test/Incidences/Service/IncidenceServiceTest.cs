@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using VirtualPark.BusinessLogic.Attractions.Entity;
+using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.BusinessLogic.Incidences.Models;
 using VirtualPark.BusinessLogic.Incidences.Service;
 using VirtualPark.BusinessLogic.TypeIncidences.Entity;
@@ -20,6 +21,7 @@ public sealed class IncidenceTest
     private Mock<IReadOnlyRepository<Attraction>> _mockAttractionRepository = null!;
     private IncidenceService _incidenceService = null!;
     private IncidenceArgs _incidenceArgs = null!;
+    private Mock<IClockAppService> _mockClock = null!;
 
     [TestInitialize]
     public void Initialize()
@@ -27,11 +29,12 @@ public sealed class IncidenceTest
         _mockIncidenceRepository = new Mock<IRepository<Incidence>>(MockBehavior.Strict);
         _mockTypeIncidenceRepository = new Mock<IReadOnlyRepository<TypeIncidence>>(MockBehavior.Strict);
         _mockAttractionRepository = new Mock<IReadOnlyRepository<Attraction>>(MockBehavior.Strict);
+        _mockClock = new Mock<IClockAppService>(MockBehavior.Strict);
 
         _incidenceService = new IncidenceService(
             _mockIncidenceRepository.Object,
             _mockTypeIncidenceRepository.Object,
-            _mockAttractionRepository.Object);
+            _mockAttractionRepository.Object, _mockClock.Object);
 
         _incidenceArgs = new IncidenceArgs(
             "c8a0b0ef-9a4d-46e0-b9d3-0dfd68b6a010",
@@ -291,6 +294,11 @@ public sealed class IncidenceTest
             new() { Id = Guid.NewGuid(), Description = "Incidence 1" },
             new() { Id = Guid.NewGuid(), Description = "Incidence 2" }
         };
+
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(DateTime.Now);
+
         _mockIncidenceRepository
             .Setup(r => r.GetAll())
             .Returns(data);
@@ -319,6 +327,10 @@ public sealed class IncidenceTest
             End = DateTime.Now.AddHours(-1),
             Active = true
         };
+
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(DateTime.Now);
 
         _mockIncidenceRepository
             .Setup(r => r.GetAll())
@@ -354,6 +366,10 @@ public sealed class IncidenceTest
             Active = true
         };
 
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(DateTime.Now);
+
         _mockIncidenceRepository
             .Setup(r => r.GetAll())
             .Returns([active]);
@@ -382,6 +398,10 @@ public sealed class IncidenceTest
         var id = Guid.NewGuid();
         var expected = new Incidence { Id = id, Description = "Test" };
 
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(DateTime.Now);
+
         _mockIncidenceRepository
             .Setup(r => r.Get(
                 i => i.Id == id,
@@ -409,6 +429,9 @@ public sealed class IncidenceTest
             Start = DateTime.Now.AddHours(-2),
             End = DateTime.Now.AddHours(-1)
         };
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(DateTime.Now);
 
         _mockIncidenceRepository
             .Setup(r => r.Get(
@@ -454,6 +477,10 @@ public sealed class IncidenceTest
         var id = Guid.NewGuid();
         var existing = new Incidence { Id = id };
 
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(DateTime.Now);
+
         _mockIncidenceRepository
             .Setup(r => r.Get(
                 i => i.Id == id,
@@ -479,6 +506,10 @@ public sealed class IncidenceTest
     {
         var id = Guid.NewGuid();
 
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(DateTime.Now);
+
         _mockIncidenceRepository
             .Setup(r => r.Get(
                 i => i.Id == id,
@@ -500,6 +531,10 @@ public sealed class IncidenceTest
     {
         var id = Guid.NewGuid();
         var existing = new Incidence { Id = id };
+
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(DateTime.Now);
 
         _mockIncidenceRepository
             .Setup(r => r.Get(
@@ -689,12 +724,18 @@ public sealed class IncidenceTest
     }
     #endregion
     #endregion
+
+    #region AutoActivate
     [TestMethod]
     [TestCategory("AutoActivate")]
     public void GetAll_WhenIncidenceWasInactiveButNowIsValid_ShouldActivateAndCallUpdate()
     {
         var id = Guid.NewGuid();
         var now = DateTime.Now;
+
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(DateTime.Now);
 
         var inactive = new Incidence
         {
@@ -727,6 +768,7 @@ public sealed class IncidenceTest
 
         _mockIncidenceRepository.VerifyAll();
     }
+
     [TestMethod]
     [TestCategory("AutoActivate")]
     public void Get_WhenInactiveButNowIsWithinRange_ShouldActivateAndUpdate()
@@ -748,6 +790,10 @@ public sealed class IncidenceTest
                 It.IsAny<Func<IQueryable<Incidence>, IIncludableQueryable<Incidence, object>>>()))
             .Returns(inactive);
 
+        _mockClock
+            .Setup(c => c.Now())
+            .Returns(DateTime.Now);
+
         _mockIncidenceRepository
             .Setup(r => r.Update(It.Is<Incidence>(x =>
                 x.Id == id &&
@@ -761,5 +807,5 @@ public sealed class IncidenceTest
 
         _mockIncidenceRepository.VerifyAll();
     }
-
+    #endregion
 }

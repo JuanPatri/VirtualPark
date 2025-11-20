@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VirtualPark.BusinessLogic.Attractions.Entity;
+using VirtualPark.BusinessLogic.ClocksApp.Service;
 using VirtualPark.BusinessLogic.Incidences.Entity;
 using VirtualPark.BusinessLogic.Incidences.Models;
 using VirtualPark.BusinessLogic.TypeIncidences.Entity;
@@ -8,11 +9,12 @@ using VirtualPark.Repository;
 namespace VirtualPark.BusinessLogic.Incidences.Service;
 
 public sealed class IncidenceService(IRepository<Incidence> incidenceRepository, IReadOnlyRepository<TypeIncidence> incidenceReadOnlyTypeRepository,
-    IReadOnlyRepository<Attraction> attractionReadOnlyRepository) : IIncidenceService
+    IReadOnlyRepository<Attraction> attractionReadOnlyRepository, IClockAppService clockAppService) : IIncidenceService
 {
     private readonly IRepository<Incidence> _incidenceRepository = incidenceRepository;
     private readonly IReadOnlyRepository<TypeIncidence> _typeIncidenceRepository = incidenceReadOnlyTypeRepository;
     private readonly IReadOnlyRepository<Attraction> _attractionRepository = attractionReadOnlyRepository;
+    private readonly IClockAppService _clockAppService = clockAppService;
 
     public Guid Create(IncidenceArgs incidenceArgs)
     {
@@ -29,7 +31,7 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
             .Select(i => i.Id)
             .ToList();
 
-        var now = DateTime.Now;
+        var now = _clockAppService.Now();
 
         var incidences = allIds.Select(id =>
                 _incidenceRepository.Get(
@@ -55,7 +57,9 @@ public sealed class IncidenceService(IRepository<Incidence> incidenceRepository,
             i => i.Id == id,
             include: q => q.Include(i => i.Type)
                 .Include(i => i.Attraction)) ?? throw new InvalidOperationException("Incidence don't exist");
-        AutoDeactivateIfExpired(incidence, DateTime.Now);
+        var now = _clockAppService.Now();
+        AutoActivateIfValid(incidence, now);
+        AutoDeactivateIfExpired(incidence, now);
 
         return incidence;
     }

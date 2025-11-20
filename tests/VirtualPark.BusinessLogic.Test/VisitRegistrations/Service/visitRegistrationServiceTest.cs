@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using VirtualPark.BusinessLogic.Attractions.Entity;
 using VirtualPark.BusinessLogic.ClocksApp.Service;
@@ -1771,6 +1772,62 @@ public class VisitRegistrationServiceTest
         _attractionRepoMock.VerifyAll();
         _visitorRepoMock.VerifyAll();
         _ticketRepoMock.VerifyAll();
+    }
+
+    [TestMethod]
+    [TestCategory("Validation")]
+    public void GetAttractionsForTicket_ShouldThrow_WhenEventDoesNotExist()
+    {
+        var now = new DateTime(2025, 10, 08, 20, 0, 0, DateTimeKind.Utc);
+        _clockMock.Setup(c => c.Now()).Returns(now);
+
+        var visitor = new VisitorProfile();
+        var visitorId = visitor.Id;
+
+        var eventTicket = new Ticket
+        {
+            Type = EntranceType.Event,
+            EventId = Guid.NewGuid()
+        };
+        var ticketId = eventTicket.Id;
+
+        var visitToday = new VisitRegistration
+        {
+            VisitorId = visitorId,
+            Date = now,
+            TicketId = ticketId,
+            Ticket = null!,
+            Attractions = [],
+            ScoreEvents = []
+        };
+
+        _repositoryMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<VisitRegistration, bool>>>()))
+            .Returns(visitToday);
+
+        _visitorRepoMock
+            .Setup(r => r.Get(It.Is<Expression<Func<VisitorProfile, bool>>>(expr => expr.Compile().Invoke(visitor))))
+            .Returns(visitor);
+
+        _ticketRepoMock
+            .Setup(r => r.Get(It.IsAny<Expression<Func<Ticket, bool>>>()))
+            .Returns(eventTicket);
+
+        _eventRepoMock
+            .Setup(r => r.Get(
+                It.IsAny<Expression<Func<Event, bool>>>(),
+                It.IsAny<Func<IQueryable<Event>, IIncludableQueryable<Event, object>>>()))
+            .Returns((Event?)null);
+
+        Action act = () => _service.GetAttractionsForTicket(visitorId);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("Event don't exist");
+
+        _repositoryMock.VerifyAll();
+        _visitorRepoMock.VerifyAll();
+        _ticketRepoMock.VerifyAll();
+        _eventRepoMock.VerifyAll();
     }
     #endregion
 

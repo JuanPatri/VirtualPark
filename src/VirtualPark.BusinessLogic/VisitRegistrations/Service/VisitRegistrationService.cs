@@ -369,8 +369,6 @@ public class VisitRegistrationService(IRepository<VisitRegistration> visitRegist
 
             scoreEvent.Points = -delta;
 
-            visit.Visitor.PointsAvailable -= delta;
-
             _visitorProfileWriteRepository.Update(visit.Visitor);
             return;
         }
